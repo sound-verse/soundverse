@@ -6,7 +6,8 @@ export default function LoadingModal(props) {
   return (
     <div>
       <div
-        className="    
+        className="
+    
     overflow-x-hidden overflow-y-auto
     fixed
     inset-0

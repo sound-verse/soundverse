@@ -5,17 +5,24 @@ import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import Button from './common/Button'
 import { formatDiagnosticsWithColorAndContext } from 'typescript'
-
-
+import { useLogin } from '../hooks/useLogin'
 
 const WalletButton = () => {
-  const { activateBrowserWallet, deactivate, account, library,active,chainId } = useEthers()
+  const {
+    activateBrowserWallet,
+    deactivate,
+    account,
+    library,
+    active,
+    chainId,
+  } = useEthers()
   const onError = async (error: Error) => {
     toast(error.message)
   }
-  useEffect(() => {
-    if(active == true ) {
 
+  const { authenticate } = useLogin()
+  useEffect(() => {
+    if (active == true) {
       if (chainId != 80001) {
         library.provider.request({
           method: 'wallet_addEthereumChain',
@@ -28,16 +35,15 @@ const WalletButton = () => {
                 symbol: 'matic',
                 decimals: 18,
               },
-              rpcUrls: [
-                "https://rpc-mumbai.maticvigil.com"
-              ],
+              rpcUrls: ['https://rpc-mumbai.maticvigil.com'],
               blockExplorerUrls: ['https://polygonscan.com/'],
             },
           ],
         })
       }
-    } 
-  }, [active ])
+      authenticate(library, account)
+    }
+  }, [active])
 
   return (
     <div>
@@ -45,8 +51,6 @@ const WalletButton = () => {
         className="hover:bg-purple-700 w-32 h-8 text-white text-xs font-bold border border-white rounded-xl"
         onClick={async () => {
           if (!account) {
-          
-
             await activateBrowserWallet(onError)
           } else {
             await deactivate()
@@ -55,7 +59,7 @@ const WalletButton = () => {
       >
         {!account ? 'Connect Wallet' : 'Disconnect Wallet'}
       </button>
-     
+
       <p className="text-purple-500">
         Account:{' '}
         {account

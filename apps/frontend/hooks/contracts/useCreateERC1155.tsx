@@ -40,7 +40,6 @@ function useCreateERC1155(file, name, description, setShowing) {
   ) => {
     e.preventDefault
     if (isConnected) {
-      setShowing(true)
       const formData = new FormData()
       formData.append(
         'operations',
@@ -48,7 +47,7 @@ function useCreateERC1155(file, name, description, setShowing) {
           query: print(CREATE_NFT),
           variables: {
             file: null,
-            data: { metadata: { name: name, description: description } },
+            data: { metadata: { name, description }, supply: 1 },
           },
         })
       )
@@ -59,11 +58,13 @@ function useCreateERC1155(file, name, description, setShowing) {
         })
       )
       formData.append('0', file)
+
       const response = await axios.request({
         method: 'POST',
         url: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,
         data: formData,
       })
+
       try {
         mintSend(
           account,
@@ -80,7 +81,6 @@ function useCreateERC1155(file, name, description, setShowing) {
   useEffect(() => {
     if (mintState.status == 'Success') {
       toast(mintState.status)
-      setShowing(false)
 
       // router.push('/landing')
     }
