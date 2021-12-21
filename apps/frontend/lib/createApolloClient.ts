@@ -38,7 +38,7 @@ export function createApolloClient(
   }) as any
 
   const errorLink = onError(({ networkError }) => {
-    if (networkError) console.log(`Network error:`, networkError)
+    if (networkError) console.log('Network error:', networkError)
   })
 
   const authLink = setApolloContext((_, { headers }) => {
