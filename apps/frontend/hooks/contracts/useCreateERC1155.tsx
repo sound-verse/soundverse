@@ -31,7 +31,7 @@ function useCreateERC1155(file, name, description, setShowing) {
   const contract = new Contract(contractaddress, ercInterface)
 
   const { state: mintState, send: mintSend } = useContractFunction(
-    contract,
+    contract as any,
     'mint',
     {}
   )
