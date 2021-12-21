@@ -188,7 +188,7 @@ export default function CreateForm() {
                   <div className="mt-3">
                     In the case of this feature release are you willing to allow
                     people who collected this NFT take part in a live auction
-                    event where they can buy portion of this tracks copyright ?{' '}
+                    event where they can buy portion of this tracks copyright?{' '}
                   </div>
                   <div
                     onChange={() => {
