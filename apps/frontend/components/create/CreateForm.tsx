@@ -180,15 +180,15 @@ export default function CreateForm() {
                 <div>
                   <div>
                     In the near future we are planning to allow artists to sell
-                    a portion of their unpublished tracks' copyright as an NFT
-                    to their fans. This bring artists and their fans closer than
+                    a portion of their unpublished tracks copyright as an NFT to
+                    their fans. This bring artists and their fans closer than
                     ever and allows both to benefit from each other. You can
                     read more about this here in our article.{' '}
                   </div>
                   <div className="mt-3">
                     In the case of this feature release are you willing to allow
                     people who collected this NFT take part in a live auction
-                    event where they can buy portion of this track's copyright ?{' '}
+                    event where they can buy portion of this tracks copyright ?{' '}
                   </div>
                   <div
                     onChange={() => {

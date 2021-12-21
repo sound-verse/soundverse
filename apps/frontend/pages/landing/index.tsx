@@ -74,7 +74,7 @@ export default function Landing() {
         </main>
       </Layout>
 
-      <style jsx>{``}</style>
+      <style jsx>{''}</style>
     </div>
   )
 }
