@@ -1,17 +1,5 @@
-import {
-  ClassSerializerInterceptor,
-  UseGuards,
-  UseInterceptors,
-} from '@nestjs/common';
-import {
-  Args,
-  Int,
-  Mutation,
-  Parent,
-  Query,
-  ResolveField,
-  Resolver,
-} from '@nestjs/graphql';
+import { ClassSerializerInterceptor, UseInterceptors } from '@nestjs/common';
+import { Args, Int, Mutation, Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import { UserService } from '../user/user.service';
 import { Auth } from './auth';
 import { AuthService } from './auth.service';
@@ -21,10 +9,7 @@ import { VerificationTokenInput } from './dto/verification-token.input';
 @UseInterceptors(ClassSerializerInterceptor)
 @Resolver(() => Auth)
 export class AuthResolver {
-  constructor(
-    private readonly auth: AuthService,
-    private readonly userService: UserService,
-  ) {}
+  constructor(private readonly auth: AuthService, private readonly userService: UserService) {}
 
   @Mutation(() => Int)
   async generateVerificationToken(@Args('data') data: VerificationTokenInput) {

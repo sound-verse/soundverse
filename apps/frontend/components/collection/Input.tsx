@@ -3,7 +3,7 @@ const Input = (props) => {
   return (
     <div>
       
-      <input type={type} id={id} className={`w-64 px-4 py-3 text-primary outline-none text-base rounded-md border leading-5`} placeholder={placeholder} {...rest} />
+      <input type={type} id={id} className={'w-64 px-4 py-3 text-primary outline-none text-base rounded-md border leading-5'} placeholder={placeholder} {...rest} />
       
       {error && <p className='text-xs pl-2 text-red mb-4'>{error}</p>}
 
