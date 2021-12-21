@@ -85,8 +85,6 @@ function useCreateERC1155(file, name, description, setShowing) {
   useEffect(() => {
     if (mintState.status == 'Success') {
       toast(mintState.status)
-
-      // router.push('/landing')
     }
     if (mintState.status == 'Exception') {
       toast(mintState.errorMessage)
