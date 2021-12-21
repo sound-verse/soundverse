@@ -8,6 +8,7 @@ import { useRouter } from 'next/router'
 import gql from 'graphql-tag'
 import { print } from 'graphql'
 import axios from 'axios'
+import Cookies from 'js-cookie'
 
 const erc115ABI = SoundVerseERC1155.abi
 const contractaddress = '0xf3EFc648D3D3AaA49137e2aE456bce2CeCe7Ced7'
@@ -63,6 +64,9 @@ function useCreateERC1155(file, name, description, setShowing) {
         method: 'POST',
         url: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,
         data: formData,
+        headers: {
+          Authorization: `Bearer ${Cookies.get('JWT_TOKEN')}`,
+        },
       })
 
       try {

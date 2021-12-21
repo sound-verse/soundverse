@@ -4,6 +4,8 @@ import { Web3Provider } from '@ethersproject/providers'
 import { gql, useMutation } from '@apollo/client'
 import link from 'next/link'
 import { useAppContext } from '../context/AppContext'
+import Cookies from 'js-cookie'
+import jwt_decode from 'jwt-decode'
 
 const GENERATE_VERIFICATION_TOKEN = gql`
   mutation generateVerificationToken($data: VerificationTokenInput!) {
@@ -42,6 +44,28 @@ export const useLogin = () => {
       setAuthToken(jwtToken.data.login.token)
     }
 
-    return { authenticate }
+    const logout = () => {
+      setAuthToken('')
+      Cookies.set('JWT_TOKEN', '')
+    }
+
+    const isLoggedIn = () => {
+      const jwtToken = Cookies.get('JWT_TOKEN')
+
+      try {
+        const decodedJwtToken: any = jwt_decode(jwtToken)
+        let currentDate = new Date()
+
+        if (decodedJwtToken.exp * 1000 < currentDate.getTime()) {
+          return false
+        } else {
+          return true
+        }
+      } catch {
+        return false
+      }
+    }
+
+    return { authenticate, logout, isLoggedIn }
   }, [])
 }

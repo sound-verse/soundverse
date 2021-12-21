@@ -20,28 +20,32 @@ const WalletButton = () => {
     toast(error.message)
   }
 
-  const { authenticate } = useLogin()
+  const { authenticate, logout, isLoggedIn } = useLogin()
   useEffect(() => {
     if (active == true) {
-      if (chainId != 80001) {
-        library.provider.request({
-          method: 'wallet_addEthereumChain',
-          params: [
-            {
-              chainId: '0x13881',
-              chainName: 'Mumbai testnet',
-              nativeCurrency: {
-                name: 'matic',
-                symbol: 'matic',
-                decimals: 18,
+      if (process.env.NEXT_PUBLIC_ENVIRONMENT === 'testflight') {
+        if (chainId != 80001) {
+          library.provider.request({
+            method: 'wallet_addEthereumChain',
+            params: [
+              {
+                chainId: '0x13881',
+                chainName: 'Mumbai testnet',
+                nativeCurrency: {
+                  name: 'matic',
+                  symbol: 'matic',
+                  decimals: 18,
+                },
+                rpcUrls: ['https://rpc-mumbai.maticvigil.com'],
+                blockExplorerUrls: ['https://polygonscan.com/'],
               },
-              rpcUrls: ['https://rpc-mumbai.maticvigil.com'],
-              blockExplorerUrls: ['https://polygonscan.com/'],
-            },
-          ],
-        })
+            ],
+          })
+        }
       }
-      authenticate(library, account)
+      if (!isLoggedIn()) {
+        authenticate(library, account)
+      }
     }
   }, [active])
 
@@ -54,6 +58,7 @@ const WalletButton = () => {
             await activateBrowserWallet(onError)
           } else {
             await deactivate()
+            logout()
           }
         }}
       >
