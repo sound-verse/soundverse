@@ -12,6 +12,7 @@ export class S3Service {
       accessKeyId: this.configService.get('DO_ACCESS_KEY_ID'),
       secretAccessKey: this.configService.get('DO_SECRET_ACCESS_KEY'),
       endpoint: spacesEndpoint,
+      s3ForcePathStyle: true,
     });
   }
 

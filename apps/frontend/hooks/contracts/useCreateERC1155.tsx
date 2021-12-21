@@ -23,7 +23,6 @@ const CREATE_NFT = gql`
 `
 
 function useCreateERC1155(file, name, description, setShowing) {
-
   const { account } = useEthers()
   const isConnected = account !== undefined
   const ercInterface = new utils.Interface(erc115ABI)
@@ -41,7 +40,7 @@ function useCreateERC1155(file, name, description, setShowing) {
   ) => {
     e.preventDefault
     if (isConnected) {
-      setShowing(true);
+      setShowing(true)
       const formData = new FormData()
       formData.append(
         'operations',
@@ -62,7 +61,7 @@ function useCreateERC1155(file, name, description, setShowing) {
       formData.append('0', file)
       const response = await axios.request({
         method: 'POST',
-        url: 'https://api-testflight.soundverse.io/graphql',
+        url: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,
         data: formData,
       })
       try {
@@ -72,8 +71,7 @@ function useCreateERC1155(file, name, description, setShowing) {
           1,
           utils.randomBytes(3)
         )
-      } catch (e) {
-      }
+      } catch (e) {}
     } else {
       toast('Please Connect Wallet')
     }
@@ -89,12 +87,9 @@ function useCreateERC1155(file, name, description, setShowing) {
     if (mintState.status == 'Exception') {
       toast(mintState.errorMessage)
     }
-    if(mintState.status == 'Mining'){
+    if (mintState.status == 'Mining') {
       setShowing(true)
     }
-
-
-
   }, [mintState.status])
 
   return [handleMintClick, mintState]

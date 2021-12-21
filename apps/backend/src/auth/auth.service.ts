@@ -24,7 +24,6 @@ export class AuthService {
     const msg = `To authenticate, please sign this message: ${user.ethAddress.toLowerCase()} (${user.nonce})`;
 
     const address = ethers.utils.verifyMessage(msg, signature);
-
     if (address.toLowerCase() !== ethAddress.toLowerCase()) {
       throw new ForbiddenException('Signature error.');
     }

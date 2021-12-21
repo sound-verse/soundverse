@@ -1,9 +1,9 @@
-# Soundverse Backend
+# Soundverse Monorepo
 
-Install all dependencies with ``yarn``
+Install all dependencies with `yarn`
 
-Start Backend with ``yarn start``
+Start development with `yarn dev`
 
-Default port on local is ``8001``
+Default port for the frontend is `3000`
 
-To start the local MongoDB enter ``docker-compose up`` (make sure to install docker first)
+To start the locally needed docker containers enter `docker-compose up` (make sure to install docker first)

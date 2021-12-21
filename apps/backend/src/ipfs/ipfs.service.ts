@@ -112,9 +112,7 @@ export class IPFSService {
   async storeNFTonIPFS(awsReadStream, rndFileName, nftData) {
     //For local development, we dont actually create an IPFS file for now
     if (this.configService.get('ENVIRONMENT') === 'local') {
-      let ipfsMetadata;
-      ipfsMetadata.isDuplicate = false;
-      ipfsMetadata.IpfsHash = '';
+      const ipfsMetadata = { isDuplicate: false, IpfsHash: '' };
       return {
         ipfsMetadata,
         ipfsMetadataUrl: '',
