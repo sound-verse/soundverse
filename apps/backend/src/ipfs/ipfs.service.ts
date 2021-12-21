@@ -116,7 +116,7 @@ export class IPFSService {
       return {
         ipfsMetadata,
         ipfsMetadataUrl: '',
-        metadata: {},
+        metadata: { ...nftData.metadata },
       };
     }
 
