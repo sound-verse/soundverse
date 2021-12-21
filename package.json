@@ -1,0 +1,25 @@
+{
+  "name": "root",
+  "private": true,
+  "scripts": {
+    "bootstrap": "lerna bootstrap",
+    "build": "lerna run build --stream",
+    "lint": "lerna run lint --parallel --scope @soundverse/app-*",
+    "prettier": "lerna run prettier --parallel --scope @soundverse/app-*",
+    "lint:fix": "yarn run lint --fix",
+    "dev": "lerna run dev --parallel --scope @soundverse/app-*",
+    "test": "lerna run test --stream",
+    "test:ci": "lerna run test:ci"
+  },
+  "devDependencies": {
+    "eslint": "^7.11.0",
+    "lerna": "^4.0.0",
+    "typescript": "^4.1.2"
+  },
+  "workspaces": {
+    "packages": [
+      "apps/*",
+      "shared/*"
+    ]
+  }
+}

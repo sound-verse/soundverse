@@ -1,0 +1,38 @@
+{
+  "name": "@soundverse/eslint-config",
+  "version": "1.0.0",
+  "description": "Shared soundverse eslint configuration",
+  "license": "ISC",
+  "main": "index.js",
+  "files": [
+    "node.js",
+    "react.js",
+    "next.js"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sound-verse/soundverse-backend.git"
+  },
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.28.3",
+    "@typescript-eslint/parser": "^4.28.3",
+    "eslint-config-prettier": "^8.3.0",
+    "prettier": "^2.3.2"
+  },
+  "peerDependencies": {
+    "eslint-config-next": ">= 11",
+    "eslint-plugin-react": ">= 7",
+    "eslint": ">= 7"
+  },
+  "peerDependenciesMeta": {
+    "eslint-config-next": {
+      "optional": true
+    },
+    "eslint-config-react": {
+      "optional": true
+    }
+  }
+}

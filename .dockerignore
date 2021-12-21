@@ -1,0 +1,13 @@
+**/node_modules
+**/dist
+**/Dockerfile
+.circleci
+.vscode
+.github
+.dependabot
+node_modules
+apps/backend/dist
+apps/backend/.env
+**/*tsbuildinfo
+ganache_data
+.git

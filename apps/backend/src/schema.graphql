@@ -1,0 +1,115 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  id: String!
+  name: String
+  description: String
+  ethAddress: String
+  twitter: String
+  instagram: String
+  website: String
+  profileImage: String
+  verified: Boolean
+}
+
+type AuthUser {
+  id: String!
+  name: String
+  description: String
+  ethAddress: String
+  twitter: String
+  instagram: String
+  website: String
+  profileImage: String
+  verified: Boolean
+  email: String
+}
+
+type Auth {
+  """JWT Bearer token"""
+  token: String!
+  user: AuthUser
+}
+
+type NftOwner {
+  ethAddress: String!
+  supply: Float!
+}
+
+type NftMetadata {
+  name: String!
+  description: String!
+}
+
+type Nft {
+  tokenId: Float!
+  contractAddress: String!
+  ipfsUrl: String!
+  fileUrl: String!
+  transactionHash: String
+  metadata: NftMetadata!
+  creator: User
+  owners: [NftOwner!]
+}
+
+type Query {
+  user(ethAddress: String!): User
+  me: User!
+  nfts: [Nft!]!
+  nft(filter: NftFilter!): Nft!
+}
+
+input NftFilter {
+  contractAddress: String!
+  tokenId: Float!
+}
+
+type Mutation {
+  updateUser(data: UpdateUserInput!): User!
+  generateVerificationToken(data: VerificationTokenInput!): Int!
+  login(data: LoginInput!): Auth!
+  createNft(data: NftInput!, file: Upload!): Nft!
+  updateTxHash(data: UpdateTxInput!): Nft!
+  unpinAll: Boolean!
+}
+
+input UpdateUserInput {
+  email: String
+  twitter: String
+  instagram: String
+  website: String
+  description: String
+  name: String
+  profileImage: String
+  profileBanner: String
+}
+
+input VerificationTokenInput {
+  ethAddress: String!
+}
+
+input LoginInput {
+  ethAddress: String!
+  signature: String!
+}
+
+input NftInput {
+  metadata: NftMetadataInput!
+  supply: Float!
+}
+
+input NftMetadataInput {
+  name: String!
+  description: String!
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+input UpdateTxInput {
+  tokenId: Float!
+  contractAddress: String!
+  transactionHash: String!
+}

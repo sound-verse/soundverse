@@ -1,0 +1,19 @@
+{
+  "extends": ["next"],
+  "rules": {
+    "quotes": [
+      2,
+      "single",
+      {
+        "avoidEscape": true
+      }
+    ]
+  },
+  "@typescript-eslint/quotes": [
+    "error",
+    "single",
+    {
+      "allowTemplateLiterals": true
+    }
+  ]
+}

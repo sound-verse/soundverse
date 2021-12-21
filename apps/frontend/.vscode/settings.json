@@ -1,0 +1,10 @@
+{
+  "eslint.options": {
+    "rules": {
+      "quotes": [2, "double"]
+    }
+  },
+
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true
+}
