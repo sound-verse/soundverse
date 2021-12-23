@@ -20,7 +20,7 @@ After that, enter `npm run prepare`.
 
 This will spin up a local hardhat node for you. 
 
-IMPORTNAT! Don't close this terminal.
+IMPORTANT! Don't close this terminal.
 
 Now open a new terminal and enter `npm run dev` - this will deploy the smart contracts on your local maschine.
 
