@@ -65,14 +65,18 @@ const WalletButton = () => {
         {!account ? 'Connect Wallet' : 'Disconnect Wallet'}
       </button>
 
-      <p className="text-purple-500">
-        Account:{' '}
-        {account
-          ? account.substring(0, 5) +
-            '...' +
-            account.substring(account.length - 4, account.length)
-          : account}
-      </p>
+      {account ? (
+        <p className="text-purple-500">
+          Account:{' '}
+          {account
+            ? account.substring(0, 5) +
+              '...' +
+              account.substring(account.length - 4, account.length)
+            : account}
+        </p>
+      ) : (
+        ''
+      )}
     </div>
   )
 }
