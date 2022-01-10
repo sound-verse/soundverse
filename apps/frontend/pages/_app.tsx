@@ -3,7 +3,7 @@ import type { AppProps } from 'next/app'
 import { DAppProvider } from '@usedapp/core'
 import { AppProvider } from '../context/AppContext'
 import 'tailwindcss/tailwind.css'
-import './styles.css'
+import './styles.scss'
 import { ApolloClientProvider } from '../context/ApolloClientProvider'
 
 function MyApp({ Component, pageProps }: AppProps) {

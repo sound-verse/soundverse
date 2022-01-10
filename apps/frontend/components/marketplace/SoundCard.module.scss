@@ -1,0 +1,148 @@
+.soundcardWrapper {
+  position: relative;
+}
+.cardExterior {
+  top: 0;
+  left: 0;
+  height: 450px;
+  width: 300px;
+  border-radius: 19px;
+  background-color: #272727;
+  position: relative;
+  // border: 5px solid red;
+  margin: 0;
+}
+%cardInteriorBase {
+  top: 1%;
+  position: relative;
+  margin: 0 auto;
+  height: 88.88%;
+  width: 92.66%;
+  border-radius: 0px 8px 8px 8px;
+}
+.cardInteriorBasePurple {
+  @extend %cardInteriorBase;
+  background: #7c4dff;
+}
+.cardInteriorBaseWhite {
+  @extend %cardInteriorBase;
+  background: white;
+}
+%cardInteriorLeft {
+  clip-path: polygon(0 0, 45% 0, 55% 100%, 0% 100%);
+  top: 3%;
+  position: relative;
+  margin: 0 auto;
+  border-radius: 8px 0px 0px 0px;
+  width: 92.66%;
+  height: 6.66%;
+}
+.cardInteriorLeftPurple {
+  @extend %cardInteriorLeft;
+  background: #7c4dff;
+}
+.cardInteriorLeftWhite {
+  @extend %cardInteriorLeft;
+  background: white;
+}
+.addButton {
+  top: 2%;
+  right: 3%;
+  z-index: 100;
+  position: absolute;
+  cursor: pointer;
+  font-size: 120%;
+}
+.addButtonBg {
+  top: 2.5%;
+  right: 4%;
+  z-index: 1;
+  position: absolute;
+  background-color: white;
+  opacity: 10%;
+  width: 4.75%;
+  height: 3.25%;
+  border-radius: 50%;
+}
+.test {
+  width: 300px;
+  height: 300px;
+  z-index: 10;
+  // clip-path: polygon(0% 0%, 50% 0, 60% 13%, 100% 13%, 100% 100%, 0 100% round);
+  background-color: green;
+}
+%soundcard-item-abstract {
+  position: relative;
+  color: black;
+  z-index: 50;
+}
+.poundText {
+  @extend %soundcard-item-abstract;
+  position: absolute;
+  top: 4px;
+  left: 14px;
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: bold;
+  font-weight: 700;
+  line-height: 21px;
+}
+.titleText {
+  @extend %soundcard-item-abstract;
+}
+.nameText {
+  @extend %soundcard-item-abstract;
+  left: 12px;
+  top: 10px;
+  font-family: Poppins;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+}
+.albumText {
+  @extend %soundcard-item-abstract;
+}
+.lowestAskText {
+  @extend %soundcard-item-abstract;
+  position: absolute;
+  top: 65px;
+  left: 14px;
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 21px;
+}
+.avgSaleText {
+  @extend %soundcard-item-abstract;
+}
+
+.listingText {
+  @extend %soundcard-item-abstract;
+  position: absolute;
+  top: 40px;
+  left: 14px;
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 21px;
+}
+.imageWrapper {
+  @extend %soundcard-item-abstract;
+}
+.mplaceImage {
+  @extend %soundcard-item-abstract;
+  align-self: center;
+  margin: auto;
+  clip-path: inset(0px 0px 0px 0px round 0px 0px 10px 10px);
+  // border: 5px solid white;
+  width: 270px;
+  height: 270px;
+  // border: 1px solid green;
+  position: relative;
+  margin: 0 auto;
+  bottom: 270px;
+  // border: 5px solid blue;
+}

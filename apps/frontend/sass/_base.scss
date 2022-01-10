@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://www.dafontfree.net/embed/YW50aXF1ZS1vbGl2ZS1jb21wYWN0JmRhdGEvMjIvYS8xMTEwNjIvQVFDVC50dGY');
+
+@font-face {
+  font-family: 'intsh';
+  src: url('/intsh/intsh.ttf') format('truetype');
+}
+
+/* reset styles */
+* {
+  color: inherit;
+  margin: 0;
+}
+
+body {
+  font-family: 'Titillium Web', sans-serif;
+}
+
+ul {
+  padding: 0;
+  list-style-type: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+hr {
+  // border: 5px;
+  // border-top: 5px dotted #efefef;
+  margin: 5px;
+}
+
+img {
+  max-width: 100%;
+}
