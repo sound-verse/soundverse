@@ -8,7 +8,7 @@ import {
 } from '../../model/data/testData'
 import SoundCard from '../../components/marketplace/SoundCard'
 
-export default function Landing() {
+export default function Marketplace() {
   const [listDroppers, setListDroppers] = useState([])
   const [latestDrops, setLatestDrops] = useState([])
 
