@@ -3,7 +3,7 @@ const Footer = () => {
     <>
       <footer className="w-full px-6 border-t text-white">
         <div className="mx-auto py-6 flex flex-wrap md:flex-no-wrap justify-between items-center text-sm">
-          &copy;{new Date().getFullYear()} Linifty. All rights reserved.
+          &copy;{new Date().getFullYear()} Soundverse. All rights reserved.
           <div className="pt-4 md:p-0 text-center md:text-right text-xs">
             <a href="#" className="text-white no-underline hover:underline">
               Privacy Policy
