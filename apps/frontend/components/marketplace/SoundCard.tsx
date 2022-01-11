@@ -5,16 +5,8 @@ import { IoIosAddCircleOutline } from 'react-icons/io'
 import { Rarity } from '../../model/data/testData'
 
 function SoundCard(props) {
-  const {
-    pic,
-    name,
-    rarity,
-    title,
-    album,
-    lowest_ask,
-    avg_sale,
-    num_listings,
-  } = props.data
+  const { pic, name, rarity, title, album, lowestAsk, avgSale, numListings } =
+    props.data
   return (
     <div className={styles.soundcardWrapper}>
       <div className={styles.cardExterior}>
@@ -40,9 +32,9 @@ function SoundCard(props) {
           }
         >
           <p className={styles.nameText}>{name}</p>
-          <p className={styles.listingText}>{num_listings} listings</p>
+          <p className={styles.listingText}>{numListings} listings</p>
           <p className={styles.lowestAskText}>
-            Price: <b>{lowest_ask} </b>
+            Price: <b>{lowestAsk} </b>
           </p>
         </div>
         <div className={styles.mplaceImage}>

@@ -92,7 +92,7 @@ const Header = () => {
         <Link href="/marketplace" passHref>
           <p className={styles.marketplaceLink}>Marketplace</p>
         </Link>
-
+        <div className={styles.headerSpacer}></div>
         <div>
           <WalletButton />
         </div>

@@ -21,8 +21,8 @@ export const listDroppers = [
   },
 ]
 export enum Rarity {
-  White = 0,
-  Purple = 1,
+  WHITE = 0,
+  PURPLE = 1,
 }
 export type DropItem = {
   pic: string
@@ -54,7 +54,7 @@ export const latestDrops: DropItem[] = [
     lowest_ask: '$6,021.00',
     avg_sale: '$5,128,50',
     num_listings: 267,
-    rarity: Rarity.White,
+    rarity: Rarity.WHITE,
   },
   {
     pic: 'https://api.lorem.space/image/album?w=150&h=150&hash=A89D0DE6',
@@ -64,7 +64,7 @@ export const latestDrops: DropItem[] = [
     lowest_ask: '$6,021.00',
     avg_sale: '$5,128,50',
     num_listings: 267,
-    rarity: Rarity.Purple,
+    rarity: Rarity.PURPLE,
   },
   {
     pic: 'https://api.lorem.space/image/album?w=150&h=150&hash=9D9539E7',
@@ -74,7 +74,7 @@ export const latestDrops: DropItem[] = [
     lowest_ask: '$6,021.00',
     avg_sale: '$5,128,50',
     num_listings: 267,
-    rarity: Rarity.White,
+    rarity: Rarity.WHITE,
   },
   {
     pic: 'https://api.lorem.space/image/album?w=150&h=150&hash=4F32C4CF',
@@ -84,7 +84,7 @@ export const latestDrops: DropItem[] = [
     lowest_ask: '$6,021.00',
     avg_sale: '$5,128,50',
     num_listings: 267,
-    rarity: Rarity.Purple,
+    rarity: Rarity.PURPLE,
   },
   {
     pic: 'https://api.lorem.space/image/album?w=150&h=150&hash=8B7BCDC2',
@@ -94,6 +94,6 @@ export const latestDrops: DropItem[] = [
     lowest_ask: '$6,021.00',
     avg_sale: '$5,128,50',
     num_listings: 267,
-    rarity: Rarity.White,
+    rarity: Rarity.WHITE,
   },
 ]

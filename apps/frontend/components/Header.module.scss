@@ -22,14 +22,17 @@
   justify-self: center;
   cursor: pointer;
   color: white;
-  padding: 0px 40px 0px 40px;
+  padding: 0px 20px 0px 20px;
 }
 .soundverseText {
   position: relative;
   justify-self: center;
   cursor: pointer;
-  font-family: Poppins;
+  font-family: 'AQCT';
   color: #7c4dff;
+  font-size: 32px;
+  line-height: 38.4px;
+  font-weight: 400;
 }
 .headerSearchbar {
   flex-grow: 4;
@@ -51,6 +54,7 @@
 
 .headerSpacer {
   flex-grow: 1;
+  min-width: 10px;
 }
 .marketplaceLink {
   position: relative;
@@ -58,9 +62,12 @@
   cursor: pointer;
   font-family: Poppins;
   color: white;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 30px;
 }
 .connectButton {
-  margin: 50px;
+  margin-right: 50px;
   height: 50px;
   width: 200px;
   border-radius: 69px;
@@ -78,6 +85,11 @@
 }
 @media screen and (max-width: 768px) {
   .headerWrapper {
+    display: none;
+  }
+}
+@media screen and (max-width: 1000px) {
+  .soundverseText {
     display: none;
   }
 }
