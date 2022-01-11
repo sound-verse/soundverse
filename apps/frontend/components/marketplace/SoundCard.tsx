@@ -15,21 +15,13 @@ function SoundCard(props) {
     avg_sale,
     num_listings,
   } = props.data
-  const logMe = () => {
-    console.log(rarity)
-  }
   return (
     <div className={styles.soundcardWrapper}>
       <div className={styles.cardExterior}>
         <div className={styles.addButton}>
-          <IoIosAddCircleOutline
-            onClick={logMe}
-            color="white"
-            opacity={'80%'}
-          />
+          <IoIosAddCircleOutline color="white" opacity={'80%'} />
         </div>
         <div className={styles.addButtonBg}></div>
-        {/* <div className={styles.test}></div> */}
         <div
           className={
             rarity === 0
@@ -62,11 +54,6 @@ function SoundCard(props) {
             quality={100}
           />
         </div>
-
-        {/* <p className={styles.titleText}>{title}</p>
-        <p className={styles.albumText}>{album}</p>
-
-        <p className={styles.avgSaleText}>{avg_sale}</p> */}
       </div>
     </div>
   )
