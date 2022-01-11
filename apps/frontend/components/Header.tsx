@@ -79,7 +79,7 @@ const Header = () => {
             <CgMenuGridO size={70} />
           </span>
         </Link>
-        <Link href="/landing" passHref>
+        <Link href="/marketplace" passHref>
           <p className={styles.soundverseText}>Soundverse</p>
         </Link>
         <div className={styles.headerSpacer} />
