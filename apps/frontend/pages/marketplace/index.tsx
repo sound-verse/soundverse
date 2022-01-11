@@ -97,7 +97,10 @@ export default function Landing() {
 
           <div className="row">
             {latestDrops.map((data, key) => (
-              <div className="col-12-sm col-6-md col-4-lg col-3-xl">
+              <div
+                className="col-12-sm col-6-md col-4-lg col-3-xl"
+                key={`soundcard-wrapper-${key}`}
+              >
                 <div className="spacer">
                   <SoundCard data={data} key={key} />
                 </div>
