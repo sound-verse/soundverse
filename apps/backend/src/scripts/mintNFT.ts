@@ -1,5 +1,6 @@
 import Web3 from 'web3';
 import ERC1155ContractAbi from '../blockchain/abis/ERC1155Contract.abi.json';
+import { utils } from 'ethers';
 
 //Usage: ../../node_modules/.bin/ts-node ./src/scripts/mintNFT.ts
 
@@ -7,20 +8,29 @@ require('dotenv').config();
 
 const main = async () => {
   const web3 = new Web3('https://matic-mumbai.chainstacklabs.com');
-  const contractAddress = process.env.ERC155_CONTRACT_ADDRESS;
+  const contractAddress = '0xd00Bb2fe207486753712C9A41374E15c2A828e57';
+  //For test purposes only!
+  const walletAddress = '';
+  const privateKey = '';
 
   const contract = new web3.eth.Contract(ERC1155ContractAbi as any, contractAddress);
 
-  //to, id, minturi, amount, data
-  const mint = await contract.methods.mint(
-    '0xE39569EF2A516f0CA065a8dA698C79EE739D02c1',
-    1,
-    'https://someipfsurl.com',
-    1,
-    '',
-  );
+  const nonce = await web3.eth.getTransactionCount(walletAddress, 'latest'); //get latest nonce
 
-  console.log(mint);
+  const tx = {
+    from: walletAddress,
+    to: contractAddress,
+    nonce: nonce,
+    gas: 500000,
+    maxPriorityFeePerGas: 1999999987,
+    //to, id, minturi, amount, data
+    data: contract.methods.mint(walletAddress, 1, 'https://ipfsUrl.com', 1, 3).encodeABI(),
+  };
+
+  const signedTx = await web3.eth.accounts.signTransaction(tx, privateKey);
+  const transactionReceipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+
+  console.log(`Transaction receipt: ${JSON.stringify(transactionReceipt)}`);
 };
 
 try {
