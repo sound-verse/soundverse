@@ -1,8 +1,15 @@
-.marketplace-wrapper {
+.big-wrapper {
   width: 100%;
-  margin-top: 0 auto;
 }
-
+.marketplace-wrapper {
+  display: block;
+  width: 82%;
+  float: right;
+}
+.col-6-md {
+  justify-content: center;
+  align-items: center;
+}
 .sale-buttons {
   font-family: Poppins;
   font-size: 24px;
@@ -55,9 +62,6 @@
     height: 50px;
     position: relative;
   }
-}
-.spacer {
-  padding: 50px;
 }
 @media screen and (max-width: 768px) {
 }

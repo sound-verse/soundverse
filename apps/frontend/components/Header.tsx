@@ -1,15 +1,10 @@
 import Link from 'next/link'
-import { UnsupportedChainIdError } from '@web3-react/core'
 import { useEthers } from '@usedapp/core/'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
-import Button from './common/Button'
-import { formatDiagnosticsWithColorAndContext } from 'typescript'
 import { useLogin } from '../hooks/useLogin'
 import styles from './Header.module.scss'
-import Image from 'next/image'
 import { CgMenuGridO } from 'react-icons/cg'
-// import {IoSearchSharp} from 'react-icons/io'
 
 const WalletButton = () => {
   const {
@@ -92,7 +87,6 @@ const Header = () => {
         <Link href="/marketplace" passHref>
           <p className={styles.marketplaceLink}>Marketplace</p>
         </Link>
-        <div className={styles.headerSpacer}></div>
         <div>
           <WalletButton />
         </div>

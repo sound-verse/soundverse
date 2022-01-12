@@ -8,7 +8,7 @@ export default function Layout({ children }) {
       <Header />
       <div className="w-full container mx-auto">{children}</div>
       {/* <MusicPlayer /> */}
-      <Footer />
+      {/* <Footer /> */}
     </div>
   )
 }
