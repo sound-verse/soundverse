@@ -17,6 +17,7 @@ export interface CreateNftInput {
   contractAddress: string;
   ipfsUrl: string;
   fileUrl: string;
+  filePictureUrl: string;
   user: User;
   supply: number;
 }
@@ -40,6 +41,7 @@ export class NftService {
         contractAddress: createNftInput.contractAddress.toLowerCase(),
         ipfsUrl: createNftInput.ipfsUrl,
         fileUrl: createNftInput.fileUrl,
+        filePictureUrl: createNftInput.filePictureUrl,
         creator: createNftInput.user,
         owners: [
           {

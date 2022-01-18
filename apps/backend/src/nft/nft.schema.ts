@@ -78,6 +78,10 @@ export class Nft extends BaseDBObject {
   @Expose()
   fileUrl: string;
 
+  @Prop()
+  @Expose()
+  filePictureUrl: string;
+
   @Prop({ default: () => Date.now() })
   createdAt?: Date;
 }
