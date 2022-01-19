@@ -2,11 +2,7 @@ import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/g
 import { NftService } from './nft.service';
 import { Nft } from './dto/output/nft.output';
 import { GraphQLUpload, FileUpload } from 'graphql-upload';
-import FileType from 'file-type';
-import { pipeline, Stream } from 'stream';
-import fs from 'fs';
-import FormData from 'form-data';
-import { S3Service } from '../file/s3.service';
+import { FileService } from '../file/file.service';
 import crypto from 'crypto';
 import { NftInput } from './dto/input/create-nft.input';
 import { IPFSService } from '../ipfs/ipfs.service';
@@ -23,7 +19,7 @@ import { User } from '../user/user.schema';
 export class NftResolver {
   constructor(
     private nftService: NftService,
-    private s3Service: S3Service,
+    private fileService: FileService,
     private ipfsService: IPFSService,
     private configService: ConfigService,
     private userService: UserService,
@@ -33,33 +29,23 @@ export class NftResolver {
   @Mutation(() => Nft)
   async createNft(
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    @Args({ name: 'file', type: () => GraphQLUpload })
-    { createReadStream, filename }: FileUpload,
+    @Args({ name: 'NFTFile', type: () => GraphQLUpload })
+    { createReadStream: createReadStreamNFT }: FileUpload,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    @Args({ name: 'pictureFile', type: () => GraphQLUpload })
+    { createReadStream: createReadStreamPicture }: FileUpload,
     @Args('data') nftData: NftInput,
     @CurrentUser() user: LoggedinUser,
   ): Promise<NftSchema> {
     const bucket = 'soundverse-nft';
     const rndFileName = crypto.randomBytes(32).toString('hex');
-
-    const writeStream = new Stream.PassThrough();
-    const fileTypeStream = await FileType.stream(createReadStream());
-
-    const uploadFile = this.s3Service.uploadFile(writeStream, rndFileName, bucket, {
-      ACL: 'public-read',
-      ContentType: fileTypeStream.fileType.mime,
-    });
-
-    await new Promise(
-      (resolve, reject) =>
-        void fileTypeStream
-          .pipe(writeStream)
-          .on('finish', () => resolve(true))
-          .on('error', (e) => reject(e)),
+    const fileUrl = await this.fileService.uploadFileToBucket(rndFileName, bucket, createReadStreamNFT);
+    const filePictureUrl = await this.fileService.uploadFileToBucket(
+      `cover/${rndFileName}`,
+      bucket,
+      createReadStreamPicture,
     );
-
-    await uploadFile;
-
-    const awsReadStream = this.s3Service.getFileReadStream(bucket, rndFileName);
+    const awsReadStream = this.fileService.getAWSReadStream(bucket, rndFileName);
 
     const { ipfsMetadata, ipfsMetadataUrl, metadata } = await this.ipfsService.storeNFTonIPFS(
       awsReadStream,
@@ -77,7 +63,8 @@ export class NftResolver {
         metadata,
         ipfsUrl: ipfsMetadataUrl,
         contractAddress: this.configService.get('ERC155_CONTRACT_ADDRESS'),
-        fileUrl: `${this.configService.get('INTERNAL_FILE_URL_BASE_NFT')}/${rndFileName}`,
+        fileUrl,
+        filePictureUrl,
         user,
         supply: nftData.supply,
       });

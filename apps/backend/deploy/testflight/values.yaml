@@ -160,5 +160,5 @@ env:
     value: 'https://gateway.pinata.cloud/ipfs'
   - name: METADATA_EXTERNAL_URL_BASE
     value: 'https://app.soundverse.io'
-  - name: INTERNAL_FILE_URL_BASE_NFT
-    value: 'https://soundverse-nft.ams3.digitaloceanspaces.com'
+  - name: INTERNAL_FILE_URL_BASE
+    value: 'https://{bucket}.ams3.digitaloceanspaces.com'

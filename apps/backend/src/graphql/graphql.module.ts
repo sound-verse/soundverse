@@ -116,7 +116,7 @@ export interface GqlConnectionContext {
 export class GraphqlModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(graphqlUploadExpress({ maxFileSize: 1024 * 1024 * 100, maxFiles: 1 }))
+      .apply(graphqlUploadExpress({ maxFileSize: 1024 * 1024 * 100, maxFiles: 2 }))
       .forRoutes('graphql');
   }
 }
