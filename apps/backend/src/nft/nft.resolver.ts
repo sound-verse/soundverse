@@ -41,7 +41,7 @@ export class NftResolver {
     const rndFileName = crypto.randomBytes(32).toString('hex');
     const fileUrl = await this.fileService.uploadFileToBucket(rndFileName, bucket, createReadStreamNFT);
     const filePictureUrl = await this.fileService.uploadFileToBucket(
-      `${rndFileName}-cover`,
+      `cover/${rndFileName}`,
       bucket,
       createReadStreamPicture,
     );
