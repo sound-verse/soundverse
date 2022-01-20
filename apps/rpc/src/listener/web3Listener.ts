@@ -3,9 +3,9 @@ import ERC1155ContractAbi from '../blockchain/abis/ERC1155Contract.abi.json';
 
 require('dotenv').config()
 
-const web3 = new Web3('ws://127.0.0.1:8545/');
-
-const CONTRACT_ADDRESS = "0x5fc8d32690cc91d4c39d9d3abcbd16989f875707";
+const web3 = new Web3(process.env.RPC_URL);
+// For local testing, enter your local ERC1155 contract address
+const CONTRACT_ADDRESS = process.env.ERC1155_CONTRACT_ADDRESS;
 const contract = new web3.eth.Contract(ERC1155ContractAbi as any, CONTRACT_ADDRESS);
 
 async function getEvents() {
