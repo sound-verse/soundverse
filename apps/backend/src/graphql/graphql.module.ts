@@ -4,7 +4,6 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { User } from '../user/user.schema';
-import { JsonScalar } from './scalars/json.scalar';
 import { ApolloServerPluginCacheControl } from 'apollo-server-core';
 import { graphqlUploadExpress } from 'graphql-upload';
 
