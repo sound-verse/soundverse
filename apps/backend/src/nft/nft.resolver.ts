@@ -23,7 +23,7 @@ export class NftResolver {
     private ipfsService: IPFSService,
     private configService: ConfigService,
     private userService: UserService,
-  ) {}
+  ) { }
 
   @UseGuards(GqlAuthGuard)
   @Mutation(() => Nft)
@@ -37,9 +37,10 @@ export class NftResolver {
     @Args('data') nftData: NftInput,
     @CurrentUser() user: LoggedinUser,
   ): Promise<NftSchema> {
-    const bucket = 'soundverse-nft';
-    const rndFileName = crypto.randomBytes(32).toString('hex');
-    const fileUrl = await this.fileService.uploadFileToBucket(rndFileName, bucket, createReadStreamNFT);
+    createReadStreamPicture
+    const bucket: string = 'soundverse-nft';
+    const rndFileName: string = crypto.randomBytes(32).toString('hex');
+    const fileNFTUrl = await this.fileService.uploadFileToBucket(rndFileName, bucket, createReadStreamNFT);
     const filePictureUrl = await this.fileService.uploadFileToBucket(
       `cover/${rndFileName}`,
       bucket,
@@ -63,7 +64,7 @@ export class NftResolver {
         metadata,
         ipfsUrl: ipfsMetadataUrl,
         contractAddress: this.configService.get('ERC155_CONTRACT_ADDRESS'),
-        fileUrl,
+        fileUrl: fileNFTUrl,
         filePictureUrl,
         user,
         supply: nftData.supply,
