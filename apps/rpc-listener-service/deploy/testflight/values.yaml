@@ -121,3 +121,5 @@ env:
         key: mongodb-ca
   - name: PORT
     value: '80'
+  - name: RPC_URL
+    value: 'https://matic-mumbai.chainstacklabs.com'
