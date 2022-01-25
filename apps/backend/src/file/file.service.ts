@@ -8,7 +8,6 @@ import { S3Service } from './s3.service';
 const pictureFilenameStart = "cover";
 const allowedPicturesRegEx = new RegExp("([a-zA-Z0-9\\s_\\.\\-\\(\\):])+(.jpg|.jpeg|.png|.gif)$");
 const allowedMusicNftsRegEx = new RegExp("([a-zA-Z0-9\\s_\\.\\-\\(\\):])+(.mp3|.wave|.wav|.flac)$");
-const maxAllowedFileSize = 1000000;
 
 @Injectable()
 export class FileService {
@@ -18,7 +17,6 @@ export class FileService {
     const writeStream = new Stream.PassThrough();
     const fileTypeStream = await FileType.stream(createReadStream());
 
-    this.validateFileSize(fileName, fileTypeStream);
     this.validateFileToUpload(fileName, fileTypeStream);
 
     const uploadFile = this.s3Service.uploadFile(writeStream, fileName, bucket, {
@@ -34,18 +32,8 @@ export class FileService {
           .on('error', (e) => reject(e)),
     );
 
+    console.log("File wird trotzdem hochgeladen")
     return await uploadFile;
-  }
-
-  private async validateFileSize(fileName: string, fileTypeStream) {
-    let byteLength = 0;
-    for await (const uploadChunk of fileTypeStream) {
-      byteLength += (uploadChunk as Buffer).byteLength;
-      if (byteLength > maxAllowedFileSize) {
-        throw new NotAcceptableException("File with name " + fileName + " is too large to upload. Maximum allowed filesize is " + maxAllowedFileSize / 10000 + "MB.");
-      }
-    }
-    fileTypeStream.destroy();
   }
 
   private validateFileToUpload(fileName: string, fileTypeStream) {
