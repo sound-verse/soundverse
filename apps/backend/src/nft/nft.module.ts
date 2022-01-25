@@ -7,7 +7,6 @@ import { S3Service } from '../file/s3.service';
 import { CoreModule } from '../core/core.module';
 import { IPFSModule } from '../ipfs/ifps.module';
 import { FileService } from '../file/file.service';
-import { UserService } from '../user/user.service';
 import { UserModule } from '../user/user.module';
 
 @Module({
