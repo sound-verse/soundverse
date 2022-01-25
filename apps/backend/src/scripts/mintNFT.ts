@@ -8,7 +8,7 @@ require('dotenv').config();
 
 const main = async () => {
   const web3 = new Web3('http://127.0.0.1:8545/');
-  const contractAddress = '0x5fc8d32690cc91d4c39d9d3abcbd16989f875707';
+  const contractAddress = '0xdc64a140aa3e981100a9beca4e685f962f0cf6c9';
   //For test purposes only!
   const walletAddress = '0x70997970C51812dc3A010C7d01b50e0d17dc79C8';
   const privateKey = '59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d';
@@ -24,7 +24,7 @@ const main = async () => {
     gas: 500000,
     maxPriorityFeePerGas: 1999999987,
     //to, id, minturi, amount, data
-    data: contract.methods.mint(walletAddress, 20, 'https://ipfsUrl.com', 1, 3).encodeABI(),
+    data: contract.methods.mint(walletAddress, 11, 'https://ipfsUrl.com/11', 1, 3).encodeABI(),
   };
 
   const signedTx = await web3.eth.accounts.signTransaction(tx, privateKey);
