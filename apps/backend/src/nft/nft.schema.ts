@@ -4,7 +4,6 @@ import { Expose } from 'class-transformer';
 import { BaseDBObject } from '../BaseDBObject';
 import * as mongoose from 'mongoose';
 import { User } from '../user/user.schema';
-import { Int } from '@nestjs/graphql';
 
 export type NftDocument = Nft & Document<Types.ObjectId>;
 

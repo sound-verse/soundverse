@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import pinataSDK from '@pinata/sdk';
 import FormData from 'form-data';
 import { HttpService } from '@nestjs/axios';
-import axios, { AxiosPromise, AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { AxiosRequestConfig } from 'axios';
 import { CreateNftMetadata } from '../nft/nft.service';
 import ipfsHasher from 'ipfs-only-hash';

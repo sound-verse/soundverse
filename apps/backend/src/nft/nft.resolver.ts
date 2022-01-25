@@ -38,7 +38,7 @@ export class NftResolver {
     @CurrentUser() user: LoggedinUser,
   ): Promise<NftSchema> {
     createReadStreamPicture
-    const bucket: string = 'soundverse-nft';
+    const bucket = 'soundverse-nft';
     const rndFileName: string = crypto.randomBytes(32).toString('hex');
     const fileNFTUrl = await this.fileService.uploadFileToBucket(rndFileName, bucket, createReadStreamNFT);
     const filePictureUrl = await this.fileService.uploadFileToBucket(
