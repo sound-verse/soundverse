@@ -32,15 +32,14 @@ export class FileService {
           .on('error', (e) => reject(e)),
     );
 
-    console.log("File wird trotzdem hochgeladen")
     return await uploadFile;
   }
 
   private validateFileToUpload(fileName: string, fileTypeStream) {
     if (fileName.startsWith(pictureFilenameStart) && !fileTypeStream.fileType.mime.match(allowedPicturesRegEx)) {
-      throw new NotAcceptableException('Picture file of type ' + fileTypeStream.fileType.mime.toString() + ' is not acceptable for this parameter.');
+      throw new NotAcceptableException(`Picture file of type ${fileTypeStream.fileType.mime.toString()} is not acceptable for this parameter.`);
     } else if (!fileName.startsWith(pictureFilenameStart) && !fileTypeStream.fileType.mime.match(allowedMusicNftsRegEx)) {
-      throw new NotAcceptableException('Music NFT file of type ' + fileTypeStream.fileType.mime.toString() + ' is not acceptable for this parameter.');
+      throw new NotAcceptableException(`Music NFT file of type ${fileTypeStream.fileType.mime.toString()} is not acceptable for this parameter.`);
     }
   }
 
