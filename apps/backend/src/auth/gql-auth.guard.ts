@@ -4,7 +4,6 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApolloError } from 'apollo-server-express';
 import { GqlContext } from '../graphql/graphql.module';
 import { LoggedinUser } from '../user/decorators/user.decorator';
-import * as _ from 'lodash';
 
 type Strategy = 'jwt';
 
