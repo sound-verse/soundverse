@@ -19,7 +19,7 @@ on:
       - ".eslintignore"
 
 jobs:
-  api-build-and-deploy:
+  rpc-listener-service-build-and-deploy:
     runs-on: ubuntu-latest
     env:
       working-directory: ./apps/rpc-listener-service
