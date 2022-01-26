@@ -21,7 +21,7 @@ FROM node:16-alpine
 
 RUN apk --no-cache add git
 
-ENV NODE_ENV testflight
+ENV NODE_ENV production
 
 WORKDIR /home/node
 

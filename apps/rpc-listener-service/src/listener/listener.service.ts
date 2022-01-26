@@ -1,7 +1,6 @@
 import { Injectable, OnApplicationBootstrap, OnModuleDestroy } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Web3 from 'web3';
-import config from 'config';
 import ERC1155ContractAbi from '../blockchain/abis/ERC1155Contract.abi.json';
 import _ from 'lodash';
 
@@ -9,11 +8,9 @@ import _ from 'lodash';
 export class ListenerService implements OnApplicationBootstrap, OnModuleDestroy {
   private web3: Web3;
   private options;
-  private config;
 
   constructor(private configService: ConfigService) {
     this.web3 = new Web3(configService.get('RPC_URL'));
-    this.config = config.get('RPCListenerConfig');
   }
 
   async onApplicationBootstrap() {
@@ -40,7 +37,9 @@ export class ListenerService implements OnApplicationBootstrap, OnModuleDestroy 
   }
 
   listen() {
-    this.config.ContractEvents.forEach((contractEvent) => {
+    const contractEvents =
+      this.configService.get('RPCListenerConfig')[this.configService.get('ENVIRONMENT')].contractEvents;
+    contractEvents.forEach((contractEvent) => {
       const abi = this.parseAbi(contractEvent.type);
       if (!abi) {
         return;
