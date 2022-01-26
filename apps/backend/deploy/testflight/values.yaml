@@ -104,9 +104,7 @@ affinity:
 # env -- Environment variables for the application.
 env:
   - name: NODE_ENV
-    value: production
-  - name: ENVIRONMENT
-    value: production
+    value: testflight
   - name: SERVICE_NAME
     value: backend
   - name: NODE_OPTIONS

@@ -4,7 +4,7 @@ ENV NODE_ENV build
 
 WORKDIR /home/node
 
-COPY apps/backend/package.json /home/node/apps/backend/package.json
+COPY apps/rpc-listener-service/package.json /home/node/apps/rpc-listener-service/package.json
 COPY shared/eslint-config/package.json /home/node/shared/eslint-config/package.json
 COPY package.json yarn.lock lerna.json ./
 
@@ -14,7 +14,7 @@ COPY . .
 
 RUN ls -la
 
-RUN ./node_modules/.bin/lerna run build --scope @soundverse/app-api
+RUN ./node_modules/.bin/lerna run build --scope @soundverse/app-rpc-listener-service
 # ---
 
 FROM node:16-alpine
@@ -25,17 +25,17 @@ ENV NODE_ENV testflight
 
 WORKDIR /home/node
 
-COPY apps/backend/package.json /home/node/apps/backend/package.json
+COPY apps/rpc-listener-service/package.json /home/node/apps/rpc-listener-service/package.json
 COPY shared/eslint-config/package.json /home/node/shared/eslint-config/package.json
 COPY package.json yarn.lock lerna.json ./
 
 RUN yarn install --frozen-lockfile --non-interactive --production --ignore-scripts --no-cache
 
-COPY --from=builder /home/node/apps/backend/dist/ /home/node/apps/backend/dist
+COPY --from=builder /home/node/apps/rpc-listener-service/dist/ /home/node/apps/rpc-listener-service/dist
 COPY --from=builder /home/node/shared/ /home/node/shared
 
-WORKDIR /home/node/apps/backend
+WORKDIR /home/node/apps/rpc-listener-service
 
-EXPOSE 8001
+EXPOSE 8002
 
 CMD ["node", "dist/main.js"]

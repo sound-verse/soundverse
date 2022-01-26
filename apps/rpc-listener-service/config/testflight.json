@@ -1,0 +1,12 @@
+{
+  "RPCListenerConfig": {
+    "ContractEvents": [
+      {
+        "contractAddress": "0xf3EFc648D3D3AaA49137e2aE456bce2CeCe7Ced7",
+        "listensTo": ["TransferSingle"],
+        "type": "ERC1155",
+        "version": "0.1"
+      }
+    ]
+  }
+}

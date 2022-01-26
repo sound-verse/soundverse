@@ -7,14 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { IPFSModule } from './ipfs/ifps.module';
 import { NftModule } from './nft/nft.module';
 @Module({
-  imports: [
-    CoreModule,
-    GraphqlModule,
-    UserModule,
-    AuthModule,
-    IPFSModule,
-    NftModule,
-  ],
+  imports: [CoreModule, GraphqlModule, UserModule, AuthModule, IPFSModule, NftModule],
   controllers: [AppController],
   providers: [],
 })
