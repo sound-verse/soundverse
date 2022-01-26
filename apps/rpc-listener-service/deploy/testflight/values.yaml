@@ -122,4 +122,4 @@ env:
   - name: PORT
     value: '80'
   - name: RPC_URL
-    value: 'https://matic-mumbai.chainstacklabs.com'
+    value: 'wss://bold-lively-wave.matic-testnet.quiknode.pro/a44093358d2164fa6f0e82d6c06fe808ed6e8854/'
