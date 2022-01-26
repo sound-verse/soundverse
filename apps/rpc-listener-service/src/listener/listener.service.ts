@@ -27,7 +27,7 @@ export class ListenerService implements OnApplicationBootstrap, OnModuleDestroy 
   }
 
   onModuleDestroy() {
-    console.log(`Listener service shutted down at block number: ${this.getLatestBlock()}`);
+    console.log(`Listener service shut down at block number: ${this.getLatestBlock()}`);
   }
 
   async getLatestBlock(): Promise<number> {
