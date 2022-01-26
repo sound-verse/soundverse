@@ -6,7 +6,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "build": "rimraf dist && tsc -b",
+    "build": "rimraf dist && rm tsconfig.tsbuildinfo && tsc -b",
     "dev": "tsc-watch -b --noClear --onSuccess \"node ./dist/main.js\"",
     "start:debug": "tsc-watch -b --onSuccess \"node --inspect-brk dist/main.js\"",
     "start": "node dist/main.js",
