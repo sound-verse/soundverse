@@ -17,13 +17,18 @@ export class ListenerService implements OnApplicationBootstrap, OnModuleDestroy 
   }
 
   async onApplicationBootstrap() {
-    this.options = {
-      filter: {
-        value: [],
-      },
-      fromBlock: await this.getLatestBlock(),
-    };
-    this.listen();
+    try {
+      this.options = {
+        filter: {
+          value: [],
+        },
+        fromBlock: await this.getLatestBlock(),
+      };
+
+      this.listen();
+    } catch (e) {
+      console.log('ERROR: could not connect to RPC node!', e);
+    }
   }
 
   onModuleDestroy() {
