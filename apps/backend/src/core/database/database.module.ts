@@ -9,7 +9,7 @@ import fs from 'fs';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        if (configService.get<string>('NODE_ENV') === 'local') {
+        if (configService.get<string>('ENVIRONMENT') === 'local') {
           return { uri: configService.get<string>('MONGODB_URI') };
         }
 
