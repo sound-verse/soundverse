@@ -33,8 +33,14 @@ export class NftService {
     const nextNft = await this.nftModel.find({}, { tokenId: 1, _id: 0 }).sort({ tokenId: -1 }).limit(1);
     const nextId = nextNft[0] ? nextNft[0].tokenId + 1 : 1;
 
+    let ipfsUrl = createNftInput.ipfsUrl;
+
+    if (this.configService.get<string>('ENVIRONMENT') === 'local') {
+      ipfsUrl =  createNftInput.fileUrl;
+    }
+
     const newNft = await this.nftModel.findOneAndUpdate(
-      { ipfsUrl: createNftInput.ipfsUrl, contractAddress: createNftInput.contractAddress.toLowerCase() },
+      { ipfsUrl, contractAddress: createNftInput.contractAddress.toLowerCase() },
       {
         metadata: createNftInput.metadata,
         tokenId: nextId,
@@ -73,6 +79,17 @@ export class NftService {
       { tokenId: nftData.tokenId, contractAddress: nftData.contractAddress.toLowerCase() },
       { ...nftData },
       { new: true },
+    );
+  }
+
+  async verifyNft(tokenId: number, contractAddress: string): Promise<void> {
+    await this.nftModel.updateOne(
+      { tokenId, contractAddress: contractAddress.toLowerCase() },
+      {
+        $set: {
+          verified: true,
+        },
+      },
     );
   }
 

@@ -3,8 +3,9 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
-    "allowJs": true
+    "allowJs": false
   },
-  "include": ["src", "src/**/*.json"],
-  "exclude": ["node_modules", "**/*.spec.ts"]
+  "include": ["src", "src/**/*.json", "../event-service/src/event/blockchain"],
+  "exclude": ["node_modules", "**/*.spec.ts"],
+  "references": [{ "path": "../../shared/shared-rpc-listener-service" }]
 }

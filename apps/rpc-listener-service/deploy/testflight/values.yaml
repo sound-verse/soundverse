@@ -77,8 +77,8 @@ resources:
 
 autoscaling:
   enabled: true
-  minReplicas: 2
-  maxReplicas: 3
+  minReplicas: 1
+  maxReplicas: 1
 targetCPUUtilizationPercentage: 80
 targetMemoryUtilizationPercentage: 80
 
@@ -123,3 +123,14 @@ env:
     value: '80'
   - name: RPC_URL
     value: 'wss://bold-lively-wave.matic-testnet.quiknode.pro/a44093358d2164fa6f0e82d6c06fe808ed6e8854/'
+  - name: RABBITMQ_USER
+    value: 'user'
+  - name: RABBITMQ_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: rabbitmq-password-soundverse-testflight
+        key: rabbitmq-password
+  - name: RABBITMQ_HOST
+    value: '127.0.0.1:5672'
+  - name: RABBITMQ_QUEUE_NAME
+    value: 'sc-blockchain-events-testflight'
