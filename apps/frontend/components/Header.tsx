@@ -22,15 +22,15 @@ const Header = () => {
     }
     const [showDropdown, setShowDropdown] = useState(false)
     const WalletDropDown = ({ open }) => {
-      console.log(open.open)
       return open ? (
         <div className={styles.dropdownWrapper}>
           <div className={styles.dropdownRect}>
             <div className={styles.dropdownText}>
-              <Link href={'/profile'}>My profile</Link>
+              {/*These links need dynamic path logic*/}
+              <Link href={'/profile[id]'}>My profile</Link>
             </div>
             <div className={styles.dropdownText}>
-              <Link href={'/collection'}>My collection</Link>
+              <Link href={'/collection[id]'}>My collection</Link>
             </div>
             <hr className={styles.ddhr}></hr>
             <div className={styles.dropdownText}>
@@ -84,7 +84,6 @@ const Header = () => {
             if (!account) {
               // await activateBrowserWallet(onError)
               setShowDropdown(!showDropdown)
-              console.log(showDropdown)
             } else {
               //currently we're showing the dropdown when account is not connected
               //this is because Coltrane cannot run the monorepo
