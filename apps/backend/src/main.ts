@@ -26,9 +26,9 @@ async function bootstrap() {
     transport: Transport.RMQ,
     options: {
       urls: [
-        `amqp://${configService.get<string>('RABBITMQ_USER')}:${configService.get<string>(
+        `amqp://${configService.get('RABBITMQ_USER')}:${configService.get(
           'RABBITMQ_PASSWORD',
-        )}@${configService.get<string>('RABBITMQ_HOST')}`,
+        )}@${configService.get('RABBITMQ_HOST')}`,
       ],
       queue: configService.get<string>('RABBITMQ_QUEUE_NAME'),
       noAck: false,
