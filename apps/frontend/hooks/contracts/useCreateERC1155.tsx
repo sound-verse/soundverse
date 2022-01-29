@@ -40,7 +40,7 @@ function useCreateERC1155(nftFile, pictureFile, name, description, setShowing) {
     {}
   )
 
-  const handleMintClick = async () => {
+  const handleMintClick: any = async () => {
     if (isConnected) {
       const formData = new FormData()
       formData.append(
@@ -74,7 +74,6 @@ function useCreateERC1155(nftFile, pictureFile, name, description, setShowing) {
       const tokenId: number = response.data.data.createNft.tokenId
       const ipfsUrl: string = response.data.data.createNft.ipfsUrl
 
-      console.log(tokenId, ipfsUrl)
       try {
         mintSend(
           account,
