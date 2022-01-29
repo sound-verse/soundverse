@@ -1,6 +1,6 @@
 module.exports = {
   images: {
-    domains: ['api.lorem.space'],
+    domains: ['localhost', 'digitaloceanspaces.com'],
   },
   async redirects() {
     return [

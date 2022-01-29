@@ -36,7 +36,7 @@ export class NftService {
     let ipfsUrl = createNftInput.ipfsUrl;
 
     if (this.configService.get<string>('ENVIRONMENT') === 'local') {
-      ipfsUrl =  createNftInput.fileUrl;
+      ipfsUrl = createNftInput.fileUrl;
     }
 
     const newNft = await this.nftModel.findOneAndUpdate(
@@ -94,6 +94,6 @@ export class NftService {
   }
 
   async getNfts(): Promise<Nft[]> {
-    return this.nftModel.find();
+    return this.nftModel.find({ verified: true });
   }
 }

@@ -11,11 +11,15 @@ import axios from 'axios'
 import Cookies from 'js-cookie'
 
 const erc115ABI = SoundVerseERC1155.abi
-const contractaddress = '0xf3EFc648D3D3AaA49137e2aE456bce2CeCe7Ced7'
+const contractaddress = process.env.NEXT_PUBLIC_ERC1155_CONTRACT_ADDRESS
 
 const CREATE_NFT = gql`
-  mutation createNft($file: Upload!, $data: NftInput!) {
-    createNft(file: $file, data: $data) {
+  mutation createNft(
+    $NFTFile: Upload!
+    $pictureFile: Upload!
+    $data: NftInput!
+  ) {
+    createNft(NFTFile: $NFTFile, pictureFile: $pictureFile, data: $data) {
       tokenId
       ipfsUrl
       fileUrl
@@ -23,7 +27,7 @@ const CREATE_NFT = gql`
   }
 `
 
-function useCreateERC1155(file, name, description, setShowing) {
+function useCreateERC1155(nftFile, pictureFile, name, description, setShowing) {
   const { account } = useEthers()
   const isConnected = account !== undefined
   const ercInterface = new utils.Interface(erc115ABI)
@@ -36,10 +40,7 @@ function useCreateERC1155(file, name, description, setShowing) {
     {}
   )
 
-  const handleMintClick = async (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    e.preventDefault
+  const handleMintClick = async () => {
     if (isConnected) {
       const formData = new FormData()
       formData.append(
@@ -55,10 +56,12 @@ function useCreateERC1155(file, name, description, setShowing) {
       formData.append(
         'map',
         JSON.stringify({
-          '0': ['variables.file'],
+          '0': ['variables.NFTFile'],
+          '1': ['variables.pictureFile'],
         })
       )
-      formData.append('0', file)
+      formData.append('0', nftFile)
+      formData.append('1', pictureFile)
 
       const response = await axios.request({
         method: 'POST',
@@ -68,11 +71,17 @@ function useCreateERC1155(file, name, description, setShowing) {
           Authorization: `Bearer ${Cookies.get('JWT_TOKEN')}`,
         },
       })
+      const tokenId: number = response.data.data.createNft.tokenId
+      const ipfsUrl: string = response.data.data.createNft.ipfsUrl
 
+      console.log(tokenId, ipfsUrl)
       try {
         mintSend(
           account,
-          response.data.data.createNft.tokenId,
+          tokenId,
+          process.env.NEXT_PUBLIC_ENVIRONMENT === 'local'
+            ? tokenId.toString()
+            : ipfsUrl,
           1,
           utils.randomBytes(3)
         )
@@ -81,18 +90,6 @@ function useCreateERC1155(file, name, description, setShowing) {
       toast('Please Connect Wallet')
     }
   }
-
-  useEffect(() => {
-    if (mintState.status == 'Success') {
-      toast(mintState.status)
-    }
-    if (mintState.status == 'Exception') {
-      toast(mintState.errorMessage)
-    }
-    if (mintState.status == 'Mining') {
-      setShowing(true)
-    }
-  }, [mintState.status])
 
   return [handleMintClick, mintState]
 }

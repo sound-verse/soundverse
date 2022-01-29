@@ -10,6 +10,34 @@ import {
   DropItem,
 } from '../../model/data/testData'
 import SoundCard from '../../components/marketplace/SoundCard'
+import { gql, useQuery } from '@apollo/client'
+
+const GET_NFTS = gql`
+  query getNfts {
+    nfts {
+      tokenId
+      contractAddress
+      fileUrl
+      filePictureUrl
+      ipfsUrl
+      transactionHash
+      metadata {
+        name
+        description
+      }
+      creator {
+        id
+        name
+        ethAddress
+        profileImage
+      }
+      owners {
+        ethAddress
+        supply
+      }
+    }
+  }
+`
 
 export default function Landing() {
   const [input, setInput] = useState('')
@@ -17,8 +45,11 @@ export default function Landing() {
     DropItem[] | undefined
   >()
   const [dropList, setDropList] = useState<DropItem[] | undefined>()
+  const { loading, error, data } = useQuery(GET_NFTS)
 
   const [latestDrops, setLatestDrops] = useState([])
+
+  const nfts = loading ? [] : data.nfts
 
   useEffect(() => {
     if (latestDrops.length === 0) {
@@ -109,16 +140,29 @@ export default function Landing() {
             </div>
 
             <div className="row">
-              {latestDrops.map((data, key) => (
-                <div
-                  className="col-12-sm col-6-md col-4-lg col-3-xl"
-                  key={`soundcard-wrapper-${key}`}
-                >
-                  <div className="spacer">
-                    <SoundCard data={data} key={key} />
+              {nfts.map((data, key) => {
+                if (!data.filePictureUrl) {
+                  return
+                }
+
+                return (
+                  <div
+                    className="col-12-sm col-6-md col-4-lg col-3-xl"
+                    key={`soundcard-wrapper-${key}`}
+                  >
+                    <div className="spacer">
+                      <SoundCard
+                        data={{
+                          pic: data.filePictureUrl,
+                          name: data.metadata.name,
+                          rarity: 1,
+                        }}
+                        key={key}
+                      />
+                    </div>
                   </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
             <div className="mt-4 mb-8 flex justify-center">
               <MoreButton />
