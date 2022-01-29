@@ -1,0 +1,132 @@
+name: RPC listener service deploy
+on:
+  workflow_dispatch:
+    inputs:
+      cacheBustKey:
+        description: "A random value to bust the cache with"
+        required: false
+  push:
+    branches:
+      # - main
+      - testflight
+    paths:
+      - "apps/rpc-listener-service/**"
+      - "packages/**"
+      - "package.json"
+      - "tsconfig.json"
+      - "yarn.lock"
+      - ".github/workflows/**"
+      - ".eslintignore"
+
+jobs:
+  rpc-listener-service-build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./apps/rpc-listener-service
+    steps:
+      - name: checkout
+        uses: actions/checkout@main
+        with:
+          fetch-depth: 5
+
+      - name: Setup SSH Keys and known_hosts
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+          ssh-add - <<< "${{ secrets.SSH_PRIVATE_KEY }}"
+
+      - name: Restore node_modules cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-${{ github.event.inputs.cacheBustKey }}
+
+      - name: setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: "16.x"
+
+      # Run the build script which populates the ./dist folder
+      - name: Install deps
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+        run: |
+          yarn
+        working-directory: ${{env.working-directory}}
+
+      # Required to resolve shared modules for linter
+      - name: Build
+        run: |
+          yarn run build
+        working-directory: ${{env.working-directory}}
+
+      - name: Run linter
+        run: |
+          yarn run lint
+        working-directory: ${{env.working-directory}}
+
+      - name: Run Tests
+        run: |
+          yarn test
+        working-directory: ${{env.working-directory}}
+
+      # Convert to asumme role one more time
+      - name: Set branch-based environment variables
+        uses: iamtheyammer/branch-env-vars@v1.0.2
+        with:
+          CR_URL: |
+            testflight:${{ secrets.CR_URL }}
+            !default: 'Unsupported branch'
+          IMAGE_NAME: |
+            testflight:rpc-listener-service-testflight
+            !default: 'Unsupported branch'
+          CLUSTER_NAME: |
+            testflight:soundverse-cluster
+            !default: 'Unsupported branch'
+          DEPLOY_NAME: |
+            testflight:rpc-listener-service-testflight
+            !default: 'Unsupported branch'
+          ENV_NAME: |
+            testflight:testflight
+            !default: 'Unsupported branch'
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DO_API_TOKEN }}
+
+      - name: Log in to DigitalOcean Container Registry with short-lived credentials
+        run: doctl registry login --expiry-seconds 600
+
+      # In this step, this action saves a list of existing images,
+      # the cache is created without them in the post run.
+      # It also restores the cache if it exists.
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        # Ignore the failure of a step and avoid terminating the job.
+        continue-on-error: true
+
+      - name: Build, tag, and push image to DO
+        id: build-image
+        env:
+          CR_URL: ${{ env.CR_URL }}
+          IMAGE_NAME: ${{ env.IMAGE_NAME }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $CR_URL/$IMAGE_NAME:$IMAGE_TAG -t $CR_URL/$IMAGE_NAME:latest -f apps/rpc-listener-service/Dockerfile .
+          docker push $CR_URL/$IMAGE_NAME:$IMAGE_TAG
+          docker push $CR_URL/$IMAGE_NAME:latest
+          echo "::set-output name=image::$CR_URL/$IMAGE_NAME:$IMAGE_TAG"
+
+      - name: Deploy
+        id: deploy
+        env:
+          CLUSTER_NAME: ${{ env.CLUSTER_NAME }}
+        run: |
+          curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+          doctl kubernetes cluster kubeconfig save $CLUSTER_NAME         
+          helm upgrade $DEPLOY_NAME ./apps/rpc-listener-service/deploy/$ENV_NAME --set image.tag=${{ github.sha }} --install --wait --atomic --namespace=apps

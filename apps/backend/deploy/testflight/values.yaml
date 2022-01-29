@@ -103,10 +103,8 @@ affinity:
 
 # env -- Environment variables for the application.
 env:
-  - name: NODE_ENV
-    value: production
   - name: ENVIRONMENT
-    value: production
+    value: testflight
   - name: SERVICE_NAME
     value: backend
   - name: NODE_OPTIONS
@@ -162,3 +160,14 @@ env:
     value: 'https://app.soundverse.io'
   - name: INTERNAL_FILE_URL_BASE
     value: 'https://{bucket}.ams3.digitaloceanspaces.com'
+  - name: RABBITMQ_USER
+    value: 'user'
+  - name: RABBITMQ_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: rabbitmq-password-soundverse-testflight
+        key: rabbitmq-password
+  - name: RABBITMQ_HOST
+    value: '127.0.0.1:5672'
+  - name: RABBITMQ_QUEUE_NAME
+    value: 'sc-blockchain-events-testflight'

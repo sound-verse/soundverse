@@ -12,8 +12,12 @@ export default function Create() {
   const [description, setDescription] = useState('')
   const [showing, setShowing] = useState<Boolean>(false)
 
-
-  const [handleMintClick, mintState] = useCreateERC1155(file, name, description,setShowing)
+  const [handleMintClick, mintState] = useCreateERC1155(
+    file,
+    name,
+    description,
+    setShowing
+  )
   const modalOnClick = () => setShowing(false)
 
   return (
@@ -21,8 +25,8 @@ export default function Create() {
       <Head>
         <title>Create Nft</title>
       </Head>
-      
-            <Layout>
+
+      <Layout>
         <main className="mx-auto">
           <h2 className="text-white dark:text-white text-3xl font-bold mt-8 mb-4 leading-tight">
             Create Collection
@@ -83,7 +87,9 @@ export default function Create() {
               I agree with Linifty terms and coniditions.{' '}
             </div>
           </div>
-          {showing ? <LoadingModal onClick = {modalOnClick} ></LoadingModal>: null}
+          {showing ? (
+            <LoadingModal onClick={modalOnClick}></LoadingModal>
+          ) : null}
 
           <div className="my-5">
             <h3 className="text-lg font-bold my-1">
@@ -142,7 +148,7 @@ export default function Create() {
           <button
             className="createBtn mb-8 w-44 h-8 text-white text-md font-bold border border-white rounded-xl"
             // @ts-ignore:next-line
-            onClick={handleMintClick}
+            // onClick={handleMintClick}
           >
             Create the package
           </button>

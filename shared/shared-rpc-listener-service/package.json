@@ -1,0 +1,16 @@
+{
+  "name": "@soundverse/shared-rpc-listener-service",
+  "version": "0.0.1",
+  "private": true,
+  "license": "MIT",
+  "dependencies": {},
+  "scripts": {
+    "build": "rm tsconfig.tsbuildinfo -f && tsc -b",
+    "dev": "rm tsconfig.tsbuildinfo -f && tsc -b"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "src/*"
+  ]
+}
