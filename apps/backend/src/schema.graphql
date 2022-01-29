@@ -48,7 +48,7 @@ type Nft {
   contractAddress: String!
   ipfsUrl: String!
   fileUrl: String!
-  filePictureUrl: String
+  filePictureUrl: String!
   transactionHash: String
   metadata: NftMetadata!
   creator: User

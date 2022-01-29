@@ -5,20 +5,69 @@ import Input from '../../components/collection/Input'
 import LoadingModal from '../../components/common/modals/LoadingModal'
 import ToggleSwitch from '../../components/common/ToggleSwitch'
 import useCreateERC1155 from '../../hooks/contracts/useCreateERC1155'
+import Button from '../../components/common/Button'
+import Modal from 'react-modal'
+import { Bars } from 'react-loader-spinner'
+import toast from 'react-hot-toast'
+import { Toaster } from 'react-hot-toast'
+import { useRouter } from 'next/router'
 
 export default function Create() {
-  const [file, setSelectedFile] = useState(null)
+  const [nftFile, setNftFile] = useState(null)
+  const [pictureFile, setPictureFile] = useState(null)
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [showing, setShowing] = useState<Boolean>(false)
+  const router = useRouter()
 
   const [handleMintClick, mintState] = useCreateERC1155(
-    file,
+    nftFile,
+    pictureFile,
     name,
     description,
     setShowing
   )
-  const modalOnClick = () => setShowing(false)
+
+  const handleMint = async () => {
+    if (!nftFile) {
+      toast.error('You have to provide a music file!')
+      return
+    }
+    if (!pictureFile) {
+      toast.error('You have to provide a nft cover file!')
+      return
+    }
+    if (name === '') {
+      toast.error('You have to provide a name!')
+      return
+    }
+    if (description === '') {
+      toast.error('You have to provide a description!')
+      return
+    }
+    try {
+      setShowing(true)
+      await handleMintClick()
+    } catch (e) {
+      setShowing(false)
+      console.log(e)
+      toast.error('Error minting your NFT')
+    }
+  }
+
+  useEffect(() => {
+    if (mintState.status === 'Success') {
+      setShowing(false)
+      router.push('/marketplace')
+    }
+    if (mintState.status == 'Exception') {
+      setShowing(false)
+      toast('Error minting your NFT')
+      console.log(mintState.errorMessage)
+    }
+  }, [mintState])
+
+  Modal.setAppElement('#__next')
 
   return (
     <div>
@@ -28,149 +77,105 @@ export default function Create() {
 
       <Layout>
         <main className="mx-auto">
-          <h2 className="text-white dark:text-white text-3xl font-bold mt-8 mb-4 leading-tight">
-            Create Collection
-          </h2>
-
-          <div>
-            <h3 className="text-lg font-bold my-1">Preview</h3>
-            <div>
-              Upload a moment of o your live set where you played an unpublished
-              music{' '}
-            </div>
-            <div className="flex">
-              <div>Live Video Moment</div>
-              <div>Add album covers</div>
-            </div>
-          </div>
-
-          <div className="my-5">
-            <h3 className="text-lg font-bold my-1">Unlock once purchased</h3>
-            <div>Content will be unlocked after successful transaction</div>
-
-            <input
-              type="file"
-              id="file"
-              name="file"
-              onChange={async (e) => await setSelectedFile(e.target.files[0])}
-            ></input>
-
-            <div className="my-3">
-              <Input
-                id="trackId"
-                placeholder="Track Name"
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value)
-                }}
-              />
-            </div>
-            <div className="my-3">
-              <Input
-                id="trackDesc"
-                placeholder="Track Description"
-                value={description}
-                onChange={(e) => {
-                  setDescription(e.target.value)
-                }}
-              />
-            </div>
-            <div className="my-3">
-              <Input id="tags" placeholder="Tags" disabled={true} />
-            </div>
-          </div>
-
-          <div className="my-5">
-            <h3 className="text-lg font-bold my-1">Copyright ownership</h3>
-            <div>
-              I certify that I own 100% copyrights on this unpublished track and
-              I agree with Linifty terms and coniditions.{' '}
-            </div>
-          </div>
-          {showing ? (
-            <LoadingModal onClick={modalOnClick}></LoadingModal>
-          ) : null}
-
-          <div className="my-5">
-            <h3 className="text-lg font-bold my-1">
-              Engage with your fans and maximise your marketing potential
-            </h3>
-            <div>
+          <Toaster position="top-right" />
+          <div className="rounded-3xl bg-grey-dark max-w-3xl p-20 mx-auto mt-36 mb-36">
+            <div className="flex flex-col">
+              <div className="text-white font-bold text-base">Track</div>
               <div>
-                In the near future we are planning to allow artists to sell
-                portion of their unpublished music copyright as an NFT to their
-                fans. This bring artists and their fans closer than ever and
-                allow both benefit from each other. You can rad more about this
-                here in our article.{' '}
+                <label
+                  htmlFor="nft-file"
+                  className="text-white border-2 border-white rounded-full p-2 mt-5 inline-block cursor-pointer px-36 whitespace-nowrap"
+                >
+                  Choose Music File
+                </label>
+                <input
+                  type="file"
+                  id="nft-file"
+                  className="hidden"
+                  onChange={async (e) => await setNftFile(e.target.files[0])}
+                ></input>
+                <div className="text-grey-light mt-3">
+                  MP3, WAVE - Max 100Mb
+                </div>
+                <div className="text-grey-light">
+                  {nftFile && `Selected File: ${nftFile.name}`}
+                </div>
+              </div>
+              <div>
+                <label
+                  htmlFor="picture-file-upload"
+                  className="text-white border-2 border-white rounded-full p-2 mt-5 inline-block cursor-pointer px-36 whitespace-nowrap"
+                >
+                  Choose Nft Cover Picture
+                </label>
+                <input
+                  type="file"
+                  id="picture-file-upload"
+                  className="hidden"
+                  onChange={async (e) =>
+                    await setPictureFile(e.target.files[0])
+                  }
+                ></input>
+                <div className="text-grey-light mt-3">JPG, PNG - Max 100Mb</div>
+                <div className="text-grey-light">
+                  {pictureFile && `Selected File: ${pictureFile.name}`}
+                </div>
+              </div>
+              <div className="text-white font-bold text-base mt-10">
+                Track Name
               </div>
               <div className="mt-3">
-                In the case of this feature release are you willing to allow
-                people who collected this NFT take part of the live auction
-                event where they can buy portion of this track copyright ?{' '}
-              </div>
-              <ToggleSwitch />
-            </div>
-          </div>
-
-          <div className="my-5">
-            <h3 className="text-lg font-bold my-1">Price</h3>
-            <div>Enter price to allow users instantly purchase your NFT</div>
-            <div className="my-3 flex">
-              <Input id="price" placeholder="Price" disabled={true} /> ETH
-            </div>
-            {/* <div>
-              Service fee: 5% <br />
-              You will recieve 0.915 ETH = $3,871.00
-            </div> */}
-          </div>
-
-          <div className="my-5">
-            <div className="flex">
-              <div>
-                <h3 className="text-lg font-bold my-1">Royalty</h3>
                 <Input
-                  id="royalty"
-                  placeholder="10%, 15%, 30%"
-                  disabled={true}
+                  id="track-name"
+                  placeholder="Ice in the dark..."
+                  value={name}
+                  onChange={(e) => {
+                    setName(e.target.value)
+                  }}
                 />
+                <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
+                <div className="text-grey-light">max. 20 characters</div>
               </div>
-              <div className="ml-10">
-                <h3 className="text-lg font-bold my-1">Number of editions</h3>
-                <Input id="numEditions" placeholder="100" disabled={true} />
+              <div className="text-white font-bold text-base mt-10">
+                Description
               </div>
+              <div className="mt-3">
+                <textarea
+                  className="w-full text-white bg-transparent border-2 rounded-3xl p-5"
+                  id="trac-desc"
+                  placeholder="I am ..."
+                  value={description}
+                  rows={8}
+                  cols={50}
+                  onChange={(e) => {
+                    setDescription(e.target.value)
+                  }}
+                ></textarea>
+              </div>
+              <button
+                className="text-white cursor-pointer rounded-full bg-purple px-24 py-4 ml-auto mt-10 font-bold"
+                onClick={handleMint}
+              >
+                Mint
+              </button>
             </div>
           </div>
-
-          <div className="my-5">
-            <h3 className="text-lg font-bold my-1">Royalty Partners</h3>
-          </div>
-
-          <button
-            className="createBtn mb-8 w-44 h-8 text-white text-md font-bold border border-white rounded-xl"
-            // @ts-ignore:next-line
-            // onClick={handleMintClick}
+          <Modal
+            isOpen={showing}
+            contentLabel="onRequestClose Example"
+            className="flex justify-center items-center h-full"
           >
-            Create the package
-          </button>
+            <div className="w-1/2 h-1/2 rounded-3xl p-10 bg-grey-dark flex flex-col justify-between items-center">
+              <div className="h-full w-full justify-center items-center flex flex-col">
+                <div className="text-white text-3xl font-bold mb-10">
+                  Minting
+                </div>
+                <Bars color="#7A64FF" height={80} width={80} />
+              </div>
+            </div>
+          </Modal>
         </main>
       </Layout>
-
-      <style jsx>{`
-        div {
-          color: #fff;
-        }
-
-        h3 {
-          color: #ede7f6;
-        }
-
-        .chooseBtn {
-          background: #6200ea;
-        }
-        .createBtn {
-          background: #6200ea;
-        }
-      `}</style>
     </div>
   )
 }
