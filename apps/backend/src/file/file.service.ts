@@ -17,7 +17,7 @@ export class FileService {
     const writeStream = new Stream.PassThrough();
     const fileTypeStream = await FileType.stream(createReadStream());
 
-    // this.validateFileToUpload(fileName, fileTypeStream);
+    this.validateFileToUpload(fileName, fileTypeStream);
 
     const uploadFile = this.s3Service.uploadFile(writeStream, fileName, bucket, {
       ACL: 'public-read',
