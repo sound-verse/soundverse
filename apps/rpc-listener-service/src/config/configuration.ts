@@ -15,7 +15,7 @@ export default () => ({
     testflight: {
       contractEvents: [
         {
-          contractAddress: '0xd00Bb2fe207486753712C9A41374E15c2A828e57',
+          contractAddress: '0x247b064C419A7B80261d70Dea30e76464301e0fD',
           listensTo: [EventType.TRANSFER_SINGLE],
           contractType: ContractType.ERC1155,
           version: '0.1',

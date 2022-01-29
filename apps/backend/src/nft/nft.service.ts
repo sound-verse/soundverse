@@ -30,7 +30,10 @@ export class NftService {
   ) {}
 
   async createNft(createNftInput: CreateNftInput): Promise<Nft> {
-    const nextNft = await this.nftModel.find({}, { tokenId: 1, _id: 0 }).sort({ tokenId: -1 }).limit(1);
+    const nextNft = await this.nftModel
+      .find({ contractAddress: createNftInput.contractAddress.toLowerCase() }, { tokenId: 1, _id: 0 })
+      .sort({ tokenId: -1 })
+      .limit(1);
     const nextId = nextNft[0] ? nextNft[0].tokenId + 1 : 1;
 
     let ipfsUrl = createNftInput.ipfsUrl;

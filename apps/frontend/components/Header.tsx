@@ -62,7 +62,7 @@ const Header = () => {
     <Fragment>
       <div className={styles.headerWrapper}>
         <div className={styles.headerWrapperToo}>
-          <Link href="/" passHref>
+          <Link href="#" passHref>
             <span className={styles.nineByNineIcon}>
               <CgMenuGridO size={70} />
             </span>
