@@ -1,5 +1,5 @@
 import { useEthers } from '@usedapp/core'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Web3Provider } from '@ethersproject/providers'
 import { gql, useMutation } from '@apollo/client'
 import link from 'next/link'
@@ -25,8 +25,32 @@ export const useLogin = () => {
   const [login] = useMutation(LOGIN)
   const { jwtToken, setAuthToken } = useAppContext()
 
-  return useMemo(() => {
-    const authenticate = async (library: Web3Provider, account: string) => {
+  const isLoggedIn = useCallback(() => {
+    const jwtToken = Cookies.get('JWT_TOKEN')
+
+    try {
+      const decodedJwtToken: any = jwt_decode(jwtToken)
+      let currentDate = new Date()
+
+      if (decodedJwtToken.exp * 1000 < currentDate.getTime()) {
+        return false
+      } else {
+        return true
+      }
+    } catch {
+      return false
+    }
+  }, [jwtToken])
+
+  const authenticate = async (
+    library: Web3Provider,
+    account: string
+  ): Promise<boolean> => {
+    if (isLoggedIn()) {
+      return true
+    }
+
+    try {
       const nonce = await generateVerificationToken({
         variables: { data: { ethAddress: account } },
       })
@@ -42,30 +66,18 @@ export const useLogin = () => {
       })
 
       setAuthToken(jwtToken.data.login.token)
+    } catch (e) {
+      console.log(`Authentication failed ${e}`)
+      return false
     }
 
-    const logout = () => {
-      setAuthToken('')
-      Cookies.set('JWT_TOKEN', '')
-    }
+    return true
+  }
 
-    const isLoggedIn = () => {
-      const jwtToken = Cookies.get('JWT_TOKEN')
+  const logout = () => {
+    setAuthToken('')
+    Cookies.set('JWT_TOKEN', '')
+  }
 
-      try {
-        const decodedJwtToken: any = jwt_decode(jwtToken)
-        let currentDate = new Date()
-
-        if (decodedJwtToken.exp * 1000 < currentDate.getTime()) {
-          return false
-        } else {
-          return true
-        }
-      } catch {
-        return false
-      }
-    }
-
-    return { authenticate, logout, isLoggedIn }
-  }, [])
+  return { authenticate, logout, isLoggedIn }
 }

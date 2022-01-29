@@ -5,102 +5,58 @@ import toast from 'react-hot-toast'
 import { useLogin } from '../hooks/useLogin'
 import styles from './Header.module.scss'
 import { CgMenuGridO } from 'react-icons/cg'
-import blockies from 'ethereum-blockies'
+import Blockies from 'react-blockies'
+import { generateShortEthAddress } from '../utils/common'
+import Image from 'next/image'
 
 const Header = () => {
-  const WalletButton = () => {
-    const {
-      activateBrowserWallet,
-      deactivate,
-      account,
-      library,
-      active,
-      chainId,
-    } = useEthers()
-    const onError = async (error: Error) => {
-      toast(error.message)
+  const {
+    activateBrowserWallet,
+    deactivate,
+    account,
+    library,
+    active,
+    chainId,
+  } = useEthers()
+
+  const onError = async (error: Error) => {
+    toast(error.message)
+  }
+  const { authenticate, logout, isLoggedIn } = useLogin()
+  const [showDropdown, setShowDropdown] = useState<boolean>(false)
+  const [authenticated, setAuthenticated] = useState<boolean>(false)
+
+  useEffect(() => {
+    const auth = async () => {
+      setAuthenticated(await authenticate(library, account))
     }
-    const [showDropdown, setShowDropdown] = useState(false)
-    const WalletDropDown = ({ open }) => {
-      return open ? (
-        <div className={styles.dropdownWrapper}>
-          <div className={styles.dropdownRect}>
-            <div className={styles.dropdownText}>
-              {/*These links need dynamic path logic*/}
-              <Link href={'/profile[id]'}>My profile</Link>
-            </div>
-            <div className={styles.dropdownText}>
-              <Link href={'/collection[id]'}>My collection</Link>
-            </div>
-            <hr className={styles.ddhr}></hr>
-            <div className={styles.dropdownText}>
-              <button
-                onClick={async () => {
-                  await deactivate()
-                  logout()
-                }}
-              >
-                Disconnect
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : null
-    }
-    const { authenticate, logout, isLoggedIn } = useLogin()
-    useEffect(() => {
-      if (active == true) {
-        if (process.env.NEXT_PUBLIC_ENVIRONMENT === 'testflight') {
-          if (chainId != 80001) {
-            library.provider.request({
-              method: 'wallet_addEthereumChain',
-              params: [
-                {
-                  chainId: '0x13881',
-                  chainName: 'Mumbai testnet',
-                  nativeCurrency: {
-                    name: 'matic',
-                    symbol: 'matic',
-                    decimals: 18,
-                  },
-                  rpcUrls: ['https://rpc-mumbai.maticvigil.com'],
-                  blockExplorerUrls: ['https://polygonscan.com/'],
+    if (active == true) {
+      if (process.env.NEXT_PUBLIC_ENVIRONMENT === 'testflight') {
+        if (chainId != 80001) {
+          library.provider.request({
+            method: 'wallet_addEthereumChain',
+            params: [
+              {
+                chainId: '0x13881',
+                chainName: 'Mumbai testnet',
+                nativeCurrency: {
+                  name: 'matic',
+                  symbol: 'matic',
+                  decimals: 18,
                 },
-              ],
-            })
-          }
-        }
-        if (!isLoggedIn()) {
-          authenticate(library, account)
+                rpcUrls: ['https://rpc-mumbai.maticvigil.com'],
+                blockExplorerUrls: ['https://polygonscan.com/'],
+              },
+            ],
+          })
         }
       }
-    }, [active])
-
-    return (
-      <Fragment>
-        <button
-          className={styles.connectButton}
-          onClick={async () => {
-            if (!account) {
-              // await activateBrowserWallet(onError)
-              setShowDropdown(!showDropdown)
-            } else {
-              //currently we're showing the dropdown when account is not connected
-              //this is because Coltrane cannot run the monorepo
-
-              //when refactoring this logic just switch the conditional above and uncomment the await call
-              await deactivate()
-              logout()
-            }
-          }}
-        >
-          {/*blockies and account details go here*/}
-          {!account ? 'CONNECT' : account}
-        </button>
-        <WalletDropDown open={showDropdown} />
-      </Fragment>
-    )
-  }
+      auth()
+    }
+    if (!account) {
+      setShowDropdown(false)
+    }
+  }, [active])
 
   return (
     <Fragment>
@@ -125,8 +81,83 @@ const Header = () => {
             <p className={styles.marketplaceLink}>Marketplace</p>
           </Link>
           <div className={styles.headerSpacer} />
+          <Link href="/create" passHref>
+            <p className={styles.marketplaceLink}>Create</p>
+          </Link>
+          <div className={styles.headerSpacer} />
           <div>
-            <WalletButton />
+            <button
+              className={styles.connectButton}
+              onClick={async () => {
+                if (account) {
+                  setShowDropdown(!showDropdown)
+                } else {
+                  setShowDropdown(false)
+                  await activateBrowserWallet(onError)
+                }
+              }}
+            >
+              <div
+                className={
+                  account && authenticated ? styles.connectButtonLabel : 'block'
+                }
+              >
+                {/*blockies and account details go here*/}
+                {account && authenticated && (
+                  <div>
+                    <Blockies
+                      seed={account}
+                      size={12}
+                      scale={3}
+                      color="#dfe"
+                      bgColor="#ffe"
+                      spotColor="#abc"
+                      className={styles.blockie}
+                    />
+                  </div>
+                )}
+                <div className={styles.connectButtonAddress}>
+                  {account && authenticated
+                    ? generateShortEthAddress(account)
+                    : 'CONNECT'}
+                </div>
+                {account && authenticated && (
+                  <div className={styles.chevronDown}>
+                    <Image
+                      src="/img/chevronDown.svg"
+                      width={25}
+                      height={25}
+                      layout="fixed"
+                    />
+                  </div>
+                )}
+              </div>
+            </button>
+            {showDropdown && (
+              <div className={styles.dropdownWrapper}>
+                <div className={styles.dropdownRect}>
+                  <div className={styles.dropdownText}>
+                    {/*These links need dynamic path logic*/}
+                    <Link href={`/profile/${account}`}>My profile</Link>
+                  </div>
+                  <div className={styles.dropdownText}>
+                    <Link href={`/collection/${account}`}>My collection</Link>
+                  </div>
+                  <hr className={styles.ddhr}></hr>
+                  <div className={styles.dropdownText}>
+                    <button
+                      onClick={async () => {
+                        await deactivate()
+                        logout()
+                        setAuthenticated(false)
+                      }}
+                    >
+                      Disconnect
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

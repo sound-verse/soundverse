@@ -9,18 +9,15 @@ import {
   latestDrops as dataLatestDrops,
   DropItem,
 } from '../../model/data/testData'
+import SoundCard from '../../components/marketplace/SoundCard'
 
-<<<<<<< HEAD
 export default function Landing() {
   const [input, setInput] = useState('')
   const [dropListDefault, setDropListDefault] = useState<
     DropItem[] | undefined
   >()
   const [dropList, setDropList] = useState<DropItem[] | undefined>()
-=======
-export default function Marketplace() {
-  const [listDroppers, setListDroppers] = useState([])
->>>>>>> 548ac837f121d4102758284a3e822d10821f3df1
+
   const [latestDrops, setLatestDrops] = useState([])
 
   useEffect(() => {
@@ -111,25 +108,18 @@ export default function Marketplace() {
               </span>
             </div>
 
-<<<<<<< HEAD
             <div className="row">
-              <Drops dropList={dropList} />
-            </div>
-=======
-          <div className="row">
-            {latestDrops.map((data, key) => (
-              <div
-                className="col-12-sm col-6-md col-4-lg col-3-xl"
-                key={`soundcard-wrapper-${key}`}
-              >
-                <div className="spacer">
-                  <SoundCard data={data} key={key} />
+              {latestDrops.map((data, key) => (
+                <div
+                  className="col-12-sm col-6-md col-4-lg col-3-xl"
+                  key={`soundcard-wrapper-${key}`}
+                >
+                  <div className="spacer">
+                    <SoundCard data={data} key={key} />
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
->>>>>>> 548ac837f121d4102758284a3e822d10821f3df1
-
+              ))}
+            </div>
             <div className="mt-4 mb-8 flex justify-center">
               <MoreButton />
             </div>
