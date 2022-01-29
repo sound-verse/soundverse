@@ -34,6 +34,9 @@ export class Nft {
   fileUrl: string;
 
   @Field({ nullable: true })
+  filePictureUrl?: string;
+
+  @Field({ nullable: true })
   transactionHash?: string;
 
   @Field()

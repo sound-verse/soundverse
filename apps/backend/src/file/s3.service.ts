@@ -1,4 +1,4 @@
-import { Injectable, Req, Res } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import * as AWS from 'aws-sdk';
 import { ConfigService } from '@nestjs/config';
 
@@ -16,10 +16,10 @@ export class S3Service {
     });
   }
 
-  async uploadFile(file, fileName, bucketName, overrides) {
+  async uploadFile(file, fileName: string, bucketName: string, overrides) {
     let params = {
       Bucket: bucketName,
-      Key: String(fileName),
+      Key: fileName,
       Body: file,
       ACL: 'public-read',
       ContentDisposition: 'inline',
@@ -34,11 +34,17 @@ export class S3Service {
       console.log(error);
     }
 
-    return `${this.configService.get<string>('INTERNAL_FILE_URL_BASE_NFT')}/${fileName}`;
+    return this.resolveBucketUrl(bucketName, fileName);
   }
 
-  getFileReadStream(bucket, key) {
+  getFileReadStream(bucket: string, key: string) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return this.s3.getObject({ Bucket: bucket, Key: key }).createReadStream();
+  }
+
+  resolveBucketUrl(bucket: string, fileName: string): string {
+    return `${this.configService
+      .get<string>('INTERNAL_FILE_URL_BASE')
+      .replace('{bucket}', bucket)}/${fileName}`;
   }
 }

@@ -103,10 +103,8 @@ affinity:
 
 # env -- Environment variables for the application.
 env:
-  - name: NODE_ENV
-    value: production
   - name: ENVIRONMENT
-    value: production
+    value: testflight
   - name: SERVICE_NAME
     value: backend
   - name: NODE_OPTIONS
@@ -160,5 +158,5 @@ env:
     value: 'https://gateway.pinata.cloud/ipfs'
   - name: METADATA_EXTERNAL_URL_BASE
     value: 'https://app.soundverse.io'
-  - name: INTERNAL_FILE_URL_BASE_NFT
-    value: 'https://soundverse-nft.ams3.digitaloceanspaces.com'
+  - name: INTERNAL_FILE_URL_BASE
+    value: 'https://{bucket}.ams3.digitaloceanspaces.com'

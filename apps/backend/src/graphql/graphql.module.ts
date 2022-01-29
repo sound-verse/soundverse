@@ -4,7 +4,6 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { User } from '../user/user.schema';
-import { JsonScalar } from './scalars/json.scalar';
 import { ApolloServerPluginCacheControl } from 'apollo-server-core';
 import { graphqlUploadExpress } from 'graphql-upload';
 
@@ -116,7 +115,7 @@ export interface GqlConnectionContext {
 export class GraphqlModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(graphqlUploadExpress({ maxFileSize: 1024 * 1024 * 100, maxFiles: 1 }))
+      .apply(graphqlUploadExpress({ maxFileSize: 1024 * 1024 * 100, maxFiles: 2 }))
       .forRoutes('graphql');
   }
 }
