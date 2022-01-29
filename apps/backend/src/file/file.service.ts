@@ -7,7 +7,7 @@ import { S3Service } from './s3.service';
 
 const pictureFilenameStart = 'cover';
 const allowedPicturesRegEx = new RegExp('([a-zA-Z0-9\\s_\\.\\-\\(\\):])+(.jpg|.jpeg|.png|.gif)$');
-const allowedMusicNftsRegEx = new RegExp('([a-zA-Z0-9\\s_\\.\\-\\(\\):])+(.mp3|.wave|.wav|.flac)$');
+const allowedMusicNftsRegEx = new RegExp('([a-zA-Z0-9\\s_\\.\\-\\(\\):])+(.mp3|.wave|.wav|.flac|.mpeg)$');
 
 @Injectable()
 export class FileService {
