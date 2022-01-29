@@ -82,7 +82,7 @@ export default function Landing() {
   return (
     <div className="">
       <Head>
-        <title>Linifty App</title>
+        <title>Soundverse App</title>
       </Head>
 
       <Layout>
