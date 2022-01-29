@@ -124,13 +124,13 @@ env:
   - name: RPC_URL
     value: 'wss://bold-lively-wave.matic-testnet.quiknode.pro/a44093358d2164fa6f0e82d6c06fe808ed6e8854/'
   - name: RABBITMQ_USER
-    value: 'user'
+    value: 'rezmtgjt'
   - name: RABBITMQ_PASSWORD
     valueFrom:
       secretKeyRef:
         name: rabbitmq-password-soundverse-testflight
         key: rabbitmq-password
   - name: RABBITMQ_HOST
-    value: '127.0.0.1:5672'
+    value: 'roedeer.rmq.cloudamqp.com/rezmtgjt'
   - name: RABBITMQ_QUEUE_NAME
     value: 'sc-blockchain-events-testflight'
