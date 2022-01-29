@@ -85,6 +85,10 @@
 }
 .titleText {
   @extend %soundcard-item-abstract;
+  font-size: 16px;
+  left: 12px;
+  top: 10px;
+  font-family: Poppins;
 }
 .nameText {
   @extend %soundcard-item-abstract;
@@ -93,9 +97,10 @@
   font-family: Poppins;
   font-size: 20px;
   font-style: normal;
-  font-weight: 400;
   line-height: 24px;
+  font-weight: bold;
 }
+
 .albumText {
   @extend %soundcard-item-abstract;
 }
