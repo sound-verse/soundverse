@@ -160,3 +160,14 @@ env:
     value: 'https://app.soundverse.io'
   - name: INTERNAL_FILE_URL_BASE
     value: 'https://{bucket}.ams3.digitaloceanspaces.com'
+  - name: RABBITMQ_USER
+    value: 'user'
+  - name: RABBITMQ_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: rabbitmq-password-soundverse-testflight
+        key: rabbitmq-password
+  - name: RABBITMQ_HOST
+    value: '127.0.0.1:5672'
+  - name: RABBITMQ_QUEUE_NAME
+    value: 'sc-blockchain-events-testflight'

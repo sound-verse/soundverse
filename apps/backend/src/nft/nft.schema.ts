@@ -63,7 +63,7 @@ export class Nft extends BaseDBObject {
   active: boolean;
 
   @Prop({ default: false })
-  verfied: boolean;
+  verified?: boolean;
 
   @Prop()
   @Expose()

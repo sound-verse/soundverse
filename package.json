@@ -7,7 +7,7 @@
     "lint": "lerna run lint --parallel --scope @soundverse/app-*",
     "prettier": "lerna run prettier --parallel --scope @soundverse/app-*",
     "lint:fix": "yarn run lint --fix",
-    "dev": "lerna run dev --parallel --scope @soundverse/app-*",
+    "dev": "lerna run dev --parallel --include-dependencies --stream",
     "test": "lerna run test --stream",
     "test:ci": "lerna run test:ci"
   },

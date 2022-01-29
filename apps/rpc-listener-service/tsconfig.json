@@ -3,8 +3,9 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
-    "allowJs": true
+    "allowJs": false
   },
   "include": ["src", "src/**/*.json", "rpc-listener.config.ts"],
-  "exclude": ["node_modules", "**/*.spec.ts"]
+  "exclude": ["node_modules", "**/*.spec.ts"],
+  "references": [{ "path": "../../shared/shared-rpc-listener-service" }]
 }
