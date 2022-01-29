@@ -6,6 +6,7 @@ WORKDIR /home/node
 
 COPY apps/backend/package.json /home/node/apps/backend/package.json
 COPY shared/eslint-config/package.json /home/node/shared/eslint-config/package.json
+COPY shared/shared-rpc-listener-service/package.json /home/node/shared/shared-rpc-listener-service/package.json
 COPY package.json yarn.lock lerna.json ./
 
 RUN yarn install --frozen-lockfile --non-interactive --production=false --ignore-scripts
@@ -27,6 +28,7 @@ WORKDIR /home/node
 
 COPY apps/backend/package.json /home/node/apps/backend/package.json
 COPY shared/eslint-config/package.json /home/node/shared/eslint-config/package.json
+COPY shared/shared-rpc-listener-service/package.json /home/node/shared/shared-rpc-listener-service/package.json
 COPY package.json yarn.lock lerna.json ./
 
 RUN yarn install --frozen-lockfile --non-interactive --production --ignore-scripts --no-cache
