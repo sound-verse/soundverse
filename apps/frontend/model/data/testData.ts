@@ -38,7 +38,7 @@ export type DropItem = {
 export const latestDrops: DropItem[] = [
   {
     pic: 'https://api.lorem.space/image/album?w=150&h=150&hash=8B7BCDC2',
-    name: 'Tiesto',
+    name: 'Daft Punk',
     title: 'Solomun Drop - Jun 11 2021, 2021 - Dubai',
     album: 'Common#/100 LE',
     lowest_ask: '$6,021.00',
@@ -48,7 +48,7 @@ export const latestDrops: DropItem[] = [
   },
   {
     pic: 'https://api.lorem.space/image/album?w=150&h=150&hash=500B67FB',
-    name: 'Tiesto',
+    name: 'Adele',
     title: 'Solomun Drop - Jun 11 2021, 2021 - Dubai',
     album: 'Common#/100 LE',
     lowest_ask: '$6,021.00',
@@ -58,7 +58,7 @@ export const latestDrops: DropItem[] = [
   },
   {
     pic: 'https://api.lorem.space/image/album?w=150&h=150&hash=A89D0DE6',
-    name: 'Tiesto',
+    name: 'Lana Del Rey',
     title: 'Solomun Drop - Jun 11 2021, 2021 - Dubai',
     album: 'Common#/100 LE',
     lowest_ask: '$6,021.00',
@@ -68,7 +68,7 @@ export const latestDrops: DropItem[] = [
   },
   {
     pic: 'https://api.lorem.space/image/album?w=150&h=150&hash=9D9539E7',
-    name: 'Tiesto',
+    name: 'Metallica',
     title: 'Solomun Drop - Jun 11 2021, 2021 - Dubai',
     album: 'Common#/100 LE',
     lowest_ask: '$6,021.00',
@@ -78,7 +78,7 @@ export const latestDrops: DropItem[] = [
   },
   {
     pic: 'https://api.lorem.space/image/album?w=150&h=150&hash=4F32C4CF',
-    name: 'Tiesto',
+    name: 'Katy Perry',
     title: 'Solomun Drop - Jun 11 2021, 2021 - Dubai',
     album: 'Common#/100 LE',
     lowest_ask: '$6,021.00',
@@ -88,7 +88,7 @@ export const latestDrops: DropItem[] = [
   },
   {
     pic: 'https://api.lorem.space/image/album?w=150&h=150&hash=8B7BCDC2',
-    name: 'Tiesto',
+    name: 'Daft Punk',
     title: 'Solomun Drop - Jun 11 2021, 2021 - Dubai',
     album: 'Common#/100 LE',
     lowest_ask: '$6,021.00',

@@ -7,7 +7,11 @@ import './styles.scss'
 import { ApolloClientProvider } from '../context/ApolloClientProvider'
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const config = {}
+  const config = {
+    ...(process.env.NEXT_PUBLIC_ENVIRONMENT === 'local' && {
+      multicallAddresses: ['0xdf3e18d64bc6a983f673ab319ccae4f1a57c7097'],
+    }),
+  }
 
   return (
     <AppProvider>

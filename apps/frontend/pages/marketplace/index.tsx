@@ -2,15 +2,40 @@ import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
 import Image from 'next/image'
 import Layout from '../../components/layout'
+import SidebarFilters from '../../components/marketplace/SidebarFilters'
+import Drops from '../../components/marketplace/Drops'
+import MarketplaceSearchBar from '../../components/marketplace/MarketplaceSearchBar'
 import {
-  listDroppers as dataListDroppers,
   latestDrops as dataLatestDrops,
+  DropItem,
 } from '../../model/data/testData'
 import SoundCard from '../../components/marketplace/SoundCard'
 
-export default function Marketplace() {
-  const [listDroppers, setListDroppers] = useState([])
+export default function Landing() {
+  const [input, setInput] = useState('')
+  const [dropListDefault, setDropListDefault] = useState<
+    DropItem[] | undefined
+  >()
+  const [dropList, setDropList] = useState<DropItem[] | undefined>()
+
   const [latestDrops, setLatestDrops] = useState([])
+
+  useEffect(() => {
+    if (latestDrops.length === 0) {
+      setDropListDefault(dataLatestDrops)
+    }
+    if (latestDrops.length === 0) {
+      setDropList(dataLatestDrops)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  const updateInput = async (input) => {
+    const filtered = dropListDefault.filter((drop) => {
+      return drop.name.toLowerCase().includes(input.toLowerCase())
+    })
+    setInput(input)
+    setDropList(filtered)
+  }
 
   const MoreButton = () => {
     return (
@@ -23,16 +48,6 @@ export default function Marketplace() {
     )
   }
 
-  useEffect(() => {
-    if (listDroppers.length === 0) {
-      setListDroppers(dataListDroppers)
-    }
-    if (latestDrops.length === 0) {
-      setLatestDrops(dataLatestDrops)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
   return (
     <div className="">
       <Head>
@@ -40,76 +55,74 @@ export default function Marketplace() {
       </Head>
 
       <Layout>
-        <div className="marketplace-wrapper">
-          <div className="sale-button-wrapper">
-            <nav className="flex space-x-1">
-              <a href="#" className="sale-buttons">
-                FOR SALE
-              </a>
-              <a href="#" className="sale-buttons">
-                LATEST SALES
-              </a>
-              <a href="#" className="sale-buttons">
-                TOP SALES
-              </a>
-            </nav>
-          </div>
+        <div className="big-wrapper">
+          <SidebarFilters />
 
-          <div className="topbar-wrapper">
-            {/*SEARCHBAR WITH DROPDOWN COMPONENT WILL GO HERE*/}
-            <input
-              type="text"
-              placeholder="Search by DJ, Event, Genre"
-              className="marketplace-searchbar"
-            />
+          <div className="marketplace-wrapper">
+            <div className="sale-button-wrapper">
+              <nav className="flex space-x-1">
+                <a href="#" className="sale-buttons">
+                  FOR SALE
+                </a>
+                <a href="#" className="sale-buttons">
+                  LATEST SALES
+                </a>
+                <a href="#" className="sale-buttons">
+                  TOP SALES
+                </a>
+              </nav>
+            </div>
 
-            <div className="marketplace-spacer"></div>
-            <div className="marketplace-spacer"></div>
-            <span className="marketplace-icons-wrapper">
-              <span className="marketplace-icon">
-                <Image
-                  src="/img/marketplace/dollarIcon.svg"
-                  width={50}
-                  height={50}
-                  layout="fixed"
-                />
-              </span>
+            <div className="topbar-wrapper">
+              <MarketplaceSearchBar input={input} onChange={updateInput} />
+
               <div className="marketplace-spacer"></div>
-              <span className="marketplace-icon">
-                <Image
-                  src="/img/marketplace/ethIcon.svg"
-                  width={50}
-                  height={50}
-                  layout="fixed"
-                />
-              </span>
               <div className="marketplace-spacer"></div>
-              <span className="marketplace-icon">
-                <Image
-                  src="/img/marketplace/svjIcon.svg"
-                  width={50}
-                  height={50}
-                  layout="fixed"
-                />
+              <span className="marketplace-icons-wrapper">
+                <span className="marketplace-icon">
+                  <Image
+                    src="/img/marketplace/dollarIcon.svg"
+                    width={50}
+                    height={50}
+                    layout="fixed"
+                  />
+                </span>
+                <div className="marketplace-spacer"></div>
+                <span className="marketplace-icon">
+                  <Image
+                    src="/img/marketplace/ethIcon.svg"
+                    width={50}
+                    height={50}
+                    layout="fixed"
+                  />
+                </span>
+                <div className="marketplace-spacer"></div>
+                <span className="marketplace-icon">
+                  <Image
+                    src="/img/marketplace/svjIcon.svg"
+                    width={50}
+                    height={50}
+                    layout="fixed"
+                  />
+                </span>
               </span>
-            </span>
-          </div>
+            </div>
 
-          <div className="row">
-            {latestDrops.map((data, key) => (
-              <div
-                className="col-12-sm col-6-md col-4-lg col-3-xl"
-                key={`soundcard-wrapper-${key}`}
-              >
-                <div className="spacer">
-                  <SoundCard data={data} key={key} />
+            <div className="row">
+              {latestDrops.map((data, key) => (
+                <div
+                  className="col-12-sm col-6-md col-4-lg col-3-xl"
+                  key={`soundcard-wrapper-${key}`}
+                >
+                  <div className="spacer">
+                    <SoundCard data={data} key={key} />
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-4 mb-8 flex justify-center">
-            <MoreButton />
+              ))}
+            </div>
+            <div className="mt-4 mb-8 flex justify-center">
+              <MoreButton />
+            </div>
           </div>
         </div>
       </Layout>
