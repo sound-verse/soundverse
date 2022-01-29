@@ -155,6 +155,7 @@ export default function Landing() {
                         data={{
                           pic: data.filePictureUrl,
                           name: data.metadata.name,
+                          title: data.metadata.description,
                           rarity: 1,
                         }}
                         key={key}

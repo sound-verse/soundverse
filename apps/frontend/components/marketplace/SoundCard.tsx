@@ -22,7 +22,7 @@ function SoundCard(props) {
           }
         >
           {' '}
-          <p className={styles.poundText}>#/1500</p>
+          <p className={styles.poundText}>1/1</p>
         </div>
         <div
           className={
@@ -32,10 +32,11 @@ function SoundCard(props) {
           }
         >
           <p className={styles.nameText}>{name}</p>
-          <p className={styles.listingText}>{numListings} listings</p>
-          <p className={styles.lowestAskText}>
-            Price: <b>{lowestAsk} </b>
-          </p>
+          <p className={styles.titleText}>{title}</p>
+          {/* <p className={styles.listingText}>{numListings} listings</p>
+          <p className={styles.lowestAskText}> */}
+          {/* Price: <b>{lowestAsk} </b>
+          </p> */}
         </div>
         <div className={styles.mplaceImage}>
           <Image
