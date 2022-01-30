@@ -5,8 +5,8 @@
   "license": "MIT",
   "dependencies": {},
   "scripts": {
-    "build": "rm tsconfig.tsbuildinfo -f && tsc -b",
-    "dev": "rm tsconfig.tsbuildinfo -f && tsc -b"
+    "build": "tsc -b",
+    "dev": "tsc -b"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
