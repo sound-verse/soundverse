@@ -9,6 +9,8 @@ export class NftMetadataInput {
 
   @Field()
   description: string;
+
+  @Field(() => [String]) tags: string[];
 }
 
 @InputType()

@@ -8,6 +8,7 @@ import { User } from '../user/user.schema';
 export interface CreateNftMetadata {
   name: string;
   description: string;
+  tags: Array<string>;
   image: string;
   external_url: string;
 }

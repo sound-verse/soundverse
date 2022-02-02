@@ -9,13 +9,16 @@ import { IPFSService } from '../ipfs/ipfs.service';
 import { ConfigService } from '@nestjs/config';
 import { UpdateTxInput } from './dto/input/update-tx-nft.input';
 import { NftFilter } from './dto/input/nft-filter.input';
-import { UseGuards } from '@nestjs/common';
+import { Catch, UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from '../auth/gql-auth.guard';
 import { CurrentUser, LoggedinUser } from '../user/decorators/user.decorator';
 import { Nft as NftSchema } from './nft.schema';
 import { UserService } from '../user/user.service';
 import { User } from '../user/user.schema';
+import { TagService } from '../tag/tag.service';
+import { MongoError } from 'mongodb';
 @Resolver(() => Nft)
+@Catch(MongoError)
 export class NftResolver {
   constructor(
     private nftService: NftService,
@@ -23,6 +26,7 @@ export class NftResolver {
     private ipfsService: IPFSService,
     private configService: ConfigService,
     private userService: UserService,
+    private tagService: TagService,
   ) { }
 
   @UseGuards(GqlAuthGuard)
@@ -60,6 +64,13 @@ export class NftResolver {
         contractAddress: this.configService.get('ERC155_CONTRACT_ADDRESS'),
       });
     } else {
+
+        nftData.metadata.tags.forEach(async tag => {
+          const tagExists = await this.tagService.findByName(tag)
+          if (!tagExists) this.tagService.create({name: tag});
+        });
+
+
       return await this.nftService.createNft({
         metadata,
         ipfsUrl: ipfsMetadataUrl,

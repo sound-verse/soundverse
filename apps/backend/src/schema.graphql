@@ -108,6 +108,7 @@ input NftInput {
 input NftMetadataInput {
   name: String!
   description: String!
+  tags: [String!]!
 }
 
 input UpdateTxInput {
