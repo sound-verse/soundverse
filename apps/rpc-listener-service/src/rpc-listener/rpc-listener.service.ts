@@ -17,6 +17,7 @@ interface Options {
     value: string[];
   };
   fromBlock: number;
+  chainId: number;
 }
 
 @Injectable()
@@ -38,6 +39,7 @@ export class RPCListenerService implements OnApplicationBootstrap, OnModuleDestr
           value: [],
         },
         fromBlock: await this.getLatestBlock(),
+        chainId: await this.getChainId(),
       };
 
       await this.scBlockchainEventsService.connect();
@@ -53,6 +55,10 @@ export class RPCListenerService implements OnApplicationBootstrap, OnModuleDestr
 
   async getLatestBlock(): Promise<number> {
     return await this.web3.eth.getBlockNumber();
+  }
+
+  async getChainId(): Promise<number> {
+    return await this.web3.eth.getChainId();
   }
 
   listen() {
@@ -86,6 +92,7 @@ export class RPCListenerService implements OnApplicationBootstrap, OnModuleDestr
         console.log(`RPC Listener received error ${error}`);
       }
       event.contractType = contractType;
+      event.chainId = this.options.chainId;
       this.handleEvent(event);
     });
   }

@@ -72,6 +72,10 @@ export class Nft extends BaseDBObject {
 
   @Prop()
   @Expose()
+  chainId?: number;
+
+  @Prop()
+  @Expose()
   ipfsUrl: string;
 
   @Prop()

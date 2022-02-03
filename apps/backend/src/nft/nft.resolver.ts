@@ -24,7 +24,6 @@ export class NftResolver {
     private ipfsService: IPFSService,
     private configService: ConfigService,
     private userService: UserService,
-    private tagService: TagService,
   ) { }
 
   @UseGuards(GqlAuthGuard)
@@ -72,6 +71,8 @@ export class NftResolver {
         user,
         supply: nftData.supply,
         tags: nftData.tags,
+        transactionHash: nftData.transactionHash ? nftData.transactionHash : "",
+        chainId: nftData.chainId ? nftData.chainId : 0,
       });
     }
   }
