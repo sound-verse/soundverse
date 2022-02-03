@@ -20,4 +20,10 @@ export class NftInput {
   supply: number;
 
   @Field(() => [String]) tags: string[];
+
+  @Field({ nullable: true })
+  transactionHash: string;
+
+  @Field({ nullable: true })
+  chainId: number;
 }

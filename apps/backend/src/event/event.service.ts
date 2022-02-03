@@ -21,7 +21,7 @@ export class EventService {
           case EventType.TRANSFER_SINGLE: {
             const returnValues: ERC1155TransferSingleReturnValues = event.returnValues;
             if (returnValues.from === nullAddress) {
-              await this.nftService.verifyNft(parseInt(returnValues.id), event.address);
+              await this.nftService.verifyNft(parseInt(returnValues.id), event.address, event.chainId);
             }
           }
         }

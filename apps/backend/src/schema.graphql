@@ -104,6 +104,8 @@ input NftInput {
   metadata: NftMetadataInput!
   supply: Float!
   tags: [String!]!
+  transactionHash: String
+  chainId: Float
 }
 
 input NftMetadataInput {
