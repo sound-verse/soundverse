@@ -15,6 +15,7 @@ import { CurrentUser, LoggedinUser } from '../user/decorators/user.decorator';
 import { Nft as NftSchema } from './nft.schema';
 import { UserService } from '../user/user.service';
 import { User } from '../user/user.schema';
+import { TagService } from '../tag/tag.service';
 @Resolver(() => Nft)
 export class NftResolver {
   constructor(
@@ -23,6 +24,7 @@ export class NftResolver {
     private ipfsService: IPFSService,
     private configService: ConfigService,
     private userService: UserService,
+    private tagService: TagService,
   ) { }
 
   @UseGuards(GqlAuthGuard)
@@ -60,6 +62,7 @@ export class NftResolver {
         contractAddress: this.configService.get('ERC155_CONTRACT_ADDRESS'),
       });
     } else {
+
       return await this.nftService.createNft({
         metadata,
         ipfsUrl: ipfsMetadataUrl,
@@ -68,6 +71,7 @@ export class NftResolver {
         filePictureUrl,
         user,
         supply: nftData.supply,
+        tags: nftData.tags,
       });
     }
   }

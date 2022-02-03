@@ -4,6 +4,7 @@ import { Expose } from 'class-transformer';
 import { BaseDBObject } from '../BaseDBObject';
 import * as mongoose from 'mongoose';
 import { User } from '../user/user.schema';
+import { Tag } from '../tag/tag.schema';
 
 export type NftDocument = Nft & Document<Types.ObjectId>;
 
@@ -80,6 +81,10 @@ export class Nft extends BaseDBObject {
   @Prop()
   @Expose()
   filePictureUrl: string;
+
+  @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'Tag' })
+  @Expose()
+  tags: mongoose.PopulatedDoc<Tag>[];
 
   @Prop({ default: () => Date.now() })
   createdAt?: Date;

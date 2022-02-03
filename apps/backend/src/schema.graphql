@@ -103,6 +103,7 @@ input LoginInput {
 input NftInput {
   metadata: NftMetadataInput!
   supply: Float!
+  tags: [String!]!
 }
 
 input NftMetadataInput {

@@ -8,6 +8,7 @@ import { CoreModule } from '../core/core.module';
 import { IPFSModule } from '../ipfs/ifps.module';
 import { FileService } from '../file/file.service';
 import { UserModule } from '../user/user.module';
+import { TagModule } from '../tag/tag.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { UserModule } from '../user/user.module';
     CoreModule,
     MongooseModule.forFeature([{ name: Nft.name, schema: NftSchema }]),
     UserModule,
+    TagModule,
   ],
   providers: [NftResolver, NftService, FileService, S3Service],
   exports: [NftService],

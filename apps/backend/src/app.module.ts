@@ -7,8 +7,9 @@ import { AuthModule } from './auth/auth.module';
 import { IPFSModule } from './ipfs/ifps.module';
 import { NftModule } from './nft/nft.module';
 import { EventModule } from './event/event.module';
+import { TagModule } from './tag/tag.module';
 @Module({
-  imports: [CoreModule, GraphqlModule, UserModule, AuthModule, IPFSModule, NftModule, EventModule],
+  imports: [CoreModule, GraphqlModule, UserModule, AuthModule, IPFSModule, NftModule, EventModule, TagModule],
   controllers: [AppController],
   providers: [],
 })
