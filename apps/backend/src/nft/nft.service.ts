@@ -33,7 +33,7 @@ export class NftService {
   ) {}
 
   async createNft(createNftInput: CreateNftInput): Promise<Nft> {
-    let nftTagsObjectIds = await this.handleTags(createNftInput);
+    const nftTagsObjectIds = await this.handleTags(createNftInput);
 
     const nextNft = await this.nftModel
       .find({ contractAddress: createNftInput.contractAddress.toLowerCase() }, { tokenId: 1, _id: 0 })
