@@ -117,7 +117,7 @@ export class NftService {
         $set: {
           verified: true,
           // TODO: Should be moved to filter, as soon as we will receive chainId from the frontend
-          chainId: chainId
+          chainId
         },
       },
     );
