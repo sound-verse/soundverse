@@ -71,8 +71,8 @@ export class NftResolver {
         user,
         supply: nftData.supply,
         tags: nftData.tags,
-        transactionHash: nftData.transactionHash,
-        chainId: nftData.chainId,
+        transactionHash: nftData.transactionHash ? nftData.transactionHash : "",
+        chainId: nftData.chainId ? nftData.chainId : 0,
       });
     }
   }

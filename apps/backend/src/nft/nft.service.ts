@@ -60,8 +60,8 @@ export class NftService {
         filePictureUrl: createNftInput.filePictureUrl,
         creator: createNftInput.user,
         tags: nftTagsObjectIds,
-        transactionHash: createNftInput.transactionHash,
-        chainId: createNftInput.chainId,
+        transactionHash: createNftInput.transactionHash ? createNftInput.transactionHash : "",
+        chainId: createNftInput.chainId ? createNftInput.chainId : 0,
         owners: [
           {
             ethAddress: createNftInput.user.ethAddress,
@@ -112,10 +112,12 @@ export class NftService {
 
   async verifyNft(tokenId: number, contractAddress: string, chainId: number): Promise<void> {
     await this.nftModel.updateOne(
-      { tokenId, contractAddress: contractAddress.toLowerCase(), chainId },
+      { tokenId, contractAddress: contractAddress.toLowerCase() },
       {
         $set: {
           verified: true,
+          // TODO: Should be moved to filter, as soon as we will receive chainId from the frontend
+          chainId: chainId
         },
       },
     );

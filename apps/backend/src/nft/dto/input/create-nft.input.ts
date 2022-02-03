@@ -22,8 +22,8 @@ export class NftInput {
   @Field(() => [String]) tags: string[];
 
   @Field({ nullable: true })
-  transactionHash: string;
+  transactionHash?: string;
 
   @Field({ nullable: true })
-  chainId: number;
+  chainId?: number;
 }
