@@ -103,12 +103,12 @@ input LoginInput {
 input NftInput {
   metadata: NftMetadataInput!
   supply: Float!
+  tags: [String!]!
 }
 
 input NftMetadataInput {
   name: String!
   description: String!
-  tags: [String!]!
 }
 
 input UpdateTxInput {

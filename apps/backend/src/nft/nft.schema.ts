@@ -26,10 +26,6 @@ class NftMetadata {
   description: string;
 
   @Expose()
-  @Prop({lowercase: true })
-  tags: Array<string>;
-
-  @Expose()
   @Prop()
   image: string;
 
@@ -85,6 +81,10 @@ export class Nft extends BaseDBObject {
   @Prop()
   @Expose()
   filePictureUrl: string;
+
+  @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'Tag' })
+  @Expose()
+  tags: mongoose.PopulatedDoc<Tag>[];
 
   @Prop({ default: () => Date.now() })
   createdAt?: Date;

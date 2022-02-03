@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Nft, NftDocument } from './nft.schema';
 import { User } from '../user/user.schema';
+import { TagService } from '../tag/tag.service';
 
 export interface CreateNftMetadata {
   name: string;
   description: string;
-  tags: Array<string>;
   image: string;
   external_url: string;
 }
@@ -21,6 +21,7 @@ export interface CreateNftInput {
   filePictureUrl: string;
   user: User;
   supply: number;
+  tags: string[];
 }
 
 @Injectable()
@@ -28,9 +29,12 @@ export class NftService {
   constructor(
     @InjectModel(Nft.name) private nftModel: Model<NftDocument>,
     private configService: ConfigService,
+    private tagService: TagService,
   ) {}
 
   async createNft(createNftInput: CreateNftInput): Promise<Nft> {
+    let nftTagsObjectIds = await this.handleTags(createNftInput);
+
     const nextNft = await this.nftModel
       .find({ contractAddress: createNftInput.contractAddress.toLowerCase() }, { tokenId: 1, _id: 0 })
       .sort({ tokenId: -1 })
@@ -53,6 +57,7 @@ export class NftService {
         fileUrl: createNftInput.fileUrl,
         filePictureUrl: createNftInput.filePictureUrl,
         creator: createNftInput.user,
+        tags: nftTagsObjectIds,
         owners: [
           {
             ethAddress: createNftInput.user.ethAddress,
@@ -67,6 +72,21 @@ export class NftService {
     );
 
     return newNft;
+  }
+
+  async handleTags(createNftInput: CreateNftInput): Promise<Types.ObjectId[]> {
+    const nftTagsObjectIds = await Promise.all(
+      createNftInput.tags.map(async (tag) => {
+        const tagDocument = await this.tagService.findByName(tag);
+        if (!tagDocument) {
+          const newTagDocument = await this.tagService.create({ name: tag });
+          return newTagDocument._id;
+        } else {
+          return tagDocument._id;
+        }
+      }),
+    );
+    return nftTagsObjectIds;
   }
 
   async findNft({ contractAddress, ipfsUrl, tokenId }: Partial<Nft>): Promise<Nft> {

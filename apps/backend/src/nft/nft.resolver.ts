@@ -63,11 +63,6 @@ export class NftResolver {
       });
     } else {
 
-        nftData.metadata.tags.forEach(async tag => {
-          const tagExists = await this.tagService.findByName(tag)
-          if (!tagExists) this.tagService.create({name: tag});
-        });
-
       return await this.nftService.createNft({
         metadata,
         ipfsUrl: ipfsMetadataUrl,
@@ -76,6 +71,7 @@ export class NftResolver {
         filePictureUrl,
         user,
         supply: nftData.supply,
+        tags: nftData.tags,
       });
     }
   }
