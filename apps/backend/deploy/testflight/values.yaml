@@ -153,7 +153,7 @@ env:
   - name: DO_SPACES_ENDPOINT
     value: ams3.digitaloceanspaces.com
   - name: ERC721_CONTRACT_ADDRESS
-    value: '0x247b064C419A7B80261d70Dea30e76464301e0fD'
+    value: '0xa9F48fB7ef674a7c6Ac5629Ae44eC2c597069D1b'
   - name: IPFS_GATEWAY_URL
     value: 'https://gateway.pinata.cloud/ipfs'
   - name: METADATA_EXTERNAL_URL_BASE
