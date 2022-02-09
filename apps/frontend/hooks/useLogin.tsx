@@ -1,6 +1,6 @@
 import { useEthers } from '@usedapp/core'
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Web3Provider } from '@ethersproject/providers'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
 import { gql, useMutation } from '@apollo/client'
 import link from 'next/link'
 import { useAppContext } from '../context/AppContext'
@@ -25,31 +25,36 @@ export const useLogin = () => {
   const [login] = useMutation(LOGIN)
   const { jwtToken, setAuthToken } = useAppContext()
 
-  const isLoggedIn = useCallback(() => {
-    const jwtToken = Cookies.get('JWT_TOKEN')
+  const isLoggedIn = useCallback(
+    (jwtToken) => {
+      if (jwtToken && jwtToken !== '') {
+        const decodedJwtToken: any = jwt_decode(jwtToken)
+        let currentDate = new Date()
 
-    try {
-      const decodedJwtToken: any = jwt_decode(jwtToken)
-      let currentDate = new Date()
-
-      if (decodedJwtToken.exp * 1000 < currentDate.getTime()) {
-        return false
+        if (decodedJwtToken.exp * 1000 < currentDate.getTime()) {
+          return false
+        } else {
+          return true
+        }
       } else {
-        return true
+        return false
       }
-    } catch {
-      return false
-    }
+    },
+    [jwtToken]
+  )
+
+  const [authenticated, setAuthenticated] = useState<Boolean>(
+    isLoggedIn(Cookies.get('JWT_TOKEN'))
+  )
+
+  useEffect(() => {
+    setAuthenticated(isLoggedIn(jwtToken))
   }, [jwtToken])
 
   const authenticate = async (
-    library: Web3Provider,
+    library: JsonRpcProvider,
     account: string
-  ): Promise<boolean> => {
-    if (isLoggedIn()) {
-      return true
-    }
-
+  ): Promise<void> => {
     try {
       const nonce = await generateVerificationToken({
         variables: { data: { ethAddress: account } },
@@ -68,16 +73,16 @@ export const useLogin = () => {
       setAuthToken(jwtToken.data.login.token)
     } catch (e) {
       console.log(`Authentication failed ${e}`)
-      return false
     }
-
-    return true
   }
 
-  const logout = () => {
+  const logout = async () => {
     setAuthToken('')
-    Cookies.set('JWT_TOKEN', '')
+    await Cookies.set('JWT_TOKEN', '')
   }
 
-  return { authenticate, logout, isLoggedIn }
+  return useMemo(
+    () => ({ authenticate, logout, authenticated }),
+    [authenticate, logout, authenticated]
+  )
 }

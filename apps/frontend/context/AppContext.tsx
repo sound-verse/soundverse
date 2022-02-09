@@ -21,21 +21,21 @@ export const useAppContext = () => {
 export const AppProvider: FC = ({ children }) => {
   const [jwtToken, setJwtToken] = useState(Cookies.get('JWT_TOKEN'))
 
-  const setAuthToken = useCallback((jwtToken: string) => {
+  const setAuthToken = (jwtToken: string) => {
     if (!jwtToken) {
       Cookies.remove('JWT_TOKEN')
     } else {
       Cookies.set('JWT_TOKEN', jwtToken)
     }
     setJwtToken(jwtToken)
-  }, [])
+  }
 
   const value = useMemo(
     () => ({
       jwtToken,
       setAuthToken,
     }),
-    []
+    [jwtToken, setAuthToken]
   )
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>

@@ -45,9 +45,9 @@ export class Nft extends BaseDBObject {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   creator: mongoose.PopulatedDoc<User>;
 
-  @Prop()
+  @Prop({ nullable: true })
   @Expose()
-  tokenId: number;
+  tokenId?: number;
 
   @Expose()
   @Prop({ lowercase: true })
@@ -97,4 +97,3 @@ export class Nft extends BaseDBObject {
 export const NftSchema = SchemaFactory.createForClass(Nft);
 
 NftSchema.index({ tokenId: -1 });
-NftSchema.index({ tokenId: 1, contractAddress: 1 }, { unique: true });

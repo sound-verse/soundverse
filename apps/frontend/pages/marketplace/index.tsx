@@ -49,7 +49,7 @@ export default function Landing() {
 
   const [latestDrops, setLatestDrops] = useState([])
 
-  const nfts = loading ? [] : data.nfts
+  const nfts = loading ? [] : data?.nfts ? data.nfts : []
 
   useEffect(() => {
     if (latestDrops.length === 0) {
@@ -139,17 +139,14 @@ export default function Landing() {
               </span>
             </div>
 
-            <div className="row">
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 ">
               {nfts.map((data, key) => {
                 if (!data.filePictureUrl) {
                   return
                 }
 
                 return (
-                  <div
-                    className="col-12-sm col-6-md col-4-lg col-3-xl"
-                    key={`soundcard-wrapper-${key}`}
-                  >
+                  <div key={`soundcard-wrapper-${key}`}>
                     <div className="spacer">
                       <SoundCard
                         data={{

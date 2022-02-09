@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './SoundCard.module.scss'
+import styles from './SoundCard.module.css'
 import Image from 'next/image'
 import { IoIosAddCircleOutline } from 'react-icons/io'
 import { Rarity } from '../../model/data/testData'

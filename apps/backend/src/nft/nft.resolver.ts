@@ -24,7 +24,7 @@ export class NftResolver {
     private ipfsService: IPFSService,
     private configService: ConfigService,
     private userService: UserService,
-  ) { }
+  ) {}
 
   @UseGuards(GqlAuthGuard)
   @Mutation(() => Nft)
@@ -38,7 +38,7 @@ export class NftResolver {
     @Args('data') nftData: NftInput,
     @CurrentUser() user: LoggedinUser,
   ): Promise<NftSchema> {
-    createReadStreamPicture
+    createReadStreamPicture;
     const bucket = 'soundverse-nft';
     const rndFileName: string = crypto.randomBytes(32).toString('hex');
     const fileNFTUrl = await this.fileService.uploadFileToBucket(rndFileName, bucket, createReadStreamNFT);
@@ -58,20 +58,19 @@ export class NftResolver {
     if (ipfsMetadata.isDuplicate) {
       return await this.nftService.findNft({
         ipfsUrl: ipfsMetadataUrl,
-        contractAddress: this.configService.get('ERC155_CONTRACT_ADDRESS'),
+        contractAddress: this.configService.get('ERC721_CONTRACT_ADDRESS'),
       });
     } else {
-
       return await this.nftService.createNft({
         metadata,
         ipfsUrl: ipfsMetadataUrl,
-        contractAddress: this.configService.get('ERC155_CONTRACT_ADDRESS'),
+        contractAddress: this.configService.get('ERC721_CONTRACT_ADDRESS'),
         fileUrl: fileNFTUrl,
         filePictureUrl,
         user,
         supply: nftData.supply,
         tags: nftData.tags,
-        transactionHash: nftData.transactionHash ? nftData.transactionHash : "",
+        transactionHash: nftData.transactionHash ? nftData.transactionHash : '',
         chainId: nftData.chainId ? nftData.chainId : 0,
       });
     }
@@ -79,7 +78,7 @@ export class NftResolver {
 
   @Mutation(() => Nft)
   async updateTxHash(@Args('data') data: UpdateTxInput): Promise<NftSchema> {
-    return await this.nftService.update(data);
+    return await this.nftService.updateTxHash(data);
   }
 
   @Query(() => [Nft])

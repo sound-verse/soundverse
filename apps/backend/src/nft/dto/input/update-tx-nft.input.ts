@@ -5,10 +5,7 @@ import { Field, InputType } from '@nestjs/graphql';
 @InputType()
 export class UpdateTxInput {
   @Field()
-  tokenId: number;
-
-  @Field()
-  contractAddress: string;
+  id: string;
 
   @Field()
   transactionHash: string;
