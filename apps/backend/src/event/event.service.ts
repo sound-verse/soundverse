@@ -12,7 +12,6 @@ export class EventService {
   constructor(private nftService: NftService) {}
 
   async handleEvent(event: IEventMessage): Promise<void> {
-    console.log(event);
     const contractType: ContractType = event.contractType;
     const eventType: EventType = event.event;
     const nullAddress = '0x0000000000000000000000000000000000000000';
@@ -21,9 +20,12 @@ export class EventService {
         switch (eventType) {
           case EventType.MASTER_MINT_EVENT: {
             const returnValues: ERC721MasterMintEventReturnValues = event.returnValues;
-            if (returnValues.from === nullAddress) {
-              await this.nftService.setTokenId(parseInt(returnValues.id), event.address, event.chainId);
-            }
+            await this.nftService.setTokenId(
+              parseInt(returnValues.id),
+              event.address,
+              event.chainId,
+              event.transactionHash,
+            );
             break;
           }
         }

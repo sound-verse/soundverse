@@ -63,13 +63,13 @@ export const useCreateNFT = () => {
   const updateTransactionHash = async () => {
     await updateTxHash({
       variables: {
-        data: { id, transactionHash: mintState.receipt.transactionHash },
+        data: { id, transactionHash: mintState.transaction.hash },
       },
     })
   }
 
   useEffect(() => {
-    if (mintState.status === 'Success') {
+    if (mintState.status === 'Mining') {
       void updateTransactionHash()
     }
   }, [mintState])

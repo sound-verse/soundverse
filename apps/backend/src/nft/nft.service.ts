@@ -113,9 +113,17 @@ export class NftService {
     );
   }
 
-  async setTokenId(tokenId: number, contractAddress: string, chainId: number): Promise<void> {
+  async setTokenId(
+    tokenId: number,
+    contractAddress: string,
+    chainId: number,
+    transactionHash: string,
+  ): Promise<void> {
+    //TODO: workournd for race condition of transactionHashes -> will be solved with dead letter queue ticket
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
     await this.nftModel.updateOne(
-      { contractAddress: contractAddress.toLowerCase(), chainId },
+      { contractAddress: contractAddress.toLowerCase(), chainId, transactionHash },
       {
         $set: {
           tokenId,
