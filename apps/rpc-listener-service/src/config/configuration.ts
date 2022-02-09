@@ -5,9 +5,9 @@ export default () => ({
     local: {
       contractEvents: [
         {
-          contractAddress: '0xdc64a140aa3e981100a9beca4e685f962f0cf6c9',
+          contractAddress: '0x5FC8d32690cc91D4c39d9d3abcBD16989F875707',
           listensTo: [EventType.TRANSFER_SINGLE],
-          contractType: ContractType.ERC1155,
+          contractType: ContractType.ERC721,
           version: '0.1',
         },
       ],
@@ -17,7 +17,7 @@ export default () => ({
         {
           contractAddress: '0x247b064C419A7B80261d70Dea30e76464301e0fD',
           listensTo: [EventType.TRANSFER_SINGLE],
-          contractType: ContractType.ERC1155,
+          contractType: ContractType.ERC721,
           version: '0.1',
         },
       ],

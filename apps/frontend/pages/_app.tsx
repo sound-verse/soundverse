@@ -2,8 +2,8 @@ import React from 'react'
 import type { AppProps } from 'next/app'
 import { DAppProvider } from '@usedapp/core'
 import { AppProvider } from '../context/AppContext'
-import 'tailwindcss/tailwind.css'
-import './styles.scss'
+import '../css/index.css'
+import '../css/pages/marketplace.css'
 import { ApolloClientProvider } from '../context/ApolloClientProvider'
 
 function MyApp({ Component, pageProps }: AppProps) {

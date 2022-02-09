@@ -5,18 +5,13 @@
   display: flex;
   flex-direction: row;
   width: 100%;
-  margin: 0, auto;
-  // justify-content: space-between;
+  margin: 0 auto;
   align-items: center;
   background: #272727;
   border-radius: 0px 0px 15px 15px;
   height: 100px;
 }
 
-.headerItem {
-  // display: inline-block;
-  // position: absolute;
-}
 .nineByNineIcon {
   position: relative;
   justify-self: center;
@@ -25,14 +20,12 @@
   padding: 0px 20px 0px 20px;
 }
 .soundverseText {
+  @apply font-AOCR font-extrabold text-purple;
   position: relative;
   justify-self: center;
   cursor: pointer;
-  font-family: 'AQCT';
-  color: #7c4dff;
   font-size: 32px;
   line-height: 38.4px;
-  font-weight: 400;
 }
 .headerSearchbar {
   flex-grow: 4;
@@ -45,11 +38,11 @@
   padding: 0px 10px 0px 40px;
   background: transparent url('/img/searchIcon.svg') 12px 12px/22px 22px
     no-repeat;
-  &:focus {
-    outline-style: solid;
-    border-color: #7c4dff;
-    box-shadow: 0px 0px 8px #7c4dff;
-  }
+}
+.headerSearchbar:focus {
+  outline-style: solid;
+  border-color: #7c4dff;
+  box-shadow: 0px 0px 8px #7c4dff;
 }
 
 .headerSpacer {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { utils } from 'ethers'
 import { Contract } from '@ethersproject/contracts'
-import SoundVerseERC1155 from '../../artifacts/SoundVerseERC1155.sol/SoundVerseERC1155.json'
+import SoundVerseERC721 from '../../artifacts/SoundVerseERC1155.sol/SoundVerseERC721.json'
 import { useContractFunction, useEthers, useContractCall } from '@usedapp/core'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/router'
@@ -9,9 +9,10 @@ import gql from 'graphql-tag'
 import { print } from 'graphql'
 import axios from 'axios'
 import Cookies from 'js-cookie'
+import crypto from 'crypto'
 
-const erc115ABI = SoundVerseERC1155.abi
-const contractaddress = process.env.NEXT_PUBLIC_ERC1155_CONTRACT_ADDRESS
+const erc721ABI = SoundVerseERC721.abi
+const contractaddress = process.env.NEXT_PUBLIC_ERC721_CONTRACT_ADDRESS
 
 const CREATE_NFT = gql`
   mutation createNft(
@@ -20,27 +21,45 @@ const CREATE_NFT = gql`
     $data: NftInput!
   ) {
     createNft(NFTFile: $NFTFile, pictureFile: $pictureFile, data: $data) {
-      tokenId
       ipfsUrl
-      fileUrl
     }
   }
 `
 
-function useCreateERC1155(nftFile, pictureFile, name, description, setShowing) {
-  const { account } = useEthers()
-  const isConnected = account !== undefined
-  const ercInterface = new utils.Interface(erc115ABI)
+export type CreateNFT = {
+  nftFile: File
+  pictureFile: File
+  name: string
+  description: string
+  tags?: string[]
+  licences?: number
+}
 
+export const useCreateNFT = () => {
+  const { account, library } = useEthers()
+
+  const ercInterface = new utils.Interface(erc721ABI)
   const contract = new Contract(contractaddress, ercInterface)
 
   const { state: mintState, send: mintSend } = useContractFunction(
     contract as any,
-    'mint',
+    'createMasterItem',
     {}
   )
 
-  const handleMintClick: any = async () => {
+  const mint = async ({
+    nftFile,
+    pictureFile,
+    name,
+    description,
+    tags = [],
+    licences = 2,
+  }: CreateNFT) => {
+    const isConnected = account !== undefined
+    const { chainId } = await library.getNetwork()
+
+    console.log(chainId)
+
     if (isConnected) {
       const formData = new FormData()
       formData.append(
@@ -49,7 +68,12 @@ function useCreateERC1155(nftFile, pictureFile, name, description, setShowing) {
           query: print(CREATE_NFT),
           variables: {
             file: null,
-            data: { metadata: { name, description }, supply: 1 },
+            data: {
+              metadata: { name, description },
+              supply: licences,
+              tags,
+              chainId,
+            },
           },
         })
       )
@@ -71,18 +95,14 @@ function useCreateERC1155(nftFile, pictureFile, name, description, setShowing) {
           Authorization: `Bearer ${Cookies.get('JWT_TOKEN')}`,
         },
       })
-      const tokenId: number = response.data.data.createNft.tokenId
       const ipfsUrl: string = response.data.data.createNft.ipfsUrl
 
       try {
         mintSend(
-          account,
-          tokenId,
           process.env.NEXT_PUBLIC_ENVIRONMENT === 'local'
-            ? tokenId.toString()
+            ? `http://ipfs.local/${crypto.randomBytes(16).toString('hex')}` //random string for localhost
             : ipfsUrl,
-          1,
-          utils.randomBytes(3)
+          licences
         )
       } catch (e) {}
     } else {
@@ -90,7 +110,5 @@ function useCreateERC1155(nftFile, pictureFile, name, description, setShowing) {
     }
   }
 
-  return [handleMintClick, mintState]
+  return { mint, mintState }
 }
-
-export default useCreateERC1155

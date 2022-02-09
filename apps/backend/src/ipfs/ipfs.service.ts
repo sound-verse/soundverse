@@ -135,7 +135,7 @@ export class IPFSService {
       ...nftData.metadata,
       image: ipfsFileUrl,
       external_url: `${this.configService.get('METADATA_EXTERNAL_URL_BASE')}/${this.configService.get(
-        'ERC155_CONTRACT_ADDRESS',
+        'ERC721_CONTRACT_ADDRESS',
       )}/${metadataPreHash}`,
     };
 

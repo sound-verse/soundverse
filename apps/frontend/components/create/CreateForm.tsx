@@ -1,286 +1,238 @@
-import LoadingModal from '../common/modals/LoadingModal'
-import ToggleSwitch from '../common/ToggleSwitch'
-import useCreateERC1155 from '../../hooks/contracts/useCreateERC1155'
-import { Formik, Form, FieldArray, Field, ErrorMessage } from 'formik'
+import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
-import FormikControl from './FormikControl'
-import { Fragment, useRef, useState } from 'react'
-import ValidationError from './ValidationError'
+import { Fragment, useEffect, useRef, useState } from 'react'
+import { useRouter } from 'next/router'
+import { useCreateNFT } from '../../hooks/contracts/useCreateNFT'
+import { Toaster } from 'react-hot-toast'
+import toast from 'react-hot-toast'
+import Modal from 'react-modal'
+import { Bars } from 'react-loader-spinner'
+import styles from './CreateForm.module.css'
 
-//using radio buttons for royalty %
-const royaltyOptions = [
-  { key: '10%', value: '10' },
-  { key: '15%', value: '15' },
-  { key: '30%', value: '30' },
+const FILE_SIZE = 100000000
+
+export const SUPPORTED_FORMATS_PICTURE = [
+  'image/jpg',
+  'image/jpeg',
+  'image/gif',
+  'image/png',
 ]
-const initialValues = {
-  file: false,
-  name: '',
-  description: '',
-  tags: [''],
-  price: 0,
-  switch: false,
-  royaltyPercent: '',
-  editions: 0,
-}
-const validationSchema = Yup.object({
-  file: Yup.bool()
-    .required('Please upload your file')
-    .oneOf([true], 'Please upload your file'),
-  name: Yup.string().required('Please enter a title'),
-  price: Yup.number()
-    .typeError('Please enter a valid numeric amount')
-    .min(0.01, 'Minimum value of .01 ETH')
-    .required('Please enter a valid numeric amount'),
-  royaltyPercent: Yup.string().required('Please choose one'),
-  editions: Yup.number()
-    .typeError('Please enter a number')
-    .min(1, 'Minimum 1 edition')
-    .required('Please enter a number'),
-})
 
-const onSubmit = (values, onSubmitProps) => {
-  console.log('Form Accepted!', values)
+export const SUPPORTED_FORMATS_MUSIC = ['audio/mpeg', 'audio/wav']
 
-  //await form submission accepted
-
-  onSubmitProps.setSubmitting(false)
-}
-export default function CreateForm() {
+export const CreateForm = () => {
+  const [nftFile, setNftFile] = useState<File>(undefined)
+  const [pictureFile, setPictureFile] = useState<File>(undefined)
   const [showing, setShowing] = useState<Boolean>(false)
-  const modalOnClick = () => setShowing(false)
-  const [file, setSubmittedFile] = useState(null)
+  const router = useRouter()
+  const { mint, mintState } = useCreateNFT()
+  const [nftFileError, setNftFileError] = useState<String>('')
+  const [pictureFileError, setPictureFileError] = useState<String>('')
 
-  // const [handleMintClick, mintState] = useCreateERC1155(
-  //   file,
-  //   name,
-  //   description,
-  //   setShowing
+  const initialValues = {
+    name: '',
+    description: '',
+    tags: [],
+    licences: 2,
+  }
+
+  const onFileChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    setFile: React.Dispatch<React.SetStateAction<File>>,
+    setFileError: React.Dispatch<React.SetStateAction<String>>,
+    supportedFormats: string[]
+  ) => {
+    const fileSize = e.target.files[0].size
+    const fileType = e.target.files[0].type
+    const file = e.target.files[0]
+
+    if (fileSize > FILE_SIZE) {
+      setFileError('Your selected file is too large')
+      return
+    }
+
+    if (!supportedFormats.includes(fileType)) {
+      setFileError('Your selected file type is not supported')
+      return
+    }
+
+    setFile(file)
+    setFileError('')
+  }
+
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().required('Please enter a title'),
+    description: Yup.string().required('Please enter a description'),
+    licences: Yup.number()
+      .typeError('Please enter a number')
+      .min(2, 'You have to set at least a minium of 2 licences')
+      .required('Please enter a number'),
+  })
+
+  const onSubmit = async (values, onSubmitProps) => {
+    console.log(values)
+
+    if (!nftFile) {
+      setNftFileError('Please select a music file')
+      return
+    }
+
+    if (!pictureFile) {
+      setPictureFileError('Please select a picture file')
+      return
+    }
+    try {
+      setShowing(true)
+      await mint({
+        nftFile,
+        pictureFile,
+        name: values.name,
+        description: values.description,
+      })
+    } catch (error) {
+      setShowing(false)
+      console.log(error)
+      toast.error('Error minting your NFT')
+    }
+
+    onSubmitProps.setSubmitting(false)
+  }
+
+  Modal.setAppElement('#__next')
+
+  useEffect(() => {
+    if (mintState.status === 'Success') {
+      setShowing(false)
+      router.push('/marketplace')
+    }
+    if (mintState.status == 'Exception') {
+      setShowing(false)
+      toast('Error minting your NFT')
+      console.log(mintState.errorMessage)
+    }
+  }, [mintState])
 
   return (
-    <Fragment>
+    <div>
+      <Toaster position="top-right" />
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={onSubmit}
-        validateOnMount={true}
+        enableReinitialize
       >
-        {(formik) => {
-          console.log(formik)
-          return (
-            <Form>
-              <div>
-                <h3 className="text-lg font-bold my-1">Preview</h3>
-                <div>
-                  Upload a moment of of your live set where you played a piece
-                  of unpublished music!
-                </div>
-                <div className="flex">
-                  <div>Live Video Moment</div>
-                  <div>Add album covers</div>
-                </div>
-              </div>
-
-              <div className="my-5 ">
-                <h3 className="text-lg font-bold my-1">
-                  Unlock once purchased
-                </h3>
-                <div>
-                  Content will be unlocked after a successful transaction
-                </div>
-                <div>* - Indicates Required Field</div>
-                <div className="my-2">
-                  <input
-                    type="file"
-                    id="file"
-                    name="file"
-                    onChange={(e) => {
-                      /*Formik has no built in way to handle file types
-                      so we set the file property to true when a user submits a file
-                      and store the value in state*/
-                      setSubmittedFile(e.target.files[0])
-                      formik.setFieldValue('file', true)
-                      console.log(e.target.files[0])
-                    }}
-                  ></input>
-                </div>
-                <div className="my-2">
-                  <FormikControl
-                    control="input"
-                    type="text"
-                    label="Title*"
-                    name="name"
-                  />
-                </div>
-                <div className="my-2">
-                  <FormikControl
-                    control="input"
-                    type="text"
-                    label="Track Description"
-                    name="description"
-                  />
-                </div>
-                <div className="my-2 ">
-                  <label>Tags</label>
-                  <FieldArray name="tags">
-                    {(fieldArrayProps) => {
-                      // console.log('Field Array Props', fieldArrayProps)
-                      const { push, remove, form } = fieldArrayProps
-                      const { values } = form
-                      const { tags } = values
-                      return (
-                        <div>
-                          {tags.map((tag, index) => (
-                            <div key={index} className="text-black">
-                              <Field name={`tags[${index}]`}></Field>
-                              {index > 0 && (
-                                <button
-                                  className="text-white"
-                                  type="button"
-                                  onClick={() => remove(index)}
-                                >
-                                  Delete
-                                </button>
-                              )}
-                              {index === 0 && (
-                                <button
-                                  type="button"
-                                  className="text-white"
-                                  onClick={() => push('')}
-                                >
-                                  Add Tag
-                                </button>
-                              )}
-
-                              <br></br>
-                            </div>
-                          ))}
-                        </div>
-                      )
-                    }}
-                  </FieldArray>
-                </div>
-              </div>
-
-              <div className="my-5">
-                <h3 className="text-lg font-bold my-1">Copyright ownership</h3>
-                <div>
-                  I certify that I own 100% of the copyright on this unpublished
-                  track and I agree with Linifty terms and coniditions.{' '}
-                </div>
-              </div>
-              {showing ? (
-                <LoadingModal onClick={modalOnClick}></LoadingModal>
-              ) : null}
-
-              <div className="my-5">
-                <h3 className="text-lg font-bold my-1">
-                  Engage with your fans and maximise your marketing potential
-                </h3>
-                <div>
-                  <div>
-                    In the near future we are planning to allow artists to sell
-                    a portion of their unpublished tracks copyright as an NFT to
-                    their fans. This bring artists and their fans closer than
-                    ever and allows both to benefit from each other. You can
-                    read more about this here in our article.{' '}
-                  </div>
-                  <div className="mt-3">
-                    In the case of this feature release are you willing to allow
-                    people who collected this NFT take part in a live auction
-                    event where they can buy portion of this tracks copyright?{' '}
-                  </div>
-                  <div
-                    onChange={() => {
-                      const { values } = formik
-                      values.switch = !values.switch
-                    }}
-                  >
-                    <Field
-                      type="checkbox"
-                      name="switch"
-                      component={ToggleSwitch}
-                    ></Field>
-                  </div>
-                </div>
-              </div>
-
-              <div className="my-5">
-                <div>
-                  Enter a price to allow users instantly purchase your NFT
-                </div>
-                <div className="my-3 flex">
-                  <FormikControl
-                    control="input"
-                    type="text"
-                    label="Price*"
-                    name="price"
-                  />
-                  <br></br>
-                  ETH
-                </div>
-                <div>
-                  Service fee: 5% <br />
-                  {formik.values.price &&
-                    !isNaN(formik.values.price) &&
-                    `You will recieve ${formik.values.price * 0.95} ETH`}
-                </div>
-              </div>
-
-              <div className="my-5">
-                <div className="flex">
-                  <div>
-                    <FormikControl
-                      control="radio"
-                      label="Royalty Percentage*"
-                      name="royaltyPercent"
-                      options={royaltyOptions}
-                    />
-                  </div>
-                  <div className="ml-10">
-                    <FormikControl
-                      control="input"
-                      type="text"
-                      label="Number of Editions*"
-                      name="editions"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="my-5">
-                <h3 className="text-lg font-bold my-1">Royalty Partners</h3>
-              </div>
-
-              <button
-                className={
-                  formik.isSubmitting || !formik.isValid
-                    ? 'bg-white text-gray-400 mb-8 w-44 h-8 text-md font-bold border border-white'
-                    : 'createBtn mb-8 w-44 h-8 text-md font-bold border border-white rounded-xl'
-                }
-                disabled={!formik.isValid || formik.isSubmitting}
-                type="submit"
+        <Form>
+          <div className="flex flex-col">
+            <div className="text-white font-bold text-base">Track</div>
+            <div>
+              <label
+                htmlFor="nftFile"
+                className="text-white border-2 border-white rounded-full p-2 mt-5 inline-block cursor-pointer px-36 whitespace-nowrap"
               >
-                Create the package
-              </button>
-            </Form>
-          )
-        }}
+                Choose Music File
+              </label>
+              <Field
+                type="file"
+                id="nftFile"
+                name="nftFile"
+                className="hidden"
+                onChange={(e) =>
+                  onFileChange(
+                    e,
+                    setNftFile,
+                    setNftFileError,
+                    SUPPORTED_FORMATS_MUSIC
+                  )
+                }
+              ></Field>
+              <div className="text-grey-light mt-3">MP3, WAVE - Max 100Mb</div>
+              <div className="text-grey-light">
+                {nftFile && `Selected File: ${nftFile.name}`}
+              </div>
+              <div className={styles.error}>{nftFileError}</div>
+            </div>
+            <div>
+              <label
+                htmlFor="pictureFile"
+                className="text-white border-2 border-white rounded-full p-2 mt-5 inline-block cursor-pointer px-36 whitespace-nowrap"
+              >
+                Choose Nft Cover Picture
+              </label>
+              <input
+                type="file"
+                id="pictureFile"
+                name="pictureFile"
+                className="hidden"
+                onChange={(e) =>
+                  onFileChange(
+                    e,
+                    setPictureFile,
+                    setPictureFileError,
+                    SUPPORTED_FORMATS_PICTURE
+                  )
+                }
+              ></input>
+              <div className="text-grey-light mt-3">JPG, PNG - Max 100Mb</div>
+            </div>
+            <div className="text-grey-light">
+              {pictureFile && `Selected File: ${pictureFile.name}`}
+            </div>
+            <div className={styles.error}>{pictureFileError}</div>
+            <div className="text-white font-bold text-base mt-10">
+              Track Name
+            </div>
+            <div className="mt-3">
+              <Field
+                id="name"
+                name="name"
+                placeholder="Ice in the dark..."
+                className="outline-none bg-grey-dark text-white"
+              />
+              <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
+              <div className="text-grey-light mt-2">max. 20 characters</div>
+              <div className={styles.error}>
+                <ErrorMessage name="name" />
+              </div>
+            </div>
+            <div className="text-white font-bold text-base mt-10">
+              Description
+            </div>
+            <div className="mt-3">
+              <Field
+                type="input"
+                as="textarea"
+                name="description"
+                className="w-full text-white bg-transparent border-2 rounded-3xl p-5"
+                id="trac-desc"
+                placeholder="I am ..."
+                rows={8}
+                cols={50}
+              ></Field>
+              <div className={styles.error}>
+                <ErrorMessage name="description" />
+              </div>
+            </div>
+            <button
+              className="text-white cursor-pointer rounded-full bg-purple px-24 py-4 ml-auto mt-10 font-bold"
+              type="submit"
+            >
+              Mint
+            </button>
+          </div>
+        </Form>
       </Formik>
-      <style jsx>{`
-        div {
-          color: #ede7f6;
-        }
-        h3 {
-          color: #ede7f6;
-        }
-        .chooseBtn {
-          background: #6200ea;
-        }
-        .createBtn {
-          background: #6200ea;
-        }
-      `}</style>
-    </Fragment>
+      <Modal
+        isOpen={showing}
+        contentLabel="onRequestClose Example"
+        className="flex justify-center items-center h-full"
+      >
+        <div className="w-1/2 h-1/2 rounded-3xl p-10 bg-grey-dark flex flex-col justify-between items-center">
+          <div className="h-full w-full justify-center items-center flex flex-col">
+            <div className="text-white text-3xl font-bold mb-10">Minting</div>
+            <Bars color="#7A64FF" height={80} width={80} />
+          </div>
+        </div>
+      </Modal>
+    </div>
   )
 }

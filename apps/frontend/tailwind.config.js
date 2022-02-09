@@ -9,6 +9,13 @@ module.exports = {
         'grey-medium': '#464447',
         purple: '#7A64FF',
       },
+      fontFamily: {
+        lato: ['Lato', 'sans-serif'],
+        raleway: ['Raleway', 'sans-serif'],
+        poppins: ['Poppins', 'sans-serif'],
+        AQCT: ['AQCT', 'sans-serif'],
+        AOCR: ['AOCR', 'sans-serif'],
+      },
     },
   },
   variants: {
