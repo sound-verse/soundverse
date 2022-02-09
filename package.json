@@ -21,5 +21,8 @@
       "apps/*",
       "shared/*"
     ]
+  },
+  "dependencies": {
+    "newrelic": "^8.7.1"
   }
 }
