@@ -12,6 +12,7 @@ export class EventService {
   constructor(private nftService: NftService) {}
 
   async handleEvent(event: IEventMessage): Promise<void> {
+    console.log(event);
     const contractType: ContractType = event.contractType;
     const eventType: EventType = event.event;
     const nullAddress = '0x0000000000000000000000000000000000000000';

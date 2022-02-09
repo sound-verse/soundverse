@@ -88,14 +88,18 @@ export class RPCListenerService implements OnApplicationBootstrap, OnModuleDestr
       return;
     }
 
-    eventCall(this.options, (error, event: IEventMessage) => {
-      if (error) {
-        console.log(`RPC Listener received error ${error}`);
-      }
-      event.contractType = contractType;
-      event.chainId = this.options.chainId;
-      this.handleEvent(event);
-    });
+    try {
+      eventCall(this.options, (error, event: IEventMessage) => {
+        if (error) {
+          console.log(`RPC Listener received error ${error}`);
+        }
+        event.contractType = contractType;
+        event.chainId = this.options.chainId;
+        this.handleEvent(event);
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   handleEvent(event: IEventMessage): void {

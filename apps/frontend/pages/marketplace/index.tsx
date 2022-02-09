@@ -49,7 +49,7 @@ export default function Landing() {
 
   const [latestDrops, setLatestDrops] = useState([])
 
-  const nfts = loading ? [] : data.nfts
+  const nfts = loading ? [] : data?.nfts ? data.nfts : []
 
   useEffect(() => {
     if (latestDrops.length === 0) {

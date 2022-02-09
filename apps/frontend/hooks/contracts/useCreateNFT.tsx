@@ -5,7 +5,7 @@ import SoundVerseERC721 from '../../artifacts/SoundVerseERC1155.sol/SoundVerseER
 import { useContractFunction, useEthers, useContractCall } from '@usedapp/core'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/router'
-import gql from 'graphql-tag'
+import { gql, useMutation } from '@apollo/client'
 import { print } from 'graphql'
 import axios from 'axios'
 import Cookies from 'js-cookie'
@@ -21,7 +21,17 @@ const CREATE_NFT = gql`
     $data: NftInput!
   ) {
     createNft(NFTFile: $NFTFile, pictureFile: $pictureFile, data: $data) {
+      id
       ipfsUrl
+    }
+  }
+`
+
+const UPDATE_TX_HASH = gql`
+  mutation updateTxHash($data: UpdateTxInput!) {
+    updateTxHash(data: $data) {
+      id
+      transactionHash
     }
   }
 `
@@ -37,15 +47,32 @@ export type CreateNFT = {
 
 export const useCreateNFT = () => {
   const { account, library } = useEthers()
+  const [id, setId] = useState<String>('')
 
   const ercInterface = new utils.Interface(erc721ABI)
   const contract = new Contract(contractaddress, ercInterface)
+
+  const [updateTxHash] = useMutation(UPDATE_TX_HASH)
 
   const { state: mintState, send: mintSend } = useContractFunction(
     contract as any,
     'createMasterItem',
     {}
   )
+
+  const updateTransactionHash = async () => {
+    await updateTxHash({
+      variables: {
+        data: { id, transactionHash: mintState.receipt.transactionHash },
+      },
+    })
+  }
+
+  useEffect(() => {
+    if (mintState.status === 'Success') {
+      void updateTransactionHash()
+    }
+  }, [mintState])
 
   const mint = async ({
     nftFile,
@@ -57,8 +84,6 @@ export const useCreateNFT = () => {
   }: CreateNFT) => {
     const isConnected = account !== undefined
     const { chainId } = await library.getNetwork()
-
-    console.log(chainId)
 
     if (isConnected) {
       const formData = new FormData()
@@ -96,9 +121,12 @@ export const useCreateNFT = () => {
         },
       })
       const ipfsUrl: string = response.data.data.createNft.ipfsUrl
+      const id: string = response.data.data.createNft.id
+
+      setId(id)
 
       try {
-        mintSend(
+        await mintSend(
           process.env.NEXT_PUBLIC_ENVIRONMENT === 'local'
             ? `http://ipfs.local/${crypto.randomBytes(16).toString('hex')}` //random string for localhost
             : ipfsUrl,

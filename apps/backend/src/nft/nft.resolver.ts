@@ -78,7 +78,7 @@ export class NftResolver {
 
   @Mutation(() => Nft)
   async updateTxHash(@Args('data') data: UpdateTxInput): Promise<NftSchema> {
-    return await this.nftService.update(data);
+    return await this.nftService.updateTxHash(data);
   }
 
   @Query(() => [Nft])

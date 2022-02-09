@@ -44,7 +44,8 @@ type NftMetadata {
 }
 
 type Nft {
-  tokenId: Float!
+  id: String!
+  tokenId: Float
   contractAddress: String!
   ipfsUrl: String!
   fileUrl: String!
@@ -114,7 +115,6 @@ input NftMetadataInput {
 }
 
 input UpdateTxInput {
-  tokenId: Float!
-  contractAddress: String!
+  id: String!
   transactionHash: String!
 }

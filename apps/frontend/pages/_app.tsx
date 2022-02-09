@@ -1,16 +1,21 @@
 import React from 'react'
 import type { AppProps } from 'next/app'
-import { DAppProvider } from '@usedapp/core'
+import {
+  DAppProvider,
+  FullConfig,
+  Localhost,
+  Mumbai,
+  Polygon,
+} from '@usedapp/core'
 import { AppProvider } from '../context/AppContext'
 import '../css/index.css'
 import '../css/pages/marketplace.css'
 import { ApolloClientProvider } from '../context/ApolloClientProvider'
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const config = {
-    ...(process.env.NEXT_PUBLIC_ENVIRONMENT === 'local' && {
-      multicallAddresses: ['0xdf3e18d64bc6a983f673ab319ccae4f1a57c7097'],
-    }),
+  const config: Partial<FullConfig> = {
+    networks:
+      process.env.NEXT_PUBLIC_ENVIRONMENT === 'local' ? [Localhost] : [Mumbai],
   }
 
   return (

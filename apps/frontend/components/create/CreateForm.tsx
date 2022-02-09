@@ -70,8 +70,6 @@ export const CreateForm = () => {
   })
 
   const onSubmit = async (values, onSubmitProps) => {
-    console.log(values)
-
     if (!nftFile) {
       setNftFileError('Please select a music file')
       return
@@ -114,7 +112,6 @@ export const CreateForm = () => {
 
   return (
     <div>
-      <Toaster position="top-right" />
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}

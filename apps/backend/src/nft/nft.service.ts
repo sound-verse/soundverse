@@ -5,6 +5,7 @@ import { Model, Types } from 'mongoose';
 import { Nft, NftDocument } from './nft.schema';
 import { User } from '../user/user.schema';
 import { TagService } from '../tag/tag.service';
+import { UpdateTxInput } from './dto/input/update-tx-nft.input';
 
 export interface CreateNftMetadata {
   name: string;
@@ -100,6 +101,14 @@ export class NftService {
     return await this.nftModel.findOneAndUpdate(
       { tokenId: nftData.tokenId, contractAddress: nftData.contractAddress.toLowerCase() },
       { ...nftData },
+      { new: true },
+    );
+  }
+
+  async updateTxHash(txInput: UpdateTxInput): Promise<Nft> {
+    return await this.nftModel.findOneAndUpdate(
+      { _id: txInput.id, tokenId: null },
+      { transactionHash: txInput.transactionHash },
       { new: true },
     );
   }
