@@ -37,12 +37,6 @@ export class NftService {
   async createNft(createNftInput: CreateNftInput): Promise<Nft> {
     const nftTagsObjectIds = await this.handleTags(createNftInput);
 
-    const nextNft = await this.nftModel
-      .find({ contractAddress: createNftInput.contractAddress.toLowerCase() }, { tokenId: 1, _id: 0 })
-      .sort({ tokenId: -1 })
-      .limit(1);
-    const nextId = nextNft[0] ? nextNft[0].tokenId + 1 : 1;
-
     let ipfsUrl = createNftInput.ipfsUrl;
 
     if (this.configService.get<string>('ENVIRONMENT') === 'local') {
@@ -52,15 +46,15 @@ export class NftService {
     const newNft = await this.nftModel.findOneAndUpdate(
       { ipfsUrl, contractAddress: createNftInput.contractAddress.toLowerCase() },
       {
+        verified: true, //we set all new NFTS to verfied, to prepare already for lazy minting
         metadata: createNftInput.metadata,
-        tokenId: nextId,
         contractAddress: createNftInput.contractAddress.toLowerCase(),
         ipfsUrl: createNftInput.ipfsUrl,
         fileUrl: createNftInput.fileUrl,
         filePictureUrl: createNftInput.filePictureUrl,
         creator: createNftInput.user,
         tags: nftTagsObjectIds,
-        transactionHash: createNftInput.transactionHash ? createNftInput.transactionHash : "",
+        transactionHash: createNftInput.transactionHash ? createNftInput.transactionHash : '',
         chainId: createNftInput.chainId ? createNftInput.chainId : 0,
         owners: [
           {
@@ -110,14 +104,12 @@ export class NftService {
     );
   }
 
-  async verifyNft(tokenId: number, contractAddress: string, chainId: number): Promise<void> {
+  async setTokenId(tokenId: number, contractAddress: string, chainId: number): Promise<void> {
     await this.nftModel.updateOne(
-      { tokenId, contractAddress: contractAddress.toLowerCase() },
+      { contractAddress: contractAddress.toLowerCase(), chainId },
       {
         $set: {
-          verified: true,
-          // TODO: Should be moved to filter, as soon as we will receive chainId from the frontend
-          chainId
+          tokenId,
         },
       },
     );

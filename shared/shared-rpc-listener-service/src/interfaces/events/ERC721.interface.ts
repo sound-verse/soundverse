@@ -1,4 +1,4 @@
-export interface ERC1155TransferSingleReturnValues {
+export interface ERC721MasterMintEventReturnValues {
   operator: string;
   from: string;
   to: string;

@@ -47,7 +47,7 @@ export class Nft extends BaseDBObject {
 
   @Prop()
   @Expose()
-  tokenId: number;
+  tokenId?: number;
 
   @Expose()
   @Prop({ lowercase: true })
