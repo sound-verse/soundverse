@@ -1,13 +1,15 @@
 import { Field, InputType } from '@nestjs/graphql';
-// import xss from 'xss';
-// import { Transform } from 'class-transformer';
+import { Transform } from 'class-transformer';
+import xss from 'xss';
 
 @InputType()
 export class NftMetadataInput {
   @Field()
+  @Transform(({ value }) => xss(value))
   name: string;
 
   @Field()
+  @Transform(({ value }) => xss(value))
   description: string;
 }
 
