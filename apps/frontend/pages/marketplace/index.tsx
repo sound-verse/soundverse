@@ -3,7 +3,6 @@ import Head from 'next/head'
 import Image from 'next/image'
 import Layout from '../../components/layout'
 import SidebarFilters from '../../components/marketplace/SidebarFilters'
-import Drops from '../../components/marketplace/Drops'
 import MarketplaceSearchBar from '../../components/marketplace/MarketplaceSearchBar'
 import {
   latestDrops as dataLatestDrops,
