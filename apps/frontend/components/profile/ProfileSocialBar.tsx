@@ -34,6 +34,7 @@ export const PorfileSocialBar = ({
           <a
             href={`https://twitter.com/${twitter}`}
             target="_blank"
+            rel="noreferrer"
             className={cn(iconClass, styles.lastNoBorder)}
           >
             <Image
@@ -48,6 +49,7 @@ export const PorfileSocialBar = ({
           <a
             href={`https://instagram.com/${instagram}`}
             target="_blank"
+            rel="noreferrer"
             className={cn(iconClass, styles.lastNoBorder)}
           >
             <Image
@@ -62,6 +64,7 @@ export const PorfileSocialBar = ({
           <a
             href={`https://soundcloud.com/${soundcloud}`}
             target="_blank"
+            rel="noreferrer"
             className={cn(iconClass, styles.lastNoBorder)}
           >
             <Image
@@ -76,6 +79,7 @@ export const PorfileSocialBar = ({
           <a
             href={`https://open.spotify.com/artist/${spotify}`}
             target="_blank"
+            rel="noreferrer"
             className={cn(iconClass, styles.lastNoBorder)}
           >
             <Image
@@ -90,6 +94,7 @@ export const PorfileSocialBar = ({
           <a
             href={`https://discord.com/users/${discord}`}
             target="_blank"
+            rel="noreferrer"
             className={cn(iconClass, styles.lastNoBorder)}
           >
             <Image
