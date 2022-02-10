@@ -23,6 +23,7 @@
     "apollo-link-ws": "^1.0.20",
     "apollo-upload-client": "^17.0.0",
     "axios": "^0.24.0",
+    "classnames": "^2.3.1",
     "crypto": "^1.0.1",
     "deepmerge": "^4.2.2",
     "eslint": "^7.32.0",

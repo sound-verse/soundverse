@@ -6,6 +6,8 @@ import { Nft, NftDocument } from './nft.schema';
 import { User } from '../user/user.schema';
 import { TagService } from '../tag/tag.service';
 import { UpdateTxInput } from './dto/input/update-tx-nft.input';
+import { NftsFilter } from './dto/input/nfts-filter.input';
+import { UserService } from '../user/user.service';
 
 export interface CreateNftMetadata {
   name: string;
@@ -29,10 +31,12 @@ export interface CreateNftInput {
 
 @Injectable()
 export class NftService {
+  userModel: any;
   constructor(
     @InjectModel(Nft.name) private nftModel: Model<NftDocument>,
     private configService: ConfigService,
     private tagService: TagService,
+    private userService: UserService,
   ) {}
 
   async createNft(createNftInput: CreateNftInput): Promise<Nft> {
@@ -132,7 +136,11 @@ export class NftService {
     );
   }
 
-  async getNfts(): Promise<Nft[]> {
+  async getNfts(filter?: NftsFilter): Promise<Nft[]> {
+    if (filter?.creatorEthAddress) {
+      const creator = await this.userService.findByETHAddress(filter.creatorEthAddress.toLowerCase());
+      return this.nftModel.find({ verified: true, creator: creator._id });
+    }
     return this.nftModel.find({ verified: true });
   }
 }

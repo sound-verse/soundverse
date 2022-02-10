@@ -9,6 +9,9 @@ type User {
   ethAddress: String
   twitter: String
   instagram: String
+  soundcloud: String
+  discord: String
+  spotify: String
   website: String
   profileImage: String
   verified: Boolean
@@ -21,6 +24,9 @@ type AuthUser {
   ethAddress: String
   twitter: String
   instagram: String
+  soundcloud: String
+  discord: String
+  spotify: String
   website: String
   profileImage: String
   verified: Boolean
@@ -59,8 +65,12 @@ type Nft {
 type Query {
   user(ethAddress: String!): User
   me: User!
-  nfts: [Nft!]!
+  nfts(filter: NftsFilter): [Nft!]!
   nft(filter: NftFilter!): Nft!
+}
+
+input NftsFilter {
+  creatorEthAddress: String!
 }
 
 input NftFilter {
@@ -82,11 +92,12 @@ input UpdateUserInput {
   email: String
   twitter: String
   instagram: String
+  soundcloud: String
+  discord: String
+  spotify: String
   website: String
   description: String
   name: String
-  profileImage: String
-  profileBanner: String
 }
 
 """The `Upload` scalar type represents a file upload."""

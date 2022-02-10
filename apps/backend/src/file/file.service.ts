@@ -13,11 +13,16 @@ const allowedMusicNftsRegEx = new RegExp('([a-zA-Z0-9\\s_\\.\\-\\(\\):])+(.mp3|.
 export class FileService {
   constructor(private configService: ConfigService, private s3Service: S3Service) {}
 
-  async uploadFileToBucket(fileName: string, bucket: string, createReadStream): Promise<string> {
+  async uploadFileToBucket(
+    fileName: string,
+    bucket: string,
+    createReadStream,
+    validateType?: 'image' | 'music',
+  ): Promise<string> {
     const writeStream = new Stream.PassThrough();
     const fileTypeStream = await FileType.stream(createReadStream());
 
-    this.validateFileToUpload(fileName, fileTypeStream);
+    this.validateFileToUpload(fileName, fileTypeStream, validateType);
 
     const uploadFile = this.s3Service.uploadFile(writeStream, fileName, bucket, {
       ACL: 'public-read',
@@ -35,14 +40,13 @@ export class FileService {
     return await uploadFile;
   }
 
-  private validateFileToUpload(fileName: string, fileTypeStream) {
-    if (
-      fileName.startsWith(pictureFilenameStart) &&
-      !fileTypeStream.fileType.mime.match(allowedPicturesRegEx)
-    ) {
-      throw new NotAcceptableException(
-        `Picture file of type ${fileTypeStream.fileType.mime.toString()} is not acceptable for this parameter.`,
-      );
+  private validateFileToUpload(fileName: string, fileTypeStream, validateType?) {
+    if (fileName.startsWith(pictureFilenameStart) || validateType === 'image') {
+      if (!fileTypeStream.fileType.mime.match(allowedPicturesRegEx)) {
+        throw new NotAcceptableException(
+          `Picture file of type ${fileTypeStream.fileType.mime.toString()} is not acceptable for this parameter.`,
+        );
+      }
     } else if (
       !fileName.startsWith(pictureFilenameStart) &&
       !fileTypeStream.fileType.mime.match(allowedMusicNftsRegEx)

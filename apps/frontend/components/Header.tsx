@@ -8,6 +8,8 @@ import { CgMenuGridO } from 'react-icons/cg'
 import Blockies from 'react-blockies'
 import { generateShortEthAddress } from '../utils/common'
 import Image from 'next/image'
+import { ProfileImage } from './profile'
+import { ProfileName } from './profile/ProfileName'
 
 const Header = () => {
   const {
@@ -19,7 +21,7 @@ const Header = () => {
     chainId,
   } = useEthers()
 
-  const { authenticate, logout, authenticated } = useLogin()
+  const { authenticate, logout, loggedInUser, loading } = useLogin()
   const [showDropdown, setShowDropdown] = useState<boolean>(false)
 
   const correctChainId =
@@ -38,16 +40,30 @@ const Header = () => {
       void logout()
       return
     }
-    if (account && !authenticated) {
-      void authenticate(library, account)
-    }
-    if (!account) {
+    if (!loggedInUser || !account) {
       setShowDropdown(false)
     }
-    if (authenticated && !account) {
+    if (account && !loggedInUser) {
+      void authenticate(library, account)
+    }
+  }, [account, loggedInUser])
+
+  useEffect(() => {
+    if (
+      loggedInUser?.ethAddress &&
+      account &&
+      account !== loggedInUser.ethAddress
+    ) {
+      void deactivate()
+      void logout()
+    }
+  }, [account])
+
+  useEffect(() => {
+    if (loggedInUser && !account) {
       void activateBrowserWallet()
     }
-  }, [account, authenticated])
+  }, [])
 
   return (
     <div className={styles.headerWrapper}>
@@ -80,39 +96,45 @@ const Header = () => {
           <button
             className={styles.connectButton}
             onClick={async () => {
-              if (account) {
-                setShowDropdown(!showDropdown)
-              } else {
+              if (!account || !loggedInUser) {
                 setShowDropdown(false)
                 activateBrowserWallet()
+              }
+            }}
+            onMouseEnter={() => {
+              if (account && loggedInUser) {
+                setShowDropdown(true)
               }
             }}
           >
             <div
               className={
-                account && authenticated ? styles.connectButtonLabel : 'block'
+                account && loggedInUser ? styles.connectButtonLabel : 'block'
               }
             >
               {/*blockies and account details go here*/}
-              {account && authenticated && (
+              {account && loggedInUser && (
                 <div>
-                  <Blockies
-                    seed={account}
-                    size={12}
-                    scale={3}
-                    color="#dfe"
-                    bgColor="#ffe"
-                    spotColor="#abc"
-                    className={styles.blockie}
+                  <ProfileImage
+                    ethAddress={loggedInUser?.ethAddress}
+                    width={13}
+                    height={13}
+                    imageUrl={loggedInUser?.profileImage}
                   />
                 </div>
               )}
               <div className={styles.connectButtonAddress}>
-                {account && authenticated
-                  ? generateShortEthAddress(account)
-                  : 'CONNECT'}
+                {account && loggedInUser ? (
+                  <ProfileName
+                    ethAddress={loggedInUser?.ethAddress}
+                    name={loggedInUser?.name}
+                    short={true}
+                  />
+                ) : (
+                  'CONNECT'
+                )}
               </div>
-              {account && authenticated && (
+              {account && loggedInUser && (
                 <div className={styles.chevronDown}>
                   <Image
                     src="/img/chevronDown.svg"
@@ -125,21 +147,21 @@ const Header = () => {
             </div>
           </button>
           {showDropdown && (
-            <div className={styles.dropdownWrapper}>
+            <div
+              className={styles.dropdownWrapper}
+              onMouseLeave={() => setShowDropdown(false)}
+            >
               <div className={styles.dropdownRect}>
                 <div className={styles.dropdownText}>
                   {/*These links need dynamic path logic*/}
                   <Link href={`/profile/${account}`}>My profile</Link>
                 </div>
-                <div className={styles.dropdownText}>
-                  <Link href={`/collection/${account}`}>My collection</Link>
-                </div>
                 <div className={styles.ddhr}></div>
                 <div className={styles.dropdownText}>
                   <button
                     onClick={async () => {
-                      await logout()
                       deactivate()
+                      await logout()
                     }}
                   >
                     Disconnect

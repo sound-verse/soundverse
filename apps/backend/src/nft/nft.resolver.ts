@@ -9,6 +9,7 @@ import { IPFSService } from '../ipfs/ipfs.service';
 import { ConfigService } from '@nestjs/config';
 import { UpdateTxInput } from './dto/input/update-tx-nft.input';
 import { NftFilter } from './dto/input/nft-filter.input';
+import { NftsFilter } from './dto/input/nfts-filter.input';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from '../auth/gql-auth.guard';
 import { CurrentUser, LoggedinUser } from '../user/decorators/user.decorator';
@@ -82,8 +83,8 @@ export class NftResolver {
   }
 
   @Query(() => [Nft])
-  async nfts(): Promise<NftSchema[]> {
-    return await this.nftService.getNfts();
+  async nfts(@Args('filter', { nullable: true }) filter?: NftsFilter): Promise<NftSchema[]> {
+    return await this.nftService.getNfts(filter);
   }
 
   @Query(() => Nft)
