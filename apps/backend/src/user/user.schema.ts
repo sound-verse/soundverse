@@ -41,6 +41,18 @@ export class User extends BaseDBObject {
 
   @Expose()
   @Prop()
+  soundcloud?: string;
+
+  @Expose()
+  @Prop()
+  discord?: string;
+
+  @Expose()
+  @Prop()
+  spotify?: string;
+
+  @Expose()
+  @Prop()
   website?: string;
 
   @Expose()

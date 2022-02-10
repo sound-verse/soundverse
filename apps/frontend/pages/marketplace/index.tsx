@@ -12,9 +12,9 @@ import {
 import SoundCard from '../../components/marketplace/SoundCard'
 import { gql, useQuery } from '@apollo/client'
 
-const GET_NFTS = gql`
-  query getNfts {
-    nfts {
+export const GET_NFTS = gql`
+  query getNfts($filter: NftsFilter) {
+    nfts(filter: $filter) {
       tokenId
       contractAddress
       fileUrl
@@ -149,11 +149,13 @@ export default function Landing() {
                   <div key={`soundcard-wrapper-${key}`}>
                     <div className="spacer">
                       <SoundCard
-                        data={{
-                          pic: data.filePictureUrl,
+                        soundCard={{
+                          pictureUrl: data.filePictureUrl,
                           name: data.metadata.name,
-                          title: data.metadata.description,
-                          rarity: 1,
+                          creatorName: data.creator.name,
+                          creatorEthAddress: data.creator.ethAddress,
+                          licences: data.supply,
+                          musicUrl: data.fileUrl,
                         }}
                         key={key}
                       />

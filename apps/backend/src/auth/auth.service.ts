@@ -33,7 +33,7 @@ export class AuthService {
 
     return this.jwtService.sign(
       { id: user._id, ethAddress: user.ethAddress },
-      { subject: user._id.toHexString() },
+      { subject: user._id.toHexString(), expiresIn: '14d' },
     );
   }
 

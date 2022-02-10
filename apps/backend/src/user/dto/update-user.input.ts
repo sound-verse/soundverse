@@ -20,6 +20,18 @@ export class UpdateUserInput {
 
   @Transform(({ value }) => xss(value))
   @Field({ nullable: true })
+  soundcloud?: string;
+
+  @Transform(({ value }) => xss(value))
+  @Field({ nullable: true })
+  discord?: string;
+
+  @Transform(({ value }) => xss(value))
+  @Field({ nullable: true })
+  spotify?: string;
+
+  @Transform(({ value }) => xss(value))
+  @Field({ nullable: true })
   @ValidateIf((schema) => schema.website !== '')
   @IsOptional()
   @IsUrl()
@@ -34,10 +46,4 @@ export class UpdateUserInput {
   @ValidateIf((schema) => !!schema.name)
   @MaxLength(20)
   name?: string;
-
-  @Field({ nullable: true })
-  profileImage?: string;
-
-  @Field({ nullable: true })
-  profileBanner?: string;
 }
