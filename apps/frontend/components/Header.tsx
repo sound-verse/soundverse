@@ -23,7 +23,7 @@ const Header = () => {
   const [showDropdown, setShowDropdown] = useState<boolean>(false)
 
   const correctChainId =
-    process.env.NEXT_PUBLIC_ENVIRONMENT === 'local' ? 31337 : 137
+    process.env.NEXT_PUBLIC_ENVIRONMENT === 'local' ? 31337 : 80001
 
   const correctNetwork =
     process.env.NEXT_PUBLIC_ENVIRONMENT === 'local'
