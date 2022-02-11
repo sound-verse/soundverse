@@ -98,7 +98,7 @@ export default function Profile({
                       </div>
                     )}
                   </div>
-                  <div className="mt-96">
+                  <div className="mt-20">
                     <ProfileNftTabs createdNfts={createdNfts} />
                   </div>
                 </div>
