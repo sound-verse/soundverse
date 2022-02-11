@@ -15,23 +15,27 @@
   position: relative;
   margin: 12px auto;
 }
-%cardInteriorBase {
+
+.cardInteriorBasePurple {
   top: 1%;
   position: relative;
   margin: 0 auto;
   height: 88.88%;
   width: 92.66%;
   border-radius: 0px 8px 8px 8px;
-}
-.cardInteriorBasePurple {
-  @extend %cardInteriorBase;
   background: #7c4dff;
 }
 .cardInteriorBaseWhite {
-  @extend %cardInteriorBase;
+  top: 1%;
+  position: relative;
+  margin: 0 auto;
+  height: 88.88%;
+  width: 92.66%;
+  border-radius: 0px 8px 8px 8px;
   background: white;
 }
-%cardInteriorLeft {
+
+.cardInteriorLeftPurple {
   clip-path: polygon(0 0, 45% 0, 55% 100%, 0% 100%);
   top: 3%;
   position: relative;
@@ -39,13 +43,16 @@
   border-radius: 8px 0px 0px 0px;
   width: 92.66%;
   height: 6.66%;
-}
-.cardInteriorLeftPurple {
-  @extend %cardInteriorLeft;
   background: #7c4dff;
 }
 .cardInteriorLeftWhite {
-  @extend %cardInteriorLeft;
+  clip-path: polygon(0 0, 45% 0, 55% 100%, 0% 100%);
+  top: 3%;
+  position: relative;
+  margin: 0 auto;
+  border-radius: 8px 0px 0px 0px;
+  width: 92.66%;
+  height: 6.66%;
   background: white;
 }
 .addButton {
@@ -67,13 +74,8 @@
   height: 3.25%;
   border-radius: 50%;
 }
-%soundcard-item-abstract {
-  position: relative;
-  color: black;
-  z-index: 50;
-}
+
 .poundText {
-  @extend %soundcard-item-abstract;
   position: absolute;
   top: 4px;
   left: 14px;
@@ -82,16 +84,20 @@
   font-style: bold;
   font-weight: 700;
   line-height: 21px;
+  position: relative;
+  color: black;
+  z-index: 50;
 }
-.titleText {
-  @extend %soundcard-item-abstract;
+.creatorName {
   font-size: 16px;
   left: 12px;
   top: 10px;
   font-family: Poppins;
+  position: relative;
+  color: black;
+  z-index: 50;
 }
 .nameText {
-  @extend %soundcard-item-abstract;
   left: 12px;
   top: 10px;
   font-family: Poppins;
@@ -99,13 +105,17 @@
   font-style: normal;
   line-height: 24px;
   font-weight: bold;
+  position: relative;
+  color: black;
+  z-index: 50;
 }
 
 .albumText {
-  @extend %soundcard-item-abstract;
+  position: relative;
+  color: black;
+  z-index: 50;
 }
 .lowestAskText {
-  @extend %soundcard-item-abstract;
   position: absolute;
   top: 65px;
   left: 14px;
@@ -114,13 +124,17 @@
   font-style: normal;
   font-weight: 400;
   line-height: 21px;
+  position: relative;
+  color: black;
+  z-index: 50;
 }
 .avgSaleText {
-  @extend %soundcard-item-abstract;
+  position: relative;
+  color: black;
+  z-index: 50;
 }
 
 .listingText {
-  @extend %soundcard-item-abstract;
   position: absolute;
   top: 40px;
   left: 14px;
@@ -129,21 +143,25 @@
   font-style: normal;
   font-weight: 700;
   line-height: 21px;
+  position: relative;
+  color: black;
+  z-index: 50;
 }
 .imageWrapper {
-  @extend %soundcard-item-abstract;
+  position: relative;
+  color: black;
+  z-index: 50;
 }
 .mplaceImage {
-  @extend %soundcard-item-abstract;
+  position: relative;
+  color: black;
+  z-index: 50;
   align-self: center;
   margin: auto;
   clip-path: inset(0px 0px 0px 0px round 0px 0px 10px 10px);
-  // border: 5px solid white;
   width: 270px;
   height: 270px;
-  // border: 1px solid green;
   position: relative;
   margin: 0 auto;
   bottom: 270px;
-  // border: 5px solid blue;
 }

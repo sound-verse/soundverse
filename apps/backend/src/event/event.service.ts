@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import {
   ContractType,
-  ERC1155TransferSingleReturnValues,
+  ERC721MasterMintEventReturnValues,
   EventType,
   IEventMessage,
 } from '@soundverse/shared-rpc-listener-service';
@@ -16,15 +16,20 @@ export class EventService {
     const eventType: EventType = event.event;
     const nullAddress = '0x0000000000000000000000000000000000000000';
     switch (contractType) {
-      case ContractType.ERC1155: {
+      case ContractType.ERC721: {
         switch (eventType) {
-          case EventType.TRANSFER_SINGLE: {
-            const returnValues: ERC1155TransferSingleReturnValues = event.returnValues;
-            if (returnValues.from === nullAddress) {
-              await this.nftService.verifyNft(parseInt(returnValues.id), event.address, event.chainId);
-            }
+          case EventType.MASTER_MINT_EVENT: {
+            const returnValues: ERC721MasterMintEventReturnValues = event.returnValues;
+            await this.nftService.setTokenId(
+              parseInt(returnValues.id),
+              event.address,
+              event.chainId,
+              event.transactionHash,
+            );
+            break;
           }
         }
+        break;
       }
     }
   }

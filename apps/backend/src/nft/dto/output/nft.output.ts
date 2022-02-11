@@ -22,7 +22,10 @@ export class NftMetadata {
 @ObjectType()
 export class Nft {
   @Field()
-  tokenId: number;
+  id: string;
+
+  @Field({ nullable: true })
+  tokenId?: number;
 
   @Field()
   contractAddress: string;

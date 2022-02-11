@@ -7,6 +7,7 @@ import {
   EventType,
   ContractType,
   ERC1155ContractAbi,
+  ERC721ContractAbi,
 } from '@soundverse/shared-rpc-listener-service';
 import { AbiItem } from 'web3-utils';
 import { Contract } from 'web3-eth-contract';
@@ -87,14 +88,18 @@ export class RPCListenerService implements OnApplicationBootstrap, OnModuleDestr
       return;
     }
 
-    eventCall(this.options, (error, event: IEventMessage) => {
-      if (error) {
-        console.log(`RPC Listener received error ${error}`);
-      }
-      event.contractType = contractType;
-      event.chainId = this.options.chainId;
-      this.handleEvent(event);
-    });
+    try {
+      eventCall(this.options, (error, event: IEventMessage) => {
+        if (error) {
+          console.log(`RPC Listener received error ${error}`);
+        }
+        event.contractType = contractType;
+        event.chainId = this.options.chainId;
+        this.handleEvent(event);
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   handleEvent(event: IEventMessage): void {
@@ -110,6 +115,11 @@ export class RPCListenerService implements OnApplicationBootstrap, OnModuleDestr
     switch (eventType) {
       case EventType.TRANSFER_SINGLE: {
         event = contract.events.TransferSingle;
+        break;
+      }
+      case EventType.MASTER_MINT_EVENT: {
+        event = contract.events.MasterMintEvent;
+        break;
       }
     }
 
@@ -124,6 +134,12 @@ export class RPCListenerService implements OnApplicationBootstrap, OnModuleDestr
       case ContractType.ERC1155: {
         //Typecast reason: https://github.com/ChainSafe/web3.js/issues/3310
         abi = ERC1155ContractAbi as AbiItem[];
+        break;
+      }
+      case ContractType.ERC721: {
+        //Typecast reason: https://github.com/ChainSafe/web3.js/issues/3310
+        abi = ERC721ContractAbi as AbiItem[];
+        break;
       }
     }
 

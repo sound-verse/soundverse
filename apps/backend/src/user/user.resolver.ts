@@ -45,7 +45,7 @@ export class UserResolver {
   ) {
     const bucket = 'soundverse-user';
     const rndFileName = crypto.randomBytes(32).toString('hex');
-    const fileUrl = await this.fileService.uploadFileToBucket(rndFileName, bucket, createReadStream);
+    const fileUrl = await this.fileService.uploadFileToBucket(rndFileName, bucket, createReadStream, 'image');
 
     await this.userService.update(user._id, { profileImage: fileUrl });
     return await this.userService.findByETHAddress(user.ethAddress);

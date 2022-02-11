@@ -19,6 +19,15 @@ export class User extends BaseModel {
   instagram?: string;
 
   @Field({ nullable: true })
+  soundcloud?: string;
+
+  @Field({ nullable: true })
+  discord?: string;
+
+  @Field({ nullable: true })
+  spotify?: string;
+
+  @Field({ nullable: true })
   website?: string;
 
   @Field({ nullable: true })

@@ -1,0 +1,3 @@
+.lastNoBorder:last-child {
+  @apply border-none;
+}

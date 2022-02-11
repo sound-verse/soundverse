@@ -3,7 +3,6 @@ import Head from 'next/head'
 import Image from 'next/image'
 import Layout from '../../components/layout'
 import SidebarFilters from '../../components/marketplace/SidebarFilters'
-import Drops from '../../components/marketplace/Drops'
 import MarketplaceSearchBar from '../../components/marketplace/MarketplaceSearchBar'
 import {
   latestDrops as dataLatestDrops,
@@ -12,9 +11,9 @@ import {
 import SoundCard from '../../components/marketplace/SoundCard'
 import { gql, useQuery } from '@apollo/client'
 
-const GET_NFTS = gql`
-  query getNfts {
-    nfts {
+export const GET_NFTS = gql`
+  query getNfts($filter: NftsFilter) {
+    nfts(filter: $filter) {
       tokenId
       contractAddress
       fileUrl
@@ -49,7 +48,7 @@ export default function Landing() {
 
   const [latestDrops, setLatestDrops] = useState([])
 
-  const nfts = loading ? [] : data.nfts
+  const nfts = loading ? [] : data?.nfts ? data.nfts : []
 
   useEffect(() => {
     if (latestDrops.length === 0) {
@@ -139,24 +138,23 @@ export default function Landing() {
               </span>
             </div>
 
-            <div className="row">
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 ">
               {nfts.map((data, key) => {
                 if (!data.filePictureUrl) {
                   return
                 }
 
                 return (
-                  <div
-                    className="col-12-sm col-6-md col-4-lg col-3-xl"
-                    key={`soundcard-wrapper-${key}`}
-                  >
+                  <div key={`soundcard-wrapper-${key}`}>
                     <div className="spacer">
                       <SoundCard
-                        data={{
-                          pic: data.filePictureUrl,
+                        soundCard={{
+                          pictureUrl: data.filePictureUrl,
                           name: data.metadata.name,
-                          title: data.metadata.description,
-                          rarity: 1,
+                          creatorName: data.creator.name,
+                          creatorEthAddress: data.creator.ethAddress,
+                          licences: data.supply,
+                          musicUrl: data.fileUrl,
                         }}
                         key={key}
                       />

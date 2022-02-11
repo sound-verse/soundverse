@@ -6,7 +6,7 @@ export default function Layout({ children }) {
   return (
     <div>
       <Header />
-      <div className="w-full container mx-auto">{children}</div>
+      <div className="w-full p-10 mx-auto">{children}</div>
       {/* <MusicPlayer /> */}
       {/* <Footer /> */}
     </div>
