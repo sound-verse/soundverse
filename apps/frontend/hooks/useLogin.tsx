@@ -76,7 +76,6 @@ export const useLogin = () => {
   } = useEthers()
   const correctChainId =
     process.env.NEXT_PUBLIC_ENVIRONMENT === 'local' ? 31337 : 80001
-
   const correctNetwork =
     process.env.NEXT_PUBLIC_ENVIRONMENT === 'local'
       ? 'Localhost'
@@ -132,6 +131,9 @@ export const useLogin = () => {
     ) {
       setAuthUser(undefined)
       authenticate()
+    }
+    if (!account && authenticated) {
+      activateBrowserWallet()
     }
   }, [account, chainId])
 

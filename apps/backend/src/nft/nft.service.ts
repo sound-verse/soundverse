@@ -139,8 +139,11 @@ export class NftService {
   async getNfts(filter?: NftsFilter): Promise<Nft[]> {
     if (filter?.creatorEthAddress) {
       const creator = await this.userService.findByETHAddress(filter.creatorEthAddress.toLowerCase());
-      return this.nftModel.find({ verified: true, creator: creator._id });
+      if (!creator) {
+        return null;
+      }
+      return this.nftModel.find({ verified: true, creator: creator._id, tokenId: { $exists: true } });
     }
-    return this.nftModel.find({ verified: true });
+    return this.nftModel.find({ verified: true, tokenId: { $exists: true } });
   }
 }

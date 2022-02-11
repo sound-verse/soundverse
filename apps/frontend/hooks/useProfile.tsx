@@ -92,7 +92,6 @@ export const useProfile = () => {
 
   const getProfile = useCallback(
     async (ethAddress: String) => {
-      console.log(ethAddress)
       getUser({ variables: { ethAddress } })
     },
     [getUser]

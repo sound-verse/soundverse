@@ -82,12 +82,12 @@ export class NftResolver {
     return await this.nftService.updateTxHash(data);
   }
 
-  @Query(() => [Nft])
+  @Query(() => [Nft], { nullable: true })
   async nfts(@Args('filter', { nullable: true }) filter?: NftsFilter): Promise<NftSchema[]> {
     return await this.nftService.getNfts(filter);
   }
 
-  @Query(() => Nft)
+  @Query(() => Nft, { nullable: true })
   async nft(@Args('filter') filter: NftFilter): Promise<NftSchema> {
     return await this.nftService.findNft({
       contractAddress: filter.contractAddress,

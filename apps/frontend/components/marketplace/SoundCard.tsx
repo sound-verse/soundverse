@@ -5,6 +5,7 @@ import { IoIosAddCircleOutline } from 'react-icons/io'
 import { Rarity } from '../../model/data/testData'
 import { generateShortEthAddress } from '../../utils/common'
 import Link from 'next/link'
+import { ProfileName } from '../profile'
 
 export type SoundCardI = {
   pictureUrl: string
@@ -13,6 +14,8 @@ export type SoundCardI = {
   musicUrl: string
   creatorName: string
   creatorEthAddress: string
+  contractAddress: string
+  tokenId: string
 }
 
 export type SoundCardProp = {
@@ -20,47 +23,34 @@ export type SoundCardProp = {
 }
 
 function SoundCard({ soundCard }: SoundCardProp) {
+  if (!soundCard.pictureUrl) {
+    return
+  }
   return (
-    <div className={styles.soundcardWrapper}>
-      <div className={styles.cardExterior}>
-        <div className={styles.addButton}>
-          <IoIosAddCircleOutline color="white" opacity={'80%'} />
+    <Link href={`/${soundCard.contractAddress}/${soundCard.tokenId}`}>
+      <a>
+        <div className={styles.soundCardWrapper}>
+          <div className={styles.soundCardHeaderTop}>Master</div>
+          <div className={styles.soundCardHeaderBottom}>
+            <div className="font-semibold text-xl">{soundCard.name}</div>
+            <div className={styles.creatorName}>
+              <ProfileName
+                ethAddress={soundCard.creatorEthAddress}
+                name={soundCard.creatorName}
+                short={true}
+                className=""
+              />
+            </div>
+          </div>
+          <div className={styles.mplaceImage}>
+            <Image src={soundCard.pictureUrl} layout="fill" objectFit="cover" />
+          </div>
+          <div className={styles.soundCardFooter}>
+            <div></div>
+          </div>
         </div>
-        <div className={styles.addButtonBg}></div>
-        <div
-          className={
-            soundCard.licences === 0
-              ? styles.cardInteriorLeftWhite
-              : styles.cardInteriorLeftPurple
-          }
-        ></div>
-        <div
-          className={
-            soundCard.licences === 0
-              ? styles.cardInteriorBaseWhite
-              : styles.cardInteriorBasePurple
-          }
-        >
-          <p className={styles.nameText}>{soundCard.name}</p>
-          <Link href={`/profile/${soundCard.creatorEthAddress}`}>
-            <a className={styles.creatorName}>
-              {soundCard.creatorName
-                ? soundCard.creatorName
-                : generateShortEthAddress(soundCard.creatorEthAddress)}
-            </a>
-          </Link>
-        </div>
-        <div className={styles.mplaceImage}>
-          <Image
-            src={soundCard.pictureUrl}
-            layout="fixed"
-            width={270}
-            height={270}
-            quality={100}
-          />
-        </div>
-      </div>
-    </div>
+      </a>
+    </Link>
   )
 }
 

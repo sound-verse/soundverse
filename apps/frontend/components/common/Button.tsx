@@ -3,7 +3,7 @@ import styles from './Button.module.css'
 import cn from 'classnames'
 
 type ButtonProps = {
-  type?: 'ghost' | 'normal' | 'purple'
+  type?: 'ghost' | 'normal' | 'purple' | 'disabled'
   text: string
   onClick?: React.MouseEventHandler<HTMLButtonElement>
   className?: string
@@ -21,12 +21,17 @@ const Button = ({
       [styles.normal]: type === 'normal',
       [styles.ghost]: type === 'ghost',
       [styles.purple]: type === 'purple',
+      [styles.disabled]: type === 'disabled',
     },
     className
   )
 
   return (
-    <button className={rootClassName} onClick={onClick && onClick}>
+    <button
+      className={rootClassName}
+      onClick={onClick && onClick}
+      disabled={type === 'disabled' ? true : false}
+    >
       {text}
     </button>
   )

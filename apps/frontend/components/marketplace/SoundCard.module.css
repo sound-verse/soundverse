@@ -1,167 +1,31 @@
-.soundcardWrapper {
-  position: relative;
-  align-self: center;
-  justify-self: center;
-  align-items: center;
-  justify-content: center;
-}
-.cardExterior {
-  top: 0;
-  left: 0;
-  height: 450px;
+.soundCardWrapper {
+  @apply flex flex-col rounded-2xl text-white mb-12;
   width: 300px;
-  border-radius: 19px;
-  background-color: #272727;
-  position: relative;
-  margin: 12px auto;
+  height: 400px;
 }
 
-.cardInteriorBasePurple {
-  top: 1%;
-  position: relative;
-  margin: 0 auto;
-  height: 88.88%;
-  width: 92.66%;
-  border-radius: 0px 8px 8px 8px;
-  background: #7c4dff;
-}
-.cardInteriorBaseWhite {
-  top: 1%;
-  position: relative;
-  margin: 0 auto;
-  height: 88.88%;
-  width: 92.66%;
-  border-radius: 0px 8px 8px 8px;
-  background: white;
-}
-
-.cardInteriorLeftPurple {
+.soundCardHeaderTop {
+  @apply bg-purple border border-purple rounded-t-2xl rounded-tr-2xl p-2 pl-5 h-8 pb-4 relative;
   clip-path: polygon(0 0, 45% 0, 55% 100%, 0% 100%);
-  top: 3%;
-  position: relative;
-  margin: 0 auto;
-  border-radius: 8px 0px 0px 0px;
-  width: 92.66%;
-  height: 6.66%;
-  background: #7c4dff;
-}
-.cardInteriorLeftWhite {
-  clip-path: polygon(0 0, 45% 0, 55% 100%, 0% 100%);
-  top: 3%;
-  position: relative;
-  margin: 0 auto;
-  border-radius: 8px 0px 0px 0px;
-  width: 92.66%;
-  height: 6.66%;
-  background: white;
-}
-.addButton {
-  top: 2%;
-  right: 3%;
-  z-index: 100;
-  position: absolute;
-  cursor: pointer;
-  font-size: 120%;
-}
-.addButtonBg {
-  top: 2.5%;
-  right: 4%;
-  z-index: 1;
-  position: absolute;
-  background-color: white;
-  opacity: 10%;
-  width: 4.75%;
-  height: 3.25%;
-  border-radius: 50%;
 }
 
-.poundText {
-  position: absolute;
-  top: 4px;
-  left: 14px;
-  font-family: Poppins;
-  font-size: 14px;
-  font-style: bold;
-  font-weight: 700;
-  line-height: 21px;
-  position: relative;
-  color: black;
-  z-index: 50;
-}
-.creatorName {
-  font-size: 16px;
-  left: 12px;
-  top: 10px;
-  font-family: Poppins;
-  position: relative;
-  color: black;
-  z-index: 50;
-}
-.nameText {
-  left: 12px;
-  top: 10px;
-  font-family: Poppins;
-  font-size: 20px;
-  font-style: normal;
-  line-height: 24px;
-  font-weight: bold;
-  position: relative;
-  color: black;
-  z-index: 50;
+.soundCardHeaderBottom {
+  @apply bg-purple border rounded-tr-2xl border-purple p-2 -mt-1 pl-5 pt-4 h-24 overflow-hidden;
 }
 
-.albumText {
-  position: relative;
-  color: black;
-  z-index: 50;
-}
-.lowestAskText {
-  position: absolute;
-  top: 65px;
-  left: 14px;
-  font-family: Poppins;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 21px;
-  position: relative;
-  color: black;
-  z-index: 50;
-}
-.avgSaleText {
-  position: relative;
-  color: black;
-  z-index: 50;
+.soundCardHeaderPurple {
+  @apply bg-purple;
 }
 
-.listingText {
-  position: absolute;
-  top: 40px;
-  left: 14px;
-  font-family: Poppins;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 21px;
-  position: relative;
-  color: black;
-  z-index: 50;
-}
-.imageWrapper {
-  position: relative;
-  color: black;
-  z-index: 50;
-}
 .mplaceImage {
-  position: relative;
-  color: black;
   z-index: 50;
-  align-self: center;
-  margin: auto;
-  clip-path: inset(0px 0px 0px 0px round 0px 0px 10px 10px);
-  width: 270px;
-  height: 270px;
   position: relative;
+  align-self: center;
+  width: 300px;
+  height: 230px;
   margin: 0 auto;
-  bottom: 270px;
+}
+
+.soundCardFooter {
+  @apply border-b-2 border-l-2 border-r-2 rounded-bl-2xl rounded-br-2xl border-grey-medium h-24 bg-grey-dark;
 }

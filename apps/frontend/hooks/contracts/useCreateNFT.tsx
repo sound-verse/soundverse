@@ -124,15 +124,18 @@ export const useCreateNFT = () => {
       setId(id)
 
       try {
+        console.log('mintSend')
         await mintSend(
           process.env.NEXT_PUBLIC_ENVIRONMENT === 'local'
             ? `http://ipfs.local/${crypto.randomBytes(16).toString('hex')}` //random string for localhost
             : ipfsUrl,
           licences
         )
-      } catch (e) {}
+      } catch (e) {
+        console.log(e)
+      }
     } else {
-      toast('Please Connect Wallet')
+      toast.error('Please Connect Wallet')
     }
   }
 
