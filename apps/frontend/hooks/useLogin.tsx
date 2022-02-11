@@ -122,7 +122,7 @@ export const useLogin = () => {
   }, [jwtUser, data])
 
   useEffect(() => {
-    if (account && correctChainId !== chainId) {
+    if (authenticated && correctChainId !== chainId) {
       toast.error(`Wrong network! Please change to ${correctNetwork}`)
       logout()
     } else if (

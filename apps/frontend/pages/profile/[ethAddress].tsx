@@ -48,9 +48,9 @@ export default function Profile({
 
       <Layout>
         <main className="mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-4 lg:h-screen text-white">
-            <div className="col-span-1 lg:border-r lg:border-grey-medium">
-              <div className="flex flex-col m-10">
+          <div className="grid grid-cols-1 xl:grid-cols-4 xl:h-screen text-white">
+            <div className="col-span-1 xl:border-r lg:border-grey-medium">
+              <div className="flex flex-col m-10 overflow-hidden">
                 <ProfileImage
                   ethAddress={activeUser.ethAddress}
                   imageUrl={activeUser.profileImage}
@@ -60,10 +60,9 @@ export default function Profile({
                 <ProfileName
                   ethAddress={activeUser.ethAddress}
                   name={activeUser.name}
-                  short={activeUser.name ? false : true}
                   className="font-bold text-2xl mt-10 mb-3"
                 />
-                {generateShortEthAddress(activeUser.ethAddress, 15)}
+                {generateShortEthAddress(activeUser.ethAddress, 10)}
               </div>
             </div>
             <div className="col-span-3">

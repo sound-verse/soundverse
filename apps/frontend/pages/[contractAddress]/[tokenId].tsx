@@ -9,6 +9,7 @@ import Custom404 from '../404'
 import SoundCard from '../../components/marketplace/SoundCard'
 import { ProfileName } from '../../components/profile'
 import Button from '../../components/common/Button'
+import Link from 'next/link'
 
 export const GET_NFT = gql`
   query getNft($filter: NftFilter!) {
@@ -86,21 +87,20 @@ export default function Nft({ user, query, nft }: ProfileProps) {
               <div className="flex flex-col m-16">
                 <div className="flex flex-col p-10">
                   <div className="text-white font-extrabold text-2xl  font-AOCR ">
-                    <ProfileName
-                      ethAddress={nft.creator.ethAddress}
-                      name={nft.creator.name}
-                      className="inline-block"
-                    />{' '}
-                    - <span>{nft.metadata.name} </span>
+                    {nft.metadata.name}
                   </div>
-                  <div className="flex justify-between items-baseline text-grey-light border-b border-grey-medium pb-5">
+                  <div className="flex justify-between items-baseline text-white border-b border-grey-medium pb-5">
                     <div className="mt-12">
                       Owned by:{' '}
-                      <ProfileName
-                        ethAddress={nft.creator.ethAddress}
-                        name={nft.creator.name}
-                        className="inline-block font-bold"
-                      />
+                      <Link href={`/profile/${nft.creator.ethAddress}`}>
+                        <a>
+                          <ProfileName
+                            ethAddress={nft.creator.ethAddress}
+                            name={nft.creator.name}
+                            className="inline-block font-bold text-purple"
+                          />
+                        </a>
+                      </Link>
                     </div>
                     <div>
                       Type: <span className="font-bold">Master</span>
