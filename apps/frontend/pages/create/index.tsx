@@ -2,10 +2,10 @@ import React from 'react'
 import Head from 'next/head'
 import Layout from '../../components/layout'
 import { CreateForm } from '../../components/create/CreateForm'
-import { useLogin } from '../../hooks/useLogin'
+import { useAuthContext } from '../../context/AuthContext'
 
 export default function Create() {
-  const { authenticated } = useLogin()
+  const { authUser } = useAuthContext()
 
   return (
     <div>
@@ -15,7 +15,7 @@ export default function Create() {
 
       <Layout>
         <main className="mx-auto">
-          {authenticated ? (
+          {authUser ? (
             <div className="rounded-3xl bg-grey-dark max-w-3xl p-20 mx-auto mt-36 mb-36">
               <CreateForm />
             </div>

@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { useEthers } from '@usedapp/core/'
 import { useEffect, useState, Fragment } from 'react'
 import { toast, Toaster } from 'react-hot-toast'
 import { useLogin } from '../hooks/useLogin'
@@ -10,60 +9,18 @@ import { generateShortEthAddress } from '../utils/common'
 import Image from 'next/image'
 import { ProfileImage } from './profile'
 import { ProfileName } from './profile/ProfileName'
+import { useAuthContext } from '../context/AuthContext'
 
 const Header = () => {
-  const {
-    activateBrowserWallet,
-    deactivate,
-    account,
-    library,
-    active,
-    chainId,
-  } = useEthers()
-
-  const { authenticate, logout, loggedInUser, loading } = useLogin()
+  const { loginUser, logout } = useLogin()
+  const { authUser } = useAuthContext()
   const [showDropdown, setShowDropdown] = useState<boolean>(false)
 
-  const correctChainId =
-    process.env.NEXT_PUBLIC_ENVIRONMENT === 'local' ? 31337 : 80001
-
-  const correctNetwork =
-    process.env.NEXT_PUBLIC_ENVIRONMENT === 'local'
-      ? 'Localhost'
-      : 'Polygon Mumbai'
-
   useEffect(() => {
-    if (account && correctChainId !== chainId) {
-      // toast.remove()
-      toast.error(`Wrong network! Please change to ${correctNetwork}`)
-      void deactivate()
-      void logout()
-      return
-    }
-    if (!loggedInUser || !account) {
+    if (!authUser) {
       setShowDropdown(false)
     }
-    if (account && !loggedInUser) {
-      void authenticate(library, account)
-    }
-  }, [account, loggedInUser])
-
-  useEffect(() => {
-    if (
-      loggedInUser?.ethAddress &&
-      account &&
-      account !== loggedInUser.ethAddress
-    ) {
-      void deactivate()
-      void logout()
-    }
-  }, [account])
-
-  useEffect(() => {
-    if (loggedInUser && !account) {
-      void activateBrowserWallet()
-    }
-  }, [])
+  }, [authUser])
 
   return (
     <div className={styles.headerWrapper}>
@@ -95,46 +52,42 @@ const Header = () => {
         <div>
           <button
             className={styles.connectButton}
-            onClick={async () => {
-              if (!account || !loggedInUser) {
+            onClick={() => {
+              if (!authUser) {
                 setShowDropdown(false)
-                activateBrowserWallet()
+                loginUser()
               }
             }}
             onMouseEnter={() => {
-              if (account && loggedInUser) {
+              if (authUser) {
                 setShowDropdown(true)
               }
             }}
           >
-            <div
-              className={
-                account && loggedInUser ? styles.connectButtonLabel : 'block'
-              }
-            >
+            <div className={authUser ? styles.connectButtonLabel : 'block'}>
               {/*blockies and account details go here*/}
-              {account && loggedInUser && (
+              {authUser && (
                 <div>
                   <ProfileImage
-                    ethAddress={loggedInUser?.ethAddress}
+                    ethAddress={authUser?.ethAddress}
                     width={13}
                     height={13}
-                    imageUrl={loggedInUser?.profileImage}
+                    imageUrl={authUser?.profileImage}
                   />
                 </div>
               )}
               <div className={styles.connectButtonAddress}>
-                {account && loggedInUser ? (
+                {authUser ? (
                   <ProfileName
-                    ethAddress={loggedInUser?.ethAddress}
-                    name={loggedInUser?.name}
+                    ethAddress={authUser?.ethAddress}
+                    name={authUser?.name}
                     short={true}
                   />
                 ) : (
                   'CONNECT'
                 )}
               </div>
-              {account && loggedInUser && (
+              {authUser && (
                 <div className={styles.chevronDown}>
                   <Image
                     src="/img/chevronDown.svg"
@@ -154,13 +107,14 @@ const Header = () => {
               <div className={styles.dropdownRect}>
                 <div className={styles.dropdownText}>
                   {/*These links need dynamic path logic*/}
-                  <Link href={`/profile/${account}`}>My profile</Link>
+                  <Link href={`/profile/${authUser?.ethAddress}`}>
+                    My profile
+                  </Link>
                 </div>
                 <div className={styles.ddhr}></div>
                 <div className={styles.dropdownText}>
                   <button
                     onClick={async () => {
-                      deactivate()
                       await logout()
                     }}
                   >

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
 import Layout from '../../components/layout'
-import { useLogin } from '../../hooks/useLogin'
 import {
   EditProfileForm,
   ProfileImage,
@@ -14,6 +13,7 @@ import { generateShortEthAddress } from '../../utils/common'
 import Button from '../../components/common/Button'
 import { PorfileSocialBar } from '../../components/profile/ProfileSocialBar'
 import { GET_NFTS } from '../marketplace'
+import { useAuthContext } from '../../context/AuthContext'
 
 type ProfileProps = {
   user: User
@@ -27,14 +27,13 @@ export default function Profile({
   queryEthAddress,
   createdNfts,
 }: ProfileProps) {
-  const { loggedInUser, authenticated } = useLogin()
+  const { authUser } = useAuthContext()
   const [showEditProfile, setShowEditProfile] = useState<boolean>(false)
 
   const isMe =
-    queryEthAddress.toLowerCase() === loggedInUser?.ethAddress?.toLowerCase() &&
-    authenticated
+    queryEthAddress.toLowerCase() === authUser?.ethAddress?.toLowerCase()
 
-  const activeUser = isMe ? loggedInUser : user
+  const activeUser = isMe ? authUser : user
 
   return (
     <div>

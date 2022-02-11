@@ -1,11 +1,12 @@
-import { useEthers } from '@usedapp/core'
+import { useCall, useEthers } from '@usedapp/core'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
 import { gql, useMutation, useQuery } from '@apollo/client'
 import link from 'next/link'
-import { useAppContext } from '../context/AppContext'
+import { useAuthContext } from '../context/AuthContext'
 import Cookies from 'js-cookie'
 import jwt_decode from 'jwt-decode'
+import toast from 'react-hot-toast'
 
 export type JwtObject = {
   id?: string
@@ -64,10 +65,22 @@ export const ME = gql`
 export const useLogin = () => {
   const [generateVerificationToken] = useMutation(GENERATE_VERIFICATION_TOKEN)
   const [login] = useMutation(LOGIN)
-  const { jwtToken, setAuthToken } = useAppContext()
-  const [loggedInUser, setLoggedInUser] = useState<LoggedInUser>(undefined)
-  const [jwtUser, setJwtUser] = useState<JwtObject>(undefined)
+  const { jwtToken, setAuthToken, setLoggedInUser } = useAuthContext()
   const { data, loading, refetch } = useQuery(ME)
+  const {
+    account,
+    library: ethLibraray,
+    activateBrowserWallet,
+    deactivate,
+    chainId,
+  } = useEthers()
+  const correctChainId =
+    process.env.NEXT_PUBLIC_ENVIRONMENT === 'local' ? 31337 : 80001
+
+  const correctNetwork =
+    process.env.NEXT_PUBLIC_ENVIRONMENT === 'local'
+      ? 'Localhost'
+      : 'Polygon Mumbai'
 
   const getJwtUser = useCallback((jwtToken): JwtObject => {
     if (jwtToken && jwtToken !== '') {
@@ -87,64 +100,96 @@ export const useLogin = () => {
   }, [])
 
   const [authenticated, setAuthenticated] = useState<Boolean>(
-    !!getJwtUser(Cookies.get('JWT_TOKEN'))?.ethAddress
+    !!getJwtUser(jwtToken)?.ethAddress
   )
+  const [jwtUser, setJwtUser] = useState<JwtObject>(getJwtUser(jwtToken))
+
+  const setAuthUser = useCallback(
+    (authUser: LoggedInUser) => {
+      setLoggedInUser(authUser)
+      setAuthenticated(true)
+    },
+    [setLoggedInUser]
+  )
+
   useEffect(() => {
     if (!loading && data && jwtUser) {
-      if (jwtUser.ethAddress !== data.me.ethAddress) {
-        refetch()
+      if (
+        jwtUser.ethAddress.toLowerCase() === data.me.ethAddress.toLowerCase()
+      ) {
+        setAuthUser(data.me)
       }
-      setLoggedInUser(data.me)
     }
-  }, [jwtUser, loading, data])
+  }, [jwtUser, data])
 
   useEffect(() => {
-    setAuthenticated(!!getJwtUser(jwtToken)?.ethAddress)
-    setJwtUser(getJwtUser(jwtToken))
-  }, [setJwtUser, jwtToken])
+    if (account && correctChainId !== chainId) {
+      toast.error(`Wrong network! Please change to ${correctNetwork}`)
+      logout()
+    } else if (
+      account &&
+      account.toLowerCase() !== jwtUser?.ethAddress.toLowerCase()
+    ) {
+      setAuthUser(undefined)
+      authenticate()
+    }
+  }, [account, chainId])
 
-  const authenticate = useCallback(
-    async (library: JsonRpcProvider, account: string): Promise<void> => {
-      try {
-        const nonce = await generateVerificationToken({
-          variables: { data: { ethAddress: account } },
-        })
-
-        const msg = `To authenticate, please sign this message: ${account.toLowerCase()} (${
-          nonce.data.generateVerificationToken
-        })`
-
-        const signature = await library.getSigner().signMessage(msg)
-
-        const jwtToken = await login({
-          variables: { data: { ethAddress: account, signature } },
-        })
-
-        setAuthToken(jwtToken.data.login.token)
-      } catch (e) {
-        console.log(`Authentication failed ${e}`)
-      }
-    },
-    [generateVerificationToken, login, setAuthToken]
-  )
+  const loginUser = useCallback(() => {
+    activateBrowserWallet()
+  }, [activateBrowserWallet])
 
   const logout = useCallback(async () => {
     setAuthToken('')
     setJwtUser(undefined)
     setAuthenticated(false)
     setLoggedInUser(undefined)
-    await Cookies.set('JWT_TOKEN', '')
-  }, [setAuthToken])
+    deactivate()
+  }, [deactivate, setAuthToken, setLoggedInUser])
+
+  const authenticate = useCallback(async (): Promise<void> => {
+    try {
+      const nonce = await generateVerificationToken({
+        variables: { data: { ethAddress: account } },
+      })
+
+      const msg = `To authenticate, please sign this message: ${account.toLowerCase()} (${
+        nonce.data.generateVerificationToken
+      })`
+
+      const signature = await ethLibraray.getSigner().signMessage(msg)
+
+      const jwtToken = await login({
+        variables: { data: { ethAddress: account, signature } },
+      })
+
+      setAuthToken(jwtToken.data.login.token)
+      setJwtUser(getJwtUser(jwtToken.data.login.token))
+      refetch()
+    } catch (e) {
+      logout()
+      console.log(`Authentication failed ${e}`)
+    }
+  }, [
+    generateVerificationToken,
+    account,
+    ethLibraray,
+    login,
+    setAuthToken,
+    getJwtUser,
+    refetch,
+    logout,
+  ])
 
   return useMemo(
     () => ({
-      authenticate,
       logout,
       authenticated,
-      loggedInUser,
       loading,
       refetch,
+      loginUser,
+      chainId,
     }),
-    [authenticate, logout, authenticated, loggedInUser, loading, refetch]
+    [logout, authenticated, loading, refetch, loginUser, chainId]
   )
 }

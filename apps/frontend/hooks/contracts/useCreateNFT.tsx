@@ -2,14 +2,14 @@ import { useEffect, useState } from 'react'
 import { utils } from 'ethers'
 import { Contract } from '@ethersproject/contracts'
 import SoundVerseERC721 from '../../artifacts/SoundVerseERC1155.sol/SoundVerseERC721.json'
-import { useContractFunction, useEthers, useContractCall } from '@usedapp/core'
+import { useContractFunction, useEthers } from '@usedapp/core'
 import toast from 'react-hot-toast'
-import { useRouter } from 'next/router'
 import { gql, useMutation } from '@apollo/client'
 import { print } from 'graphql'
 import axios from 'axios'
 import Cookies from 'js-cookie'
 import crypto from 'crypto'
+import { useAuthContext } from '../../context/AuthContext'
 
 const erc721ABI = SoundVerseERC721.abi
 const contractaddress = process.env.NEXT_PUBLIC_ERC721_CONTRACT_ADDRESS
@@ -46,7 +46,8 @@ export type CreateNFT = {
 }
 
 export const useCreateNFT = () => {
-  const { account, library } = useEthers()
+  const { authUser } = useAuthContext()
+  const { chainId } = useEthers()
   const [id, setId] = useState<String>('')
 
   const ercInterface = new utils.Interface(erc721ABI)
@@ -82,10 +83,7 @@ export const useCreateNFT = () => {
     tags = [],
     licences = 2,
   }: CreateNFT) => {
-    const isConnected = account !== undefined
-    const { chainId } = await library.getNetwork()
-
-    if (isConnected) {
+    if (authUser) {
       const formData = new FormData()
       formData.append(
         'operations',

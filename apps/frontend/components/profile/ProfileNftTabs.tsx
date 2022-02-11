@@ -32,7 +32,7 @@ export const ProfileNftTabs = ({
         </span>
       </div>
       {activeTab === PROFILE_TAB.CREATED && (
-        <div className="grid lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 mt-16">
+        <div className="grid xl:grid-cols-2 2xl:grid-cols-3 mt-16">
           {createdNfts.map((createdNft, key) => (
             <SoundCard
               key={key}

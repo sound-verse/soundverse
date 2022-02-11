@@ -7,7 +7,7 @@ import {
   Mumbai,
   Polygon,
 } from '@usedapp/core'
-import { AppProvider } from '../context/AppContext'
+import { AuthProvider } from '../context/AuthContext'
 import '../css/index.css'
 import '../css/pages/marketplace.css'
 import { ApolloClientProvider } from '../context/ApolloClientProvider'
@@ -19,13 +19,13 @@ function MyApp({ Component, pageProps }: AppProps) {
   }
 
   return (
-    <AppProvider>
+    <AuthProvider>
       <ApolloClientProvider initialApolloState={pageProps.initialApolloState}>
         <DAppProvider config={config}>
           <Component {...pageProps} />
         </DAppProvider>
       </ApolloClientProvider>
-    </AppProvider>
+    </AuthProvider>
   )
 }
 export default MyApp
