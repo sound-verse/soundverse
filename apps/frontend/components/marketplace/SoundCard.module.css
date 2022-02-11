@@ -1,5 +1,5 @@
 .soundCardWrapper {
-  @apply flex flex-col rounded-2xl text-white mb-12;
+  @apply flex flex-col rounded-2xl text-white;
   width: 300px;
   height: 400px;
 }

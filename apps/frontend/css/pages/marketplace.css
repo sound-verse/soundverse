@@ -1,14 +1,5 @@
 .big-wrapper {
-  width: 100%;
-}
-.marketplace-wrapper {
-  display: block;
-  width: 82%;
-  float: right;
-}
-.col-6-md {
-  justify-content: center;
-  align-items: center;
+  @apply flex flex-col items-center justify-between mt-10;
 }
 .sale-buttons {
   font-family: Poppins;

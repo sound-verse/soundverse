@@ -86,59 +86,8 @@ export default function Landing() {
 
       <Layout>
         <div className="big-wrapper">
-          <SidebarFilters />
-
           <div className="marketplace-wrapper">
-            <div className="sale-button-wrapper">
-              <nav className="flex space-x-1">
-                <a href="#" className="sale-buttons">
-                  FOR SALE
-                </a>
-                <a href="#" className="sale-buttons">
-                  LATEST SALES
-                </a>
-                <a href="#" className="sale-buttons">
-                  TOP SALES
-                </a>
-              </nav>
-            </div>
-
-            <div className="topbar-wrapper">
-              <MarketplaceSearchBar input={input} onChange={updateInput} />
-
-              <div className="marketplace-spacer"></div>
-              <div className="marketplace-spacer"></div>
-              <span className="marketplace-icons-wrapper">
-                <span className="marketplace-icon">
-                  <Image
-                    src="/img/marketplace/dollarIcon.svg"
-                    width={50}
-                    height={50}
-                    layout="fixed"
-                  />
-                </span>
-                <div className="marketplace-spacer"></div>
-                <span className="marketplace-icon">
-                  <Image
-                    src="/img/marketplace/ethIcon.svg"
-                    width={50}
-                    height={50}
-                    layout="fixed"
-                  />
-                </span>
-                <div className="marketplace-spacer"></div>
-                <span className="marketplace-icon">
-                  <Image
-                    src="/img/marketplace/svjIcon.svg"
-                    width={50}
-                    height={50}
-                    layout="fixed"
-                  />
-                </span>
-              </span>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 ">
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-10">
               {nfts.map((data, key) => {
                 if (!data.filePictureUrl) {
                   return
@@ -165,7 +114,7 @@ export default function Landing() {
                 )
               })}
             </div>
-            <div className="mt-4 mb-8 flex justify-center">
+            <div className="mt-10 mb-8 flex justify-center">
               <MoreButton />
             </div>
           </div>
