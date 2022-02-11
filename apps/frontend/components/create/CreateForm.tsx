@@ -99,6 +99,7 @@ export const CreateForm = () => {
   Modal.setAppElement('#__next')
 
   useEffect(() => {
+    console.log(mintState)
     if (mintState.status === 'Success') {
       setShowing(false)
       router.push('/marketplace')

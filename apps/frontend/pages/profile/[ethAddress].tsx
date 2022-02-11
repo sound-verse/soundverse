@@ -14,6 +14,7 @@ import Button from '../../components/common/Button'
 import { PorfileSocialBar } from '../../components/profile/ProfileSocialBar'
 import { GET_NFTS } from '../marketplace'
 import { useAuthContext } from '../../context/AuthContext'
+import Custom404 from '../404'
 
 type ProfileProps = {
   user: User
@@ -29,6 +30,10 @@ export default function Profile({
 }: ProfileProps) {
   const { authUser } = useAuthContext()
   const [showEditProfile, setShowEditProfile] = useState<boolean>(false)
+
+  if (!user) {
+    return <Custom404 />
+  }
 
   const isMe =
     queryEthAddress.toLowerCase() === authUser?.ethAddress?.toLowerCase()

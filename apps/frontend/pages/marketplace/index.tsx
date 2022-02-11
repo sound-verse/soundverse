@@ -155,6 +155,8 @@ export default function Landing() {
                           creatorEthAddress: data.creator.ethAddress,
                           licences: data.supply,
                           musicUrl: data.fileUrl,
+                          contractAddress: data.contractAddress,
+                          tokenId: data.tokenId,
                         }}
                         key={key}
                       />

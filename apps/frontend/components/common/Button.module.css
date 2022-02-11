@@ -1,7 +1,7 @@
 .root {
   @apply px-8 py-4 border-white border text-white bg-grey-medium rounded-full cursor-pointer;
-  max-width: 300px;
 }
 
-.ghost {
+.disabled {
+  @apply border-none font-bold cursor-default;
 }
