@@ -60,6 +60,7 @@ export default function Profile({
                 <ProfileName
                   ethAddress={activeUser.ethAddress}
                   name={activeUser.name}
+                  short={activeUser.name ? false : true}
                   className="font-bold text-2xl mt-10 mb-3"
                 />
                 {generateShortEthAddress(activeUser.ethAddress, 10)}
