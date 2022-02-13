@@ -6,6 +6,9 @@ module.exports = {
       'soundverse-user.ams3.digitaloceanspaces.com',
     ],
   },
+
+  //TODO: define better CORS
+  headers: { 'Access-Control-Allow-Origin': '*' },
   async redirects() {
     return [
       {
