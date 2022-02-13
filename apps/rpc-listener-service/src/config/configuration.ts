@@ -15,7 +15,7 @@ export default () => ({
     testflight: {
       contractEvents: [
         {
-          contractAddress: '0xa9F48fB7ef674a7c6Ac5629Ae44eC2c597069D1b',
+          contractAddress: '0x2357a93fF873CA0CE783F71a87d1d38CaAd9fbCb',
           listensTo: [EventType.MASTER_MINT_EVENT],
           contractType: ContractType.ERC721,
           version: '0.1',
