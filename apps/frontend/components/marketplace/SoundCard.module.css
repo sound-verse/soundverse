@@ -18,6 +18,7 @@
 }
 
 .mplaceImage {
+  @apply border-l border-r border-grey-medium;
   z-index: 50;
   position: relative;
   align-self: center;
@@ -28,4 +29,8 @@
 
 .soundCardFooter {
   @apply border-b-2 border-l-2 border-r-2 rounded-bl-2xl rounded-br-2xl border-grey-medium h-24 bg-grey-dark;
+}
+
+.audioWaves {
+  @apply border-grey-medium bg-grey-medium;
 }
