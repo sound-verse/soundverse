@@ -11,6 +11,7 @@ import { AuthProvider } from '../context/AuthContext'
 import '../css/index.css'
 import '../css/pages/marketplace.css'
 import { ApolloClientProvider } from '../context/ApolloClientProvider'
+import { AudioProvider } from '../context/AudioContext'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const config: Partial<FullConfig> = {
@@ -22,7 +23,9 @@ function MyApp({ Component, pageProps }: AppProps) {
     <AuthProvider>
       <ApolloClientProvider initialApolloState={pageProps.initialApolloState}>
         <DAppProvider config={config}>
-          <Component {...pageProps} />
+          <AudioProvider>
+            <Component {...pageProps} />
+          </AudioProvider>
         </DAppProvider>
       </ApolloClientProvider>
     </AuthProvider>

@@ -14084,6 +14084,16 @@ watchpack@^2.3.1:
     glob-to-regexp "^0.4.1"
     graceful-fs "^4.1.2"
 
+wavesurfer-react@^2.0.12:
+  version "2.0.12"
+  resolved "https://registry.yarnpkg.com/wavesurfer-react/-/wavesurfer-react-2.0.12.tgz#d01af1d1a4ecb1f95790d5e62402510bc919e152"
+  integrity sha512-Qs1vSpx61e9aN47JWXoB/hyjaA6wLMT7wB3owHAUSu28CzDpRhpKFpq7byDQE8PTGucyd9kYjsZkK3mcCDEe7g==
+
+wavesurfer.js@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/wavesurfer.js/-/wavesurfer.js-6.0.0.tgz#61a249c7c59e2222bbb37d876c8ac98cb9731a29"
+  integrity sha512-38sYA7wqKBDTh67gle7TcgTD/ihA68eMlMZfUcJWzvolZts3K2Z/d4ZJtXFyNqEpDzhPnMNyIybcWRQwNt2NKA==
+
 wcwidth@^1.0.0, wcwidth@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/wcwidth/-/wcwidth-1.0.1.tgz#f0b0dcf915bc5ff1528afadb2c0e17b532da2fe8"
