@@ -4,7 +4,7 @@ import styles from './AudioPlayer.module.css'
 
 export type AudioPlayerProps = {
   url: string
-  play: boolean
+  play?: boolean
   className?: string
 }
 
@@ -42,7 +42,7 @@ export const AudioPlayer = ({
     if (wavesurfer.current) {
       if (play) {
         wavesurfer.current.play()
-      } else {
+      } else if (wavesurfer.current.isPlaying()) {
         wavesurfer.current.pause()
       }
     }

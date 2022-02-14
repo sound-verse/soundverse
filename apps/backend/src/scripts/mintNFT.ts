@@ -15,10 +15,10 @@ const main = async () => {
   // const walletAddress = '0xE39569EF2A516f0CA065a8dA698C79EE739D02c1';
   // const privateKey = 'dba25f2301e49b76b8381d57007312555d8fed8b4e54372838f67b08c334d026';
 
-  const web3 = new Web3('ws://127.0.0.1:8545/');
-  const contractAddress = '0x5FC8d32690cc91D4c39d9d3abcBD16989F875707';
-  const walletAddress = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
-  const privateKey = 'ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80';
+  const web3 = new Web3('https://matic-mumbai.chainstacklabs.com');
+  const contractAddress = '0x2357a93fF873CA0CE783F71a87d1d38CaAd9fbCb';
+  const walletAddress = '0xE39569EF2A516f0CA065a8dA698C79EE739D02c1';
+  const privateKey = 'dba25f2301e49b76b8381d57007312555d8fed8b4e54372838f67b08c334d026';
 
   const contract = new web3.eth.Contract(ERC721ContractAbi as AbiItem[], contractAddress);
 

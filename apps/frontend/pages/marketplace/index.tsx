@@ -14,6 +14,7 @@ import { gql, useQuery } from '@apollo/client'
 export const GET_NFTS = gql`
   query getNfts($filter: NftsFilter) {
     nfts(filter: $filter) {
+      id
       tokenId
       contractAddress
       fileUrl
@@ -45,10 +46,15 @@ export default function Landing() {
   >()
   const [dropList, setDropList] = useState<DropItem[] | undefined>()
   const { loading, error, data } = useQuery(GET_NFTS)
+  const [playingCardId, setPlayingCardId] = useState<string>('')
 
   const [latestDrops, setLatestDrops] = useState([])
 
   const nfts = loading ? [] : data?.nfts ? data.nfts : []
+
+  const handleMusicClick = (activeCardId: string) => {
+    setPlayingCardId(activeCardId)
+  }
 
   useEffect(() => {
     if (latestDrops.length === 0) {
@@ -106,8 +112,11 @@ export default function Landing() {
                           musicUrl: data.fileUrl,
                           contractAddress: data.contractAddress,
                           tokenId: data.tokenId,
+                          id: data.id,
                         }}
                         key={key}
+                        playingCardId={playingCardId}
+                        onMusicClick={() => handleMusicClick(data.id)}
                       />
                     </div>
                   </div>

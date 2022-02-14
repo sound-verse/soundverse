@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { utils } from 'ethers'
 import { Contract } from '@ethersproject/contracts'
-import SoundVerseERC721 from '../../artifacts/SoundVerseERC1155.sol/SoundVerseERC721.json'
+import ERC721Abi from '../../artifacts/ERC721Contract.abi.json'
 import { useContractFunction, useEthers } from '@usedapp/core'
 import toast from 'react-hot-toast'
 import { gql, useMutation } from '@apollo/client'
@@ -11,7 +11,6 @@ import Cookies from 'js-cookie'
 import crypto from 'crypto'
 import { useAuthContext } from '../../context/AuthContext'
 
-const erc721ABI = SoundVerseERC721.abi
 const contractaddress = process.env.NEXT_PUBLIC_ERC721_CONTRACT_ADDRESS
 
 const CREATE_NFT = gql`
@@ -50,7 +49,7 @@ export const useCreateNFT = () => {
   const { chainId } = useEthers()
   const [id, setId] = useState<String>('')
 
-  const ercInterface = new utils.Interface(erc721ABI)
+  const ercInterface = new utils.Interface(ERC721Abi)
   const contract = new Contract(contractaddress, ercInterface)
 
   const [updateTxHash] = useMutation(UPDATE_TX_HASH)
@@ -124,7 +123,6 @@ export const useCreateNFT = () => {
       setId(id)
 
       try {
-        console.log('mintSend')
         await mintSend(
           process.env.NEXT_PUBLIC_ENVIRONMENT === 'local'
             ? `http://ipfs.local/${crypto.randomBytes(16).toString('hex')}` //random string for localhost
