@@ -14,6 +14,7 @@ import Link from 'next/link'
 export const GET_NFT = gql`
   query getNft($filter: NftFilter!) {
     nft(filter: $filter) {
+      id
       tokenId
       contractAddress
       fileUrl
@@ -71,6 +72,7 @@ export default function Nft({ user, query, nft }: ProfileProps) {
               <div className="flex flex-col m-10">
                 <SoundCard
                   soundCard={{
+                    id: nft.id,
                     creatorEthAddress: nft.creator.ethAddress,
                     creatorName: nft.creator.name,
                     licences: nft.supply,
