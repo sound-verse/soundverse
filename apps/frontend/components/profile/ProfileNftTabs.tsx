@@ -4,6 +4,7 @@ import Blockies from 'react-blockies'
 import { generateShortEthAddress } from '../../utils/common'
 import SoundCard, { SoundCardI } from '../marketplace/SoundCard'
 import styles from './ProfileNftTabs.module.css'
+import { connectContractToSigner } from '@usedapp/core'
 
 export type ProfileNftTabsProps = {
   createdNfts: any[]
@@ -37,6 +38,7 @@ export const ProfileNftTabs = ({
             <SoundCard
               key={key}
               soundCard={{
+                id: createdNft.id,
                 creatorEthAddress: createdNft.creator.ethAddress,
                 creatorName: createdNft.creator.name,
                 licences: createdNft.supply,
