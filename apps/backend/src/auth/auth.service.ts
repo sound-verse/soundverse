@@ -1,4 +1,5 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import * as ethers from 'ethers';
@@ -11,6 +12,7 @@ export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly userService: UserService,
+    private configService: ConfigService,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
   ) {}
 
@@ -28,6 +30,19 @@ export class AuthService {
       throw new ForbiddenException('Signature error.');
     }
 
+    const authorizedWallets = [
+      '0xE39569EF2A516f0CA065a8dA698C79EE739D02c1',
+      '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+      '0x52122acDfED5740019765889766BF9Bfd71a66f1',
+      '0x955F5C98058ab50623a7a4aa1dD9C55372C79a5a',
+    ];
+
+    if (
+      this.configService.get('ENVIRONMENT') !== 'local' &&
+      !authorizedWallets.find((authAddress) => address.toLowerCase() === authAddress.toLowerCase())
+    ) {
+      throw new ForbiddenException('Wallet not authorized.');
+    }
     user.nonce = Math.floor(Math.random() * 1000000);
     await user.save();
 
