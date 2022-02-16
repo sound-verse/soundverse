@@ -83,8 +83,8 @@ export class NftResolver {
   }
 
   @Query(() => [Nft], { nullable: true })
-  async nfts(@Args('filter', { nullable: true }) filter?: NftsFilter): Promise<NftSchema[]> {
-    return await this.nftService.getNfts(filter);
+  async nfts(@Args('skip') skip: number, @Args('limit') limit: number, @Args('filter', { nullable: true }) filter?: NftsFilter): Promise<NftSchema[]> {
+    return await this.nftService.getNfts(limit, skip, filter);
   }
 
   @Query(() => Nft, { nullable: true })
