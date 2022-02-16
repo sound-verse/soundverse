@@ -33,6 +33,7 @@ export class AuthService {
     const authorizedWallets = [
       '0xE39569EF2A516f0CA065a8dA698C79EE739D02c1',
       '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+      '0x52122acDfED5740019765889766BF9Bfd71a66f1',
     ];
 
     if (
