@@ -28,6 +28,14 @@ export class AuthService {
       throw new ForbiddenException('Signature error.');
     }
 
+    const authorizedWallets = [
+      '0xE39569EF2A516f0CA065a8dA698C79EE739D02c1',
+      '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+    ];
+
+    if (!authorizedWallets.find((authAddress) => address.toLowerCase() === authAddress.toLowerCase())) {
+      throw new ForbiddenException('Wallet not authorized.');
+    }
     user.nonce = Math.floor(Math.random() * 1000000);
     await user.save();
 

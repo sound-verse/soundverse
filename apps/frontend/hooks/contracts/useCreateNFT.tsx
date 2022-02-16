@@ -89,7 +89,8 @@ export const useCreateNFT = () => {
         JSON.stringify({
           query: print(CREATE_NFT),
           variables: {
-            file: null,
+            NFTFile: null,
+            pictureFile: null,
             data: {
               metadata: { name, description },
               supply: licences,
