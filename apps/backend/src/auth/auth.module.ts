@@ -9,9 +9,11 @@ import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
 import { GqlAuthGuard } from './gql-auth.guard';
 import { JwtStrategy } from './jwt.strategy';
+import { CoreModule } from '../core/core.module';
 
 @Module({
   imports: [
+    CoreModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => ({
