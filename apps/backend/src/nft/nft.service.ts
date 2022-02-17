@@ -156,7 +156,6 @@ export class NftService {
     }
 
     const results = await findQuery;
-
     return results
   }
 }
