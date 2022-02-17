@@ -65,7 +65,7 @@ type Nft {
 type Query {
   user(ethAddress: String!): User
   me: User!
-  nfts(filter: NftsFilter): [Nft!]
+  nfts(filter: NftsFilter, limit: Float!, skip: Float!): [Nft!]
   nft(filter: NftFilter!): Nft
 }
 
