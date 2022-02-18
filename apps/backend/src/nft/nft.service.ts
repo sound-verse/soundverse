@@ -149,10 +149,8 @@ export class NftService {
     const findQuery = this.nftModel
     .find({ verified: true})
     .sort({ _id: 1 })
-    .skip(documentsToSkip);
-    
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    findQuery.limit(limitOfDocuments);
+    .skip(documentsToSkip)
+    .limit(limitOfDocuments)
 
     const results = await findQuery;
     return results
