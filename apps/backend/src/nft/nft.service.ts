@@ -136,7 +136,7 @@ export class NftService {
     );
   }
 
-  async getNfts(limitOfDocuments: number, documentsToSkip = 0, filter?: NftsFilter): Promise<Nft[]> {
+  async getNfts(limitOfDocuments = 100, documentsToSkip = 0, filter?: NftsFilter): Promise<Nft[]> {
 
     if (filter?.creatorEthAddress) {
       const creator = await this.userService.findByETHAddress(filter.creatorEthAddress.toLowerCase());
