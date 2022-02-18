@@ -5,12 +5,12 @@
 }
 
 .soundCardHeaderTop {
-  @apply bg-purple border border-purple rounded-t-2xl rounded-tr-2xl p-2 pl-5 h-8 pb-4 relative;
+  @apply bg-purple border border-purple p-2 pl-5 h-8 pb-4 relative;
   clip-path: polygon(0 0, 45% 0, 55% 100%, 0% 100%);
 }
 
 .soundCardHeaderBottom {
-  @apply bg-purple border rounded-tr-2xl border-purple p-2 -mt-1 pl-5 pt-4 h-24 overflow-hidden;
+  @apply bg-purple border border-purple p-2 -mt-1 pl-5 pt-4 h-24 overflow-hidden;
 }
 
 .soundCardHeaderPurple {
@@ -28,7 +28,7 @@
 }
 
 .soundCardFooter {
-  @apply border-b-2 border-l-2 border-r-2 rounded-bl-2xl rounded-br-2xl border-grey-medium h-24 bg-grey-dark;
+  @apply border-b-2 border-l-2 border-r-2 border-grey-medium h-24 bg-grey-dark;
 }
 
 .audioWaves {
