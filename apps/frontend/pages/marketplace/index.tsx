@@ -12,8 +12,8 @@ import SoundCard from '../../components/marketplace/SoundCard'
 import { gql, useQuery } from '@apollo/client'
 
 export const GET_NFTS = gql`
-  query getNfts($filter: NftsFilter) {
-    nfts(filter: $filter) {
+ query getNfts($filter: NftsFilter, $limit: Float!, $skip: Float!) {
+    nfts(filter: $filter, limit: $limit, skip: $skip) {
       id
       tokenId
       contractAddress
@@ -45,7 +45,8 @@ export default function Landing() {
     DropItem[] | undefined
   >()
   const [dropList, setDropList] = useState<DropItem[] | undefined>()
-  const { loading, error, data } = useQuery(GET_NFTS)
+  console.log(GET_NFTS)
+  const { loading, error, data } = useQuery(GET_NFTS, {variables:{limit:100, skip:0}})
   const [playingCardId, setPlayingCardId] = useState<string>('')
 
   const [latestDrops, setLatestDrops] = useState([])
