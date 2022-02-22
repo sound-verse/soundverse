@@ -84,7 +84,6 @@ type Mutation {
   generateVerificationToken(data: VerificationTokenInput!): Int!
   login(data: LoginInput!): Auth!
   createNft(data: NftInput!, pictureFile: Upload!, NFTFile: Upload!): Nft!
-  updateTxHash(data: UpdateTxInput!): Nft!
   unpinAll: Boolean!
 }
 
@@ -123,9 +122,4 @@ input NftInput {
 input NftMetadataInput {
   name: String!
   description: String!
-}
-
-input UpdateTxInput {
-  id: String!
-  transactionHash: String!
 }

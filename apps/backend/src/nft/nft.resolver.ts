@@ -10,7 +10,7 @@ import { ConfigService } from '@nestjs/config';
 import { UpdateTxInput } from './dto/input/update-tx-nft.input';
 import { NftFilter } from './dto/input/nft-filter.input';
 import { NftsFilter } from './dto/input/nfts-filter.input';
-import { UseGuards } from '@nestjs/common';
+import { ForbiddenException, UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from '../auth/gql-auth.guard';
 import { CurrentUser, LoggedinUser } from '../user/decorators/user.decorator';
 import { Nft as NftSchema } from './nft.schema';
@@ -57,10 +57,7 @@ export class NftResolver {
     );
 
     if (ipfsMetadata.isDuplicate) {
-      return await this.nftService.findNft({
-        ipfsUrl: ipfsMetadataUrl,
-        contractAddress: this.configService.get('ERC721_CONTRACT_ADDRESS'),
-      });
+      throw new ForbiddenException('This NFT was already created.');
     } else {
       return await this.nftService.createNft({
         metadata,
@@ -77,13 +74,12 @@ export class NftResolver {
     }
   }
 
-  @Mutation(() => Nft)
-  async updateTxHash(@Args('data') data: UpdateTxInput): Promise<NftSchema> {
-    return await this.nftService.updateTxHash(data);
-  }
-
   @Query(() => [Nft], { nullable: true })
-  async nfts(@Args('skip') skip: number, @Args('limit') limit: number, @Args('filter', { nullable: true }) filter?: NftsFilter): Promise<NftSchema[]> {
+  async nfts(
+    @Args('skip') skip: number,
+    @Args('limit') limit: number,
+    @Args('filter', { nullable: true }) filter?: NftsFilter,
+  ): Promise<NftSchema[]> {
     return await this.nftService.getNfts(limit, skip, filter);
   }
 
