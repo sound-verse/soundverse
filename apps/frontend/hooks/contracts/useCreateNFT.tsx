@@ -5,6 +5,7 @@ import axios from 'axios'
 import Cookies from 'js-cookie'
 import { useAuthContext } from '../../context/AuthContext'
 import crypto from 'crypto'
+import toast from 'react-hot-toast'
 const CREATE_NFT = gql`
   mutation createNft(
     $NFTFile: Upload!
@@ -64,7 +65,15 @@ export const useCreateNFT = () => {
       return
     }
 
-    const { ipfsUrl } = await prepareMint(createNftProps)
+    let tokenUri
+    try {
+      const { ipfsUrl } = await prepareMint(createNftProps)
+      tokenUri = ipfsUrl
+    } catch (error) {
+      console.log(error)
+      toast.error('This NFT was already minted!')
+      return
+    }
 
     const voucher: MintVoucher = {
       nftContractAddress: await library._getAddress(erc721ContractAddress),
@@ -73,7 +82,7 @@ export const useCreateNFT = () => {
       tokenUri:
         process.env.NEXT_PUBLIC_ENVIRONMENT === 'local'
           ? `http://ipfs.local/${crypto.randomBytes(16).toString('hex')}` //random string for localhost
-          : ipfsUrl,
+          : tokenUri,
       sellCount: 0,
       supply: licences,
       isMaster: true,

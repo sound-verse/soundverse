@@ -142,7 +142,7 @@ export class NftService {
       if (!creator) {
         return null;
       }
-      return this.nftModel.find({ verified: true, creator: creator._id, tokenId: { $exists: true } });
+      return this.nftModel.find({ verified: true, creator: creator._id });
     }
 
     const findQuery = this.nftModel
