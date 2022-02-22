@@ -7,7 +7,6 @@ import crypto from 'crypto';
 import { NftInput } from './dto/input/create-nft.input';
 import { IPFSService } from '../ipfs/ipfs.service';
 import { ConfigService } from '@nestjs/config';
-import { UpdateTxInput } from './dto/input/update-tx-nft.input';
 import { NftFilter } from './dto/input/nft-filter.input';
 import { NftsFilter } from './dto/input/nfts-filter.input';
 import { ForbiddenException, UseGuards } from '@nestjs/common';
@@ -16,7 +15,6 @@ import { CurrentUser, LoggedinUser } from '../user/decorators/user.decorator';
 import { Nft as NftSchema } from './nft.schema';
 import { UserService } from '../user/user.service';
 import { User } from '../user/user.schema';
-import { TagService } from '../tag/tag.service';
 @Resolver(() => Nft)
 export class NftResolver {
   constructor(
