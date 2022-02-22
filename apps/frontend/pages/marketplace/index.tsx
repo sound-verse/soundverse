@@ -45,7 +45,6 @@ export default function Landing() {
     DropItem[] | undefined
   >()
   const [dropList, setDropList] = useState<DropItem[] | undefined>()
-  console.log(GET_NFTS)
   const { loading, error, data } = useQuery(GET_NFTS, {variables:{limit:100, skip:0}})
   const [playingCardId, setPlayingCardId] = useState<string>('')
 
