@@ -6,6 +6,9 @@ body {
   font-family: 'SF Pro Text', 'SF Pro Icons', 'Helvetica Neue', 'Helvetica',
     'Arial', sans-serif;
   background: #161616;
+  zoom: 0.9;
+  -moz-transform: scale(0.9);
+  -moz-transform-origin: center 0;
 }
 
 /* reset styles */
