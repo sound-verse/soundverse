@@ -80,7 +80,7 @@ export const useCreateNFT = () => {
     name,
     description,
     tags = [],
-    licences = 2,
+    licences,
   }: CreateNFT) => {
     if (authUser) {
       const formData = new FormData()

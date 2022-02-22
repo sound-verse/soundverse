@@ -65,7 +65,8 @@ export const CreateForm = () => {
     description: Yup.string().required('Please enter a description'),
     licences: Yup.number()
       .typeError('Please enter a number')
-      .min(2, 'You have to set at least a minium of 2 licences')
+      .min(2, 'You have to set a minium of 2 licences')
+      .max(100000, 'You can only set a maximum of 100.000 licences')
       .required('Please enter a number'),
   })
 
@@ -86,6 +87,7 @@ export const CreateForm = () => {
         pictureFile,
         name: values.name,
         description: values.description,
+        licences: values.licences,
       })
     } catch (error) {
       setShowing(false)
@@ -207,6 +209,22 @@ export const CreateForm = () => {
               ></Field>
               <div className={styles.error}>
                 <ErrorMessage name="description" />
+              </div>
+            </div>
+            <div className="text-white font-bold text-base mt-10">
+              Licences
+            </div>
+            <div className="mt-3">
+              <Field
+                id="licences"
+                name="licences"
+                placeholder="2"
+                className="outline-none bg-grey-dark text-white"
+              />
+              <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
+              <div className="text-grey-light mt-2">min. 2 - max. 100.000</div>
+              <div className={styles.error}>
+                <ErrorMessage name="licences" />
               </div>
             </div>
             <button
