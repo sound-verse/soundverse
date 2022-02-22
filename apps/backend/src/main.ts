@@ -39,6 +39,24 @@ async function bootstrap() {
     },
   });
 
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.RMQ,
+    options: {
+      urls: [
+        `amqp://${configService.get('RABBITMQ_USER')}:${configService.get(
+          'RABBITMQ_PASSWORD',
+        )}@${configService.get('RABBITMQ_HOST')}`,
+      ],
+      queue: configService.get<string>('RABBITMQ_RECOVERY_QUEUE_NAME'),
+      noAck: false,
+      queueOptions: {
+        durable: true,
+      },
+    },
+  });
+
+  console.log("microservice connected")
+
   await app.startAllMicroservices();
   await app.listen(process.env.PORT || 8001);
 }
