@@ -25,7 +25,7 @@ export const CreateForm = () => {
   const [pictureFile, setPictureFile] = useState<File>(undefined)
   const [showing, setShowing] = useState<Boolean>(false)
   const router = useRouter()
-  const { mint, mintState } = useCreateNFT()
+  const { createMintVoucher } = useCreateNFT()
   const [nftFileError, setNftFileError] = useState<String>('')
   const [pictureFileError, setPictureFileError] = useState<String>('')
 
@@ -82,13 +82,15 @@ export const CreateForm = () => {
     }
     try {
       setShowing(true)
-      await mint({
+      await createMintVoucher({
         nftFile,
         pictureFile,
         name: values.name,
         description: values.description,
         licences: values.licences,
       })
+      setShowing(false)
+      router.push('/marketplace')
     } catch (error) {
       setShowing(false)
       console.log(error)
@@ -99,18 +101,6 @@ export const CreateForm = () => {
   }
 
   Modal.setAppElement('#__next')
-
-  useEffect(() => {
-    if (mintState.status === 'Success') {
-      setShowing(false)
-      router.push('/marketplace')
-    }
-    if (mintState.status == 'Exception') {
-      setShowing(false)
-      toast('Error minting your NFT')
-      console.log(mintState.errorMessage)
-    }
-  }, [mintState])
 
   return (
     <div>
@@ -193,6 +183,20 @@ export const CreateForm = () => {
                 <ErrorMessage name="name" />
               </div>
             </div>
+            <div className="text-white font-bold text-base mt-10">Licences</div>
+            <div className="mt-3">
+              <Field
+                id="licences"
+                name="licences"
+                placeholder="2"
+                className="outline-none bg-grey-dark text-white"
+              />
+              <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
+              <div className="text-grey-light mt-2">min. 2 - max. 100.000</div>
+              <div className={styles.error}>
+                <ErrorMessage name="licences" />
+              </div>
+            </div>
             <div className="text-white font-bold text-base mt-10">
               Description
             </div>
@@ -209,22 +213,6 @@ export const CreateForm = () => {
               ></Field>
               <div className={styles.error}>
                 <ErrorMessage name="description" />
-              </div>
-            </div>
-            <div className="text-white font-bold text-base mt-10">
-              Licences
-            </div>
-            <div className="mt-3">
-              <Field
-                id="licences"
-                name="licences"
-                placeholder="2"
-                className="outline-none bg-grey-dark text-white"
-              />
-              <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
-              <div className="text-grey-light mt-2">min. 2 - max. 100.000</div>
-              <div className={styles.error}>
-                <ErrorMessage name="licences" />
               </div>
             </div>
             <button

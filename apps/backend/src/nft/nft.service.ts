@@ -137,22 +137,21 @@ export class NftService {
   }
 
   async getNfts(limitOfDocuments = 100, documentsToSkip = 0, filter?: NftsFilter): Promise<Nft[]> {
-
     if (filter?.creatorEthAddress) {
       const creator = await this.userService.findByETHAddress(filter.creatorEthAddress.toLowerCase());
       if (!creator) {
         return null;
       }
-      return this.nftModel.find({ verified: true, creator: creator._id, tokenId: { $exists: true } });
+      return this.nftModel.find({ verified: true, creator: creator._id });
     }
 
     const findQuery = this.nftModel
-    .find({ verified: true})
-    .sort({ _id: 1 })
-    .skip(documentsToSkip)
-    .limit(limitOfDocuments)
+      .find({ verified: true })
+      .sort({ _id: 1 })
+      .skip(documentsToSkip)
+      .limit(limitOfDocuments);
 
     const results = await findQuery;
-    return results
+    return results;
   }
 }
