@@ -1,10 +1,7 @@
-import { useCall, useEthers } from '@usedapp/core'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
+import { useEthers } from '@usedapp/core'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { gql, useMutation, useQuery } from '@apollo/client'
-import link from 'next/link'
 import { useAuthContext } from '../context/AuthContext'
-import Cookies from 'js-cookie'
 import jwt_decode from 'jwt-decode'
 import toast from 'react-hot-toast'
 

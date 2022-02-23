@@ -45,7 +45,7 @@ function SoundCard({
   }
   return (
     <div className={styles.soundCardWrapper}>
-      <Link href={`/${soundCard.contractAddress}/${soundCard.tokenId}`}>
+      <Link href={`/${soundCard.contractAddress}/${soundCard.id}`}>
         <a>
           <div className={styles.soundCardHeaderTop}>Master</div>
           <div className={styles.soundCardHeaderBottom}>

@@ -25,7 +25,7 @@ export const CreateForm = () => {
   const [pictureFile, setPictureFile] = useState<File>(undefined)
   const [showing, setShowing] = useState<Boolean>(false)
   const router = useRouter()
-  const { createMintVoucher } = useCreateNFT()
+  const { prepareMint } = useCreateNFT()
   const [nftFileError, setNftFileError] = useState<String>('')
   const [pictureFileError, setPictureFileError] = useState<String>('')
 
@@ -82,15 +82,19 @@ export const CreateForm = () => {
     }
     try {
       setShowing(true)
-      await createMintVoucher({
+      const { id } = await prepareMint({
         nftFile,
         pictureFile,
         name: values.name,
         description: values.description,
         licences: values.licences,
       })
+      if (id) {
+        router.push(`${process.env.NEXT_PUBLIC_ERC721_CONTRACT_ADDRESS}/${id}`)
+      } else {
+        toast.error('Error minting your NFT')
+      }
       setShowing(false)
-      router.push('/marketplace')
     } catch (error) {
       setShowing(false)
       console.log(error)

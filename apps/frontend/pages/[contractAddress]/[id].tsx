@@ -142,14 +142,12 @@ export default function Nft({ user, query, nft }: ProfileProps) {
 }
 
 export async function getServerSideProps(context) {
-  const { contractAddress, tokenId } = context.query
+  const { contractAddress, id } = context.query
   const client = createApolloClient()
-  const intTokenId =
-    parseInt(tokenId) || tokenId === '0' ? parseInt(tokenId) : -1
 
   const nft = await client.apolloClient.query({
     query: GET_NFT,
-    variables: { filter: { contractAddress, tokenId: intTokenId } },
+    variables: { filter: { contractAddress, id } },
   })
 
   return {
@@ -157,7 +155,7 @@ export async function getServerSideProps(context) {
       nft: nft.data.nft,
       query: {
         contractAddress,
-        tokenId,
+        id,
       },
     },
   }

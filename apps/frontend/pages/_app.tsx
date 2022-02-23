@@ -12,6 +12,7 @@ import '../css/index.css'
 import '../css/pages/marketplace.css'
 import { ApolloClientProvider } from '../context/ApolloClientProvider'
 import { AudioProvider } from '../context/AudioContext'
+import NextNProgress from 'nextjs-progressbar'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const supportedNetworks = {
@@ -31,6 +32,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <ApolloClientProvider initialApolloState={pageProps.initialApolloState}>
         <DAppProvider config={config}>
           <AudioProvider>
+            <NextNProgress color="#7A64FF" height={5} />
             <Component {...pageProps} />
           </AudioProvider>
         </DAppProvider>
