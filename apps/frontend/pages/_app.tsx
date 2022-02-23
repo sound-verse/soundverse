@@ -14,9 +14,16 @@ import { ApolloClientProvider } from '../context/ApolloClientProvider'
 import { AudioProvider } from '../context/AudioContext'
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const supportedNetworks = {
+    local: [Localhost, Mumbai],
+    testflight: [Mumbai],
+  }
+
   const config: Partial<FullConfig> = {
     networks:
-      process.env.NEXT_PUBLIC_ENVIRONMENT === 'local' ? [Localhost] : [Mumbai],
+      process.env.NEXT_PUBLIC_ENVIRONMENT === 'local'
+        ? supportedNetworks.local
+        : supportedNetworks.testflight,
   }
 
   return (
