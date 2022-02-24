@@ -4,27 +4,31 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ProfileName } from '../profile'
 import { AudioPlayer } from '../AudioPlayer/AudioPlayer'
+import cn from 'classnames'
 
 export type SoundCardI = {
   id: string
   pictureUrl: string
   name: string
-  licences: number
+  licenses: number
   musicUrl: string
   creatorName: string
   creatorEthAddress: string
   tokenId: string
+  type: 'master' | 'license'
 }
 
 export type SoundCardProp = {
   soundCard: SoundCardI
   playingCardId?: string
   onMusicClick?(): void
+  className?: string
 }
 
 function SoundCard({
   soundCard,
   playingCardId = '',
+  className,
   onMusicClick = () => {},
 }: SoundCardProp) {
   const [playCard, setPlayCard] = useState<boolean>(false)
@@ -37,16 +41,31 @@ function SoundCard({
     onMusicClick()
   }
 
+  const rootClassName = cn(
+    styles.soundCardWrapper,
+    {
+      [styles.master]: soundCard.type === 'master',
+      [styles.license]: soundCard.type === 'license',
+    },
+    className
+  )
+
   if (!soundCard.pictureUrl) {
     return
   }
   return (
-    <div className={styles.soundCardWrapper}>
-      <Link href={`/nft/${soundCard.id}`}>
+    <div className={rootClassName}>
+      <Link href={`/${soundCard.type}/${soundCard.id}`}>
         <a>
-          <div className={styles.soundCardHeaderTop}>Master</div>
+          <div className={styles.soundCardHeaderTop}>
+            {soundCard.type === 'master' ? 'Master' : 'License'}
+          </div>
           <div className={styles.soundCardHeaderBottom}>
-            <div className="font-semibold text-xl">{soundCard.name}</div>
+            <div className="font-semibold text-xl">
+              {soundCard.name.length > 45
+                ? `${soundCard.name.substring(0, 45)}...`
+                : soundCard.name}
+            </div>
             <div className={styles.creatorName}>
               <ProfileName
                 ethAddress={soundCard.creatorEthAddress}

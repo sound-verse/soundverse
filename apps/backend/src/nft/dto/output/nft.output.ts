@@ -4,7 +4,7 @@ import { User } from '../../../user/dto/output/user.output';
 @ObjectType()
 export class NftOwner {
   @Field()
-  ethAddress: string;
+  user: User;
 
   @Field()
   supply: number;
@@ -28,6 +28,9 @@ export class Nft {
   tokenId?: number;
 
   @Field()
+  supply: number;
+
+  @Field()
   contractAddress: string;
 
   @Field()
@@ -49,5 +52,8 @@ export class Nft {
   creator?: User;
 
   @Field((type) => [NftOwner], { nullable: true })
-  owners?: NftOwner[];
+  licenseOwners?: NftOwner[];
+
+  @Field((type) => NftOwner)
+  masterOwner: NftOwner;
 }
