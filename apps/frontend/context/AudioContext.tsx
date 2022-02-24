@@ -13,15 +13,28 @@ export enum PLAYER_STATUS {
 }
 
 export type Track = {
-  trackName: string
-  url: string
+  id?: string
+  contractAddress?: string
+  trackName?: string
+  url?: string
+  currentPosition?: number
+  creatorName?: string
+  trackPictureUrl?: string
+  creatorEthAddress?: string
+  visible?: boolean
+  mute?: boolean
+  volume?: number
+  play?: boolean
+  isLoading?: boolean
+  playTime?: number
+  isPlaying?: boolean
 }
 
 export type State = {
   currentTrack: Track
 }
 
-type CheckoutContextType = State & {
+type AudioContextType = State & {
   setCurrentTrack: (track: Track) => void
 }
 
@@ -33,7 +46,22 @@ type Action =
   | { type: 'SET_VOLUME'; volume: number }
 
 const initialState: State = {
-  currentTrack: {} as Track,
+  currentTrack: {
+    id: '',
+    contractAddress: '',
+    trackName: '',
+    url: '',
+    currentPosition: 0,
+    creatorEthAddress: '',
+    creatorName: '',
+    mute: true,
+    volume: 0.5,
+    play: false,
+    playTime: 0,
+    visible: false,
+    isLoading: false,
+    isPlaying: false,
+  } as Track,
 }
 
 export const AudioContext = createContext<State | any>(initialState)
@@ -44,8 +72,10 @@ const audioReducer = (state: State, action: Action): State => {
   switch (action.type) {
     case 'SET_CURRENT_TRACK':
       return {
-        ...state,
-        currentTrack: action.track,
+        currentTrack: {
+          ...state.currentTrack,
+          ...action.track,
+        },
       }
     default:
       return state
@@ -75,7 +105,7 @@ export const AudioProvider: FC = (props) => {
 
 export const useAudioContext = () => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const context = useContext<CheckoutContextType>(AudioContext)
+  const context = useContext<AudioContextType>(AudioContext)
   if (context === undefined) {
     throw new Error('useAudioContext must be used within a AudioProvider')
   }
