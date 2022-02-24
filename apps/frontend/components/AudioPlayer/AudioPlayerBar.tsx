@@ -58,7 +58,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
     }
     if (currentTrack.play) {
       wavesurfer.current.play()
-      setCurrentTrack({ isPlaying: true })
+      setCurrentTrack({ isPlaying: true, visible: true, mute: false })
     } else {
       wavesurfer.current.pause()
       setCurrentTrack({ isPlaying: false })
@@ -120,6 +120,9 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
     wavesurfer.current.on('audioprocess', () => {
       setCurrentTrack({ playTime: wavesurfer.current.getCurrentTime() })
     })
+    wavesurfer.current.on('finish', () => {
+      setCurrentTrack({ isPlaying: false, play: false })
+    })
   }
 
   return (
@@ -130,8 +133,8 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
       )}
     >
       <div className="grid grid-cols-1 lg:grid-cols-3 w-full relative text-center items-center align-center">
-        <div className="hidden lg:flex items-center justify-end mr-5">
-          <div className="mr-5">
+        <div className="hidden lg:flex items-center justify-end mr-2">
+          <div className="mr-2">
             {currentTrack.trackPictureUrl && (
               <Link href={`/nft/${currentTrack.id}`}>
                 <a>
@@ -146,7 +149,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
               </Link>
             )}
           </div>
-          <div className="flex-col text-left">
+          <div className="flex-col text-left justify-start">
             <div className="text-white font-bold text-md">
               {currentTrack.trackName.length > 30
                 ? `${currentTrack.trackName.substring(0, 25)}...`
@@ -171,7 +174,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
         </div>
         <div className="grid grid-cols-5 algin-center items-center">
           <div
-            className="col-span-1 cursor-pointer"
+            className="col-span-1 cursor-pointer text-right mr-3"
             onClick={() => {
               setCurrentTrack({
                 play: !wavesurfer.current?.isPlaying(),
@@ -197,14 +200,14 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
           <div className={cn('col-span-3', styles.noOverflow)}>
             <div ref={waveformRef} />
           </div>
-          <div className="col-span-1 text-white">
+          <div className="col-span-1 text-white text-left ml-3">
             {currentTrack.playTime &&
               new Date(currentTrack.playTime * 1000)
                 .toISOString()
                 .substr(11, 8)}
           </div>
         </div>
-        <div className="hidden lg:flex justify-start ml-5">
+        <div className="hidden lg:flex justify-start">
           <div
             className="cursor-pointer flex items-center"
             onClick={() => setCurrentTrack({ mute: !currentTrack.mute })}

@@ -101,6 +101,8 @@ export const AudioPlayer = ({
         creatorEthAddress,
         id,
         contractAddress,
+        isPlaying: true,
+        play: true,
       })
     })
   }
