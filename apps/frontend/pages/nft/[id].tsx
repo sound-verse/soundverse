@@ -79,7 +79,6 @@ export default function Nft({ user, query, nft }: ProfileProps) {
                     musicUrl: nft.fileUrl,
                     name: nft.metadata.name,
                     pictureUrl: nft.filePictureUrl,
-                    contractAddress: nft.contractAddress,
                     tokenId: nft.tokenId,
                   }}
                 />
@@ -142,19 +141,18 @@ export default function Nft({ user, query, nft }: ProfileProps) {
 }
 
 export async function getServerSideProps(context) {
-  const { contractAddress, id } = context.query
+  const { id } = context.query
   const client = createApolloClient()
 
   const nft = await client.apolloClient.query({
     query: GET_NFT,
-    variables: { filter: { contractAddress, id } },
+    variables: { filter: { id } },
   })
 
   return {
     props: {
       nft: nft.data.nft,
       query: {
-        contractAddress,
         id,
       },
     },

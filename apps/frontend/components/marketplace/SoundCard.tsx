@@ -13,7 +13,6 @@ export type SoundCardI = {
   musicUrl: string
   creatorName: string
   creatorEthAddress: string
-  contractAddress: string
   tokenId: string
 }
 
@@ -29,15 +28,13 @@ function SoundCard({
   onMusicClick = () => {},
 }: SoundCardProp) {
   const [playCard, setPlayCard] = useState<boolean>(false)
+
   useEffect(() => {
-    if (playingCardId !== soundCard.id) {
-      setPlayCard(false)
-    }
+    setPlayCard(playingCardId === soundCard.id ? true : false)
   }, [playingCardId])
 
   const handleMusicClick = () => {
     onMusicClick()
-    setPlayCard(true)
   }
 
   if (!soundCard.pictureUrl) {
@@ -45,7 +42,7 @@ function SoundCard({
   }
   return (
     <div className={styles.soundCardWrapper}>
-      <Link href={`/${soundCard.contractAddress}/${soundCard.id}`}>
+      <Link href={`/nft/${soundCard.id}`}>
         <a>
           <div className={styles.soundCardHeaderTop}>Master</div>
           <div className={styles.soundCardHeaderBottom}>
@@ -69,6 +66,11 @@ function SoundCard({
           url={soundCard.musicUrl}
           className={styles.audioWaves}
           play={playCard}
+          name={soundCard.name}
+          creatorName={soundCard.creatorName}
+          creatorEthAddress={soundCard.creatorEthAddress}
+          trackPictureUrl={soundCard.pictureUrl}
+          id={soundCard.id}
         />
       </div>
       <div className={styles.soundCardFooter}>
