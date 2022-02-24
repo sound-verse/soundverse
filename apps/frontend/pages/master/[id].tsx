@@ -102,23 +102,25 @@ export default function Nft({ user, query, nft }: ProfileProps) {
                     <Link href={`/profile/${nft.creator.ethAddress}`}>
                       <a>
                         <ProfileName
-                          ethAddress={nft.masterOwner.user.ethAddress}
-                          name={nft.masterOwner.user.name}
+                          ethAddress={nft.creator.ethAddress}
+                          name={nft.creator.name}
                           className="inline-block font-bold text-purple"
                         />
                       </a>
-                    </Link>{' '}
+                    </Link>
                     {' - '}
                     {nft.metadata.name}
                   </div>
                   <div className="flex justify-between items-baseline text-white border-b border-grey-medium pb-5">
                     <div className="mt-12">
                       Owned by:{' '}
-                      <Link href={`/profile/${nft.creator.ethAddress}`}>
+                      <Link
+                        href={`/profile/${nft.masterOwner.user.ethAddress}`}
+                      >
                         <a>
                           <ProfileName
-                            ethAddress={nft.creator.ethAddress}
-                            name={nft.creator.name}
+                            ethAddress={nft.masterOwner.user.ethAddress}
+                            name={nft.masterOwner.user.name}
                             className="inline-block font-bold text-purple"
                           />
                         </a>

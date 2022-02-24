@@ -99,6 +99,16 @@ export default function Nft({ user, query, nft }: ProfileProps) {
               <div className="flex flex-col m-16">
                 <div className="flex flex-col p-10">
                   <div className="text-white font-extrabold text-2xl  font-AOCR ">
+                    <Link href={`/profile/${nft.creator.ethAddress}`}>
+                      <a>
+                        <ProfileName
+                          ethAddress={nft.creator.ethAddress}
+                          name={nft.creator.name}
+                          className="inline-block font-bold text-purple"
+                        />
+                      </a>
+                    </Link>
+                    {' - '}
                     {nft.metadata.name}
                   </div>
                   <div className="flex justify-between items-baseline text-white border-b border-grey-medium pb-5">
