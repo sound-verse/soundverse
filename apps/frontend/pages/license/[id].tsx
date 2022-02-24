@@ -21,6 +21,13 @@ export const GET_NFT = gql`
       filePictureUrl
       ipfsUrl
       transactionHash
+      supply
+      masterOwner {
+        user {
+          name
+          ethAddress
+        }
+      }
       metadata {
         name
         description
@@ -31,8 +38,11 @@ export const GET_NFT = gql`
         ethAddress
         profileImage
       }
-      owners {
-        ethAddress
+      licenseOwners {
+        user {
+          name
+          ethAddress
+        }
         supply
       }
     }
@@ -75,11 +85,12 @@ export default function Nft({ user, query, nft }: ProfileProps) {
                     id: nft.id,
                     creatorEthAddress: nft.creator.ethAddress,
                     creatorName: nft.creator.name,
-                    licences: nft.supply,
+                    licenses: nft.supply,
                     musicUrl: nft.fileUrl,
                     name: nft.metadata.name,
                     pictureUrl: nft.filePictureUrl,
                     tokenId: nft.tokenId,
+                    type: 'license',
                   }}
                 />
               </div>
@@ -93,24 +104,30 @@ export default function Nft({ user, query, nft }: ProfileProps) {
                   <div className="flex justify-between items-baseline text-white border-b border-grey-medium pb-5">
                     <div className="mt-12">
                       Owned by:{' '}
-                      <Link href={`/profile/${nft.creator.ethAddress}`}>
-                        <a>
-                          <ProfileName
-                            ethAddress={nft.creator.ethAddress}
-                            name={nft.creator.name}
-                            className="inline-block font-bold text-purple"
-                          />
-                        </a>
-                      </Link>
+                      {nft.licenseOwners.map((licenseOwner) => {
+                        return (
+                          <>
+                            <Link
+                              href={`/profile/${licenseOwner.user.ethAddress}`}
+                            >
+                              <a>
+                                <ProfileName
+                                  ethAddress={licenseOwner.user.ethAddress}
+                                  name={licenseOwner.user.name}
+                                  className="inline-block font-bold text-purple"
+                                />
+                              </a>
+                            </Link>
+                            <span>
+                              {' '}
+                              ({`${licenseOwner.supply}/${nft.supply}`})
+                            </span>
+                          </>
+                        )
+                      })}
                     </div>
                     <div>
-                      Type: <span className="font-bold">Master</span>
-                    </div>
-                    <div className="">
-                      Licences:{' '}
-                      <span className="font-bold">
-                        {nft.supply ? nft.supply : '#/#'}
-                      </span>
+                      Type: <span className="font-bold">License</span>
                     </div>
                   </div>
                   <div className="mt-10">

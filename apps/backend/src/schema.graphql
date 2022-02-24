@@ -40,7 +40,7 @@ type Auth {
 }
 
 type NftOwner {
-  ethAddress: String!
+  user: User!
   supply: Float!
 }
 
@@ -52,6 +52,7 @@ type NftMetadata {
 type Nft {
   id: String!
   tokenId: Float
+  supply: Float!
   contractAddress: String!
   ipfsUrl: String!
   fileUrl: String!
@@ -59,7 +60,8 @@ type Nft {
   transactionHash: String
   metadata: NftMetadata!
   creator: User
-  owners: [NftOwner!]
+  licenseOwners: [NftOwner!]
+  masterOwner: NftOwner!
 }
 
 type Query {

@@ -21,6 +21,12 @@ export const GET_NFTS = gql`
       filePictureUrl
       ipfsUrl
       transactionHash
+      masterOwner {
+        user {
+          name
+          ethAddress
+        }
+      }
       metadata {
         name
         description
@@ -31,8 +37,11 @@ export const GET_NFTS = gql`
         ethAddress
         profileImage
       }
-      owners {
-        ethAddress
+      licenseOwners {
+        user {
+          name
+          ethAddress
+        }
         supply
       }
     }
@@ -86,10 +95,40 @@ export default function Landing() {
                           name: data.metadata.name,
                           creatorName: data.creator.name,
                           creatorEthAddress: data.creator.ethAddress,
-                          licences: data.supply,
+                          licenses: data.supply,
                           musicUrl: data.fileUrl,
                           tokenId: data.tokenId,
                           id: data.id,
+                          type: 'master',
+                        }}
+                        key={key}
+                        playingCardId={playingCardId}
+                        onMusicClick={() => handleMusicClick(data.id)}
+                      />
+                    </div>
+                  </div>
+                )
+              })}
+
+              {nfts.map((data, key) => {
+                if (!data.filePictureUrl) {
+                  return
+                }
+
+                return (
+                  <div key={`soundcard-wrapper-${key}`}>
+                    <div className="spacer">
+                      <SoundCard
+                        soundCard={{
+                          pictureUrl: data.filePictureUrl,
+                          name: data.metadata.name,
+                          creatorName: data.creator.name,
+                          creatorEthAddress: data.creator.ethAddress,
+                          licenses: data.supply,
+                          musicUrl: data.fileUrl,
+                          tokenId: data.tokenId,
+                          id: data.id,
+                          type: 'license',
                         }}
                         key={key}
                         playingCardId={playingCardId}
