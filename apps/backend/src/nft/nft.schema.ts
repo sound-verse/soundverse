@@ -10,7 +10,7 @@ export type NftDocument = Nft & Document<Types.ObjectId>;
 
 class NftOwner {
   @Prop({ lowercase: true })
-  ethAddress: string;
+  user: User;
 
   @Prop({ min: 0, default: 0 })
   supply: number;
@@ -57,11 +57,17 @@ export class Nft extends BaseDBObject {
   @Prop({ default: [] })
   metadata: NftMetadata;
 
+  @Prop()
+  masterOwner: NftOwner;
+
   @Prop({ default: [] })
-  owners: [NftOwner];
+  licenseOwners: [NftOwner];
 
   @Prop({ default: true })
   active: boolean;
+
+  @Prop()
+  supply?: number;
 
   @Prop({ default: false })
   verified?: boolean;

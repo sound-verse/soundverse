@@ -35,7 +35,7 @@ export type CreateNFT = {
   name: string
   description: string
   tags?: string[]
-  licences: number
+  licenses: number
 }
 
 export type MintVoucher = {
@@ -70,7 +70,7 @@ export const useCreateNFT = () => {
   const [verifyMintedNft] = useMutation(VERIFY_MINTED_NFT)
 
   const createMintVoucher = async (createNftProps: CreateNFT) => {
-    const { licences } = createNftProps
+    const { licenses } = createNftProps
 
     if (!authUser || !chainId) {
       return
@@ -96,7 +96,7 @@ export const useCreateNFT = () => {
           ? `http://ipfs.local/${crypto.randomBytes(16).toString('hex')}` //random string for localhost
           : tokenUri,
       sellCount: 0,
-      supply: licences,
+      supply: licenses,
       isMaster: true,
     }
 
@@ -135,7 +135,7 @@ export const useCreateNFT = () => {
       name,
       description,
       tags = [],
-      licences,
+      licenses,
     } = createNftProps
 
     const formData = new FormData()
@@ -148,7 +148,7 @@ export const useCreateNFT = () => {
           pictureFile: null,
           data: {
             metadata: { name, description },
-            supply: licences,
+            supply: parseInt(licenses.toString()),
             tags,
             chainId,
           },

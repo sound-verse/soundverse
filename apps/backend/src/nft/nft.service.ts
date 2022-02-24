@@ -62,9 +62,14 @@ export class NftService {
         tags: nftTagsObjectIds,
         transactionHash: createNftInput.transactionHash ? createNftInput.transactionHash : '',
         chainId: createNftInput.chainId ? createNftInput.chainId : 0,
-        owners: [
+        supply: createNftInput.supply,
+        masterOwner: {
+          user: createNftInput.user,
+          supply: 1,
+        },
+        licenseOwners: [
           {
-            ethAddress: createNftInput.user.ethAddress,
+            user: createNftInput.user,
             supply: createNftInput.supply,
           },
         ],
