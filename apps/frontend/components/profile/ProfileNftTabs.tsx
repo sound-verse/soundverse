@@ -45,7 +45,6 @@ export const ProfileNftTabs = ({
                 musicUrl: createdNft.fileUrl,
                 name: createdNft.metadata.name,
                 pictureUrl: createdNft.filePictureUrl,
-                contractAddress: createdNft.contractAddress,
                 tokenId: createdNft.tokenId,
               }}
             />
