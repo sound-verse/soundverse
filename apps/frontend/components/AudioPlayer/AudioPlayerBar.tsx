@@ -194,7 +194,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
               />
             )}
           </div>
-          <div className="col-span-3">
+          <div className={cn('col-span-3', styles.noOverflow)}>
             <div ref={waveformRef} />
           </div>
           <div className="col-span-1 text-white">
