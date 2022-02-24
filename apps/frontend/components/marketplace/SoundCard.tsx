@@ -78,7 +78,10 @@ function SoundCard({
         </a>
       </Link>
       <div className={styles.mplaceImage}>
-        <Image src={soundCard.pictureUrl} layout="fill" objectFit="cover" />
+        <div className={styles.blur}>
+          <Image src={soundCard.pictureUrl} layout="fill" objectFit="cover" />
+        </div>
+        <Image src={soundCard.pictureUrl} layout="fill" objectFit="contain" />
       </div>
       <div className={styles.soundCardAudio} onClick={handleMusicClick}>
         <AudioPlayer
