@@ -4,6 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { useContainer } from 'class-validator';
 import { ConfigService } from '@nestjs/config';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { truncate } from 'fs';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -35,22 +36,12 @@ async function bootstrap() {
       noAck: false,
       queueOptions: {
         durable: true,
-      },
-    },
-  });
-
-  app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.RMQ,
-    options: {
-      urls: [
-        `amqp://${configService.get('RABBITMQ_USER')}:${configService.get(
-          'RABBITMQ_PASSWORD',
-        )}@${configService.get('RABBITMQ_HOST')}`,
-      ],
-      queue: configService.get<string>('RABBITMQ_RECOVERY_QUEUE_NAME'),
-      noAck: false,
-      queueOptions: {
-        durable: true,
+        // setup the dead letter exchange to point to the default exchange
+        deadLetterExchange: "",
+        // dead letters from our queue should be routed to the recovery-queue
+        deadLetterRoutingKey: configService.get('RABBITMQ_RECOVERY_QUEUE_NAME'),
+        // set message time to live to 4s
+        messageTtl: 4000,
       },
     },
   });

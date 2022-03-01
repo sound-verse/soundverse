@@ -35,24 +35,6 @@ import { ClientProxyFactory, RmqOptions, Transport } from '@nestjs/microservices
       },
       inject: [ConfigService],
     },
-    {
-      provide: 'SC_BLOCKCHAIN_EVENTS_SERVICE',
-      useFactory: (configService: ConfigService) => {
-        return ClientProxyFactory.create({
-          transport: Transport.RMQ,
-          options: {
-            urls: [
-              `amqp://${configService.get('RABBITMQ_USER')}:${configService.get(
-                'RABBITMQ_PASSWORD',
-              )}@${configService.get('RABBITMQ_HOST')}`,
-            ],
-            queue: configService.get('RABBITMQ_RECOVERY_QUEUE_NAME'),
-            noAck: false,
-          },
-        });
-      },
-      inject: [ConfigService],
-    },
   ],
   exports: [RPCListenerService],
 })
