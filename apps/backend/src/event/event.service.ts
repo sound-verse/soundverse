@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, OnApplicationBootstrap } from '@nestjs/common';
+import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import {
   ContractType,
   ERC721MasterMintEventReturnValues,
@@ -14,15 +14,10 @@ import { ConfigService } from '@nestjs/config';
 export class EventService implements OnApplicationBootstrap {
   constructor(private nftService: NftService, private configService: ConfigService) {}
 
-  async onApplicationBootstrap() {
-    let connection = amqpConMgr.connect({
+  onApplicationBootstrap() {
+    const connection = amqpConMgr.connect({
       url:
-        'amqp://' +
-        this.configService.get('RABBITMQ_USER') +
-        ':' +
-        this.configService.get('RABBITMQ_PASSWORD') +
-        '@' +
-        this.configService.get('RABBITMQ_HOST'),
+        `amqp://${this.configService.get('RABBITMQ_USER')}:${this.configService.get('RABBITMQ_PASSWORD')}@${this.configService.get('RABBITMQ_HOST')}`,
     });
     const channelWrapper: amqpConMgr.ChannelWrapper = connection.createChannel({
       json: true,
