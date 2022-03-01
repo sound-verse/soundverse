@@ -15,6 +15,7 @@ import { CurrentUser, LoggedinUser } from '../user/decorators/user.decorator';
 import { Nft as NftSchema } from './nft.schema';
 import { UserService } from '../user/user.service';
 import { User } from '../user/user.schema';
+import { VerifyNftInput } from './dto/input/verify-nft.input';
 @Resolver(() => Nft)
 export class NftResolver {
   constructor(
@@ -72,6 +73,15 @@ export class NftResolver {
     }
   }
 
+  @UseGuards(GqlAuthGuard)
+  @Mutation(() => Nft)
+  async verifyMintedNFT(
+    @Args('input') input: VerifyNftInput,
+    @CurrentUser() user: LoggedinUser,
+  ): Promise<NftSchema> {
+    return await this.nftService.verifyNft(input, user.ethAddress);
+  }
+
   @Query(() => [Nft], { nullable: true })
   async nfts(
     @Args('skip') skip: number,
@@ -83,10 +93,7 @@ export class NftResolver {
 
   @Query(() => Nft, { nullable: true })
   async nft(@Args('filter') filter: NftFilter): Promise<NftSchema> {
-    return await this.nftService.findNft({
-      contractAddress: filter.contractAddress,
-      tokenId: filter.tokenId,
-    });
+    return await this.nftService.findNft(filter);
   }
 
   @Mutation(() => Boolean)

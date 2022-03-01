@@ -21,6 +21,13 @@ export const GET_NFT = gql`
       filePictureUrl
       ipfsUrl
       transactionHash
+      supply
+      masterOwner {
+        user {
+          name
+          ethAddress
+        }
+      }
       metadata {
         name
         description
@@ -31,8 +38,11 @@ export const GET_NFT = gql`
         ethAddress
         profileImage
       }
-      owners {
-        ethAddress
+      licenseOwners {
+        user {
+          name
+          ethAddress
+        }
         supply
       }
     }
@@ -75,12 +85,12 @@ export default function Nft({ user, query, nft }: ProfileProps) {
                     id: nft.id,
                     creatorEthAddress: nft.creator.ethAddress,
                     creatorName: nft.creator.name,
-                    licences: nft.supply,
+                    licenses: nft.supply,
                     musicUrl: nft.fileUrl,
                     name: nft.metadata.name,
                     pictureUrl: nft.filePictureUrl,
-                    contractAddress: nft.contractAddress,
                     tokenId: nft.tokenId,
+                    type: 'master',
                   }}
                 />
               </div>
@@ -89,16 +99,28 @@ export default function Nft({ user, query, nft }: ProfileProps) {
               <div className="flex flex-col m-16">
                 <div className="flex flex-col p-10">
                   <div className="text-white font-extrabold text-2xl  font-AOCR ">
+                    <Link href={`/profile/${nft.creator.ethAddress}`}>
+                      <a>
+                        <ProfileName
+                          ethAddress={nft.creator.ethAddress}
+                          name={nft.creator.name}
+                          className="inline-block font-bold text-purple"
+                        />
+                      </a>
+                    </Link>
+                    {' - '}
                     {nft.metadata.name}
                   </div>
                   <div className="flex justify-between items-baseline text-white border-b border-grey-medium pb-5">
                     <div className="mt-12">
                       Owned by:{' '}
-                      <Link href={`/profile/${nft.creator.ethAddress}`}>
+                      <Link
+                        href={`/profile/${nft.masterOwner.user.ethAddress}`}
+                      >
                         <a>
                           <ProfileName
-                            ethAddress={nft.creator.ethAddress}
-                            name={nft.creator.name}
+                            ethAddress={nft.masterOwner.user.ethAddress}
+                            name={nft.masterOwner.user.name}
                             className="inline-block font-bold text-purple"
                           />
                         </a>
@@ -106,12 +128,6 @@ export default function Nft({ user, query, nft }: ProfileProps) {
                     </div>
                     <div>
                       Type: <span className="font-bold">Master</span>
-                    </div>
-                    <div className="">
-                      Licences:{' '}
-                      <span className="font-bold">
-                        {nft.supply ? nft.supply : '#/#'}
-                      </span>
                     </div>
                   </div>
                   <div className="mt-10">
@@ -142,22 +158,19 @@ export default function Nft({ user, query, nft }: ProfileProps) {
 }
 
 export async function getServerSideProps(context) {
-  const { contractAddress, tokenId } = context.query
+  const { id } = context.query
   const client = createApolloClient()
-  const intTokenId =
-    parseInt(tokenId) || tokenId === '0' ? parseInt(tokenId) : -1
 
   const nft = await client.apolloClient.query({
     query: GET_NFT,
-    variables: { filter: { contractAddress, tokenId: intTokenId } },
+    variables: { filter: { id } },
   })
 
   return {
     props: {
       nft: nft.data.nft,
       query: {
-        contractAddress,
-        tokenId,
+        id,
       },
     },
   }

@@ -25,7 +25,7 @@ export const CreateForm = () => {
   const [pictureFile, setPictureFile] = useState<File>(undefined)
   const [showing, setShowing] = useState<Boolean>(false)
   const router = useRouter()
-  const { createMintVoucher } = useCreateNFT()
+  const { prepareMint } = useCreateNFT()
   const [nftFileError, setNftFileError] = useState<String>('')
   const [pictureFileError, setPictureFileError] = useState<String>('')
 
@@ -33,7 +33,7 @@ export const CreateForm = () => {
     name: '',
     description: '',
     tags: [],
-    licences: 2,
+    licenses: 2,
   }
 
   const onFileChange = (
@@ -63,10 +63,10 @@ export const CreateForm = () => {
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Please enter a title'),
     description: Yup.string().required('Please enter a description'),
-    licences: Yup.number()
+    licenses: Yup.number()
       .typeError('Please enter a number')
-      .min(2, 'You have to set a minium of 2 licences')
-      .max(100000, 'You can only set a maximum of 100.000 licences')
+      .min(2, 'You have to set a minium of 2 licenses')
+      .max(100000, 'You can only set a maximum of 100.000 licenses')
       .required('Please enter a number'),
   })
 
@@ -82,15 +82,19 @@ export const CreateForm = () => {
     }
     try {
       setShowing(true)
-      await createMintVoucher({
+      const { id } = await prepareMint({
         nftFile,
         pictureFile,
         name: values.name,
         description: values.description,
-        licences: values.licences,
+        licenses: values.licenses,
       })
+      if (id) {
+        router.push(`/master/${id}`)
+      } else {
+        toast.error('Error minting your NFT')
+      }
       setShowing(false)
-      router.push('/marketplace')
     } catch (error) {
       setShowing(false)
       console.log(error)
@@ -170,12 +174,12 @@ export const CreateForm = () => {
             <div className="text-white font-bold text-base mt-10">
               Track Name
             </div>
-            <div className="mt-3">
+            <div className="mt-3 w-full">
               <Field
                 id="name"
                 name="name"
                 placeholder="Ice in the dark..."
-                className="outline-none bg-grey-dark text-white"
+                className="outline-none bg-grey-dark text-white w-full"
               />
               <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
               <div className="text-grey-light mt-2">max. 20 characters</div>
@@ -183,18 +187,18 @@ export const CreateForm = () => {
                 <ErrorMessage name="name" />
               </div>
             </div>
-            <div className="text-white font-bold text-base mt-10">Licences</div>
-            <div className="mt-3">
+            <div className="text-white font-bold text-base mt-10">Licenses</div>
+            <div className="mt-3 w-full">
               <Field
-                id="licences"
-                name="licences"
+                id="licenses"
+                name="licenses"
                 placeholder="2"
-                className="outline-none bg-grey-dark text-white"
+                className="outline-none bg-grey-dark text-white w-full"
               />
               <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
               <div className="text-grey-light mt-2">min. 2 - max. 100.000</div>
               <div className={styles.error}>
-                <ErrorMessage name="licences" />
+                <ErrorMessage name="licenses" />
               </div>
             </div>
             <div className="text-white font-bold text-base mt-10">

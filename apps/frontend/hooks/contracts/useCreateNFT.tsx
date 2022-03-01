@@ -6,6 +6,8 @@ import Cookies from 'js-cookie'
 import { useAuthContext } from '../../context/AuthContext'
 import crypto from 'crypto'
 import toast from 'react-hot-toast'
+import { useMutation } from '@apollo/client'
+
 const CREATE_NFT = gql`
   mutation createNft(
     $NFTFile: Upload!
@@ -19,13 +21,21 @@ const CREATE_NFT = gql`
   }
 `
 
+const VERIFY_MINTED_NFT = gql`
+  mutation verifyMintedNFT($input: VerifyNftInput!) {
+    verifyMintedNFT(input: $input) {
+      id
+    }
+  }
+`
+
 export type CreateNFT = {
   nftFile: File
   pictureFile: File
   name: string
   description: string
   tags?: string[]
-  licences: number
+  licenses: number
 }
 
 export type MintVoucher = {
@@ -36,7 +46,7 @@ export type MintVoucher = {
   tokenUri: string
   supply: number
   isMaster: boolean
-  //   signature?: string
+  signature?: string
 }
 
 export const mintVoucherTypes = {
@@ -57,18 +67,20 @@ const marketContractAddress = process.env.NEXT_PUBLIC_MARKET_CONTRACT_ADDRESS
 export const useCreateNFT = () => {
   const { authUser } = useAuthContext()
   const { chainId, library } = useEthers()
+  const [verifyMintedNft] = useMutation(VERIFY_MINTED_NFT)
 
   const createMintVoucher = async (createNftProps: CreateNFT) => {
-    const { licences } = createNftProps
+    const { licenses } = createNftProps
 
     if (!authUser || !chainId) {
       return
     }
 
-    let tokenUri
+    let tokenUri, nftId
     try {
-      const { ipfsUrl } = await prepareMint(createNftProps)
+      const { ipfsUrl, id } = await prepareMint(createNftProps)
       tokenUri = ipfsUrl
+      nftId = id
     } catch (error) {
       console.log(error)
       toast.error('This NFT was already minted!')
@@ -84,7 +96,7 @@ export const useCreateNFT = () => {
           ? `http://ipfs.local/${crypto.randomBytes(16).toString('hex')}` //random string for localhost
           : tokenUri,
       sellCount: 0,
-      supply: licences,
+      supply: licenses,
       isMaster: true,
     }
 
@@ -104,19 +116,26 @@ export const useCreateNFT = () => {
       signature,
     }
 
-    //TODO: pass signed voucher to database
+    try {
+      await verifyMintedNft({
+        variables: { input: { id: nftId, mintVoucher: singnedVoucher } },
+      })
+    } catch (error) {
+      console.log(error)
+      toast.error('Error minting your NFT!')
+    }
   }
 
   const prepareMint = async (
     createNftProps: CreateNFT
-  ): Promise<{ ipfsUrl: string }> => {
+  ): Promise<{ ipfsUrl: string; id: string }> => {
     const {
       nftFile,
       pictureFile,
       name,
       description,
       tags = [],
-      licences,
+      licenses,
     } = createNftProps
 
     const formData = new FormData()
@@ -129,7 +148,7 @@ export const useCreateNFT = () => {
           pictureFile: null,
           data: {
             metadata: { name, description },
-            supply: licences,
+            supply: parseInt(licenses.toString()),
             tags,
             chainId,
           },
@@ -155,11 +174,13 @@ export const useCreateNFT = () => {
       },
     })
     const ipfsUrl: string = response.data.data.createNft.ipfsUrl
+    const id: string = response.data.data.createNft.id
 
     return {
       ipfsUrl,
+      id,
     }
   }
 
-  return { createMintVoucher }
+  return { createMintVoucher, prepareMint }
 }

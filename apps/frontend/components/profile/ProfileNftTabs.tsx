@@ -41,12 +41,12 @@ export const ProfileNftTabs = ({
                 id: createdNft.id,
                 creatorEthAddress: createdNft.creator.ethAddress,
                 creatorName: createdNft.creator.name,
-                licences: createdNft.supply,
+                licenses: createdNft.supply,
                 musicUrl: createdNft.fileUrl,
                 name: createdNft.metadata.name,
                 pictureUrl: createdNft.filePictureUrl,
-                contractAddress: createdNft.contractAddress,
                 tokenId: createdNft.tokenId,
+                type: 'master',
               }}
             />
           ))}
