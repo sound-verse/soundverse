@@ -171,5 +171,3 @@ env:
     value: 'roedeer.rmq.cloudamqp.com/rezmtgjt'
   - name: RABBITMQ_QUEUE_NAME
     value: 'sc-blockchain-events-testflight'
-  - name: RABBITMQ_RECOVERY_QUEUE_NAME
-    value: 'sc-blockchain-events-testflight-recovery'

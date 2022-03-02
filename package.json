@@ -21,10 +21,5 @@
       "apps/*",
       "shared/*"
     ]
-  },
-  "dependencies": {
-    "@metamask/eth-sig-util": "^4.0.0",
-    "@types/amqplib": "^0.8.2",
-    "amqplib": "^0.8.0"
   }
 }
