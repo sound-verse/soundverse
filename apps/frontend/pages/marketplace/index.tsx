@@ -12,8 +12,8 @@ import SoundCard from '../../components/marketplace/SoundCard'
 import { gql, useQuery } from '@apollo/client'
 
 export const GET_NFTS = gql`
-  query getNfts($filter: NftsFilter) {
-    nfts(filter: $filter) {
+  query getNfts($filter: NftsFilter, $limit: Float!, $skip: Float!) {
+    nfts(filter: $filter, limit: $limit, skip: $skip) {
       id
       tokenId
       contractAddress
@@ -21,6 +21,12 @@ export const GET_NFTS = gql`
       filePictureUrl
       ipfsUrl
       transactionHash
+      masterOwner {
+        user {
+          name
+          ethAddress
+        }
+      }
       metadata {
         name
         description
@@ -31,8 +37,11 @@ export const GET_NFTS = gql`
         ethAddress
         profileImage
       }
-      owners {
-        ethAddress
+      licenseOwners {
+        user {
+          name
+          ethAddress
+        }
         supply
       }
     }
@@ -40,37 +49,15 @@ export const GET_NFTS = gql`
 `
 
 export default function Landing() {
-  const [input, setInput] = useState('')
-  const [dropListDefault, setDropListDefault] = useState<
-    DropItem[] | undefined
-  >()
-  const [dropList, setDropList] = useState<DropItem[] | undefined>()
-  const { loading, error, data } = useQuery(GET_NFTS)
+  const { loading, data } = useQuery(GET_NFTS, {
+    variables: { limit: 100, skip: 0 },
+  })
   const [playingCardId, setPlayingCardId] = useState<string>('')
-
-  const [latestDrops, setLatestDrops] = useState([])
 
   const nfts = loading ? [] : data?.nfts ? data.nfts : []
 
   const handleMusicClick = (activeCardId: string) => {
     setPlayingCardId(activeCardId)
-  }
-
-  useEffect(() => {
-    if (latestDrops.length === 0) {
-      setDropListDefault(dataLatestDrops)
-    }
-    if (latestDrops.length === 0) {
-      setDropList(dataLatestDrops)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-  const updateInput = async (input) => {
-    const filtered = dropListDefault.filter((drop) => {
-      return drop.name.toLowerCase().includes(input.toLowerCase())
-    })
-    setInput(input)
-    setDropList(filtered)
   }
 
   const MoreButton = () => {
@@ -108,11 +95,40 @@ export default function Landing() {
                           name: data.metadata.name,
                           creatorName: data.creator.name,
                           creatorEthAddress: data.creator.ethAddress,
-                          licences: data.supply,
+                          licenses: data.supply,
                           musicUrl: data.fileUrl,
-                          contractAddress: data.contractAddress,
                           tokenId: data.tokenId,
                           id: data.id,
+                          type: 'master',
+                        }}
+                        key={key}
+                        playingCardId={playingCardId}
+                        onMusicClick={() => handleMusicClick(data.id)}
+                      />
+                    </div>
+                  </div>
+                )
+              })}
+
+              {nfts.map((data, key) => {
+                if (!data.filePictureUrl) {
+                  return
+                }
+
+                return (
+                  <div key={`soundcard-wrapper-${key}`}>
+                    <div className="spacer">
+                      <SoundCard
+                        soundCard={{
+                          pictureUrl: data.filePictureUrl,
+                          name: data.metadata.name,
+                          creatorName: data.creator.name,
+                          creatorEthAddress: data.creator.ethAddress,
+                          licenses: data.supply,
+                          musicUrl: data.fileUrl,
+                          tokenId: data.tokenId,
+                          id: data.id,
+                          type: 'license',
                         }}
                         key={key}
                         playingCardId={playingCardId}

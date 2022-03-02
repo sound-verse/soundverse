@@ -40,7 +40,7 @@ type Auth {
 }
 
 type NftOwner {
-  ethAddress: String!
+  user: User!
   supply: Float!
 }
 
@@ -52,6 +52,7 @@ type NftMetadata {
 type Nft {
   id: String!
   tokenId: Float
+  supply: Float!
   contractAddress: String!
   ipfsUrl: String!
   fileUrl: String!
@@ -59,7 +60,8 @@ type Nft {
   transactionHash: String
   metadata: NftMetadata!
   creator: User
-  owners: [NftOwner!]
+  licenseOwners: [NftOwner!]
+  masterOwner: NftOwner!
 }
 
 type Query {
@@ -74,8 +76,10 @@ input NftsFilter {
 }
 
 input NftFilter {
-  contractAddress: String!
-  tokenId: Float!
+  contractAddress: String
+  tokenId: Float
+  id: String
+  ipfsUrl: String
 }
 
 type Mutation {
@@ -84,7 +88,7 @@ type Mutation {
   generateVerificationToken(data: VerificationTokenInput!): Int!
   login(data: LoginInput!): Auth!
   createNft(data: NftInput!, pictureFile: Upload!, NFTFile: Upload!): Nft!
-  updateTxHash(data: UpdateTxInput!): Nft!
+  verifyMintedNFT(input: VerifyNftInput!): Nft!
   unpinAll: Boolean!
 }
 
@@ -125,7 +129,18 @@ input NftMetadataInput {
   description: String!
 }
 
-input UpdateTxInput {
+input VerifyNftInput {
   id: String!
-  transactionHash: String!
+  mintVoucher: MintVoucher!
+}
+
+input MintVoucher {
+  tokenId: Float!
+  nftContractAddress: String!
+  price: Float!
+  sellCount: Float!
+  tokenUri: String!
+  supply: Float!
+  isMaster: Boolean!
+  signature: String!
 }

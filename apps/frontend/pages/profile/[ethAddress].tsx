@@ -122,7 +122,11 @@ export async function getServerSideProps(context) {
 
   const createdNfts = await client.apolloClient.query({
     query: GET_NFTS,
-    variables: { filter: { creatorEthAddress: ethAddress } },
+    variables: {
+      filter: { creatorEthAddress: ethAddress },
+      limit: 100,
+      skip: 0,
+    },
   })
 
   return {

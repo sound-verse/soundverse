@@ -159,7 +159,7 @@ env:
   - name: METADATA_EXTERNAL_URL_BASE
     value: 'https://app.soundverse.io'
   - name: INTERNAL_FILE_URL_BASE
-    value: 'https://{bucket}.ams3.digitaloceanspaces.com'
+    value: 'https://cdn-{bucket}.soundverse.io'
   - name: RABBITMQ_USER
     value: 'rezmtgjt'
   - name: RABBITMQ_PASSWORD
@@ -171,3 +171,5 @@ env:
     value: 'roedeer.rmq.cloudamqp.com/rezmtgjt'
   - name: RABBITMQ_QUEUE_NAME
     value: 'sc-blockchain-events-testflight'
+  - name: RABBITMQ_RECOVERY_QUEUE_NAME
+    value: 'sc-blockchain-events-testflight-recovery'

@@ -1,4 +1,4 @@
-import { Controller, Inject } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { Ctx, MessagePattern, Payload, RmqContext, Transport } from '@nestjs/microservices';
 import { IEventMessage } from '@soundverse/shared-rpc-listener-service';
 import { EventService } from './event.service';
@@ -11,7 +11,15 @@ export class EventController {
     const channel = context.getChannelRef();
     const originalMsg = context.getMessage();
 
-    await this.eventService.handleEvent(event);
-    channel.ack(originalMsg);
+    try {
+      await this.eventService.handleEvent(event);
+      console.log(`Acknowledging event message with transaction hash ${event.transactionHash} ...`);
+      channel.ack(originalMsg);
+    } catch (error) {
+      console.log(
+        `An error occured while handling the event ${event.event} with transactionhash ${event.transactionHash}. Put event message in the recovery queue ...`,
+      );
+      channel.reject(originalMsg, false);
+    }
   }
 }

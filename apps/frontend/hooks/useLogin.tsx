@@ -1,10 +1,7 @@
-import { useCall, useEthers } from '@usedapp/core'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
+import { useEthers } from '@usedapp/core'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { gql, useMutation, useQuery } from '@apollo/client'
-import link from 'next/link'
 import { useAuthContext } from '../context/AuthContext'
-import Cookies from 'js-cookie'
 import jwt_decode from 'jwt-decode'
 import toast from 'react-hot-toast'
 
@@ -74,12 +71,31 @@ export const useLogin = () => {
     deactivate,
     chainId,
   } = useEthers()
-  const correctChainId =
-    process.env.NEXT_PUBLIC_ENVIRONMENT === 'local' ? 31337 : 80001
-  const correctNetwork =
+
+  const supportedNetworks = {
+    local: {
+      chainIds: [31337, 80001],
+    },
+    testflight: {
+      chanIds: [80001],
+    },
+  }
+
+  const networks = {
+    31337: {
+      name: 'Localhost',
+    },
+    80001: {
+      name: 'Polygon Mumbai',
+    },
+  }
+
+  const correctChainIds =
     process.env.NEXT_PUBLIC_ENVIRONMENT === 'local'
-      ? 'Localhost'
-      : 'Polygon Mumbai'
+      ? supportedNetworks.local.chainIds
+      : supportedNetworks.testflight.chanIds
+
+  const correctNetworkName = chainId && networks[correctChainIds[0]].name
 
   const getJwtUser = useCallback((jwtToken): JwtObject => {
     if (jwtToken && jwtToken !== '') {
@@ -106,7 +122,7 @@ export const useLogin = () => {
   const setAuthUser = useCallback(
     (authUser: LoggedInUser) => {
       setLoggedInUser(authUser)
-      setAuthenticated(true)
+      setAuthenticated(authUser ? true : false)
     },
     [setLoggedInUser]
   )
@@ -122,10 +138,11 @@ export const useLogin = () => {
   }, [jwtUser, data])
 
   useEffect(() => {
-    if (authenticated && correctChainId !== chainId) {
-      toast.error(`Wrong network! Please change to ${correctNetwork}`)
+    if (account && chainId && !correctChainIds.includes(chainId)) {
+      toast.error(`Wrong network! Please change to ${correctNetworkName}`)
       logout()
     } else if (
+      correctChainIds.includes(chainId) &&
       account &&
       account.toLowerCase() !== jwtUser?.ethAddress.toLowerCase()
     ) {
@@ -143,9 +160,8 @@ export const useLogin = () => {
 
   const logout = useCallback(async () => {
     setAuthToken('')
+    setAuthUser(undefined)
     setJwtUser(undefined)
-    setAuthenticated(false)
-    setLoggedInUser(undefined)
     deactivate()
   }, [deactivate, setAuthToken, setLoggedInUser])
 

@@ -25,7 +25,7 @@ export const CreateForm = () => {
   const [pictureFile, setPictureFile] = useState<File>(undefined)
   const [showing, setShowing] = useState<Boolean>(false)
   const router = useRouter()
-  const { mint, mintState } = useCreateNFT()
+  const { prepareMint } = useCreateNFT()
   const [nftFileError, setNftFileError] = useState<String>('')
   const [pictureFileError, setPictureFileError] = useState<String>('')
 
@@ -33,7 +33,7 @@ export const CreateForm = () => {
     name: '',
     description: '',
     tags: [],
-    licences: 2,
+    licenses: 2,
   }
 
   const onFileChange = (
@@ -63,9 +63,10 @@ export const CreateForm = () => {
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Please enter a title'),
     description: Yup.string().required('Please enter a description'),
-    licences: Yup.number()
+    licenses: Yup.number()
       .typeError('Please enter a number')
-      .min(2, 'You have to set at least a minium of 2 licences')
+      .min(2, 'You have to set a minium of 2 licenses')
+      .max(100000, 'You can only set a maximum of 100.000 licenses')
       .required('Please enter a number'),
   })
 
@@ -81,12 +82,19 @@ export const CreateForm = () => {
     }
     try {
       setShowing(true)
-      await mint({
+      const { id } = await prepareMint({
         nftFile,
         pictureFile,
         name: values.name,
         description: values.description,
+        licenses: values.licenses,
       })
+      if (id) {
+        router.push(`/master/${id}`)
+      } else {
+        toast.error('Error minting your NFT')
+      }
+      setShowing(false)
     } catch (error) {
       setShowing(false)
       console.log(error)
@@ -97,18 +105,6 @@ export const CreateForm = () => {
   }
 
   Modal.setAppElement('#__next')
-
-  useEffect(() => {
-    if (mintState.status === 'Success') {
-      setShowing(false)
-      router.push('/marketplace')
-    }
-    if (mintState.status == 'Exception') {
-      setShowing(false)
-      toast('Error minting your NFT')
-      console.log(mintState.errorMessage)
-    }
-  }, [mintState])
 
   return (
     <div>
@@ -178,17 +174,31 @@ export const CreateForm = () => {
             <div className="text-white font-bold text-base mt-10">
               Track Name
             </div>
-            <div className="mt-3">
+            <div className="mt-3 w-full">
               <Field
                 id="name"
                 name="name"
                 placeholder="Ice in the dark..."
-                className="outline-none bg-grey-dark text-white"
+                className="outline-none bg-grey-dark text-white w-full"
               />
               <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
               <div className="text-grey-light mt-2">max. 20 characters</div>
               <div className={styles.error}>
                 <ErrorMessage name="name" />
+              </div>
+            </div>
+            <div className="text-white font-bold text-base mt-10">Licenses</div>
+            <div className="mt-3 w-full">
+              <Field
+                id="licenses"
+                name="licenses"
+                placeholder="2"
+                className="outline-none bg-grey-dark text-white w-full"
+              />
+              <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
+              <div className="text-grey-light mt-2">min. 2 - max. 100.000</div>
+              <div className={styles.error}>
+                <ErrorMessage name="licenses" />
               </div>
             </div>
             <div className="text-white font-bold text-base mt-10">
