@@ -14,10 +14,12 @@ export class EventController {
     try {
       await this.eventService.handleEvent(event);
       console.log(`Acknowledging event message with transaction hash ${event.transactionHash} ...`);
-        channel.ack(originalMsg);
+      channel.ack(originalMsg);
     } catch (error) {
-      console.log(`An error occured while handling the event ${event.event} with transactionhash ${event.transactionHash}. Put event message in the recovery queue ...`);
+      console.log(
+        `An error occured while handling the event ${event.event} with transactionhash ${event.transactionHash}. Put event message in the recovery queue ...`,
+      );
       channel.reject(originalMsg, false);
     }
- }
+  }
 }

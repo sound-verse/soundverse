@@ -16,8 +16,9 @@ export class EventService implements OnApplicationBootstrap {
 
   onApplicationBootstrap() {
     const connection = amqpConMgr.connect({
-      url:
-        `amqp://${this.configService.get('RABBITMQ_USER')}:${this.configService.get('RABBITMQ_PASSWORD')}@${this.configService.get('RABBITMQ_HOST')}`,
+      url: `amqp://${this.configService.get('RABBITMQ_USER')}:${this.configService.get(
+        'RABBITMQ_PASSWORD',
+      )}@${this.configService.get('RABBITMQ_HOST')}`,
     });
     const channelWrapper: amqpConMgr.ChannelWrapper = connection.createChannel({
       json: true,

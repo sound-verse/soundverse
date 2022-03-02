@@ -24,7 +24,7 @@ import { ClientProxyFactory, RmqOptions, Transport } from '@nestjs/microservices
             queueOptions: {
               durable: true,
               // setup the dead letter exchange to point to the default exchange
-              deadLetterExchange: "",
+              deadLetterExchange: '',
               // dead letters from our queue should be routed to the recovery-queue
               deadLetterRoutingKey: configService.get('RABBITMQ_RECOVERY_QUEUE_NAME'),
               // set message time to live to 4s
