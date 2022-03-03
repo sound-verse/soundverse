@@ -28,7 +28,7 @@ const Header = () => {
       <div className={styles.headerWrapperToo}>
         <Link href="#" passHref>
           <span className={styles.nineByNineIcon}>
-            <CgMenuGridO size={70} />
+            <CgMenuGridO size={50} />
           </span>
         </Link>
         <Link href="/marketplace" passHref>
