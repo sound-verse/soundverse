@@ -120,7 +120,7 @@ export const CreateForm = () => {
             <div>
               <label
                 htmlFor="nftFile"
-                className="text-white border-2 border-white rounded-full p-2 mt-5 inline-block cursor-pointer px-36 whitespace-nowrap"
+                className="text-white border-2 border-white rounded-full p-2 mt-5 inline-block cursor-pointer px-20 whitespace-nowrap"
               >
                 Choose Music File
               </label>
@@ -147,7 +147,7 @@ export const CreateForm = () => {
             <div>
               <label
                 htmlFor="pictureFile"
-                className="text-white border-2 border-white rounded-full p-2 mt-5 inline-block cursor-pointer px-36 whitespace-nowrap"
+                className="text-white border-2 border-white rounded-full p-2 mt-5 inline-block cursor-pointer px-20 whitespace-nowrap"
               >
                 Choose Nft Cover Picture
               </label>
@@ -220,7 +220,7 @@ export const CreateForm = () => {
               </div>
             </div>
             <button
-              className="text-white cursor-pointer rounded-full bg-purple px-24 py-4 ml-auto mt-10 font-bold"
+              className="text-white cursor-pointer rounded-full bg-purple px-20 py-4 ml-auto mt-10 font-bold"
               type="submit"
             >
               Mint

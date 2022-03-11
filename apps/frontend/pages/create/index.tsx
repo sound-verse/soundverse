@@ -16,7 +16,7 @@ export default function Create() {
       <Layout>
         <main className="mx-auto">
           {authUser ? (
-            <div className="rounded-3xl bg-grey-dark max-w-3xl p-20 mx-auto mt-36 mb-36">
+            <div className="rounded-2xl bg-grey-dark max-w-2xl p-16 mx-auto mt-28 mb-28">
               <CreateForm />
             </div>
           ) : (

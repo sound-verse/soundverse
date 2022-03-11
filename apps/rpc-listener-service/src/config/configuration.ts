@@ -5,7 +5,7 @@ export default () => ({
     local: {
       contractEvents: [
         {
-          contractAddress: '0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9',
+          contractAddress: '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9',
           listensTo: [EventType.MASTER_MINT_EVENT],
           contractType: ContractType.ERC721,
           version: '0.1',

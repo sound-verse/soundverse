@@ -98,7 +98,7 @@ export default function Nft({ user, query, nft }: ProfileProps) {
             <div className="col-span-3">
               <div className="flex flex-col m-16">
                 <div className="flex flex-col p-10">
-                  <div className="text-white font-extrabold text-2xl  font-AOCR ">
+                  <div className="text-white font-extrabold text-xl  font-AOCR ">
                     <Link href={`/profile/${nft.creator.ethAddress}`}>
                       <a>
                         <ProfileName
@@ -134,12 +134,12 @@ export default function Nft({ user, query, nft }: ProfileProps) {
                     <Button
                       text="Not for sale"
                       type="disabled"
-                      className="w-64"
+                      className="w-60"
                     />
                   </div>
                   <div className="mt-24">
                     <div className="flex flex-col">
-                      <div className="font-extrabold text-2xl uppercase font-AOCR border-b border-grey-medium pb-5">
+                      <div className="font-extrabold text-xl uppercase font-AOCR border-b border-grey-medium pb-5">
                         Details
                       </div>
                       <div className="text-white mt-5">

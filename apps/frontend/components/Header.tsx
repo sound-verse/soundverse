@@ -70,8 +70,8 @@ const Header = () => {
                 <div>
                   <ProfileImage
                     ethAddress={authUser?.ethAddress}
-                    width={13}
-                    height={13}
+                    width={10}
+                    height={10}
                     imageUrl={authUser?.profileImage}
                   />
                 </div>
@@ -91,8 +91,8 @@ const Header = () => {
                 <div className={styles.chevronDown}>
                   <Image
                     src="/img/chevronDown.svg"
-                    width={25}
-                    height={25}
+                    width={18}
+                    height={18}
                     layout="fixed"
                   />
                 </div>
