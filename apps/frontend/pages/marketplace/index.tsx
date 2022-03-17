@@ -1,18 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
-import Image from 'next/image'
 import Layout from '../../components/layout'
-import SidebarFilters from '../../components/marketplace/SidebarFilters'
-import MarketplaceSearchBar from '../../components/marketplace/MarketplaceSearchBar'
-import {
-  latestDrops as dataLatestDrops,
-  DropItem,
-} from '../../model/data/testData'
 import SoundCard from '../../components/marketplace/SoundCard'
 import { gql, useQuery } from '@apollo/client'
 
 export const GET_NFTS = gql`
-  query getNfts($filter: NftsFilter, $limit: Float!, $skip: Float!) {
+  query getNfts($filter: NftsFilter, $limit: Int!, $skip: Int!) {
     nfts(filter: $filter, limit: $limit, skip: $skip) {
       id
       tokenId

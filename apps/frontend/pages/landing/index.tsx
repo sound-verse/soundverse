@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
 import Layout from '../../components/layout'
-import {
-  listDroppers as dataListDroppers,
-  latestDrops as dataLatestDrops,
-} from '../../model/data/testData'
 import TopDropperItem from '../../components/landing/TopDropperItem'
 import DropItem from '../../components/landing/DropItem'
 import JoinDiscord from '../../components/landing/JoinDiscord'
@@ -15,12 +11,6 @@ export default function Landing() {
   const [latestDrops, setLatestDrops] = useState([])
 
   useEffect(() => {
-    if (listDroppers.length === 0) {
-      setListDroppers(dataListDroppers)
-    }
-    if (latestDrops.length === 0) {
-      setLatestDrops(dataLatestDrops)
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -43,7 +33,7 @@ export default function Landing() {
               <AiOutlineLeft className="text-white" />
               {listDroppers.map((element, key) => (
                 <div className="m-4" key={key}>
-                  <TopDropperItem src = "https://api.lorem.space/image/album?w=150&h=150&hash=2D297A22" />
+                  <TopDropperItem src="https://api.lorem.space/image/album?w=150&h=150&hash=2D297A22" />
                 </div>
               ))}
               <AiOutlineRight className="text-white" />

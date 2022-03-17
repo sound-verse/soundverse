@@ -1,10 +1,7 @@
 import { Field, InputType } from '@nestjs/graphql';
 
 @InputType()
-class MintVoucher {
-  @Field()
-  tokenId: number;
-
+class SellingVoucherInput {
   @Field()
   nftContractAddress: string;
 
@@ -18,20 +15,20 @@ class MintVoucher {
   tokenUri: string;
 
   @Field()
+  tokenId: number;
+
+  @Field()
   supply: number;
 
   @Field()
   isMaster: boolean;
 
   @Field()
-  signature?: string;
+  signature: string;
 }
 
 @InputType()
-export class VerifyNftInput {
+export class CreateSellingInput {
   @Field()
-  id: string;
-
-  @Field()
-  mintVoucher: MintVoucher;
+  sellingVoucher: SellingVoucherInput;
 }

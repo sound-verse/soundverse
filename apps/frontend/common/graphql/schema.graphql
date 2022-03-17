@@ -1,0 +1,179 @@
+type Auth {
+  """
+  JWT Bearer token
+  """
+  token: String!
+  user: AuthUser
+}
+
+type AuthUser {
+  description: String
+  discord: String
+  email: String
+  ethAddress: String
+  id: String!
+  instagram: String
+  name: String
+  profileImage: String
+  soundcloud: String
+  spotify: String
+  twitter: String
+  verified: Boolean
+  website: String
+}
+
+type Buyer {
+  supply: Int!
+  user: User!
+}
+
+input CreateSellingInput {
+  sellingVoucher: SellingVoucherInput!
+}
+
+input LoginInput {
+  ethAddress: String!
+  signature: String!
+}
+
+type Mutation {
+  createNft(NFTFile: Upload!, data: NftInput!, pictureFile: Upload!): Nft!
+  createSelling(createSellingInput: CreateSellingInput!): Selling!
+  generateVerificationToken(data: VerificationTokenInput!): Int!
+  login(data: LoginInput!): Auth!
+  unpinAll: Boolean!
+  updateUser(data: UpdateUserInput!): User!
+  uploadProfilePicture(file: Upload!): User!
+}
+
+type Nft {
+  contractAddress: String!
+  creator: User
+  filePictureUrl: String!
+  fileUrl: String!
+  id: String!
+  ipfsUrl: String!
+  licenseOwners: [NftOwner!]
+  masterOwner: NftOwner!
+  metadata: NftMetadata!
+  supply: Float!
+  tokenId: Float
+  transactionHash: String
+}
+
+input NftFilter {
+  contractAddress: String
+  id: String
+  ipfsUrl: String
+  tokenId: Float
+}
+
+input NftInput {
+  chainId: Float
+  metadata: NftMetadataInput!
+  supply: Float!
+  tags: [String!]!
+  transactionHash: String
+}
+
+type NftMetadata {
+  description: String!
+  name: String!
+}
+
+input NftMetadataInput {
+  description: String!
+  name: String!
+}
+
+type NftOwner {
+  supply: Float!
+  user: User!
+}
+
+input NftsFilter {
+  creatorEthAddress: String!
+}
+
+type Query {
+  me: User!
+  nft(filter: NftFilter!): Nft
+  nfts(filter: NftsFilter, limit: Int!, skip: Int!): [Nft!]
+  sellings(filter: SellingFilter, limit: Int!, skip: Int!): [Selling!]
+  user(ethAddress: String!): User
+}
+
+type Selling {
+  buyers: [Buyer!]!
+  id: String!
+  marketplaceContractAddress: String!
+  nftType: Float!
+  seller: User!
+  sellingStatus: Float!
+  sellingVoucher: SellingVoucher!
+  transactionHash: String
+}
+
+input SellingFilter {
+  nftContractAddress: String
+  nftType: Float
+  tokenId: Int
+}
+
+type SellingVoucher {
+  isMaster: Boolean!
+  nftContractAddress: String!
+  price: Float!
+  sellCount: Float!
+  signature: String!
+  supply: Float!
+  tokenId: Float!
+  tokenUri: String!
+}
+
+input SellingVoucherInput {
+  isMaster: Boolean!
+  nftContractAddress: String!
+  price: Float!
+  sellCount: Float!
+  signature: String!
+  supply: Float!
+  tokenId: Float!
+  tokenUri: String!
+}
+
+input UpdateUserInput {
+  description: String
+  discord: String
+  email: String
+  instagram: String
+  name: String
+  soundcloud: String
+  spotify: String
+  twitter: String
+  website: String
+}
+
+"""
+The `Upload` scalar type represents a file upload.
+"""
+scalar Upload
+
+type User {
+  description: String
+  discord: String
+  ethAddress: String
+  id: String!
+  instagram: String
+  name: String
+  profileImage: String
+  soundcloud: String
+  spotify: String
+  twitter: String
+  verified: Boolean
+  website: String
+}
+
+input VerificationTokenInput {
+  ethAddress: String!
+}

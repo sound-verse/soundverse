@@ -1,4 +1,4 @@
-import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { Args, Int, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { NftService } from './nft.service';
 import { Nft } from './dto/output/nft.output';
 import { GraphQLUpload, FileUpload } from 'graphql-upload';
@@ -15,7 +15,8 @@ import { CurrentUser, LoggedinUser } from '../user/decorators/user.decorator';
 import { Nft as NftSchema } from './nft.schema';
 import { UserService } from '../user/user.service';
 import { User } from '../user/user.schema';
-import { VerifyNftInput } from './dto/input/verify-nft.input';
+import { NftOwner } from './dto/output/nft.output';
+
 @Resolver(() => Nft)
 export class NftResolver {
   constructor(
@@ -73,21 +74,12 @@ export class NftResolver {
     }
   }
 
-  @UseGuards(GqlAuthGuard)
-  @Mutation(() => Nft)
-  async verifyMintedNFT(
-    @Args('input') input: VerifyNftInput,
-    @CurrentUser() user: LoggedinUser,
-  ): Promise<NftSchema> {
-    return await this.nftService.verifyNft(input, user.ethAddress);
-  }
-
   @Query(() => [Nft], { nullable: true })
   async nfts(
-    @Args('skip') skip: number,
-    @Args('limit') limit: number,
+    @Args('skip', { type: () => Int }) skip: number,
+    @Args('limit', { type: () => Int }) limit: number,
     @Args('filter', { nullable: true }) filter?: NftsFilter,
-  ): Promise<NftSchema[]> {
+  ) {
     return await this.nftService.getNfts(limit, skip, filter);
   }
 
@@ -103,10 +95,36 @@ export class NftResolver {
   }
 
   @ResolveField()
-  async creator(@Parent() nft: Nft): Promise<User> {
-    if (!nft?.creator?._id) {
+  async creator(@Parent() nft: NftSchema): Promise<User> {
+    if (!nft?.creator) {
       return;
     }
-    return await this.userService.findUserById(nft.creator._id.toString());
+    return await this.userService.findUserById(nft.creator);
+  }
+
+  @ResolveField()
+  async masterOwner(@Parent() nft: NftSchema): Promise<NftOwner> {
+    if (!nft?.masterOwner?.user) {
+      return;
+    }
+    const masterOwnerUser = await this.userService.findUserById(nft.masterOwner.user);
+    return { user: masterOwnerUser, supply: nft.masterOwner.supply };
+  }
+
+  @ResolveField()
+  async licenseOwners(@Parent() nft: NftSchema): Promise<NftOwner[]> {
+    if (!nft?.licenseOwners) {
+      return;
+    }
+    const licenseOwnersUser = await this.userService.findUserByIds(
+      nft.licenseOwners.map((licenseOwner) => licenseOwner.user),
+    );
+
+    return licenseOwnersUser.map((licenseOwnerUser) => ({
+      user: licenseOwnerUser,
+      supply: nft.licenseOwners.find(
+        (licenseOwner) => licenseOwner.user.toString() === licenseOwnerUser._id.toString(),
+      ).supply,
+    }));
   }
 }

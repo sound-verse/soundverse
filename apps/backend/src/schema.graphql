@@ -64,11 +64,39 @@ type Nft {
   masterOwner: NftOwner!
 }
 
+type Buyer {
+  user: User!
+  supply: Int!
+}
+
+type SellingVoucher {
+  nftContractAddress: String!
+  price: Float!
+  sellCount: Float!
+  tokenUri: String!
+  tokenId: Float!
+  supply: Float!
+  isMaster: Boolean!
+  signature: String!
+}
+
+type Selling {
+  id: String!
+  seller: User!
+  buyers: [Buyer!]!
+  sellingVoucher: SellingVoucher!
+  nftType: Float!
+  marketplaceContractAddress: String!
+  sellingStatus: Float!
+  transactionHash: String
+}
+
 type Query {
   user(ethAddress: String!): User
   me: User!
-  nfts(filter: NftsFilter, limit: Float!, skip: Float!): [Nft!]
+  nfts(skip: Int!, limit: Int!, filter: NftsFilter): [Nft!]
   nft(filter: NftFilter!): Nft
+  sellings(skip: Int!, limit: Int!, filter: SellingFilter): [Selling!]
 }
 
 input NftsFilter {
@@ -82,14 +110,20 @@ input NftFilter {
   ipfsUrl: String
 }
 
+input SellingFilter {
+  nftType: Float
+  nftContractAddress: String
+  tokenId: Int
+}
+
 type Mutation {
   updateUser(data: UpdateUserInput!): User!
   uploadProfilePicture(file: Upload!): User!
   generateVerificationToken(data: VerificationTokenInput!): Int!
   login(data: LoginInput!): Auth!
-  createNft(data: NftInput!, pictureFile: Upload!, NFTFile: Upload!): Nft!
-  verifyMintedNFT(input: VerifyNftInput!): Nft!
+  createNft(NFTFile: Upload!, pictureFile: Upload!, data: NftInput!): Nft!
   unpinAll: Boolean!
+  createSelling(createSellingInput: CreateSellingInput!): Selling!
 }
 
 input UpdateUserInput {
@@ -129,17 +163,16 @@ input NftMetadataInput {
   description: String!
 }
 
-input VerifyNftInput {
-  id: String!
-  mintVoucher: MintVoucher!
+input CreateSellingInput {
+  sellingVoucher: SellingVoucherInput!
 }
 
-input MintVoucher {
-  tokenId: Float!
+input SellingVoucherInput {
   nftContractAddress: String!
   price: Float!
   sellCount: Float!
   tokenUri: String!
+  tokenId: Float!
   supply: Float!
   isMaster: Boolean!
   signature: String!

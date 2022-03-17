@@ -14,7 +14,7 @@ export type SoundCardI = {
   musicUrl: string
   creatorName: string
   creatorEthAddress: string
-  tokenId: string
+  tokenId: number
   type: 'master' | 'license'
 }
 
