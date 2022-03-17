@@ -9,10 +9,16 @@ import { SellingService } from './selling.service';
 import { User } from '../user/dto/output/user.output';
 import { UserService } from '../user/user.service';
 import { Selling as SellingSchema } from './selling.schema';
+import { NftService } from '../nft/nft.service';
+import { Nft } from '../nft/nft.schema';
 
 @Resolver(() => Selling)
 export class SellingResolver {
-  constructor(private sellingService: SellingService, private userService: UserService) {}
+  constructor(
+    private sellingService: SellingService,
+    private nftService: NftService,
+    private userService: UserService,
+  ) {}
 
   @Query(() => [Selling], { nullable: true })
   async sellings(
@@ -51,5 +57,14 @@ export class SellingResolver {
       user: buyerUser,
       supply: selling.buyers.find((buyer) => buyer.user.toString() === buyerUser._id.toString()).supply,
     }));
+  }
+
+  @ResolveField()
+  async nft(@Parent() selling: SellingSchema): Promise<Nft> {
+    if (!selling.nft) {
+      return;
+    }
+    const nft = await this.nftService.findNft({ id: selling.nft._id.toString() });
+    return nft;
   }
 }

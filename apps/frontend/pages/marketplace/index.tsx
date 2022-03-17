@@ -4,51 +4,16 @@ import Layout from '../../components/layout'
 import SoundCard from '../../components/marketplace/SoundCard'
 import { gql, useQuery } from '@apollo/client'
 import { NftType } from '../../common/types/nft-type.enum'
-
-export const GET_NFTS = gql`
-  query getNfts($filter: NftsFilter, $limit: Int!, $skip: Int!) {
-    nfts(filter: $filter, limit: $limit, skip: $skip) {
-      id
-      tokenId
-      contractAddress
-      fileUrl
-      filePictureUrl
-      ipfsUrl
-      transactionHash
-      masterOwner {
-        user {
-          name
-          ethAddress
-        }
-      }
-      metadata {
-        name
-        description
-      }
-      creator {
-        id
-        name
-        ethAddress
-        profileImage
-      }
-      licenseOwners {
-        user {
-          name
-          ethAddress
-        }
-        supply
-      }
-    }
-  }
-`
+import { GET_SELLINGS } from '../../common/graphql/queries/get-sellings.query'
+import { QuerySellingsArgs, SellingsQuery } from '../../common/graphql/schema'
 
 export default function Landing() {
-  const { loading, data } = useQuery(GET_NFTS, {
+  const { loading, data } = useQuery<SellingsQuery>(GET_SELLINGS, {
     variables: { limit: 100, skip: 0 },
   })
   const [playingCardId, setPlayingCardId] = useState<string>('')
 
-  const nfts = loading ? [] : data?.nfts ? data.nfts : []
+  const sellings = loading ? [] : data?.sellings ? data.sellings : []
 
   const handleMusicClick = (activeCardId: string) => {
     setPlayingCardId(activeCardId)
@@ -75,8 +40,9 @@ export default function Landing() {
         <div className="big-wrapper">
           <div className="marketplace-wrapper">
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-10">
-              {nfts.map((data, key) => {
-                if (!data.filePictureUrl) {
+              {sellings.map((selling, key) => {
+                const nft = selling.nft
+                if (!nft.filePictureUrl) {
                   return
                 }
 
@@ -85,48 +51,22 @@ export default function Landing() {
                     <div className="spacer">
                       <SoundCard
                         soundCard={{
-                          pictureUrl: data.filePictureUrl,
-                          name: data.metadata.name,
-                          creatorName: data.creator.name,
-                          creatorEthAddress: data.creator.ethAddress,
-                          licenses: data.supply,
-                          musicUrl: data.fileUrl,
-                          tokenId: data.tokenId,
-                          id: data.id,
-                          nftType: NftType.MASTER,
+                          pictureUrl: nft.filePictureUrl,
+                          name: nft.metadata.name,
+                          creatorName: nft.creator.name,
+                          creatorEthAddress: nft.creator.ethAddress,
+                          licenses: nft.supply,
+                          musicUrl: nft.fileUrl,
+                          tokenId: nft.tokenId,
+                          id: nft.id,
+                          nftType:
+                            selling.nftType === 'MASTER'
+                              ? NftType.MASTER
+                              : NftType.LICENSE,
                         }}
                         key={key}
                         playingCardId={playingCardId}
-                        onMusicClick={() => handleMusicClick(data.id)}
-                      />
-                    </div>
-                  </div>
-                )
-              })}
-
-              {nfts.map((data, key) => {
-                if (!data.filePictureUrl) {
-                  return
-                }
-
-                return (
-                  <div key={`soundcard-wrapper-${key}`}>
-                    <div className="spacer">
-                      <SoundCard
-                        soundCard={{
-                          pictureUrl: data.filePictureUrl,
-                          name: data.metadata.name,
-                          creatorName: data.creator.name,
-                          creatorEthAddress: data.creator.ethAddress,
-                          licenses: data.supply,
-                          musicUrl: data.fileUrl,
-                          tokenId: data.tokenId,
-                          id: data.id,
-                          nftType: NftType.LICENSE,
-                        }}
-                        key={key}
-                        playingCardId={playingCardId}
-                        onMusicClick={() => handleMusicClick(data.id)}
+                        onMusicClick={() => handleMusicClick(nft.id)}
                       />
                     </div>
                   </div>

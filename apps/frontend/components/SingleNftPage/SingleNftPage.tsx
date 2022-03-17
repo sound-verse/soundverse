@@ -13,6 +13,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useBuy } from '../../hooks/contracts/useBuy'
 import toast from 'react-hot-toast'
+import { useUnlistSelling } from '../../hooks/contracts/useUnlistSelling'
 
 type SingleNftPageProps = {
   nft: Nft
@@ -43,6 +44,7 @@ export default function SingleNftPage({
   )
 
   const { buyNft } = useBuy()
+  const { unlistNft } = useUnlistSelling()
 
   const handleBuyNft = async () => {
     await buyNft({
@@ -50,6 +52,15 @@ export default function SingleNftPage({
       selling: nftSellings[0],
       amountToBuy: nftSellings[0].sellingVoucher.supply,
     })
+  }
+
+  const handleUnlistNft = async () => {
+    await unlistNft(
+      {
+        nftType,
+      },
+      nft
+    )
   }
 
   return (
@@ -235,6 +246,7 @@ export default function SingleNftPage({
                             text="Unlist Nft"
                             type="purple"
                             className="w-64"
+                            onClick={handleUnlistNft}
                           />
                         ) : (
                           <Button

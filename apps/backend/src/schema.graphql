@@ -89,6 +89,7 @@ type Selling {
   marketplaceContractAddress: String!
   sellingStatus: String!
   transactionHash: String
+  nft: Nft
 }
 
 type Query {

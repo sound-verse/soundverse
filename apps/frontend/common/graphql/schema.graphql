@@ -108,6 +108,7 @@ type Selling {
   buyers: [Buyer!]!
   id: String!
   marketplaceContractAddress: String!
+  nft: Nft
   nftType: String!
   seller: User!
   sellingStatus: String!

@@ -2,6 +2,7 @@ import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
 import { User } from '../../../user/dto/output/user.output';
 import { NftType } from '../../../common/enums/nftType.enum';
 import { SellingStatus } from '../../../common/enums/sellingStatus.enum';
+import { Nft } from '../../../nft/dto/output/nft.output';
 
 @ObjectType()
 export class Buyer {
@@ -64,4 +65,7 @@ export class Selling {
 
   @Field({ nullable: true })
   transactionHash?: string;
+
+  @Field({ nullable: true })
+  nft?: Nft;
 }

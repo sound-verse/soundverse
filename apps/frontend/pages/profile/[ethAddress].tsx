@@ -12,7 +12,7 @@ import { USER, User } from '../../hooks/useProfile'
 import { generateShortEthAddress } from '../../utils/common'
 import Button from '../../components/common/Button'
 import { PorfileSocialBar } from '../../components/profile/ProfileSocialBar'
-import { GET_NFTS } from '../marketplace'
+import { GET_NFTS } from '../../common/graphql/queries/get-nfts.query'
 import { useAuthContext } from '../../context/AuthContext'
 import Custom404 from '../404'
 

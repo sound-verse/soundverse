@@ -183,6 +183,7 @@ export type Selling = {
   buyers: Array<Buyer>
   id: Scalars['String']
   marketplaceContractAddress: Scalars['String']
+  nft?: Maybe<Nft>
   nftType: Scalars['String']
   seller: User
   sellingStatus: Scalars['String']
@@ -290,6 +291,7 @@ export type GetNftQuery = {
     supply: number
     masterOwner: {
       __typename?: 'NftOwner'
+      supply: number
       user: {
         __typename?: 'User'
         id: string
@@ -316,6 +318,51 @@ export type GetNftQuery = {
       }
     }> | null
   } | null
+}
+
+export type GetNftsQueryVariables = Exact<{
+  filter?: InputMaybe<NftsFilter>
+  limit: Scalars['Int']
+  skip: Scalars['Int']
+}>
+
+export type GetNftsQuery = {
+  __typename?: 'Query'
+  nfts?: Array<{
+    __typename?: 'Nft'
+    id: string
+    tokenId?: number | null
+    contractAddress: string
+    fileUrl: string
+    filePictureUrl: string
+    ipfsUrl: string
+    transactionHash?: string | null
+    masterOwner: {
+      __typename?: 'NftOwner'
+      user: {
+        __typename?: 'User'
+        name?: string | null
+        ethAddress?: string | null
+      }
+    }
+    metadata: { __typename?: 'NftMetadata'; name: string; description: string }
+    creator?: {
+      __typename?: 'User'
+      id: string
+      name?: string | null
+      ethAddress?: string | null
+      profileImage?: string | null
+    } | null
+    licenseOwners?: Array<{
+      __typename?: 'NftOwner'
+      supply: number
+      user: {
+        __typename?: 'User'
+        name?: string | null
+        ethAddress?: string | null
+      }
+    }> | null
+  }> | null
 }
 
 export type SellingsQueryVariables = Exact<{
@@ -358,5 +405,48 @@ export type SellingsQuery = {
       sellCount: number
       supply: number
     }
+    nft?: {
+      __typename?: 'Nft'
+      id: string
+      tokenId?: number | null
+      contractAddress: string
+      fileUrl: string
+      filePictureUrl: string
+      ipfsUrl: string
+      transactionHash?: string | null
+      supply: number
+      masterOwner: {
+        __typename?: 'NftOwner'
+        supply: number
+        user: {
+          __typename?: 'User'
+          id: string
+          name?: string | null
+          ethAddress?: string | null
+        }
+      }
+      metadata: {
+        __typename?: 'NftMetadata'
+        name: string
+        description: string
+      }
+      creator?: {
+        __typename?: 'User'
+        id: string
+        name?: string | null
+        ethAddress?: string | null
+        profileImage?: string | null
+      } | null
+      licenseOwners?: Array<{
+        __typename?: 'NftOwner'
+        supply: number
+        user: {
+          __typename?: 'User'
+          id: string
+          name?: string | null
+          ethAddress?: string | null
+        }
+      }> | null
+    } | null
   }> | null
 }

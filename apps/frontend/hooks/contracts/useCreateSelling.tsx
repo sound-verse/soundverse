@@ -1,4 +1,4 @@
-import { useEthers } from '@usedapp/core'
+import { useContractFunction, useEthers } from '@usedapp/core'
 import { useAuthContext } from '../../context/AuthContext'
 import crypto from 'crypto'
 import toast from 'react-hot-toast'
@@ -11,7 +11,10 @@ import {
 } from '../../common/graphql/schema'
 import { NftType } from '../../common/types/nft-type.enum'
 import { CREATE_SELLING } from '../../common/graphql/mutations/create-selling.mutation'
-import { ethers } from 'ethers'
+import { utils } from 'ethers'
+import { Contract } from '@ethersproject/contracts'
+import MarketContractAbi from '../../common/artifacts/MarketContract.json'
+import { useEffect } from 'react'
 
 export const sellingVoucherTypes = {
   SellingVoucher: [
@@ -31,7 +34,8 @@ export type CreateSellingInputProps = {
   nftType: NftType
 }
 
-const erc721ContractAddress = process.env.NEXT_PUBLIC_ERC721_CONTRACT_ADDRESS
+const masterContractAddress = process.env.NEXT_PUBLIC_MASTER_CONTRACT_ADDRESS
+const licenseContractAddress = process.env.NEXT_PUBLIC_LICENSE_CONTRACT_ADDRESS
 const marketContractAddress = process.env.NEXT_PUBLIC_MARKET_CONTRACT_ADDRESS
 
 export const useCreateSelling = () => {
@@ -39,6 +43,15 @@ export const useCreateSelling = () => {
   const { chainId, library } = useEthers()
   const [createSellingMutation] =
     useMutation<MutationCreateSellingArgs>(CREATE_SELLING)
+
+  const abi = new utils.Interface(MarketContractAbi.abi)
+  const contract = new Contract(marketContractAddress, abi)
+
+  const { state, send } = useContractFunction(contract, 'getSellCount')
+
+  useEffect(() => {
+    console.log(state)
+  }, [state])
 
   const createSelling = async (
     createSellingInputProps: CreateSellingInputProps,
@@ -48,9 +61,29 @@ export const useCreateSelling = () => {
       return
     }
 
+    const contractAddress =
+      createSellingInputProps.nftType === NftType.MASTER
+        ? masterContractAddress
+        : licenseContractAddress
+
+    let sellCount = undefined
+    try {
+      sellCount = await send(
+        authUser.ethAddress,
+        contractAddress,
+        nft.tokenId ? nft.tokenId : 0
+      )
+    } catch (error) {
+      console.log(error)
+      toast.error('Error listing your NFT!')
+      return
+    }
+
+    console.log(sellCount)
+
     const voucher = {
       tokenId: nft.tokenId ? nft.tokenId : 0,
-      nftContractAddress: await library._getAddress(erc721ContractAddress),
+      nftContractAddress: await library._getAddress(contractAddress),
       price: createSellingInputProps.price,
       sellCount: 0,
       tokenUri:

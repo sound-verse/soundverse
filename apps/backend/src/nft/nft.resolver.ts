@@ -62,7 +62,7 @@ export class NftResolver {
       return await this.nftService.createNft({
         metadata,
         ipfsUrl: ipfsMetadataUrl,
-        contractAddress: this.configService.get('ERC721_CONTRACT_ADDRESS'),
+        contractAddress: this.configService.get('MASTER_CONTRACT_ADDRESS'),
         fileUrl: fileNFTUrl,
         filePictureUrl,
         user,

@@ -29,6 +29,42 @@ export const GET_SELLINGS = gql`
       marketplaceContractAddress
       sellingStatus
       transactionHash
+      nft {
+        id
+        tokenId
+        contractAddress
+        fileUrl
+        filePictureUrl
+        ipfsUrl
+        transactionHash
+        supply
+        masterOwner {
+          user {
+            id
+            name
+            ethAddress
+          }
+          supply
+        }
+        metadata {
+          name
+          description
+        }
+        creator {
+          id
+          name
+          ethAddress
+          profileImage
+        }
+        licenseOwners {
+          user {
+            id
+            name
+            ethAddress
+          }
+          supply
+        }
+      }
     }
   }
 `

@@ -43,7 +43,7 @@ export async function getServerSideProps(context) {
   const nftSellings = await client.apolloClient.query({
     query: GET_SELLINGS,
     variables: {
-      filter: { nftId: id, nftType: 'LISENCE' },
+      filter: { nftId: id, nftType: 'LICENSE' },
       limit: 1000,
       skip: 0,
     },
