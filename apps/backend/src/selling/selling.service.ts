@@ -1,9 +1,9 @@
 import { Injectable, ForbiddenException, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { SellingStatus } from '../common/enums/sellingStatus.enum';
 import { Nft, NftDocument } from '../nft/nft.schema';
-import { SellingFilter } from './dto/input/selling-filter.input';
+import { SellingsFilter } from './dto/input/sellings-filter.input';
 import { Selling, SellingDocument } from './selling.schema';
 import * as sigUtil from '@metamask/eth-sig-util';
 import { ConfigService } from '@nestjs/config';
@@ -33,33 +33,35 @@ export class SellingService {
   async getOpenSellings(
     limitOfDocuments = 100,
     documentsToSkip = 0,
-    filter?: SellingFilter,
+    filter?: SellingsFilter,
   ): Promise<Selling[]> {
     const findFilter = {
       sellingStatus: SellingStatus.OPEN,
       ...(filter.nftType && { nftType: filter.nftType }),
       ...(filter.nftContractAddress && { 'sellingVoucher.nftContractAddress': filter.nftContractAddress }),
       ...(filter.tokenId && { 'sellingVocher.tokenId': filter.tokenId }),
+      ...(filter.nftId && { nft: new Types.ObjectId(filter.nftId) }),
     };
-
-    return await this.sellingModel
+    const sellings = await this.sellingModel
       .find(findFilter)
       .sort({
         createdAt: 1,
       })
       .skip(documentsToSkip)
       .limit(limitOfDocuments);
+
+    return sellings;
   }
 
-  async voucherIsValid(voucher: Voucher, ethAddress: string): Promise<boolean> {
-    const mintVoucherTypes = {
+  async voucherIsValid(voucher: Voucher, nftId: string, seller: User): Promise<boolean> {
+    const sellingVoucherTypes = {
       EIP712Domain: [
         { name: 'name', type: 'string' },
         { name: 'version', type: 'string' },
         { name: 'chainId', type: 'uint256' },
         { name: 'verifyingContract', type: 'address' },
       ],
-      MINTVoucher: [
+      SellingVoucher: [
         { name: 'tokenId', type: 'uint256' },
         { name: 'nftContractAddress', type: 'address' },
         { name: 'price', type: 'uint256' },
@@ -71,14 +73,26 @@ export class SellingService {
     };
 
     const mintedNft = await this.nftModel.findOne({
-      tokenId: voucher.tokenId,
-      contractAddress: voucher.nftContractAddress,
+      _id: nftId,
     });
+
+    let sellerSupply = 0;
+    let owner = undefined;
+    if (voucher.isMaster) {
+      owner = mintedNft.masterOwner;
+    } else {
+      owner = mintedNft.licenseOwners.find((licenseOwner) => licenseOwner.user._id === seller._id);
+    }
+    sellerSupply = owner?.supply ?? 0;
+
+    if (sellerSupply < voucher.supply && sellerSupply > 0) {
+      return false;
+    }
 
     const address = sigUtil.recoverTypedSignature({
       data: {
-        types: mintVoucherTypes,
-        primaryType: 'MINTVoucher',
+        types: sellingVoucherTypes,
+        primaryType: 'SellingVoucher',
         domain: {
           name: 'SV-Voucher',
           version: '1',
@@ -99,15 +113,16 @@ export class SellingService {
       version: sigUtil.SignTypedDataVersion.V4,
     });
 
-    return address.toLowerCase() !== ethAddress.toLowerCase() ? false : true;
+    return address.toLowerCase() !== seller.ethAddress.toLowerCase() ? false : true;
   }
 
   async createSelling(createSellingInput: CreateSellingInput, seller: User): Promise<Selling> {
-    if (!this.voucherIsValid(createSellingInput.sellingVoucher, seller.ethAddress)) {
+    if (!(await this.voucherIsValid(createSellingInput.sellingVoucher, createSellingInput.nftId, seller))) {
       throw new ForbiddenException('NftVoucher signature is not valid!');
     }
 
     const selling = new this.sellingModel({
+      nft: new Types.ObjectId(createSellingInput.nftId),
       seller: seller._id,
       sellingVoucher: createSellingInput.sellingVoucher,
       nftType: createSellingInput.sellingVoucher.isMaster ? NftType.MASTER : NftType.LICENSE,

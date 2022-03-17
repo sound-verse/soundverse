@@ -34,6 +34,7 @@ export type UpdateProfileInput = {
 export const USER = gql`
   query user($ethAddress: String!) {
     user(ethAddress: $ethAddress) {
+      id
       name
       description
       ethAddress
@@ -52,6 +53,7 @@ export const USER = gql`
 export const UPDATE_USER = gql`
   mutation updateUser($data: UpdateUserInput!) {
     updateUser(data: $data) {
+      id
       name
       description
       ethAddress
@@ -70,6 +72,7 @@ export const UPDATE_USER = gql`
 export const UPDATE_USER_PROFILE_PICTURE = gql`
   mutation uploadProfilePicture($file: Upload!) {
     uploadProfilePicture(file: $file) {
+      id
       name
       description
       ethAddress

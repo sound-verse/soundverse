@@ -44,6 +44,7 @@ export type LoggedInUser = {
 export const ME = gql`
   query me {
     me {
+      id
       name
       description
       ethAddress

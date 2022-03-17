@@ -51,6 +51,7 @@ export type Buyer = {
 }
 
 export type CreateSellingInput = {
+  nftId: Scalars['String']
   sellingVoucher: SellingVoucherInput
 }
 
@@ -168,7 +169,7 @@ export type QueryNftsArgs = {
 }
 
 export type QuerySellingsArgs = {
-  filter?: InputMaybe<SellingFilter>
+  filter?: InputMaybe<SellingsFilter>
   limit: Scalars['Int']
   skip: Scalars['Int']
 }
@@ -182,17 +183,11 @@ export type Selling = {
   buyers: Array<Buyer>
   id: Scalars['String']
   marketplaceContractAddress: Scalars['String']
-  nftType: Scalars['Float']
+  nftType: Scalars['String']
   seller: User
-  sellingStatus: Scalars['Float']
+  sellingStatus: Scalars['String']
   sellingVoucher: SellingVoucher
   transactionHash?: Maybe<Scalars['String']>
-}
-
-export type SellingFilter = {
-  nftContractAddress?: InputMaybe<Scalars['String']>
-  nftType?: InputMaybe<Scalars['Float']>
-  tokenId?: InputMaybe<Scalars['Int']>
 }
 
 export type SellingVoucher = {
@@ -200,10 +195,10 @@ export type SellingVoucher = {
   isMaster: Scalars['Boolean']
   nftContractAddress: Scalars['String']
   price: Scalars['Float']
-  sellCount: Scalars['Float']
+  sellCount: Scalars['Int']
   signature: Scalars['String']
-  supply: Scalars['Float']
-  tokenId: Scalars['Float']
+  supply: Scalars['Int']
+  tokenId: Scalars['Int']
   tokenUri: Scalars['String']
 }
 
@@ -211,11 +206,18 @@ export type SellingVoucherInput = {
   isMaster: Scalars['Boolean']
   nftContractAddress: Scalars['String']
   price: Scalars['Float']
-  sellCount: Scalars['Float']
+  sellCount: Scalars['Int']
   signature: Scalars['String']
-  supply: Scalars['Float']
-  tokenId: Scalars['Float']
+  supply: Scalars['Int']
+  tokenId: Scalars['Int']
   tokenUri: Scalars['String']
+}
+
+export type SellingsFilter = {
+  nftContractAddress?: InputMaybe<Scalars['String']>
+  nftId?: InputMaybe<Scalars['String']>
+  nftType?: InputMaybe<Scalars['String']>
+  tokenId?: InputMaybe<Scalars['Int']>
 }
 
 export type UpdateUserInput = {
@@ -250,6 +252,26 @@ export type VerificationTokenInput = {
   ethAddress: Scalars['String']
 }
 
+export type CreateSellingMutationVariables = Exact<{
+  createSellingInput: CreateSellingInput
+}>
+
+export type CreateSellingMutation = {
+  __typename?: 'Mutation'
+  createSelling: {
+    __typename?: 'Selling'
+    id: string
+    nftType: string
+    sellingStatus: string
+    seller: {
+      __typename?: 'User'
+      id: string
+      name?: string | null
+      ethAddress?: string | null
+    }
+  }
+}
+
 export type GetNftQueryVariables = Exact<{
   filter: NftFilter
 }>
@@ -270,6 +292,7 @@ export type GetNftQuery = {
       __typename?: 'NftOwner'
       user: {
         __typename?: 'User'
+        id: string
         name?: string | null
         ethAddress?: string | null
       }
@@ -287,9 +310,53 @@ export type GetNftQuery = {
       supply: number
       user: {
         __typename?: 'User'
+        id: string
         name?: string | null
         ethAddress?: string | null
       }
     }> | null
   } | null
+}
+
+export type SellingsQueryVariables = Exact<{
+  filter?: InputMaybe<SellingsFilter>
+  skip: Scalars['Int']
+  limit: Scalars['Int']
+}>
+
+export type SellingsQuery = {
+  __typename?: 'Query'
+  sellings?: Array<{
+    __typename?: 'Selling'
+    id: string
+    nftType: string
+    marketplaceContractAddress: string
+    sellingStatus: string
+    transactionHash?: string | null
+    seller: {
+      __typename?: 'User'
+      ethAddress?: string | null
+      name?: string | null
+    }
+    buyers: Array<{
+      __typename?: 'Buyer'
+      supply: number
+      user: {
+        __typename?: 'User'
+        ethAddress?: string | null
+        name?: string | null
+      }
+    }>
+    sellingVoucher: {
+      __typename?: 'SellingVoucher'
+      nftContractAddress: string
+      price: number
+      tokenId: number
+      tokenUri: string
+      isMaster: boolean
+      signature: string
+      sellCount: number
+      supply: number
+    }
+  }> | null
 }

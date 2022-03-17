@@ -2,26 +2,33 @@ import React, { useEffect, useState } from 'react'
 import { createApolloClient } from '../../lib/createApolloClient'
 import { User } from '../../hooks/useProfile'
 import Custom404 from '../404'
-import { GET_NFT } from '../../common/graphql/queries/get-nft.mutation'
+import { GET_NFT } from '../../common/graphql/queries/get-nft.query'
 import SingleNftPage from '../../components/SingleNftPage/SingleNftPage'
-import { Nft } from '../../common/graphql/schema'
+import { Nft, Selling } from '../../common/graphql/schema'
+import { GET_SELLINGS } from '../../common/graphql/queries/get-sellings.query'
+import { NftType } from '../../common/types/nft-type.enum'
 
 type ProfileProps = {
-  user: User
   query: {
     contractAddress: string
     tokenId: string
   }
-  //TODO: create NFT type from gql schema for frontend
   nft: Nft
+  nftSellings: Selling[]
 }
 
-export default function MasterNft({ user, query, nft }: ProfileProps) {
+export default function MasterNft({ nftSellings, nft }: ProfileProps) {
   if (!nft) {
     return <Custom404 />
   }
 
-  return <SingleNftPage user={user} nft={nft} type={'master'} />
+  return (
+    <SingleNftPage
+      nft={nft}
+      nftType={NftType.MASTER}
+      nftSellings={nftSellings}
+    />
+  )
 }
 
 export async function getServerSideProps(context) {
@@ -33,9 +40,19 @@ export async function getServerSideProps(context) {
     variables: { filter: { id } },
   })
 
+  const nftSellings = await client.apolloClient.query({
+    query: GET_SELLINGS,
+    variables: {
+      filter: { nftId: id, nftType: 'MASTER' },
+      limit: 1000,
+      skip: 0,
+    },
+  })
+
   return {
     props: {
       nft: nft.data.nft,
+      nftSellings: nftSellings.data.sellings,
       query: {
         id,
       },

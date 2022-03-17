@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { ProfileName } from '../profile'
 import { AudioPlayer } from '../AudioPlayer/AudioPlayer'
 import cn from 'classnames'
+import { NftType } from '../../common/types/nft-type.enum'
 
 export type SoundCardI = {
   id: string
@@ -15,7 +16,7 @@ export type SoundCardI = {
   creatorName: string
   creatorEthAddress: string
   tokenId: number
-  type: 'master' | 'license'
+  nftType: NftType
 }
 
 export type SoundCardProp = {
@@ -44,8 +45,8 @@ function SoundCard({
   const rootClassName = cn(
     styles.soundCardWrapper,
     {
-      [styles.master]: soundCard.type === 'master',
-      [styles.license]: soundCard.type === 'license',
+      [styles.master]: soundCard.nftType === NftType.MASTER,
+      [styles.license]: soundCard.nftType === NftType.LICENSE,
     },
     className
   )
@@ -55,10 +56,14 @@ function SoundCard({
   }
   return (
     <div className={rootClassName}>
-      <Link href={`/${soundCard.type}/${soundCard.id}`}>
+      <Link
+        href={`/${
+          soundCard.nftType === NftType.MASTER ? 'master' : 'license'
+        }/${soundCard.id}`}
+      >
         <a>
           <div className={styles.soundCardHeaderTop}>
-            {soundCard.type === 'master' ? 'Master' : 'License'}
+            {soundCard.nftType === NftType.MASTER ? 'Master' : 'License'}
           </div>
           <div className={styles.soundCardHeaderBottom}>
             <div className="font-semibold text-xl">
@@ -93,6 +98,7 @@ function SoundCard({
           creatorEthAddress={soundCard.creatorEthAddress}
           trackPictureUrl={soundCard.pictureUrl}
           id={soundCard.id}
+          nftType={soundCard.nftType}
         />
       </div>
       <div className={styles.soundCardFooter}>

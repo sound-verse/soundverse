@@ -3,7 +3,7 @@ import { Args, Int, Mutation, Parent, Query, ResolveField, Resolver } from '@nes
 import { GqlAuthGuard } from '../auth/gql-auth.guard';
 import { CurrentUser, LoggedinUser } from '../user/decorators/user.decorator';
 import { CreateSellingInput } from './dto/input/create-selling.input';
-import { SellingFilter } from './dto/input/selling-filter.input';
+import { SellingsFilter } from './dto/input/sellings-filter.input';
 import { Buyer, Selling } from './dto/output/selling.output';
 import { SellingService } from './selling.service';
 import { User } from '../user/dto/output/user.output';
@@ -18,7 +18,7 @@ export class SellingResolver {
   async sellings(
     @Args('skip', { type: () => Int }) skip: number,
     @Args('limit', { type: () => Int }) limit: number,
-    @Args('filter', { nullable: true }) filter?: SellingFilter,
+    @Args('filter', { nullable: true }) filter?: SellingsFilter,
   ) {
     return await this.sellingService.getOpenSellings(limit, skip, filter);
   }

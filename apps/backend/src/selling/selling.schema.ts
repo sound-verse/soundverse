@@ -56,6 +56,9 @@ export class Selling extends BaseDBObject {
   @Prop({ default: [] })
   buyers?: [Buyer];
 
+  @Prop({ type: Types.ObjectId, ref: 'Nft' })
+  nft: Types.ObjectId;
+
   @Prop()
   sellingVoucher: SellingVoucher;
 
@@ -78,6 +81,7 @@ export class Selling extends BaseDBObject {
 export const SellingSchema = SchemaFactory.createForClass(Selling);
 
 SellingSchema.index({ createdAt: 1 });
+SellingSchema.index({ nft: 1 });
 SellingSchema.index({
   'sellingVoucher.nftContractAddress': 1,
   'sellingVoucher.tokenId': 1,

@@ -68,14 +68,10 @@ export default function Profile({
             </div>
             <div className="col-span-3">
               {showEditProfile && isMe ? (
-                <div className="flex items-center justify-center">
-                  <div className="bg-grey-dark rounded-3xl p-16">
-                    <EditProfileForm
-                      user={activeUser}
-                      setShowEditProfile={setShowEditProfile}
-                    />
-                  </div>
-                </div>
+                <EditProfileForm
+                  user={activeUser}
+                  setShowEditProfile={setShowEditProfile}
+                />
               ) : (
                 <div className="flex flex-col m-16">
                   <div className="grid grid-cols-4">

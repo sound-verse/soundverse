@@ -72,10 +72,10 @@ type Buyer {
 type SellingVoucher {
   nftContractAddress: String!
   price: Float!
-  sellCount: Float!
+  sellCount: Int!
   tokenUri: String!
-  tokenId: Float!
-  supply: Float!
+  tokenId: Int!
+  supply: Int!
   isMaster: Boolean!
   signature: String!
 }
@@ -85,9 +85,9 @@ type Selling {
   seller: User!
   buyers: [Buyer!]!
   sellingVoucher: SellingVoucher!
-  nftType: Float!
+  nftType: String!
   marketplaceContractAddress: String!
-  sellingStatus: Float!
+  sellingStatus: String!
   transactionHash: String
 }
 
@@ -96,7 +96,7 @@ type Query {
   me: User!
   nfts(skip: Int!, limit: Int!, filter: NftsFilter): [Nft!]
   nft(filter: NftFilter!): Nft
-  sellings(skip: Int!, limit: Int!, filter: SellingFilter): [Selling!]
+  sellings(skip: Int!, limit: Int!, filter: SellingsFilter): [Selling!]
 }
 
 input NftsFilter {
@@ -110,8 +110,9 @@ input NftFilter {
   ipfsUrl: String
 }
 
-input SellingFilter {
-  nftType: Float
+input SellingsFilter {
+  nftType: String
+  nftId: String
   nftContractAddress: String
   tokenId: Int
 }
@@ -164,16 +165,17 @@ input NftMetadataInput {
 }
 
 input CreateSellingInput {
+  nftId: String!
   sellingVoucher: SellingVoucherInput!
 }
 
 input SellingVoucherInput {
   nftContractAddress: String!
   price: Float!
-  sellCount: Float!
+  sellCount: Int!
   tokenUri: String!
-  tokenId: Float!
-  supply: Float!
+  tokenId: Int!
+  supply: Int!
   isMaster: Boolean!
   signature: String!
 }

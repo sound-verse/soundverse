@@ -3,6 +3,7 @@ import Head from 'next/head'
 import Layout from '../../components/layout'
 import SoundCard from '../../components/marketplace/SoundCard'
 import { gql, useQuery } from '@apollo/client'
+import { NftType } from '../../common/types/nft-type.enum'
 
 export const GET_NFTS = gql`
   query getNfts($filter: NftsFilter, $limit: Int!, $skip: Int!) {
@@ -92,7 +93,7 @@ export default function Landing() {
                           musicUrl: data.fileUrl,
                           tokenId: data.tokenId,
                           id: data.id,
-                          type: 'master',
+                          nftType: NftType.MASTER,
                         }}
                         key={key}
                         playingCardId={playingCardId}
@@ -121,7 +122,7 @@ export default function Landing() {
                           musicUrl: data.fileUrl,
                           tokenId: data.tokenId,
                           id: data.id,
-                          type: 'license',
+                          nftType: NftType.LICENSE,
                         }}
                         key={key}
                         playingCardId={playingCardId}

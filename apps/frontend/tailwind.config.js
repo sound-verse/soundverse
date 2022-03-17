@@ -22,4 +22,5 @@ module.exports = {
     extend: {},
   },
   plugins: [],
+  mode: 'jit',
 }

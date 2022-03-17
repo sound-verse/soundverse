@@ -13,9 +13,11 @@ export const GET_NFT = gql`
       supply
       masterOwner {
         user {
+          id
           name
           ethAddress
         }
+        supply
       }
       metadata {
         name
@@ -29,6 +31,7 @@ export const GET_NFT = gql`
       }
       licenseOwners {
         user {
+          id
           name
           ethAddress
         }

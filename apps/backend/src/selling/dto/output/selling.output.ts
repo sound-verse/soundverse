@@ -1,4 +1,4 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
 import { User } from '../../../user/dto/output/user.output';
 import { NftType } from '../../../common/enums/nftType.enum';
 import { SellingStatus } from '../../../common/enums/sellingStatus.enum';
@@ -17,19 +17,19 @@ class SellingVoucher {
   @Field()
   nftContractAddress: string;
 
-  @Field()
+  @Field((type) => Float)
   price: number;
 
-  @Field()
+  @Field((type) => Int)
   sellCount: number;
 
   @Field()
   tokenUri: string;
 
-  @Field()
+  @Field((type) => Int)
   tokenId: number;
 
-  @Field()
+  @Field((type) => Int)
   supply: number;
 
   @Field()

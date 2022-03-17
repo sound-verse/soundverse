@@ -107,161 +107,169 @@ export const EditProfileForm = ({
   Modal.setAppElement('#__next')
 
   return (
-    <div>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={onSubmit}
-        enableReinitialize
-      >
-        <Form>
-          <div className="flex flex-col">
-            <div className="text-white font-bold text-base">Profile Image</div>
-            <div>
-              <label
-                htmlFor="profileImage"
-                className="text-white border-2 border-white rounded-full p-2 mt-5 inline-block cursor-pointer px-36 whitespace-nowrap"
-              >
-                Choose Profile Picture
-              </label>
-              <Field
-                type="file"
-                id="profileImage"
-                name="profileImage"
-                className="hidden"
-                onChange={(e) =>
-                  onFileChange(
-                    e,
-                    setProfileImage,
-                    setProfileImageError,
-                    SUPPORTED_FORMATS_PICTURE
-                  )
-                }
-              ></Field>
-              <div className="text-grey-light mt-3">JPG, PNG - Max 100Mb</div>
-              <div className="text-grey-light">
-                {profileImage && `Selected File: ${profileImage.name}`}
+    <>
+      <div className="flex items-center justify-center">
+        <div className="bg-grey-dark rounded-3xl p-16">
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={onSubmit}
+            enableReinitialize
+          >
+            <Form>
+              <div className="flex flex-col">
+                <div className="text-white font-bold text-base">
+                  Profile Image
+                </div>
+                <div>
+                  <label
+                    htmlFor="profileImage"
+                    className="text-white border-2 border-white rounded-full p-2 mt-5 inline-block cursor-pointer px-36 whitespace-nowrap"
+                  >
+                    Choose Profile Picture
+                  </label>
+                  <Field
+                    type="file"
+                    id="profileImage"
+                    name="profileImage"
+                    className="hidden"
+                    onChange={(e) =>
+                      onFileChange(
+                        e,
+                        setProfileImage,
+                        setProfileImageError,
+                        SUPPORTED_FORMATS_PICTURE
+                      )
+                    }
+                  ></Field>
+                  <div className="text-grey-light mt-3">
+                    JPG, PNG - Max 100Mb
+                  </div>
+                  <div className="text-grey-light">
+                    {profileImage && `Selected File: ${profileImage.name}`}
+                  </div>
+                  <div className={styles.error}>{profileImageError}</div>
+                </div>
+                <div className="text-white font-bold text-base mt-10">
+                  Profile Name
+                </div>
+                <div className="mt-3">
+                  <Field
+                    id="name"
+                    name="name"
+                    placeholder="Music Rabbit"
+                    className="outline-none bg-grey-dark text-white"
+                  />
+                  <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
+                  <div className="text-grey-light mt-2">max. 20 characters</div>
+                  <div className={styles.error}>
+                    <ErrorMessage name="name" />
+                  </div>
+                </div>
+                <div className="text-white font-bold text-base mt-10">
+                  Description
+                </div>
+                <div className="mt-3">
+                  <Field
+                    type="input"
+                    as="textarea"
+                    name="description"
+                    className="w-full text-white bg-transparent border-2 rounded-3xl p-5"
+                    id="trac-desc"
+                    placeholder="I am ..."
+                    rows={8}
+                    cols={50}
+                  ></Field>
+                  <div className={styles.error}>
+                    <ErrorMessage name="description" />
+                  </div>
+                </div>
+                <div className="text-white font-bold text-base mt-10">
+                  Twitter Handle
+                </div>
+                <div className="mt-3">
+                  <Field
+                    id="twitter"
+                    name="twitter"
+                    placeholder="music_rabbit"
+                    className="outline-none bg-grey-dark text-white"
+                  />
+                  <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
+                  <div className={styles.error}>
+                    <ErrorMessage name="twitter" />
+                  </div>
+                </div>
+                <div className="text-white font-bold text-base mt-10">
+                  Instagram Handle
+                </div>
+                <div className="mt-3">
+                  <Field
+                    id="instagram"
+                    name="instagram"
+                    placeholder="music_rabbit"
+                    className="outline-none bg-grey-dark text-white"
+                  />
+                  <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
+                  <div className={styles.error}>
+                    <ErrorMessage name="instagram" />
+                  </div>
+                </div>
+                <div className="text-white font-bold text-base mt-10">
+                  Soundcloud Handle
+                </div>
+                <div className="mt-3">
+                  <Field
+                    id="soundcloud"
+                    name="soundcloud"
+                    placeholder="music_rabbit"
+                    className="outline-none bg-grey-dark text-white"
+                  />
+                  <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
+                  <div className={styles.error}>
+                    <ErrorMessage name="soundcloud" />
+                  </div>
+                </div>
+                <div className="text-white font-bold text-base mt-10">
+                  Spotify Handle
+                </div>
+                <div className="mt-3">
+                  <Field
+                    id="spotify"
+                    name="spotify"
+                    placeholder="music_rabbit"
+                    className="outline-none bg-grey-dark text-white"
+                  />
+                  <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
+                  <div className={styles.error}>
+                    <ErrorMessage name="spotify" />
+                  </div>
+                </div>
+                <div className="text-white font-bold text-base mt-10">
+                  Discord Handle
+                </div>
+                <div className="mt-3">
+                  <Field
+                    id="discord"
+                    name="discord"
+                    placeholder="music_rabbit"
+                    className="outline-none bg-grey-dark text-white"
+                  />
+                  <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
+                  <div className={styles.error}>
+                    <ErrorMessage name="discord" />
+                  </div>
+                </div>
+                <button
+                  className="text-white cursor-pointer rounded-full bg-purple px-24 py-4 ml-auto mt-10 font-bold"
+                  type="submit"
+                >
+                  Update
+                </button>
               </div>
-              <div className={styles.error}>{profileImageError}</div>
-            </div>
-            <div className="text-white font-bold text-base mt-10">
-              Profile Name
-            </div>
-            <div className="mt-3">
-              <Field
-                id="name"
-                name="name"
-                placeholder="Music Rabbit"
-                className="outline-none bg-grey-dark text-white"
-              />
-              <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
-              <div className="text-grey-light mt-2">max. 20 characters</div>
-              <div className={styles.error}>
-                <ErrorMessage name="name" />
-              </div>
-            </div>
-            <div className="text-white font-bold text-base mt-10">
-              Description
-            </div>
-            <div className="mt-3">
-              <Field
-                type="input"
-                as="textarea"
-                name="description"
-                className="w-full text-white bg-transparent border-2 rounded-3xl p-5"
-                id="trac-desc"
-                placeholder="I am ..."
-                rows={8}
-                cols={50}
-              ></Field>
-              <div className={styles.error}>
-                <ErrorMessage name="description" />
-              </div>
-            </div>
-            <div className="text-white font-bold text-base mt-10">
-              Twitter Handle
-            </div>
-            <div className="mt-3">
-              <Field
-                id="twitter"
-                name="twitter"
-                placeholder="music_rabbit"
-                className="outline-none bg-grey-dark text-white"
-              />
-              <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
-              <div className={styles.error}>
-                <ErrorMessage name="twitter" />
-              </div>
-            </div>
-            <div className="text-white font-bold text-base mt-10">
-              Instagram Handle
-            </div>
-            <div className="mt-3">
-              <Field
-                id="instagram"
-                name="instagram"
-                placeholder="music_rabbit"
-                className="outline-none bg-grey-dark text-white"
-              />
-              <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
-              <div className={styles.error}>
-                <ErrorMessage name="instagram" />
-              </div>
-            </div>
-            <div className="text-white font-bold text-base mt-10">
-              Soundcloud Handle
-            </div>
-            <div className="mt-3">
-              <Field
-                id="soundcloud"
-                name="soundcloud"
-                placeholder="music_rabbit"
-                className="outline-none bg-grey-dark text-white"
-              />
-              <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
-              <div className={styles.error}>
-                <ErrorMessage name="soundcloud" />
-              </div>
-            </div>
-            <div className="text-white font-bold text-base mt-10">
-              Spotify Handle
-            </div>
-            <div className="mt-3">
-              <Field
-                id="spotify"
-                name="spotify"
-                placeholder="music_rabbit"
-                className="outline-none bg-grey-dark text-white"
-              />
-              <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
-              <div className={styles.error}>
-                <ErrorMessage name="spotify" />
-              </div>
-            </div>
-            <div className="text-white font-bold text-base mt-10">
-              Discord Handle
-            </div>
-            <div className="mt-3">
-              <Field
-                id="discord"
-                name="discord"
-                placeholder="music_rabbit"
-                className="outline-none bg-grey-dark text-white"
-              />
-              <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
-              <div className={styles.error}>
-                <ErrorMessage name="discord" />
-              </div>
-            </div>
-            <button
-              className="text-white cursor-pointer rounded-full bg-purple px-24 py-4 ml-auto mt-10 font-bold"
-              type="submit"
-            >
-              Update
-            </button>
-          </div>
-        </Form>
-      </Formik>
+            </Form>
+          </Formik>
+        </div>
+      </div>
       <Modal
         isOpen={showing}
         contentLabel="onRequestClose Example"
@@ -276,6 +284,6 @@ export const EditProfileForm = ({
           </div>
         </div>
       </Modal>
-    </div>
+    </>
   )
 }

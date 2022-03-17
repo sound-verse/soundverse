@@ -1,7 +1,11 @@
 .root {
-  @apply px-8 py-4 border-white border text-white bg-grey-medium rounded-full cursor-pointer;
+  @apply px-8 py-4 border-white border text-white bg-grey-medium rounded-full cursor-pointer font-bold;
 }
 
 .disabled {
   @apply border-none font-bold cursor-default;
+}
+
+.purple {
+  @apply bg-purple border-purple;
 }

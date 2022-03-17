@@ -5,7 +5,7 @@ import { BaseDBObject } from '../BaseDBObject';
 export type NftDocument = Nft & Document<Types.ObjectId>;
 
 export class NftOwner {
-  @Prop({ type: Types.ObjectId })
+  @Prop({ type: Types.ObjectId, ref: 'User' })
   user: Types.ObjectId;
 
   @Prop({ min: 0, default: 0 })

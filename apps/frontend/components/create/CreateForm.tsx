@@ -107,127 +107,135 @@ export const CreateForm = () => {
   Modal.setAppElement('#__next')
 
   return (
-    <div>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={onSubmit}
-        enableReinitialize
-      >
-        <Form>
-          <div className="flex flex-col">
-            <div className="text-white font-bold text-base">Track</div>
-            <div>
-              <label
-                htmlFor="nftFile"
-                className="text-white border-2 border-white rounded-full p-2 mt-5 inline-block cursor-pointer px-36 whitespace-nowrap"
-              >
-                Choose Music File
-              </label>
-              <Field
-                type="file"
-                id="nftFile"
-                name="nftFile"
-                className="hidden"
-                onChange={(e) =>
-                  onFileChange(
-                    e,
-                    setNftFile,
-                    setNftFileError,
-                    SUPPORTED_FORMATS_MUSIC
-                  )
-                }
-              ></Field>
-              <div className="text-grey-light mt-3">MP3, WAVE - Max 100Mb</div>
+    <>
+      <div className="rounded-3xl bg-grey-dark max-w-3xl p-20 mx-auto mt-12 mb-36">
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={onSubmit}
+          enableReinitialize
+        >
+          <Form>
+            <div className="flex flex-col">
+              <div className="text-white font-bold text-base">Track</div>
+              <div>
+                <label
+                  htmlFor="nftFile"
+                  className="text-white border-2 border-white rounded-full p-2 mt-5 inline-block cursor-pointer px-36 whitespace-nowrap"
+                >
+                  Choose Music File
+                </label>
+                <Field
+                  type="file"
+                  id="nftFile"
+                  name="nftFile"
+                  className="hidden"
+                  onChange={(e) =>
+                    onFileChange(
+                      e,
+                      setNftFile,
+                      setNftFileError,
+                      SUPPORTED_FORMATS_MUSIC
+                    )
+                  }
+                ></Field>
+                <div className="text-grey-light mt-3">
+                  MP3, WAVE - Max 100Mb
+                </div>
+                <div className="text-grey-light">
+                  {nftFile && `Selected File: ${nftFile.name}`}
+                </div>
+                <div className={styles.error}>{nftFileError}</div>
+              </div>
+              <div>
+                <label
+                  htmlFor="pictureFile"
+                  className="text-white border-2 border-white rounded-full p-2 mt-5 inline-block cursor-pointer px-36 whitespace-nowrap"
+                >
+                  Choose Nft Cover Picture
+                </label>
+                <input
+                  type="file"
+                  id="pictureFile"
+                  name="pictureFile"
+                  className="hidden"
+                  onChange={(e) =>
+                    onFileChange(
+                      e,
+                      setPictureFile,
+                      setPictureFileError,
+                      SUPPORTED_FORMATS_PICTURE
+                    )
+                  }
+                ></input>
+                <div className="text-grey-light mt-3">JPG, PNG - Max 100Mb</div>
+              </div>
               <div className="text-grey-light">
-                {nftFile && `Selected File: ${nftFile.name}`}
+                {pictureFile && `Selected File: ${pictureFile.name}`}
               </div>
-              <div className={styles.error}>{nftFileError}</div>
-            </div>
-            <div>
-              <label
-                htmlFor="pictureFile"
-                className="text-white border-2 border-white rounded-full p-2 mt-5 inline-block cursor-pointer px-36 whitespace-nowrap"
+              <div className={styles.error}>{pictureFileError}</div>
+              <div className="text-white font-bold text-base mt-10">
+                Track Name
+              </div>
+              <div className="mt-3 w-full">
+                <Field
+                  id="name"
+                  name="name"
+                  placeholder="Ice in the dark..."
+                  className="outline-none bg-grey-dark text-white w-full"
+                />
+                <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
+                <div className="text-grey-light mt-2">max. 20 characters</div>
+                <div className={styles.error}>
+                  <ErrorMessage name="name" />
+                </div>
+              </div>
+              <div className="text-white font-bold text-base mt-10">
+                Licenses
+              </div>
+              <div className="mt-3 w-full">
+                <Field
+                  id="licenses"
+                  name="licenses"
+                  placeholder="2"
+                  className="outline-none bg-grey-dark text-white w-full"
+                />
+                <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
+                <div className="text-grey-light mt-2">
+                  min. 2 - max. 100.000
+                </div>
+                <div className={styles.error}>
+                  <ErrorMessage name="licenses" />
+                </div>
+              </div>
+              <div className="text-white font-bold text-base mt-10">
+                Description
+              </div>
+              <div className="mt-3">
+                <Field
+                  type="input"
+                  as="textarea"
+                  name="description"
+                  className="w-full text-white bg-transparent border-2 rounded-3xl p-5"
+                  id="trac-desc"
+                  placeholder="I am ..."
+                  rows={8}
+                  cols={50}
+                ></Field>
+                <div className={styles.error}>
+                  <ErrorMessage name="description" />
+                </div>
+              </div>
+              <button
+                className="text-white cursor-pointer rounded-full bg-purple px-24 py-4 ml-auto mt-10 font-bold"
+                type="submit"
               >
-                Choose Nft Cover Picture
-              </label>
-              <input
-                type="file"
-                id="pictureFile"
-                name="pictureFile"
-                className="hidden"
-                onChange={(e) =>
-                  onFileChange(
-                    e,
-                    setPictureFile,
-                    setPictureFileError,
-                    SUPPORTED_FORMATS_PICTURE
-                  )
-                }
-              ></input>
-              <div className="text-grey-light mt-3">JPG, PNG - Max 100Mb</div>
+                Mint
+              </button>
             </div>
-            <div className="text-grey-light">
-              {pictureFile && `Selected File: ${pictureFile.name}`}
-            </div>
-            <div className={styles.error}>{pictureFileError}</div>
-            <div className="text-white font-bold text-base mt-10">
-              Track Name
-            </div>
-            <div className="mt-3 w-full">
-              <Field
-                id="name"
-                name="name"
-                placeholder="Ice in the dark..."
-                className="outline-none bg-grey-dark text-white w-full"
-              />
-              <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
-              <div className="text-grey-light mt-2">max. 20 characters</div>
-              <div className={styles.error}>
-                <ErrorMessage name="name" />
-              </div>
-            </div>
-            <div className="text-white font-bold text-base mt-10">Licenses</div>
-            <div className="mt-3 w-full">
-              <Field
-                id="licenses"
-                name="licenses"
-                placeholder="2"
-                className="outline-none bg-grey-dark text-white w-full"
-              />
-              <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
-              <div className="text-grey-light mt-2">min. 2 - max. 100.000</div>
-              <div className={styles.error}>
-                <ErrorMessage name="licenses" />
-              </div>
-            </div>
-            <div className="text-white font-bold text-base mt-10">
-              Description
-            </div>
-            <div className="mt-3">
-              <Field
-                type="input"
-                as="textarea"
-                name="description"
-                className="w-full text-white bg-transparent border-2 rounded-3xl p-5"
-                id="trac-desc"
-                placeholder="I am ..."
-                rows={8}
-                cols={50}
-              ></Field>
-              <div className={styles.error}>
-                <ErrorMessage name="description" />
-              </div>
-            </div>
-            <button
-              className="text-white cursor-pointer rounded-full bg-purple px-24 py-4 ml-auto mt-10 font-bold"
-              type="submit"
-            >
-              Mint
-            </button>
-          </div>
-        </Form>
-      </Formik>
+          </Form>
+        </Formik>
+      </div>
       <Modal
         isOpen={showing}
         contentLabel="onRequestClose Example"
@@ -240,6 +248,6 @@ export const CreateForm = () => {
           </div>
         </div>
       </Modal>
-    </div>
+    </>
   )
 }

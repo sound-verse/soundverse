@@ -6,6 +6,7 @@ import { Bars } from 'react-loader-spinner'
 import Image from 'next/image'
 import { ProfileName } from '../profile'
 import Link from 'next/link'
+import { NftType } from '../../common/types/nft-type.enum'
 
 export type AudioPlayerProps = {
   url?: string
@@ -17,6 +18,7 @@ export type AudioPlayerProps = {
   creatorEthAddress?: string
   id?: string
   contractAddress?: string
+  nftType?: NftType
 }
 
 const formWaveSurferOptions = (ref) => ({
@@ -43,6 +45,7 @@ export const AudioPlayer = ({
   creatorEthAddress,
   id,
   contractAddress,
+  nftType,
 }: AudioPlayerProps) => {
   const waveformRef = useRef(null)
   const wavesurfer = useRef(null)
@@ -103,6 +106,7 @@ export const AudioPlayer = ({
         contractAddress,
         isPlaying: true,
         play: true,
+        nftType,
       })
     })
   }
