@@ -24,6 +24,7 @@ export const GET_SELLINGS = gql`
         signature
         sellCount
         supply
+        currency
       }
       nftType
       marketplaceContractAddress
@@ -38,6 +39,7 @@ export const GET_SELLINGS = gql`
         ipfsUrl
         transactionHash
         supply
+        chainId
         masterOwner {
           user {
             id

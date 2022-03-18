@@ -9,6 +9,7 @@ export const GET_NFTS = gql`
       fileUrl
       filePictureUrl
       ipfsUrl
+      chainId
       transactionHash
       masterOwner {
         user {

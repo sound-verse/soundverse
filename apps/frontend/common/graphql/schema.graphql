@@ -48,6 +48,7 @@ type Mutation {
 }
 
 type Nft {
+  chainId: Int!
   contractAddress: String!
   creator: User
   filePictureUrl: String!
@@ -117,6 +118,7 @@ type Selling {
 }
 
 type SellingVoucher {
+  currency: String!
   isMaster: Boolean!
   nftContractAddress: String!
   price: Float!
@@ -128,6 +130,7 @@ type SellingVoucher {
 }
 
 input SellingVoucherInput {
+  currency: String!
   isMaster: Boolean!
   nftContractAddress: String!
   price: Float!

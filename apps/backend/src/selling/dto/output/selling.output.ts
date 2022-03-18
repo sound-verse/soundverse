@@ -38,6 +38,9 @@ class SellingVoucher {
 
   @Field()
   signature: string;
+
+  @Field()
+  currency: string;
 }
 
 @ObjectType()

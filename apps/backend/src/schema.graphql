@@ -56,6 +56,7 @@ type Nft {
   contractAddress: String!
   ipfsUrl: String!
   fileUrl: String!
+  chainId: Int!
   filePictureUrl: String!
   transactionHash: String
   metadata: NftMetadata!
@@ -78,6 +79,7 @@ type SellingVoucher {
   supply: Int!
   isMaster: Boolean!
   signature: String!
+  currency: String!
 }
 
 type Selling {
@@ -179,4 +181,5 @@ input SellingVoucherInput {
   supply: Int!
   isMaster: Boolean!
   signature: String!
+  currency: String!
 }

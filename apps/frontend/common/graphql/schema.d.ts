@@ -99,6 +99,7 @@ export type MutationUploadProfilePictureArgs = {
 
 export type Nft = {
   __typename?: 'Nft'
+  chainId: Scalars['Int']
   contractAddress: Scalars['String']
   creator?: Maybe<User>
   filePictureUrl: Scalars['String']
@@ -193,6 +194,7 @@ export type Selling = {
 
 export type SellingVoucher = {
   __typename?: 'SellingVoucher'
+  currency: Scalars['String']
   isMaster: Scalars['Boolean']
   nftContractAddress: Scalars['String']
   price: Scalars['Float']
@@ -204,6 +206,7 @@ export type SellingVoucher = {
 }
 
 export type SellingVoucherInput = {
+  currency: Scalars['String']
   isMaster: Scalars['Boolean']
   nftContractAddress: Scalars['String']
   price: Scalars['Float']
@@ -289,6 +292,7 @@ export type GetNftQuery = {
     ipfsUrl: string
     transactionHash?: string | null
     supply: number
+    chainId: number
     masterOwner: {
       __typename?: 'NftOwner'
       supply: number
@@ -336,6 +340,7 @@ export type GetNftsQuery = {
     fileUrl: string
     filePictureUrl: string
     ipfsUrl: string
+    chainId: number
     transactionHash?: string | null
     masterOwner: {
       __typename?: 'NftOwner'
@@ -404,6 +409,7 @@ export type SellingsQuery = {
       signature: string
       sellCount: number
       supply: number
+      currency: string
     }
     nft?: {
       __typename?: 'Nft'
@@ -415,6 +421,7 @@ export type SellingsQuery = {
       ipfsUrl: string
       transactionHash?: string | null
       supply: number
+      chainId: number
       masterOwner: {
         __typename?: 'NftOwner'
         supply: number

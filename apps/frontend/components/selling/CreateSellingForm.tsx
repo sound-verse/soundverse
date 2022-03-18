@@ -27,7 +27,7 @@ export const CreateSellingForm = ({
 }: CreateSellingFormProps) => {
   const [loading, setLoading] = useState<Boolean>(false)
   const router = useRouter()
-  const { createSelling } = useCreateSelling()
+  const { createSelling, selling } = useCreateSelling()
 
   const initialValues = { price: 0, amount: 0 }
 
@@ -41,26 +41,25 @@ export const CreateSellingForm = ({
     ).supply
   }
 
+  useEffect(() => {
+    if (selling) {
+      showSingleNftPage(false)
+      router.push(
+        `/${nftType === NftType.MASTER ? 'master' : 'license'}/${nft.id}`
+      )
+      setLoading(false)
+    }
+  }, [selling])
+
   const onSubmit = async (values, onSubmitProps) => {
     try {
       setLoading(true)
-      const selling = await createSelling(
-        {
-          price: parseFloat(values.price),
-          amount: parseInt(values.amount),
-          nftType,
-        },
-        nft
-      )
-      if (selling) {
-        showSingleNftPage(false)
-        router.push(
-          `/${nftType === NftType.MASTER ? 'master' : 'license'}/${nft.id}`
-        )
-      } else {
-        toast.error('Error listing your NFT')
-      }
-      setLoading(false)
+      await createSelling({
+        price: parseFloat(values.price),
+        amount: parseInt(values.amount),
+        nftType,
+        nft,
+      })
     } catch (error) {
       setLoading(false)
       console.log(error)

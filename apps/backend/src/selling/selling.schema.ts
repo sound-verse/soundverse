@@ -41,6 +41,9 @@ class SellingVoucher {
 
   @Prop()
   signature: string;
+
+  @Prop()
+  currency: string;
 }
 
 @Schema()

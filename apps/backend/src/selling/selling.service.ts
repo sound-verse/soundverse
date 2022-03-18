@@ -20,6 +20,7 @@ export type Voucher = {
   supply: number;
   isMaster: boolean;
   signature: string;
+  currency: string;
 };
 
 @Injectable()
@@ -69,6 +70,7 @@ export class SellingService {
         { name: 'tokenUri', type: 'string' },
         { name: 'supply', type: 'uint256' },
         { name: 'isMaster', type: 'bool' },
+        { name: 'currency', type: 'string' },
       ],
     };
 
@@ -94,7 +96,7 @@ export class SellingService {
         types: sellingVoucherTypes,
         primaryType: 'SellingVoucher',
         domain: {
-          name: 'SV-Voucher',
+          name: 'NFTVoucher',
           version: '1',
           chainId: mintedNft.chainId,
           verifyingContract: this.configService.get('MARKET_CONTRACT_ADDRESS'),
@@ -107,12 +109,14 @@ export class SellingService {
           tokenUri: voucher.tokenUri,
           supply: voucher.supply,
           isMaster: voucher.isMaster,
+          currency: voucher.currency,
         },
       },
       signature: voucher.signature,
       version: sigUtil.SignTypedDataVersion.V4,
     });
 
+    console.log('seller', seller.ethAddress);
     return address.toLowerCase() !== seller.ethAddress.toLowerCase() ? false : true;
   }
 

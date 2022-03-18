@@ -6,7 +6,7 @@ import SoundCard from '../../components/marketplace/SoundCard'
 import { ProfileName } from '../../components/profile'
 import Button from '../../components/common/Button'
 import Link from 'next/link'
-import { Nft, Selling } from '../../common/graphql/schema'
+import { Nft, NftOwner, Selling } from '../../common/graphql/schema'
 import { NftType } from '../../common/types/nft-type.enum'
 import { CreateSellingForm } from '../selling/CreateSellingForm'
 import Image from 'next/image'
@@ -39,15 +39,22 @@ export default function SingleNftPage({
   const isMe =
     nft.creator.ethAddress.toLowerCase() === authUser?.ethAddress?.toLowerCase()
 
-  const owner = nft.licenseOwners.find(
-    (licenseOwner) => licenseOwner.user.id === authUser?.id
-  )
+  let owner: NftOwner = undefined
+
+  if (nftType === NftType.MASTER) {
+    owner = nft.masterOwner
+  } else {
+    owner = nft.licenseOwners.find(
+      (licenseOwner) => licenseOwner.user.id === authUser?.id
+    )
+  }
 
   const { buyNft } = useBuy()
   const { unlistNft } = useUnlistSelling()
 
   const handleBuyNft = async () => {
     await buyNft({
+      owner,
       nft,
       selling: nftSellings[0],
       amountToBuy: nftSellings[0].sellingVoucher.supply,
@@ -55,12 +62,10 @@ export default function SingleNftPage({
   }
 
   const handleUnlistNft = async () => {
-    await unlistNft(
-      {
-        nftType,
-      },
-      nft
-    )
+    await unlistNft({
+      nftType,
+      nft,
+    })
   }
 
   return (

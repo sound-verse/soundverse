@@ -25,6 +25,9 @@ class SellingVoucherInput {
 
   @Field()
   signature: string;
+
+  @Field()
+  currency: string;
 }
 
 @InputType()

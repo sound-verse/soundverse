@@ -10,6 +10,7 @@ import { useEffect } from 'react'
 
 export type UnlistSellingProps = {
   nftType: NftType
+  nft: Nft
 }
 
 const masterContractAddress = process.env.NEXT_PUBLIC_MASTER_CONTRACT_ADDRESS
@@ -29,10 +30,7 @@ export const useUnlistSelling = () => {
     console.log(state)
   }, [state])
 
-  const unlistNft = async (
-    createSellingInputProps: UnlistSellingProps,
-    nft: Nft
-  ) => {
+  const unlistNft = async (createSellingInputProps: UnlistSellingProps) => {
     if (!authUser || !chainId) {
       return
     }
@@ -44,9 +42,10 @@ export const useUnlistSelling = () => {
 
     try {
       await send(
-        authUser.ethAddress,
         contractAddress,
-        nft.tokenId ? nft.tokenId : 0
+        createSellingInputProps.nft.tokenId
+          ? createSellingInputProps.nft.tokenId
+          : 0
       )
     } catch (error) {
       console.log(error)

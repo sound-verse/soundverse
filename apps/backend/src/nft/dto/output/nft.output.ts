@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { User } from '../../../user/dto/output/user.output';
 
 @ObjectType()
@@ -38,6 +38,9 @@ export class Nft {
 
   @Field()
   fileUrl: string;
+
+  @Field((type) => Int)
+  chainId: number;
 
   @Field()
   filePictureUrl: string;

@@ -11,6 +11,7 @@ export const GET_NFT = gql`
       ipfsUrl
       transactionHash
       supply
+      chainId
       masterOwner {
         user {
           id
