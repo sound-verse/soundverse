@@ -6,6 +6,7 @@ import React, {
   useContext,
   createContext,
 } from 'react'
+import { NftType } from '../common/types/nft-type.enum'
 
 export enum PLAYER_STATUS {
   PLAYING = 'playing',
@@ -28,6 +29,7 @@ export type Track = {
   isLoading?: boolean
   playTime?: number
   isPlaying?: boolean
+  nftType?: NftType
 }
 
 export type State = {
@@ -61,6 +63,7 @@ const initialState: State = {
     visible: false,
     isLoading: false,
     isPlaying: false,
+    nftType: NftType.MASTER,
   } as Track,
 }
 

@@ -1,0 +1,28 @@
+{
+  "schema": {
+    "http://localhost:8001/graphql": {}
+  },
+  "documents": [
+    {
+      "./common/graphql/**/*.{ts,tsx}": {
+        "noRequire": true
+      }
+    }
+  ],
+  "generates": {
+    "./common/graphql/schema.d.ts": {
+      "plugins": ["typescript", "typescript-operations"],
+      "config": {
+        "scalars": {
+          "ID": "string"
+        }
+      }
+    },
+    "./common/graphql/schema.graphql": {
+      "plugins": ["schema-ast"]
+    }
+  },
+  "hooks": {
+    "afterAllFileWrite": ["prettier --write"]
+  }
+}

@@ -134,9 +134,7 @@ export class IPFSService {
     const metadata = {
       ...nftData.metadata,
       image: ipfsFileUrl,
-      external_url: `${this.configService.get('METADATA_EXTERNAL_URL_BASE')}/${this.configService.get(
-        'ERC721_CONTRACT_ADDRESS',
-      )}/${metadataPreHash}`,
+      external_url: `${this.configService.get('METADATA_EXTERNAL_URL_BASE')}/${metadataPreHash}`,
     };
 
     const ipfsMetadata = await this.uploadJson(metadata, ipfsFile.IpfsHash);

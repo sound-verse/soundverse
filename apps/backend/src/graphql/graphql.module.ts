@@ -6,6 +6,7 @@ import { Request } from 'express';
 import { User } from '../user/user.schema';
 import { ApolloServerPluginCacheControl } from 'apollo-server-core';
 import { graphqlUploadExpress } from 'graphql-upload';
+import { ApolloDriver } from '@nestjs/apollo';
 
 interface SubscriptionConnectionParams {
   authorization?: string;
@@ -36,77 +37,75 @@ export interface GqlConnectionContext {
   imports: [
     ConfigModule,
     GraphQLModule.forRootAsync({
-      useFactory: (configService: ConfigService, jwtService: JwtService) => {
-        return {
-          path: '/graphql',
-          plugins: [ApolloServerPluginCacheControl({ defaultMaxAge: 5 })],
-          tracing: configService.get('GRAPHQL_DEBUG') === 'true',
-          debug: configService.get('GRAPHQL_DEBUG') === 'true',
-          playground: configService.get('PLAYGROUND_ENABLE') === 'true',
-          autoSchemaFile: './src/schema.graphql',
-          introspection: true,
-          context: ({ req, res, connection }: GqlContext) => {
-            if (connection) return connection.context;
-
-            let parsedToken: unknown;
-
-            if (req?.headers?.authorization) {
-              const { 1: token } = req.headers.authorization.split('Bearer ');
-
-              parsedToken = jwtService.decode(token);
-            }
-
-            return {
-              req,
-              res,
-              token: parsedToken,
-              headers: req?.headers,
-            };
-          },
-          installSubscriptionHandlers: true,
-          cors: {
-            origin: [/^(.*)/],
-            methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-            preflightContinue: true,
-            optionsSuccessStatus: 200,
-            credentials: true,
-          },
-          fieldResolverEnhancers: ['guards'],
-          uploads: false,
-          subscriptions: {
-            'subscriptions-transport-ws': {
-              keepAlive: 1000,
-              onConnect: (connectionParams) => {
-                const connectionParamsLowerKeys = Object.keys(
-                  connectionParams,
-                ).reduce<SubscriptionConnectionParams>(
-                  (obj, key) => ({
-                    ...obj,
-                    [key.toLowerCase()]: connectionParams[key as keyof typeof connectionParams],
-                  }),
-                  {},
-                );
-
-                let parsedToken: unknown;
-
-                if (connectionParamsLowerKeys?.authorization) {
-                  const { 1: token } = connectionParamsLowerKeys.authorization.split('Bearer ');
-
-                  parsedToken = jwtService.decode(token);
-                }
-
-                return {
-                  headers: connectionParamsLowerKeys,
-                  token: parsedToken,
-                };
-              },
-            },
-          },
-        };
-      },
-
+      driver: ApolloDriver,
       inject: [ConfigService, JwtService],
       imports: [JwtModule.register({})],
+      useFactory: (configService: ConfigService, jwtService: JwtService) => ({
+        path: '/graphql',
+        plugins: [ApolloServerPluginCacheControl({ defaultMaxAge: 5 })],
+        tracing: configService.get('GRAPHQL_DEBUG') === 'true',
+        debug: configService.get('GRAPHQL_DEBUG') === 'true',
+        playground: configService.get('PLAYGROUND_ENABLE') === 'true',
+        autoSchemaFile: './src/schema.graphql',
+        introspection: true,
+        context: ({ req, res, connection }: GqlContext) => {
+          if (connection) return connection.context;
+
+          let parsedToken: unknown;
+
+          if (req?.headers?.authorization) {
+            const { 1: token } = req.headers.authorization.split('Bearer ');
+
+            parsedToken = jwtService.decode(token);
+          }
+
+          return {
+            req,
+            res,
+            token: parsedToken,
+            headers: req?.headers,
+          };
+        },
+        installSubscriptionHandlers: true,
+        cors: {
+          origin: [/^(.*)/],
+          methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+          preflightContinue: true,
+          optionsSuccessStatus: 200,
+          credentials: true,
+        },
+        // fieldResolverEnhancers: ['guards'],
+        uploads: false,
+        subscriptions: {
+          'subscriptions-transport-ws': {
+            keepAlive: 1000,
+            onConnect: (connectionParams) => {
+              const connectionParamsLowerKeys = Object.keys(
+                connectionParams,
+              ).reduce<SubscriptionConnectionParams>(
+                (obj, key) => ({
+                  ...obj,
+                  [key.toLowerCase()]: connectionParams[key as keyof typeof connectionParams],
+                }),
+                {},
+              );
+
+              let parsedToken: unknown;
+
+              if (connectionParamsLowerKeys?.authorization) {
+                const { 1: token } = connectionParamsLowerKeys.authorization.split('Bearer ');
+
+                parsedToken = jwtService.decode(token);
+              }
+
+              return {
+                headers: connectionParamsLowerKeys,
+                token: parsedToken,
+              };
+            },
+          },
+        },
+      }),
     }),
   ],
 

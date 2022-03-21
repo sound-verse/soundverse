@@ -16,9 +16,7 @@ export default function Create() {
       <Layout>
         <main className="mx-auto">
           {authUser ? (
-            <div className="rounded-3xl bg-grey-dark max-w-3xl p-20 mx-auto mt-36 mb-36">
-              <CreateForm />
-            </div>
+            <CreateForm />
           ) : (
             <div className="flex items-center justify-center h-screen -mt-24 text-white text-2xl">
               Please connect your wallet to create NFTs

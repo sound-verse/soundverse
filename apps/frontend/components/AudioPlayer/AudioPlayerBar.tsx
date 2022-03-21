@@ -6,6 +6,7 @@ import { Bars } from 'react-loader-spinner'
 import Image from 'next/image'
 import { ProfileName } from '../profile'
 import Link from 'next/link'
+import { NftType } from '../../common/types/nft-type.enum'
 
 export type AudioPlayerBarProps = {}
 
@@ -136,7 +137,11 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
         <div className="hidden lg:flex items-center justify-end mr-2">
           <div className="mr-2">
             {currentTrack.trackPictureUrl && (
-              <Link href={`/nft/${currentTrack.id}`}>
+              <Link
+                href={`/${
+                  currentTrack.nftType === NftType.MASTER ? 'master' : 'license'
+                }/${currentTrack.id}`}
+              >
                 <a>
                   <Image
                     src={currentTrack.trackPictureUrl}

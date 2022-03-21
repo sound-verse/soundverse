@@ -13,10 +13,7 @@ export class UserService {
     private configService: ConfigService,
   ) {}
 
-  async updateUser(
-    { _id: userId }: LoggedinUser,
-    newUserData: UpdateUserInput,
-  ) {
+  async updateUser({ _id: userId }: LoggedinUser, newUserData: UpdateUserInput) {
     return await this.userModel.findByIdAndUpdate(userId, newUserData, {
       new: true,
     });
@@ -26,8 +23,12 @@ export class UserService {
     return await this.userModel.findByIdAndUpdate(userId, data);
   }
 
-  async findUserById(userId: string): Promise<User> {
+  async findUserById(userId: string | Types.ObjectId): Promise<User> {
     return await this.userModel.findOne({ _id: userId });
+  }
+
+  async findUserByIds(userIds: string[] | Types.ObjectId[]): Promise<User[]> {
+    return await this.userModel.find({ _id: { $in: userIds } });
   }
 
   async findByETHAddress(ethAddress: string): Promise<UserDocument> {

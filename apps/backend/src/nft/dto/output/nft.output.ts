@@ -1,4 +1,5 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Selling } from '../../../selling/dto/output/selling.output';
 import { User } from '../../../user/dto/output/user.output';
 
 @ObjectType()
@@ -8,6 +9,15 @@ export class NftOwner {
 
   @Field()
   supply: number;
+}
+
+@ObjectType()
+export class NftSelling {
+  @Field((type) => Selling, { nullable: true })
+  masterSelling?: Selling;
+
+  @Field((type) => [Selling], { nullable: true })
+  licenseSellings?: Selling[];
 }
 
 @ObjectType()
@@ -39,6 +49,9 @@ export class Nft {
   @Field()
   fileUrl: string;
 
+  @Field((type) => Int)
+  chainId: number;
+
   @Field()
   filePictureUrl: string;
 
@@ -56,4 +69,7 @@ export class Nft {
 
   @Field((type) => NftOwner)
   masterOwner: NftOwner;
+
+  @Field((type) => NftSelling)
+  sellings: NftSelling;
 }

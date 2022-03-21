@@ -39,9 +39,37 @@ type Auth {
   user: AuthUser
 }
 
+type SellingVoucher {
+  nftContractAddress: String!
+  price: Float!
+  sellCount: Int!
+  tokenUri: String!
+  tokenId: Int!
+  supply: Int!
+  isMaster: Boolean!
+  signature: String!
+  currency: String!
+}
+
+type Selling {
+  id: String!
+  seller: User!
+  buyers: [NftOwner!]!
+  sellingVoucher: SellingVoucher!
+  nftType: String!
+  marketplaceContractAddress: String!
+  sellingStatus: String!
+  transactionHash: String
+}
+
 type NftOwner {
   user: User!
   supply: Float!
+}
+
+type NftSelling {
+  masterSelling: Selling
+  licenseSellings: [Selling!]
 }
 
 type NftMetadata {
@@ -56,23 +84,26 @@ type Nft {
   contractAddress: String!
   ipfsUrl: String!
   fileUrl: String!
+  chainId: Int!
   filePictureUrl: String!
   transactionHash: String
   metadata: NftMetadata!
   creator: User
   licenseOwners: [NftOwner!]
   masterOwner: NftOwner!
+  sellings: NftSelling!
 }
 
 type Query {
   user(ethAddress: String!): User
   me: User!
-  nfts(filter: NftsFilter, limit: Float!, skip: Float!): [Nft!]
+  nfts(skip: Int!, limit: Int!, filter: NftsFilter): [Nft!]
   nft(filter: NftFilter!): Nft
 }
 
 input NftsFilter {
-  creatorEthAddress: String!
+  creatorEthAddress: String
+  hasSelling: Boolean
 }
 
 input NftFilter {
@@ -87,9 +118,9 @@ type Mutation {
   uploadProfilePicture(file: Upload!): User!
   generateVerificationToken(data: VerificationTokenInput!): Int!
   login(data: LoginInput!): Auth!
-  createNft(data: NftInput!, pictureFile: Upload!, NFTFile: Upload!): Nft!
-  verifyMintedNFT(input: VerifyNftInput!): Nft!
+  createNft(NFTFile: Upload!, pictureFile: Upload!, data: NftInput!): Nft!
   unpinAll: Boolean!
+  createSelling(createSellingInput: CreateSellingInput!): Selling!
 }
 
 input UpdateUserInput {
@@ -129,18 +160,19 @@ input NftMetadataInput {
   description: String!
 }
 
-input VerifyNftInput {
-  id: String!
-  mintVoucher: MintVoucher!
+input CreateSellingInput {
+  nftId: String!
+  sellingVoucher: SellingVoucherInput!
 }
 
-input MintVoucher {
-  tokenId: Float!
+input SellingVoucherInput {
   nftContractAddress: String!
   price: Float!
-  sellCount: Float!
+  sellCount: Int!
   tokenUri: String!
-  supply: Float!
+  tokenId: Int!
+  supply: Int!
   isMaster: Boolean!
   signature: String!
+  currency: String!
 }

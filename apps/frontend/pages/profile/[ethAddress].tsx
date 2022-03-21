@@ -12,7 +12,7 @@ import { USER, User } from '../../hooks/useProfile'
 import { generateShortEthAddress } from '../../utils/common'
 import Button from '../../components/common/Button'
 import { PorfileSocialBar } from '../../components/profile/ProfileSocialBar'
-import { GET_NFTS } from '../marketplace'
+import { GET_NFTS } from '../../common/graphql/queries/get-nfts.query'
 import { useAuthContext } from '../../context/AuthContext'
 import Custom404 from '../404'
 
@@ -68,14 +68,10 @@ export default function Profile({
             </div>
             <div className="col-span-3">
               {showEditProfile && isMe ? (
-                <div className="flex items-center justify-center">
-                  <div className="bg-grey-dark rounded-3xl p-16">
-                    <EditProfileForm
-                      user={activeUser}
-                      setShowEditProfile={setShowEditProfile}
-                    />
-                  </div>
-                </div>
+                <EditProfileForm
+                  user={activeUser}
+                  setShowEditProfile={setShowEditProfile}
+                />
               ) : (
                 <div className="flex flex-col m-16">
                   <div className="grid grid-cols-4">

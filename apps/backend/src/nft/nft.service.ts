@@ -1,15 +1,14 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Nft, NftDocument } from './nft.schema';
 import { User } from '../user/user.schema';
 import { TagService } from '../tag/tag.service';
-import { VerifyNftInput } from './dto/input/verify-nft.input';
 import { NftsFilter } from './dto/input/nfts-filter.input';
 import { UserService } from '../user/user.service';
-import * as sigUtil from '@metamask/eth-sig-util';
 import { NftFilter } from './dto/input/nft-filter.input';
+
 export interface CreateNftMetadata {
   name: string;
   description: string;
@@ -58,18 +57,18 @@ export class NftService {
         ipfsUrl: createNftInput.ipfsUrl,
         fileUrl: createNftInput.fileUrl,
         filePictureUrl: createNftInput.filePictureUrl,
-        creator: createNftInput.user,
+        creator: createNftInput.user._id,
         tags: nftTagsObjectIds,
         transactionHash: createNftInput.transactionHash ? createNftInput.transactionHash : '',
         chainId: createNftInput.chainId ? createNftInput.chainId : 0,
         supply: createNftInput.supply,
         masterOwner: {
-          user: createNftInput.user,
+          user: createNftInput.user._id,
           supply: 1,
         },
         licenseOwners: [
           {
-            user: createNftInput.user,
+            user: createNftInput.user._id,
             supply: createNftInput.supply,
           },
         ],
@@ -114,57 +113,6 @@ export class NftService {
       { ...nftData },
       { new: true },
     );
-  }
-
-  async verifyNft(input: VerifyNftInput, ethAddress: string): Promise<Nft> {
-    const mintVoucherTypes = {
-      EIP712Domain: [
-        { name: 'name', type: 'string' },
-        { name: 'version', type: 'string' },
-        { name: 'chainId', type: 'uint256' },
-        { name: 'verifyingContract', type: 'address' },
-      ],
-      MINTVoucher: [
-        { name: 'tokenId', type: 'uint256' },
-        { name: 'nftContractAddress', type: 'address' },
-        { name: 'price', type: 'uint256' },
-        { name: 'sellCount', type: 'uint256' },
-        { name: 'tokenUri', type: 'string' },
-        { name: 'supply', type: 'uint256' },
-        { name: 'isMaster', type: 'bool' },
-      ],
-    };
-
-    const mintedNft = await this.nftModel.findOne({ _id: input.id });
-
-    const address = sigUtil.recoverTypedSignature({
-      data: {
-        types: mintVoucherTypes,
-        primaryType: 'MINTVoucher',
-        domain: {
-          name: 'SV-Voucher',
-          version: '1',
-          chainId: mintedNft.chainId,
-          verifyingContract: this.configService.get('MARKET_CONTRACT_ADDRESS'),
-        },
-        message: {
-          tokenId: input.mintVoucher.tokenId,
-          nftContractAddress: input.mintVoucher.nftContractAddress,
-          price: input.mintVoucher.price,
-          sellCount: input.mintVoucher.sellCount,
-          tokenUri: input.mintVoucher.tokenUri,
-          supply: input.mintVoucher.supply,
-          isMaster: input.mintVoucher.isMaster,
-        },
-      },
-      signature: input.mintVoucher.signature,
-      version: sigUtil.SignTypedDataVersion.V4,
-    });
-
-    if (address.toLowerCase() !== ethAddress.toLowerCase()) {
-      throw new ForbiddenException('Signature invalid!');
-    }
-    return await this.nftModel.findOneAndUpdate({ _id: input.id }, { verified: true }, { new: true });
   }
 
   async setTokenId(

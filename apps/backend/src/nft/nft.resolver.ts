@@ -1,4 +1,4 @@
-import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { Args, Int, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { NftService } from './nft.service';
 import { Nft } from './dto/output/nft.output';
 import { GraphQLUpload, FileUpload } from 'graphql-upload';
@@ -9,13 +9,15 @@ import { IPFSService } from '../ipfs/ipfs.service';
 import { ConfigService } from '@nestjs/config';
 import { NftFilter } from './dto/input/nft-filter.input';
 import { NftsFilter } from './dto/input/nfts-filter.input';
-import { ForbiddenException, UseGuards } from '@nestjs/common';
+import { ForbiddenException, forwardRef, Inject, UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from '../auth/gql-auth.guard';
 import { CurrentUser, LoggedinUser } from '../user/decorators/user.decorator';
 import { Nft as NftSchema } from './nft.schema';
 import { UserService } from '../user/user.service';
 import { User } from '../user/user.schema';
-import { VerifyNftInput } from './dto/input/verify-nft.input';
+import { NftOwner } from './dto/output/nft.output';
+import { NftSelling, SellingService } from '../selling/selling.service';
+
 @Resolver(() => Nft)
 export class NftResolver {
   constructor(
@@ -24,6 +26,8 @@ export class NftResolver {
     private ipfsService: IPFSService,
     private configService: ConfigService,
     private userService: UserService,
+    @Inject(forwardRef(() => SellingService))
+    private sellingService: SellingService,
   ) {}
 
   @UseGuards(GqlAuthGuard)
@@ -61,7 +65,7 @@ export class NftResolver {
       return await this.nftService.createNft({
         metadata,
         ipfsUrl: ipfsMetadataUrl,
-        contractAddress: this.configService.get('ERC721_CONTRACT_ADDRESS'),
+        contractAddress: this.configService.get('MASTER_CONTRACT_ADDRESS'),
         fileUrl: fileNFTUrl,
         filePictureUrl,
         user,
@@ -73,21 +77,13 @@ export class NftResolver {
     }
   }
 
-  @UseGuards(GqlAuthGuard)
-  @Mutation(() => Nft)
-  async verifyMintedNFT(
-    @Args('input') input: VerifyNftInput,
-    @CurrentUser() user: LoggedinUser,
-  ): Promise<NftSchema> {
-    return await this.nftService.verifyNft(input, user.ethAddress);
-  }
-
   @Query(() => [Nft], { nullable: true })
   async nfts(
-    @Args('skip') skip: number,
-    @Args('limit') limit: number,
+    @Args('skip', { type: () => Int }) skip: number,
+    @Args('limit', { type: () => Int }) limit: number,
     @Args('filter', { nullable: true }) filter?: NftsFilter,
-  ): Promise<NftSchema[]> {
+  ) {
+    //TODO: implement hasSellings filter!
     return await this.nftService.getNfts(limit, skip, filter);
   }
 
@@ -103,10 +99,42 @@ export class NftResolver {
   }
 
   @ResolveField()
-  async creator(@Parent() nft: Nft): Promise<User> {
-    if (!nft?.creator?._id) {
+  async creator(@Parent() nft: NftSchema): Promise<User> {
+    if (!nft?.creator) {
       return;
     }
-    return await this.userService.findUserById(nft.creator._id.toString());
+    return await this.userService.findUserById(nft.creator);
+  }
+
+  @ResolveField()
+  async masterOwner(@Parent() nft: NftSchema): Promise<NftOwner> {
+    if (!nft?.masterOwner?.user) {
+      return;
+    }
+    const masterOwnerUser = await this.userService.findUserById(nft.masterOwner.user);
+    return { user: masterOwnerUser, supply: nft.masterOwner.supply };
+  }
+
+  @ResolveField()
+  async licenseOwners(@Parent() nft: NftSchema): Promise<NftOwner[]> {
+    if (!nft?.licenseOwners) {
+      return;
+    }
+    const licenseOwnersUser = await this.userService.findUserByIds(
+      nft.licenseOwners.map((licenseOwner) => licenseOwner.user),
+    );
+
+    return licenseOwnersUser.map((licenseOwnerUser) => ({
+      user: licenseOwnerUser,
+      supply: nft.licenseOwners.find(
+        (licenseOwner) => licenseOwner.user.toString() === licenseOwnerUser._id.toString(),
+      ).supply,
+    }));
+  }
+
+  @ResolveField()
+  async sellings(@Parent() nft: NftSchema): Promise<NftSelling> {
+    const nftSellings = await this.sellingService.getNftSellingByNftId(nft._id);
+    return nftSellings;
   }
 }
