@@ -85,6 +85,7 @@ export const SellingSchema = SchemaFactory.createForClass(Selling);
 
 SellingSchema.index({ createdAt: 1 });
 SellingSchema.index({ nft: 1 });
+SellingSchema.index({ nft: 1, sellingStatus: 1, nftType: 1 });
 SellingSchema.index({
   'sellingVoucher.nftContractAddress': 1,
   'sellingVoucher.tokenId': 1,

@@ -23,6 +23,11 @@ export type Voucher = {
   currency: string;
 };
 
+export type NftSelling = {
+  masterSelling: Selling;
+  licenseSellings: Selling[];
+};
+
 @Injectable()
 export class SellingService {
   constructor(
@@ -30,6 +35,17 @@ export class SellingService {
     @InjectModel(Nft.name) private nftModel: Model<NftDocument>,
     private configService: ConfigService,
   ) {}
+
+  async getNftSellingByNftId(nftId: string | Types.ObjectId): Promise<NftSelling> {
+    const sellingFilter = {
+      nft: nftId,
+      sellingStatus: SellingStatus.OPEN,
+    };
+    const masterSelling = await this.sellingModel.findOne({ ...sellingFilter, nftType: NftType.MASTER });
+    const licenseSellings = await this.sellingModel.find({ ...sellingFilter, nftType: NftType.LICENSE });
+
+    return { masterSelling, licenseSellings };
+  }
 
   async getOpenSellings(
     limitOfDocuments = 100,
@@ -62,12 +78,12 @@ export class SellingService {
         { name: 'chainId', type: 'uint256' },
         { name: 'verifyingContract', type: 'address' },
       ],
-      SellingVoucher: [
-        { name: 'tokenId', type: 'uint256' },
+      SVVoucher: [
         { name: 'nftContractAddress', type: 'address' },
         { name: 'price', type: 'uint256' },
         { name: 'sellCount', type: 'uint256' },
         { name: 'tokenUri', type: 'string' },
+        { name: 'tokenId', type: 'uint256' },
         { name: 'supply', type: 'uint256' },
         { name: 'isMaster', type: 'bool' },
         { name: 'currency', type: 'string' },
@@ -94,16 +110,16 @@ export class SellingService {
     const address = sigUtil.recoverTypedSignature({
       data: {
         types: sellingVoucherTypes,
-        primaryType: 'SellingVoucher',
+        primaryType: 'SVVoucher',
         domain: {
-          name: 'NFTVoucher',
+          name: 'SVVoucher',
           version: '1',
           chainId: mintedNft.chainId,
           verifyingContract: this.configService.get('MARKET_CONTRACT_ADDRESS'),
         },
         message: {
-          tokenId: voucher.tokenId,
           nftContractAddress: voucher.nftContractAddress,
+          tokenId: voucher.tokenId,
           price: voucher.price,
           sellCount: voucher.sellCount,
           tokenUri: voucher.tokenUri,
@@ -116,7 +132,6 @@ export class SellingService {
       version: sigUtil.SignTypedDataVersion.V4,
     });
 
-    console.log('seller', seller.ethAddress);
     return address.toLowerCase() !== seller.ethAddress.toLowerCase() ? false : true;
   }
 

@@ -2,16 +2,7 @@ import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
 import { User } from '../../../user/dto/output/user.output';
 import { NftType } from '../../../common/enums/nftType.enum';
 import { SellingStatus } from '../../../common/enums/sellingStatus.enum';
-import { Nft } from '../../../nft/dto/output/nft.output';
-
-@ObjectType()
-export class Buyer {
-  @Field()
-  user: User;
-
-  @Field((type) => Int)
-  supply: number;
-}
+import { NftOwner } from '../../../nft/dto/output/nft.output';
 
 @ObjectType()
 class SellingVoucher {
@@ -51,8 +42,8 @@ export class Selling {
   @Field()
   seller: User;
 
-  @Field((type) => [Buyer])
-  buyers?: [Buyer];
+  @Field((type) => [NftOwner])
+  buyers?: [NftOwner];
 
   @Field()
   sellingVoucher: SellingVoucher;
@@ -68,7 +59,4 @@ export class Selling {
 
   @Field({ nullable: true })
   transactionHash?: string;
-
-  @Field({ nullable: true })
-  nft?: Nft;
 }

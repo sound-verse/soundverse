@@ -39,9 +39,37 @@ type Auth {
   user: AuthUser
 }
 
+type SellingVoucher {
+  nftContractAddress: String!
+  price: Float!
+  sellCount: Int!
+  tokenUri: String!
+  tokenId: Int!
+  supply: Int!
+  isMaster: Boolean!
+  signature: String!
+  currency: String!
+}
+
+type Selling {
+  id: String!
+  seller: User!
+  buyers: [NftOwner!]!
+  sellingVoucher: SellingVoucher!
+  nftType: String!
+  marketplaceContractAddress: String!
+  sellingStatus: String!
+  transactionHash: String
+}
+
 type NftOwner {
   user: User!
   supply: Float!
+}
+
+type NftSelling {
+  masterSelling: Selling
+  licenseSellings: [Selling!]
 }
 
 type NftMetadata {
@@ -63,35 +91,7 @@ type Nft {
   creator: User
   licenseOwners: [NftOwner!]
   masterOwner: NftOwner!
-}
-
-type Buyer {
-  user: User!
-  supply: Int!
-}
-
-type SellingVoucher {
-  nftContractAddress: String!
-  price: Float!
-  sellCount: Int!
-  tokenUri: String!
-  tokenId: Int!
-  supply: Int!
-  isMaster: Boolean!
-  signature: String!
-  currency: String!
-}
-
-type Selling {
-  id: String!
-  seller: User!
-  buyers: [Buyer!]!
-  sellingVoucher: SellingVoucher!
-  nftType: String!
-  marketplaceContractAddress: String!
-  sellingStatus: String!
-  transactionHash: String
-  nft: Nft
+  sellings: NftSelling!
 }
 
 type Query {
@@ -99,11 +99,11 @@ type Query {
   me: User!
   nfts(skip: Int!, limit: Int!, filter: NftsFilter): [Nft!]
   nft(filter: NftFilter!): Nft
-  sellings(skip: Int!, limit: Int!, filter: SellingsFilter): [Selling!]
 }
 
 input NftsFilter {
-  creatorEthAddress: String!
+  creatorEthAddress: String
+  hasSelling: Boolean
 }
 
 input NftFilter {
@@ -111,13 +111,6 @@ input NftFilter {
   tokenId: Float
   id: String
   ipfsUrl: String
-}
-
-input SellingsFilter {
-  nftType: String
-  nftId: String
-  nftContractAddress: String
-  tokenId: Int
 }
 
 type Mutation {

@@ -6,36 +6,27 @@ import { ProfileName } from '../profile'
 import { AudioPlayer } from '../AudioPlayer/AudioPlayer'
 import cn from 'classnames'
 import { NftType } from '../../common/types/nft-type.enum'
-
-export type SoundCardI = {
-  id: string
-  pictureUrl: string
-  name: string
-  licenses: number
-  musicUrl: string
-  creatorName: string
-  creatorEthAddress: string
-  tokenId: number
-  nftType: NftType
-}
+import { Nft, Selling } from '../../common/graphql/schema'
 
 export type SoundCardProp = {
-  soundCard: SoundCardI
+  nftType: NftType
+  nft: Nft
   playingCardId?: string
   onMusicClick?(): void
   className?: string
 }
 
 function SoundCard({
-  soundCard,
+  nft,
   playingCardId = '',
   className,
+  nftType,
   onMusicClick = () => {},
 }: SoundCardProp) {
   const [playCard, setPlayCard] = useState<boolean>(false)
 
   useEffect(() => {
-    setPlayCard(playingCardId === soundCard.id ? true : false)
+    setPlayCard(playingCardId === nft.id ? true : false)
   }, [playingCardId])
 
   const handleMusicClick = () => {
@@ -45,36 +36,34 @@ function SoundCard({
   const rootClassName = cn(
     styles.soundCardWrapper,
     {
-      [styles.master]: soundCard.nftType === NftType.MASTER,
-      [styles.license]: soundCard.nftType === NftType.LICENSE,
+      [styles.master]: nftType === NftType.MASTER,
+      [styles.license]: nftType === NftType.LICENSE,
     },
     className
   )
 
-  if (!soundCard.pictureUrl) {
+  if (!nft.filePictureUrl) {
     return
   }
   return (
     <div className={rootClassName}>
       <Link
-        href={`/${
-          soundCard.nftType === NftType.MASTER ? 'master' : 'license'
-        }/${soundCard.id}`}
+        href={`/${nftType === NftType.MASTER ? 'master' : 'license'}/${nft.id}`}
       >
         <a>
           <div className={styles.soundCardHeaderTop}>
-            {soundCard.nftType === NftType.MASTER ? 'Master' : 'License'}
+            {nftType === NftType.MASTER ? 'Master' : 'License'}
           </div>
           <div className={styles.soundCardHeaderBottom}>
             <div className="font-semibold text-xl">
-              {soundCard.name.length > 45
-                ? `${soundCard.name.substring(0, 45)}...`
-                : soundCard.name}
+              {nft.metadata.name.length > 45
+                ? `${nft.metadata.name.substring(0, 45)}...`
+                : nft.metadata.name}
             </div>
             <div className={styles.creatorName}>
               <ProfileName
-                ethAddress={soundCard.creatorEthAddress}
-                name={soundCard.creatorName}
+                ethAddress={nft.creator.ethAddress}
+                name={nft.creator.name}
                 short={true}
                 className=""
               />
@@ -84,25 +73,58 @@ function SoundCard({
       </Link>
       <div className={styles.mplaceImage}>
         <div className={styles.blur}>
-          <Image src={soundCard.pictureUrl} layout="fill" objectFit="cover" />
+          <Image src={nft.filePictureUrl} layout="fill" objectFit="cover" />
         </div>
-        <Image src={soundCard.pictureUrl} layout="fill" objectFit="contain" />
+        <Image src={nft.filePictureUrl} layout="fill" objectFit="contain" />
       </div>
       <div className={styles.soundCardAudio} onClick={handleMusicClick}>
         <AudioPlayer
-          url={soundCard.musicUrl}
+          url={nft.fileUrl}
           className={styles.audioWaves}
           play={playCard}
-          name={soundCard.name}
-          creatorName={soundCard.creatorName}
-          creatorEthAddress={soundCard.creatorEthAddress}
-          trackPictureUrl={soundCard.pictureUrl}
-          id={soundCard.id}
-          nftType={soundCard.nftType}
+          name={nft.metadata.name}
+          creatorName={nft.creator.name}
+          creatorEthAddress={nft.creator.ethAddress}
+          trackPictureUrl={nft.filePictureUrl}
+          id={nft.id}
+          nftType={nftType}
         />
       </div>
       <div className={styles.soundCardFooter}>
-        <div></div>
+        {nftType === NftType.MASTER ? (
+          nft.sellings.masterSelling ? (
+            <div className="flex flex-col w-full h-full ml-5 justify-center">
+              <div className="text-grey-light">
+                Price:
+                <span className="font-bold ml-2 text-white">
+                  {nft.sellings.masterSelling.sellingVoucher.price}{' '}
+                  {nft.sellings.masterSelling.sellingVoucher.currency}
+                </span>
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-col w-full h-full ml-5 justify-center">
+              <div className="text-grey-light">Nft not listed</div>
+            </div>
+          )
+        ) : nft.sellings.licenseSellings[0] ? (
+          <div className="flex flex-col w-full h-full ml-5 justify-center">
+            <div className="font-bold">
+              {nft.sellings.licenseSellings.length} listings
+            </div>
+            <div className=" text-white">
+              Lowest ask{' '}
+              <span className="font-bold ml-2 text-white">
+                {nft.sellings.licenseSellings[0]?.sellingVoucher.price}{' '}
+                {nft.sellings.licenseSellings[0]?.sellingVoucher.currency}
+              </span>
+            </div>
+          </div>
+        ) : (
+          <div className="flex flex-col w-full h-full ml-5 justify-center">
+            <div className="text-grey-light">Nft not listed</div>
+          </div>
+        )}
       </div>
     </div>
   )

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { NftResolver } from './nft.resolver';
 import { Nft, NftSchema } from './nft.schema';
@@ -9,9 +9,11 @@ import { IPFSModule } from '../ipfs/ifps.module';
 import { FileService } from '../file/file.service';
 import { UserModule } from '../user/user.module';
 import { TagModule } from '../tag/tag.module';
+import { SellingModule } from '../selling/selling.module';
 
 @Module({
   imports: [
+    forwardRef(() => SellingModule),
     IPFSModule,
     CoreModule,
     MongooseModule.forFeature([{ name: Nft.name, schema: NftSchema }]),

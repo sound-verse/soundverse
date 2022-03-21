@@ -19,12 +19,12 @@ import MarketContractAbi from '../../common/artifacts/MarketContract.json'
 import { useCallback, useEffect, useState } from 'react'
 
 export const sellingVoucherTypes = {
-  SellingVoucher: [
-    { name: 'tokenId', type: 'uint256' },
+  SVVoucher: [
     { name: 'nftContractAddress', type: 'address' },
     { name: 'price', type: 'uint256' },
     { name: 'sellCount', type: 'uint256' },
     { name: 'tokenUri', type: 'string' },
+    { name: 'tokenId', type: 'uint256' },
     { name: 'supply', type: 'uint256' },
     { name: 'isMaster', type: 'bool' },
     { name: 'currency', type: 'string' },
@@ -119,7 +119,7 @@ export const useCreateSelling = () => {
     }
 
     const signingDomain = {
-      name: 'NFTVoucher',
+      name: 'SVVoucher',
       version: '1',
       verifyingContract: marketContractAddress,
       chainId,

@@ -5,7 +5,6 @@ import Custom404 from '../404'
 import SingleNftPage from '../../components/SingleNftPage/SingleNftPage'
 import { GET_NFT } from '../../common/graphql/queries/get-nft.query'
 import { Nft, Selling } from '../../common/graphql/schema'
-import { GET_SELLINGS } from '../../common/graphql/queries/get-sellings.query'
 import { NftType } from '../../common/types/nft-type.enum'
 
 type ProfileProps = {
@@ -18,18 +17,12 @@ type ProfileProps = {
   nftSellings: Selling[]
 }
 
-export default function LicenseNft({ nft, nftSellings }: ProfileProps) {
+export default function LicenseNft({ nft }: ProfileProps) {
   if (!nft) {
     return <Custom404 />
   }
 
-  return (
-    <SingleNftPage
-      nft={nft}
-      nftType={NftType.LICENSE}
-      nftSellings={nftSellings}
-    />
-  )
+  return <SingleNftPage nft={nft} nftType={NftType.LICENSE} />
 }
 
 export async function getServerSideProps(context) {
@@ -40,19 +33,10 @@ export async function getServerSideProps(context) {
     query: GET_NFT,
     variables: { filter: { id } },
   })
-  const nftSellings = await client.apolloClient.query({
-    query: GET_SELLINGS,
-    variables: {
-      filter: { nftId: id, nftType: 'LICENSE' },
-      limit: 1000,
-      skip: 0,
-    },
-  })
 
   return {
     props: {
       nft: nft.data.nft,
-      nftSellings: nftSellings.data.sellings,
       query: {
         id,
       },

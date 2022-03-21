@@ -9,13 +9,14 @@ import { IPFSService } from '../ipfs/ipfs.service';
 import { ConfigService } from '@nestjs/config';
 import { NftFilter } from './dto/input/nft-filter.input';
 import { NftsFilter } from './dto/input/nfts-filter.input';
-import { ForbiddenException, UseGuards } from '@nestjs/common';
+import { ForbiddenException, forwardRef, Inject, UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from '../auth/gql-auth.guard';
 import { CurrentUser, LoggedinUser } from '../user/decorators/user.decorator';
 import { Nft as NftSchema } from './nft.schema';
 import { UserService } from '../user/user.service';
 import { User } from '../user/user.schema';
 import { NftOwner } from './dto/output/nft.output';
+import { NftSelling, SellingService } from '../selling/selling.service';
 
 @Resolver(() => Nft)
 export class NftResolver {
@@ -25,6 +26,8 @@ export class NftResolver {
     private ipfsService: IPFSService,
     private configService: ConfigService,
     private userService: UserService,
+    @Inject(forwardRef(() => SellingService))
+    private sellingService: SellingService,
   ) {}
 
   @UseGuards(GqlAuthGuard)
@@ -80,6 +83,7 @@ export class NftResolver {
     @Args('limit', { type: () => Int }) limit: number,
     @Args('filter', { nullable: true }) filter?: NftsFilter,
   ) {
+    //TODO: implement hasSellings filter!
     return await this.nftService.getNfts(limit, skip, filter);
   }
 
@@ -126,5 +130,11 @@ export class NftResolver {
         (licenseOwner) => licenseOwner.user.toString() === licenseOwnerUser._id.toString(),
       ).supply,
     }));
+  }
+
+  @ResolveField()
+  async sellings(@Parent() nft: NftSchema): Promise<NftSelling> {
+    const nftSellings = await this.sellingService.getNftSellingByNftId(nft._id);
+    return nftSellings;
   }
 }

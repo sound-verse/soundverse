@@ -1,33 +1,20 @@
-import { UseGuards } from '@nestjs/common';
+import { forwardRef, Inject, UseGuards } from '@nestjs/common';
 import { Args, Int, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { GqlAuthGuard } from '../auth/gql-auth.guard';
 import { CurrentUser, LoggedinUser } from '../user/decorators/user.decorator';
 import { CreateSellingInput } from './dto/input/create-selling.input';
 import { SellingsFilter } from './dto/input/sellings-filter.input';
-import { Buyer, Selling } from './dto/output/selling.output';
+import { Selling } from './dto/output/selling.output';
 import { SellingService } from './selling.service';
 import { User } from '../user/dto/output/user.output';
 import { UserService } from '../user/user.service';
 import { Selling as SellingSchema } from './selling.schema';
 import { NftService } from '../nft/nft.service';
-import { Nft } from '../nft/nft.schema';
+import { NftOwner } from '../nft/dto/output/nft.output';
 
 @Resolver(() => Selling)
 export class SellingResolver {
-  constructor(
-    private sellingService: SellingService,
-    private nftService: NftService,
-    private userService: UserService,
-  ) {}
-
-  @Query(() => [Selling], { nullable: true })
-  async sellings(
-    @Args('skip', { type: () => Int }) skip: number,
-    @Args('limit', { type: () => Int }) limit: number,
-    @Args('filter', { nullable: true }) filter?: SellingsFilter,
-  ) {
-    return await this.sellingService.getOpenSellings(limit, skip, filter);
-  }
+  constructor(private sellingService: SellingService, private userService: UserService) {}
 
   @UseGuards(GqlAuthGuard)
   @Mutation(() => Selling)
@@ -47,7 +34,7 @@ export class SellingResolver {
   }
 
   @ResolveField()
-  async buyers(@Parent() selling: SellingSchema): Promise<Buyer[]> {
+  async buyers(@Parent() selling: SellingSchema): Promise<NftOwner[]> {
     if (!selling.buyers) {
       return;
     }
@@ -57,14 +44,5 @@ export class SellingResolver {
       user: buyerUser,
       supply: selling.buyers.find((buyer) => buyer.user.toString() === buyerUser._id.toString()).supply,
     }));
-  }
-
-  @ResolveField()
-  async nft(@Parent() selling: SellingSchema): Promise<Nft> {
-    if (!selling.nft) {
-      return;
-    }
-    const nft = await this.nftService.findNft({ id: selling.nft._id.toString() });
-    return nft;
   }
 }

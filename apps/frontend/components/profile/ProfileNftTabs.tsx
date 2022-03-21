@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Image from 'next/image'
 import Blockies from 'react-blockies'
 import { generateShortEthAddress } from '../../utils/common'
-import SoundCard, { SoundCardI } from '../marketplace/SoundCard'
+import SoundCard from '../marketplace/SoundCard'
 import styles from './ProfileNftTabs.module.css'
 import { connectContractToSigner } from '@usedapp/core'
 import { NftType } from '../../common/types/nft-type.enum'
@@ -36,55 +36,29 @@ export const ProfileNftTabs = ({
       </div>
       {activeTab === PROFILE_TAB.CREATED && (
         <div className="grid xl:grid-cols-2 2xl:grid-cols-3 mt-16 gap-10">
-          {createdNfts.map((data, key) => {
-            if (!data.filePictureUrl) {
+          {createdNfts.map((nft, key) => {
+            if (!nft.filePictureUrl) {
               return
             }
 
             return (
               <div key={`soundcard-wrapper-${key}`}>
                 <div className="spacer">
-                  <SoundCard
-                    soundCard={{
-                      pictureUrl: data.filePictureUrl,
-                      name: data.metadata.name,
-                      creatorName: data.creator.name,
-                      creatorEthAddress: data.creator.ethAddress,
-                      licenses: data.supply,
-                      musicUrl: data.fileUrl,
-                      tokenId: data.tokenId,
-                      id: data.id,
-                      nftType: NftType.MASTER,
-                    }}
-                    key={key}
-                  />
+                  <SoundCard nft={nft} nftType={NftType.MASTER} key={key} />
                 </div>
               </div>
             )
           })}
 
-          {createdNfts.map((data, key) => {
-            if (!data.filePictureUrl) {
+          {createdNfts.map((nft, key) => {
+            if (!nft.filePictureUrl) {
               return
             }
 
             return (
               <div key={`soundcard-wrapper-${key}`}>
                 <div className="spacer">
-                  <SoundCard
-                    soundCard={{
-                      pictureUrl: data.filePictureUrl,
-                      name: data.metadata.name,
-                      creatorName: data.creator.name,
-                      creatorEthAddress: data.creator.ethAddress,
-                      licenses: data.supply,
-                      musicUrl: data.fileUrl,
-                      tokenId: data.tokenId,
-                      id: data.id,
-                      nftType: NftType.LICENSE,
-                    }}
-                    key={key}
-                  />
+                  <SoundCard nft={nft} nftType={NftType.LICENSE} key={key} />
                 </div>
               </div>
             )

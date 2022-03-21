@@ -14,20 +14,18 @@ import { useRouter } from 'next/router'
 import { useBuy } from '../../hooks/contracts/useBuy'
 import toast from 'react-hot-toast'
 import { useUnlistSelling } from '../../hooks/contracts/useUnlistSelling'
+import { BuyLicense } from '../selling/BuyLicense'
 
 type SingleNftPageProps = {
   nft: Nft
-  nftSellings: Selling[]
   nftType: NftType
 }
 
-export default function SingleNftPage({
-  nft,
-  nftType,
-  nftSellings,
-}: SingleNftPageProps) {
+export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
   const { authUser } = useAuthContext()
   const [showCreateListing, setShowCreateListing] = useState<boolean>(false)
+  const [showBuyLicense, setShowBuyLicense] = useState<boolean>(false)
+  const [selectedSelling, setSelectedSelling] = useState<Selling>(undefined)
   const router = useRouter()
 
   useEffect(() => {
@@ -54,10 +52,17 @@ export default function SingleNftPage({
 
   const handleBuyNft = async () => {
     await buyNft({
-      owner,
       nft,
-      selling: nftSellings[0],
-      amountToBuy: nftSellings[0].sellingVoucher.supply,
+      selling: nft.sellings.masterSelling,
+      amountToBuy: 1,
+    })
+  }
+
+  const handleBuyLicense = async () => {
+    await buyNft({
+      nft,
+      selling: selectedSelling,
+      amountToBuy: 1,
     })
   }
 
@@ -78,20 +83,22 @@ export default function SingleNftPage({
         <main className="mx-auto">
           <div className="grid grid-cols-1 xl:grid-cols-4 xl:h-screen text-white">
             <div className="col-span-1">
-              <div className="flex flex-col m-10">
-                <SoundCard
-                  soundCard={{
-                    id: nft.id,
-                    creatorEthAddress: nft.creator.ethAddress,
-                    creatorName: nft.creator.name,
-                    licenses: nft.supply,
-                    musicUrl: nft.fileUrl,
-                    name: nft.metadata.name,
-                    pictureUrl: nft.filePictureUrl,
-                    tokenId: nft.tokenId,
-                    nftType,
-                  }}
-                />
+              <div className="flex flex-col mt-10 mb-5">
+                <SoundCard className="h-full" nft={nft} nftType={nftType} />
+                {selectedSelling && (
+                  <div className="flex flex-col mt-10">
+                    <div className="font-bold text-3xl w-64 text-right mb-5">
+                      {selectedSelling.sellingVoucher.price.toFixed(2)}{' '}
+                      {selectedSelling.sellingVoucher.currency}
+                    </div>
+                    <Button
+                      text="BUY NOW"
+                      type="purple"
+                      className="w-64"
+                      onClick={handleBuyLicense}
+                    />
+                  </div>
+                )}
               </div>
             </div>
             <div className="col-span-3">
@@ -165,6 +172,28 @@ export default function SingleNftPage({
                     />
                   </div>
                 </div>
+              ) : showBuyLicense ? (
+                <div className="flex flex-col items-center justify-center mt-12">
+                  <div className="w-[50rem]">
+                    <div
+                      onClick={() => {
+                        setSelectedSelling(undefined)
+                        setShowBuyLicense(false)
+                      }}
+                      className="hover:text-purple cursor-pointer text-xl mb-10"
+                    >
+                      {'<- Back'}
+                    </div>
+                    <BuyLicense
+                      sellings={nft.sellings.licenseSellings}
+                      user={authUser}
+                      showSingleNftPage={(showBuyLicense) =>
+                        setShowBuyLicense(showBuyLicense)
+                      }
+                      setSelectedSelling={setSelectedSelling}
+                    />
+                  </div>
+                </div>
               ) : (
                 <div className="flex flex-col m-16">
                   <div className="flex flex-col p-10">
@@ -232,21 +261,46 @@ export default function SingleNftPage({
                       </div>
                     </div>
                     <div className="mt-10">
-                      {nftSellings[0] && (
-                        <div className="flex flex-col mb-10">
-                          <div className="flex mb-2">
-                            <div className="text-3xl text-bolder mr-2">
-                              {nftSellings[0].sellingVoucher.price.toFixed(2)}
+                      {NftType.MASTER
+                        ? nft.sellings.masterSelling && (
+                            <div className="flex flex-col mb-10">
+                              <div className="flex mb-2">
+                                <div className="text-3xl text-bolder mr-2">
+                                  {nft.sellings.masterSelling.sellingVoucher.price.toFixed(
+                                    2
+                                  )}
+                                </div>
+                                <div className="text-grey-medium text-sm">
+                                  {nft.sellings.masterSelling.sellingVoucher.currency.toUpperCase()}
+                                </div>
+                              </div>
+                              <div className="text-md text-grey-light">
+                                Lowest Ask
+                              </div>
                             </div>
-                            <div className="text-grey-medium text-sm">ETH</div>
-                          </div>
-                          <div className="text-md text-grey-light">
-                            Lowest Ask
-                          </div>
-                        </div>
-                      )}
+                          )
+                        : nft.sellings.licenseSellings[0] && (
+                            <div className="flex flex-col mb-10">
+                              <div className="flex mb-2">
+                                <div className="text-3xl text-bolder mr-2">
+                                  {nft.sellings.licenseSellings[0].sellingVoucher.price.toFixed(
+                                    2
+                                  )}
+                                </div>
+                                <div className="text-grey-medium text-sm">
+                                  {nft.sellings.licenseSellings[0].sellingVoucher.currency.toUpperCase()}
+                                </div>
+                              </div>
+                              <div className="text-md text-grey-light">
+                                Lowest Ask
+                              </div>
+                            </div>
+                          )}
                       {isMe ? (
-                        nftSellings.length ? (
+                        (nftType === NftType.MASTER &&
+                          nft.sellings.masterSelling) ||
+                        (nftType === NftType.LICENSE &&
+                          nft.sellings.licenseSellings[0]) ? (
                           <Button
                             text="Unlist Nft"
                             type="purple"
@@ -261,12 +315,21 @@ export default function SingleNftPage({
                             onClick={() => setShowCreateListing(true)}
                           />
                         )
-                      ) : nftSellings.length ? (
+                      ) : nftType === NftType.MASTER &&
+                        nft.sellings.masterSelling ? (
+                        <Button
+                          text="Select and BUY"
+                          type="purple"
+                          className="w-64"
+                          onClick={handleBuyNft}
+                        />
+                      ) : nftType === NftType.LICENSE &&
+                        nft.sellings.licenseSellings[0] ? (
                         <Button
                           text="BUY"
                           type="purple"
                           className="w-64"
-                          onClick={handleBuyNft}
+                          onClick={() => setShowBuyLicense(true)}
                         />
                       ) : (
                         <Button

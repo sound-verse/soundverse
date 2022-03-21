@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { SellingResolver } from './selling.resolver';
 import { Selling, SellingSchema } from './selling.schema';
@@ -14,7 +14,7 @@ import { Nft, NftSchema } from '../nft/nft.schema';
     MongooseModule.forFeature([{ name: Selling.name, schema: SellingSchema }]),
     MongooseModule.forFeature([{ name: Nft.name, schema: NftSchema }]),
     UserModule,
-    NftModule,
+    forwardRef(() => NftModule),
   ],
   providers: [SellingResolver, SellingService],
   exports: [SellingService],

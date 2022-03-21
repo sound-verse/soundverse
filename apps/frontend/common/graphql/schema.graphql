@@ -22,11 +22,6 @@ type AuthUser {
   website: String
 }
 
-type Buyer {
-  supply: Int!
-  user: User!
-}
-
 input CreateSellingInput {
   nftId: String!
   sellingVoucher: SellingVoucherInput!
@@ -58,6 +53,7 @@ type Nft {
   licenseOwners: [NftOwner!]
   masterOwner: NftOwner!
   metadata: NftMetadata!
+  sellings: NftSelling!
   supply: Float!
   tokenId: Float
   transactionHash: String
@@ -93,6 +89,11 @@ type NftOwner {
   user: User!
 }
 
+type NftSelling {
+  licenseSellings: [Selling!]
+  masterSelling: Selling
+}
+
 input NftsFilter {
   creatorEthAddress: String!
 }
@@ -101,15 +102,13 @@ type Query {
   me: User!
   nft(filter: NftFilter!): Nft
   nfts(filter: NftsFilter, limit: Int!, skip: Int!): [Nft!]
-  sellings(filter: SellingsFilter, limit: Int!, skip: Int!): [Selling!]
   user(ethAddress: String!): User
 }
 
 type Selling {
-  buyers: [Buyer!]!
+  buyers: [NftOwner!]!
   id: String!
   marketplaceContractAddress: String!
-  nft: Nft
   nftType: String!
   seller: User!
   sellingStatus: String!
@@ -139,13 +138,6 @@ input SellingVoucherInput {
   supply: Int!
   tokenId: Int!
   tokenUri: String!
-}
-
-input SellingsFilter {
-  nftContractAddress: String
-  nftId: String
-  nftType: String
-  tokenId: Int
 }
 
 input UpdateUserInput {

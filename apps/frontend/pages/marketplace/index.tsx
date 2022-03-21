@@ -4,16 +4,17 @@ import Layout from '../../components/layout'
 import SoundCard from '../../components/marketplace/SoundCard'
 import { gql, useQuery } from '@apollo/client'
 import { NftType } from '../../common/types/nft-type.enum'
-import { GET_SELLINGS } from '../../common/graphql/queries/get-sellings.query'
-import { QuerySellingsArgs, SellingsQuery } from '../../common/graphql/schema'
+import { GetNftsQuery } from '../../common/graphql/schema'
+import { GET_NFTS } from '../../common/graphql/queries/get-nfts.query'
 
 export default function Landing() {
-  const { loading, data } = useQuery<SellingsQuery>(GET_SELLINGS, {
+  //TODO: load nfts with hasSellings filter!
+  const { loading, data } = useQuery<GetNftsQuery>(GET_NFTS, {
     variables: { limit: 100, skip: 0 },
   })
   const [playingCardId, setPlayingCardId] = useState<string>('')
 
-  const sellings = loading ? [] : data?.sellings ? data.sellings : []
+  const nfts = loading ? [] : data?.nfts ? data.nfts : []
 
   const handleMusicClick = (activeCardId: string) => {
     setPlayingCardId(activeCardId)
@@ -40,36 +41,40 @@ export default function Landing() {
         <div className="big-wrapper">
           <div className="marketplace-wrapper">
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-10">
-              {sellings.map((selling, key) => {
-                const nft = selling.nft
+              {nfts.map((nft, key) => {
                 if (!nft.filePictureUrl) {
                   return
                 }
 
                 return (
-                  <div key={`soundcard-wrapper-${key}`}>
-                    <div className="spacer">
-                      <SoundCard
-                        soundCard={{
-                          pictureUrl: nft.filePictureUrl,
-                          name: nft.metadata.name,
-                          creatorName: nft.creator.name,
-                          creatorEthAddress: nft.creator.ethAddress,
-                          licenses: nft.supply,
-                          musicUrl: nft.fileUrl,
-                          tokenId: nft.tokenId,
-                          id: nft.id,
-                          nftType:
-                            selling.nftType === 'MASTER'
-                              ? NftType.MASTER
-                              : NftType.LICENSE,
-                        }}
-                        key={key}
-                        playingCardId={playingCardId}
-                        onMusicClick={() => handleMusicClick(nft.id)}
-                      />
-                    </div>
-                  </div>
+                  <>
+                    {nft.sellings.masterSelling && (
+                      <div key={`soundcard-wrapper-${key}`}>
+                        <div className="spacer">
+                          <SoundCard
+                            nft={nft}
+                            nftType={NftType.MASTER}
+                            key={key}
+                            playingCardId={playingCardId}
+                            onMusicClick={() => handleMusicClick(nft.id)}
+                          />
+                        </div>
+                      </div>
+                    )}
+                    {nft.sellings.licenseSellings[0] && (
+                      <div key={`soundcard-wrapper-${key}`}>
+                        <div className="spacer">
+                          <SoundCard
+                            nft={nft}
+                            nftType={NftType.LICENSE}
+                            key={key}
+                            playingCardId={playingCardId}
+                            onMusicClick={() => handleMusicClick(nft.id)}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </>
                 )
               })}
             </div>

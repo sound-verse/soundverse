@@ -9,7 +9,6 @@ import { useEffect, useState } from 'react'
 import * as sigUtil from '@metamask/eth-sig-util'
 
 export type BuyProps = {
-  owner: NftOwner
   nft: Nft
   selling: Selling
   amountToBuy: number
@@ -41,15 +40,14 @@ export const useBuy = () => {
   }, [state])
 
   const executeBuy = async () => {
-    console.log(buyProps.owner.user.ethAddress)
     if (!authUser || !chainId) {
       return
     }
-    verifySignature()
+
     try {
       await send(
         authUser.ethAddress,
-        buyProps.owner.user.ethAddress,
+        buyProps.selling.seller.ethAddress,
         buyProps.amountToBuy,
         buyProps.selling.sellingVoucher
       )
@@ -66,11 +64,11 @@ export const useBuy = () => {
         { name: 'chainId', type: 'uint256' },
         { name: 'verifyingContract', type: 'address' },
       ],
-      SellingVoucher: [
-        { name: 'tokenId', type: 'uint256' },
+      SVVoucher: [
         { name: 'nftContractAddress', type: 'address' },
         { name: 'price', type: 'uint256' },
         { name: 'sellCount', type: 'uint256' },
+        { name: 'tokenId', type: 'uint256' },
         { name: 'tokenUri', type: 'string' },
         { name: 'supply', type: 'uint256' },
         { name: 'isMaster', type: 'bool' },
@@ -81,9 +79,9 @@ export const useBuy = () => {
     const address = sigUtil.recoverTypedSignature({
       data: {
         types: sellingVoucherTypes,
-        primaryType: 'SellingVoucher',
+        primaryType: 'SVVoucher',
         domain: {
-          name: 'NFTVoucher',
+          name: 'SVVoucher',
           version: '1',
           chainId: buyProps.nft.chainId,
           verifyingContract: marketContractAddress,
@@ -104,9 +102,8 @@ export const useBuy = () => {
       version: sigUtil.SignTypedDataVersion.V4,
     })
 
-    console.log(address.toLowerCase())
     return address.toLowerCase() !==
-      buyProps.owner.user.ethAddress.toLowerCase()
+      buyProps.selling.seller.ethAddress.toLowerCase()
       ? false
       : true
   }
