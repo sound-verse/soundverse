@@ -7,6 +7,7 @@ import { Contract } from '@ethersproject/contracts'
 import MarketContractAbi from '../../common/artifacts/MarketContract.json'
 import { useEffect, useState } from 'react'
 import * as sigUtil from '@metamask/eth-sig-util'
+import { useServiceFees } from './useServiceFees'
 
 export type BuyProps = {
   nft: Nft
@@ -20,6 +21,7 @@ export const useBuy = () => {
   const { authUser } = useAuthContext()
   const { chainId, library } = useEthers()
   const [buyProps, setBuyProps] = useState<BuyProps>(undefined)
+  const { calculateServiceFees } = useServiceFees()
 
   //TODO: currently just taking the recent marketplace contract address - we should provide fallback for older marketplace contract addresss used in the vouchers
 
@@ -46,6 +48,7 @@ export const useBuy = () => {
 
     try {
       await send(
+        { value: calculateServiceFees(buyProps.selling.sellingVoucher.price) },
         authUser.ethAddress,
         buyProps.selling.seller.ethAddress,
         buyProps.amountToBuy,
