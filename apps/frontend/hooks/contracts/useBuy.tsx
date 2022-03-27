@@ -48,11 +48,17 @@ export const useBuy = () => {
 
     try {
       await send(
-        { value: calculateServiceFees(buyProps.selling.sellingVoucher.price) },
         authUser.ethAddress,
         buyProps.selling.seller.ethAddress,
         buyProps.amountToBuy,
-        buyProps.selling.sellingVoucher
+        buyProps.selling.sellingVoucher,
+        {
+          value: utils.parseEther(
+            calculateServiceFees(
+              buyProps.selling.sellingVoucher.price
+            ).toString()
+          ),
+        }
       )
     } catch (error) {
       toast.error('Error buying your NFT!')
