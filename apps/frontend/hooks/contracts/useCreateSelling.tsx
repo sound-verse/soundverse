@@ -59,6 +59,7 @@ export const useCreateSelling = () => {
   const { state, send } = useContractFunction(contract, 'getSellCount')
 
   useEffect(() => {
+    console.log(state)
     if (state.transaction) {
       const sellCount = parseInt(
         utils.formatEther(state.transaction as unknown as BigNumber)
