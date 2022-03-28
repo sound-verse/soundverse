@@ -24,7 +24,7 @@ export const useUnlistSelling = () => {
   const abi = new utils.Interface(MarketContractAbi.abi)
   const contract = new Contract(marketContractAddress, abi)
 
-  const { state, send } = useContractFunction(contract, 'incrementSellCount')
+  const { state, send } = useContractFunction(contract, 'unlistItem')
 
   useEffect(() => {
     console.log(state)
