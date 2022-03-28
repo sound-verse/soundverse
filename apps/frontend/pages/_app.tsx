@@ -26,6 +26,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       process.env.NEXT_PUBLIC_ENVIRONMENT === 'local'
         ? supportedNetworks.local
         : supportedNetworks.testflight,
+    multicallAddresses: {
+      31337: '0x6602338AA55E2F65d9DB5644A17AeBD1AA1CdE00',
+    },
   }
 
   return (

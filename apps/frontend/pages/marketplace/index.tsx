@@ -47,9 +47,9 @@ export default function Landing() {
                 }
 
                 return (
-                  <>
+                  <div key={`soundcard-wrapper-${key}`}>
                     {nft.sellings.masterSelling && (
-                      <div key={`soundcard-wrapper-${key}`}>
+                      <div>
                         <div className="spacer">
                           <SoundCard
                             nft={nft}
@@ -62,7 +62,7 @@ export default function Landing() {
                       </div>
                     )}
                     {nft.sellings.licenseSellings[0] && (
-                      <div key={`soundcard-wrapper-${key}`}>
+                      <div>
                         <div className="spacer">
                           <SoundCard
                             nft={nft}
@@ -74,7 +74,7 @@ export default function Landing() {
                         </div>
                       </div>
                     )}
-                  </>
+                  </div>
                 )
               })}
             </div>
