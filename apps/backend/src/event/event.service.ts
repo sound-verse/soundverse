@@ -6,15 +6,21 @@ import {
   IEventMessage,
   ITransfer,
   ITransferSingle,
+  IUnlistedNFT,
 } from '@soundverse/shared-rpc-listener-service';
 import * as amqp from 'amqplib';
 import * as amqpConMgr from 'amqp-connection-manager';
 import { NftService } from '../nft/nft.service';
 import { ConfigService } from '@nestjs/config';
+import { SellingService } from '../selling/selling.service';
 
 @Injectable()
 export class EventService implements OnApplicationBootstrap {
-  constructor(private nftService: NftService, private configService: ConfigService) {}
+  constructor(
+    private nftService: NftService,
+    private configService: ConfigService,
+    private sellingService: SellingService,
+  ) {}
 
   onApplicationBootstrap() {
     const connection = amqpConMgr.connect({
@@ -32,7 +38,6 @@ export class EventService implements OnApplicationBootstrap {
   }
 
   async handleEvent(event: IEventMessage): Promise<void> {
-    console.log(event);
     const contractType: ContractType = event.contractType;
     const eventType: EventType = event.event;
     const nullAddress = '0x0000000000000000000000000000000000000000';
@@ -89,6 +94,14 @@ export class EventService implements OnApplicationBootstrap {
           }
         }
         break;
+      }
+      case ContractType.MARKETPLACE: {
+        switch (eventType) {
+          case EventType.UNLISTED_NFT: {
+            const returnValues: IUnlistedNFT = event.returnValues;
+            await this.sellingService.unlistSelling('', returnValues.tokenUri, returnValues.contractAddress);
+          }
+        }
       }
     }
   }

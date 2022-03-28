@@ -1,4 +1,4 @@
 export interface IUnlistedNFT {
-  tokenId: string;
+  tokenUri: string;
   contractAddress: string;
 }

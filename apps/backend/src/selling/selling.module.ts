@@ -7,12 +7,14 @@ import { CoreModule } from '../core/core.module';
 import { UserModule } from '../user/user.module';
 import { NftModule } from '../nft/nft.module';
 import { Nft, NftSchema } from '../nft/nft.schema';
+import { User, UserSchema } from '../user/user.schema';
 
 @Module({
   imports: [
     CoreModule,
     MongooseModule.forFeature([{ name: Selling.name, schema: SellingSchema }]),
     MongooseModule.forFeature([{ name: Nft.name, schema: NftSchema }]),
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     UserModule,
     forwardRef(() => NftModule),
   ],

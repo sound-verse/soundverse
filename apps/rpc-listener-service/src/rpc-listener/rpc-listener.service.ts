@@ -94,7 +94,6 @@ export class RPCListenerService implements OnApplicationBootstrap, OnModuleDestr
 
     try {
       eventCall(this.options, (error, event: IEventMessage) => {
-        console.log(event);
         if (error) {
           console.log(`RPC Listener received error ${error}`);
         }

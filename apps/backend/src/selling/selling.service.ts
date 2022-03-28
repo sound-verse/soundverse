@@ -8,7 +8,7 @@ import { Selling, SellingDocument } from './selling.schema';
 import * as sigUtil from '@metamask/eth-sig-util';
 import { ConfigService } from '@nestjs/config';
 import { CreateSellingInput } from './dto/input/create-selling.input';
-import { User } from '../user/user.schema';
+import { User, UserDocument } from '../user/user.schema';
 import { NftType } from '../common/enums/nftType.enum';
 
 export type Voucher = {
@@ -33,6 +33,7 @@ export class SellingService {
   constructor(
     @InjectModel(Selling.name) private sellingModel: Model<SellingDocument>,
     @InjectModel(Nft.name) private nftModel: Model<NftDocument>,
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
     private configService: ConfigService,
   ) {}
 
@@ -132,9 +133,29 @@ export class SellingService {
       version: sigUtil.SignTypedDataVersion.V4,
     });
 
-    console.log(voucher, seller);
+    console.log(voucher, seller, address);
 
     return address.toLowerCase() !== seller.ethAddress.toLowerCase() ? false : true;
+  }
+
+  async unlistSelling(sellerEthAddress: string, uri: string, contractAddress: string) {
+    const seller = await this.userModel.findOne({ ethAddress: sellerEthAddress.toLowerCase() });
+    const selling = await this.sellingModel.findOne({
+      sellingStatus: SellingStatus.OPEN,
+      seller: seller._id,
+      'sellingVoucher.nftContractAddress': contractAddress.toLowerCase(),
+      'sellingVoucher.tokenUri': uri,
+    });
+
+    if (!selling) {
+      console.log(
+        `Selling not found or already unlisted SELLER: ${sellerEthAddress} uri: ${uri} contractAddress: ${contractAddress}`,
+      );
+      return;
+    }
+
+    selling.sellingStatus = SellingStatus.CLOSED;
+    await selling.save();
   }
 
   async createSelling(createSellingInput: CreateSellingInput, seller: User): Promise<Selling> {

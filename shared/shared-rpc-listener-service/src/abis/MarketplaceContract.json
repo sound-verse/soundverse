@@ -109,9 +109,9 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
+        "internalType": "string",
+        "name": "tokenUri",
+        "type": "string"
       },
       {
         "indexed": false,
@@ -269,9 +269,9 @@
         "type": "address"
       },
       {
-        "internalType": "uint256",
-        "name": "_tokenId",
-        "type": "uint256"
+        "internalType": "string",
+        "name": "_tokenUri",
+        "type": "string"
       }
     ],
     "name": "getSellCount",
@@ -325,24 +325,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_nftContractAddress",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_tokenId",
-        "type": "uint256"
-      }
-    ],
-    "name": "incrementSellCount",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -528,9 +510,9 @@
         "type": "address"
       },
       {
-        "internalType": "uint256",
+        "internalType": "string",
         "name": "",
-        "type": "uint256"
+        "type": "string"
       }
     ],
     "name": "sellCounts",
@@ -597,9 +579,9 @@
         "type": "address"
       },
       {
-        "internalType": "uint256",
-        "name": "_tokenId",
-        "type": "uint256"
+        "internalType": "string",
+        "name": "_tokenUri",
+        "type": "string"
       }
     ],
     "name": "unlistItem",
