@@ -6,12 +6,14 @@ import {
   IEventMessage,
   EventType,
   ContractType,
-  ERC1155ContractAbi,
-  ERC721ContractAbi,
+  MasterContract,
+  MarketplaceContract,
+  LicenseContract,
 } from '@soundverse/shared-rpc-listener-service';
 import { AbiItem } from 'web3-utils';
 import { Contract } from 'web3-eth-contract';
 import { ClientProxy } from '@nestjs/microservices';
+import { utils } from 'ethers';
 
 interface Options {
   filter: {
@@ -88,6 +90,8 @@ export class RPCListenerService implements OnApplicationBootstrap, OnModuleDestr
       return;
     }
 
+    console.log(`RPC Listener listens to: ${contractType} ${eventType}`);
+
     try {
       eventCall(this.options, (error, event: IEventMessage) => {
         if (error) {
@@ -121,6 +125,14 @@ export class RPCListenerService implements OnApplicationBootstrap, OnModuleDestr
         event = contract.events.MasterMintEvent;
         break;
       }
+      case EventType.UNLISTED_NFT: {
+        event = contract.events.UnlistedNFT;
+        break;
+      }
+      case EventType.TRANSFER: {
+        event = contract.events.Transfer;
+        break;
+      }
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
@@ -131,14 +143,19 @@ export class RPCListenerService implements OnApplicationBootstrap, OnModuleDestr
     let abi: AbiItem[] = undefined;
 
     switch (contractType) {
-      case ContractType.ERC1155: {
+      case ContractType.MARKETPLACE: {
         //Typecast reason: https://github.com/ChainSafe/web3.js/issues/3310
-        abi = ERC1155ContractAbi as AbiItem[];
+        abi = MarketplaceContract as AbiItem[];
         break;
       }
-      case ContractType.ERC721: {
+      case ContractType.MASTER: {
         //Typecast reason: https://github.com/ChainSafe/web3.js/issues/3310
-        abi = ERC721ContractAbi as AbiItem[];
+        abi = MasterContract as AbiItem[];
+        break;
+      }
+      case ContractType.LICENSE: {
+        //Typecast reason: https://github.com/ChainSafe/web3.js/issues/3310
+        abi = LicenseContract as AbiItem[];
         break;
       }
     }

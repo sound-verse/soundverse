@@ -1,4 +1,4 @@
-import { ERC721ContractAbi } from '@soundverse/shared-rpc-listener-service';
+import { MasterContract } from '@soundverse/shared-rpc-listener-service';
 import { utils } from 'ethers';
 import Web3 from 'web3';
 import { AbiItem } from 'web3-utils';
@@ -20,7 +20,7 @@ const main = async () => {
   const walletAddress = '0xE39569EF2A516f0CA065a8dA698C79EE739D02c1';
   const privateKey = 'dba25f2301e49b76b8381d57007312555d8fed8b4e54372838f67b08c334d026';
 
-  const contract = new web3.eth.Contract(ERC721ContractAbi as AbiItem[], contractAddress);
+  const contract = new web3.eth.Contract(MasterContract as AbiItem[], contractAddress);
 
   const nonce = await web3.eth.getTransactionCount(walletAddress, 'latest'); //get latest nonce
   const rnd = Math.ceil(Math.random() * 451811354);

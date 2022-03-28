@@ -85,3 +85,4 @@ export class Nft extends BaseDBObject {
 export const NftSchema = SchemaFactory.createForClass(Nft);
 
 NftSchema.index({ tokenId: -1 });
+NftSchema.index({ tokenId: 1, contractAddress: 1 });

@@ -3,11 +3,14 @@ import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Nft, NftDocument } from './nft.schema';
-import { User } from '../user/user.schema';
+import { User, UserDocument } from '../user/user.schema';
 import { TagService } from '../tag/tag.service';
 import { NftsFilter } from './dto/input/nfts-filter.input';
 import { UserService } from '../user/user.service';
 import { NftFilter } from './dto/input/nft-filter.input';
+import { Selling, SellingDocument } from '../selling/selling.schema';
+import { NftType } from '../common/enums/nftType.enum';
+import { SellingStatus } from '../common/enums/sellingStatus.enum';
 
 export interface CreateNftMetadata {
   name: string;
@@ -31,9 +34,10 @@ export interface CreateNftInput {
 
 @Injectable()
 export class NftService {
-  userModel: any;
   constructor(
     @InjectModel(Nft.name) private nftModel: Model<NftDocument>,
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    @InjectModel(Selling.name) private sellingModel: Model<SellingDocument>,
     private configService: ConfigService,
     private tagService: TagService,
     private userService: UserService,
@@ -120,18 +124,162 @@ export class NftService {
     contractAddress: string,
     chainId: number,
     transactionHash: string,
+    uri: string,
   ): Promise<void> {
-    //TODO: workournd for race condition of transactionHashes -> will be solved with dead letter queue ticket
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
     await this.nftModel.updateOne(
-      { contractAddress: contractAddress.toLowerCase(), chainId, transactionHash },
+      { contractAddress: contractAddress.toLowerCase(), chainId, ipfsUrl: uri },
       {
         $set: {
           tokenId,
+          transactionHash,
         },
       },
     );
+  }
+
+  async changeOwner(
+    sellerEthAddress: string,
+    buyerEthAddress: string,
+    amount: number,
+    contractAddress: string,
+    tokenId: number,
+    isMaster: boolean,
+    chainId: number,
+    transactionHash: string,
+  ) {
+    const nft = await this.nftModel.findOne({ contractAddress, tokenId, chainId });
+
+    if (!nft) {
+      console.log(
+        `Error transferring ownership - no NFT found! FROM: ${sellerEthAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
+      );
+      return;
+    }
+
+    let currentSellerSupply;
+    const buyer = await this.userModel.findOne({ ethAddress: buyerEthAddress.toLowerCase() });
+    const seller = await this.userModel.findOne({ ethAddress: sellerEthAddress.toLowerCase() });
+    const licenseOwners = await this.getLicenseOwners(nft);
+    const masterOwner = await this.userModel.findOne({ _id: nft.masterOwner.user._id });
+    const licenseOwner = licenseOwners.find(
+      (licenseOwner) => licenseOwner.user.ethAddress.toLowerCase() === sellerEthAddress.toLowerCase(),
+    );
+
+    const selling = await this.sellingModel.findOne({
+      nftType: isMaster ? NftType.MASTER : NftType.LICENSE,
+      sellingStatus: SellingStatus.OPEN,
+      nft: nft._id,
+      seller: seller._id,
+    });
+
+    if (!selling) {
+      console.log(
+        `Error transferring ownership - no selling found! FROM: ${sellerEthAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
+      );
+      return;
+    }
+
+    const existingTxHash = selling.buyers.find((buyer) => buyer.transactionHash === transactionHash);
+
+    if (existingTxHash) {
+      console.log(
+        `Error transferring ownership - transactionHash already processed! FROM: ${sellerEthAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
+      );
+      return;
+    }
+
+    const sellingSupplyLeft = selling.buyers.reduce((supply, buyer) => {
+      return supply + buyer.supply;
+    }, 0);
+
+    if (sellingSupplyLeft - amount < 0) {
+      console.log(
+        `Error transferring ownership - selling has not enough supply! FROM: ${sellerEthAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
+      );
+      return;
+    }
+
+    if (isMaster) {
+      if (masterOwner.ethAddress.toLowerCase() !== sellerEthAddress) {
+        console.log(
+          `Error transferring ownership - Seller is not owner! FROM: ${sellerEthAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
+        );
+        return;
+      }
+      currentSellerSupply = nft.masterOwner.supply;
+    } else {
+      if (!licenseOwner && licenseOwner.user.ethAddress.toLowerCase() !== sellerEthAddress) {
+        console.log(
+          `Error transferring ownership - Seller is not owner! FROM: ${sellerEthAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
+        );
+        return;
+      }
+
+      currentSellerSupply = licenseOwner.supply;
+    }
+
+    if (currentSellerSupply - amount < 0) {
+      console.log(
+        `Error transferring ownership - Seller has not enough supply! FROM: ${sellerEthAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
+      );
+      return;
+    }
+
+    if (isMaster) {
+      await this.nftModel.updateOne(
+        { contractAddress, tokenId, chainId },
+        {
+          $set: {
+            'masterOwner.user': buyer,
+          },
+        },
+      );
+    } else {
+      let isNewBuyer = true;
+      const newLicenseOwners = licenseOwners.map((licenseOwner_) => {
+        if (licenseOwner_.user._id === licenseOwner.user._id) {
+          return { user: licenseOwner.user, supply: licenseOwner_.supply - amount };
+        }
+        if (licenseOwner_.user._id === buyer._id) {
+          isNewBuyer = false;
+          return { user: buyer, supply: licenseOwner_.supply + amount };
+        }
+        return licenseOwner_;
+      });
+      if (isNewBuyer) {
+        newLicenseOwners.push({ user: buyer, supply: amount });
+      }
+      await this.nftModel.updateOne(
+        { contractAddress, tokenId, chainId },
+        {
+          $set: {
+            licenseOwners,
+          },
+        },
+      );
+    }
+
+    selling.buyers.push({ user: buyer._id, supply: amount, transactionHash });
+    await this.sellingModel.updateOne({ _id: selling._id }, { $set: { buyers: selling.buyers } });
+
+    if (sellingSupplyLeft - amount === 0) {
+      await this.sellingModel.updateOne(
+        { _id: selling._id },
+        { $set: { sellingStatus: SellingStatus.CLOSED } },
+      );
+    }
+  }
+
+  async getLicenseOwners(nft: Nft) {
+    const ownerIds = nft.licenseOwners.map((owner) => owner.user._id);
+    const owners = await this.userModel.find({ _id: { $in: ownerIds } });
+
+    const licenseOwners = owners.map((owner) => {
+      const licenseOwner = nft.licenseOwners.find((licenseOwner) => licenseOwner.user._id === owner._id);
+      return { user: owner, supply: licenseOwner.supply };
+    });
+
+    return licenseOwners;
   }
 
   async getNfts(limitOfDocuments = 100, documentsToSkip = 0, filter?: NftsFilter): Promise<Nft[]> {

@@ -132,6 +132,8 @@ export class SellingService {
       version: sigUtil.SignTypedDataVersion.V4,
     });
 
+    console.log(voucher, seller);
+
     return address.toLowerCase() !== seller.ethAddress.toLowerCase() ? false : true;
   }
 

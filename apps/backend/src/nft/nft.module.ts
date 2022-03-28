@@ -10,6 +10,8 @@ import { FileService } from '../file/file.service';
 import { UserModule } from '../user/user.module';
 import { TagModule } from '../tag/tag.module';
 import { SellingModule } from '../selling/selling.module';
+import { User, UserSchema } from '../user/user.schema';
+import { Selling, SellingSchema } from '../selling/selling.schema';
 
 @Module({
   imports: [
@@ -17,6 +19,8 @@ import { SellingModule } from '../selling/selling.module';
     IPFSModule,
     CoreModule,
     MongooseModule.forFeature([{ name: Nft.name, schema: NftSchema }]),
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([{ name: Selling.name, schema: SellingSchema }]),
     UserModule,
     TagModule,
   ],

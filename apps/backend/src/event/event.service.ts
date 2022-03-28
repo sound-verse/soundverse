@@ -1,9 +1,11 @@
 import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import {
   ContractType,
-  ERC721MasterMintEventReturnValues,
+  IMasterMintEvent,
   EventType,
   IEventMessage,
+  ITransfer,
+  ITransferSingle,
 } from '@soundverse/shared-rpc-listener-service';
 import * as amqp from 'amqplib';
 import * as amqpConMgr from 'amqp-connection-manager';
@@ -30,21 +32,60 @@ export class EventService implements OnApplicationBootstrap {
   }
 
   async handleEvent(event: IEventMessage): Promise<void> {
+    console.log(event);
     const contractType: ContractType = event.contractType;
     const eventType: EventType = event.event;
     const nullAddress = '0x0000000000000000000000000000000000000000';
     switch (contractType) {
-      case ContractType.ERC721: {
+      case ContractType.MASTER: {
         switch (eventType) {
           case EventType.MASTER_MINT_EVENT: {
-            const returnValues: ERC721MasterMintEventReturnValues = event.returnValues;
+            const returnValues: IMasterMintEvent = event.returnValues;
             await this.nftService.setTokenId(
               parseInt(returnValues.id),
               event.address,
               event.chainId,
               event.transactionHash,
+              returnValues.uri,
             );
             break;
+          }
+          case EventType.TRANSFER: {
+            const returnValues: ITransfer = event.returnValues;
+            if (returnValues.from === nullAddress) {
+              return;
+            }
+            await this.nftService.changeOwner(
+              returnValues.from,
+              returnValues.to,
+              1,
+              event.address,
+              parseInt(returnValues.tokenId),
+              true,
+              event.chainId,
+              event.transactionHash,
+            );
+          }
+        }
+        break;
+      }
+      case ContractType.LICENSE: {
+        switch (eventType) {
+          case EventType.TRANSFER_SINGLE: {
+            const returnValues: ITransferSingle = event.returnValues;
+            if (returnValues.from === nullAddress) {
+              return;
+            }
+            await this.nftService.changeOwner(
+              returnValues.from,
+              returnValues.to,
+              parseInt(returnValues.value),
+              event.address,
+              parseInt(returnValues.id),
+              false,
+              event.chainId,
+              event.transactionHash,
+            );
           }
         }
         break;

@@ -69,7 +69,6 @@ export const useCreateSelling = () => {
 
   useEffect(() => {
     if (sellCount >= 0) {
-      console.log(sellCount)
       saveVoucher()
     }
   }, [sellCount])
