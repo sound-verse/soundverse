@@ -1,6 +1,5 @@
 import { useContractFunction, useEthers } from '@usedapp/core'
 import { useAuthContext } from '../../context/AuthContext'
-import crypto from 'crypto'
 import toast from 'react-hot-toast'
 import { useMutation } from '@apollo/client'
 import {
@@ -103,13 +102,12 @@ export const useCreateSelling = () => {
       tokenId: createSellingInputProps.nft.tokenId
         ? createSellingInputProps.nft.tokenId
         : 0,
-      nftContractAddress: await library._getAddress(contractAddress),
+      nftContractAddress: await (
+        await library._getAddress(contractAddress)
+      ).toLowerCase(),
       price: createSellingInputProps.price,
       sellCount: sellCount,
-      tokenUri:
-        process.env.NEXT_PUBLIC_ENVIRONMENT === 'local'
-          ? `http://ipfs.local/${crypto.randomBytes(16).toString('hex')}` //random string for localhost
-          : createSellingInputProps.nft.ipfsUrl,
+      tokenUri: createSellingInputProps.nft.ipfsUrl,
       supply: createSellingInputProps.amount,
       isMaster:
         createSellingInputProps.nftType === NftType.MASTER ? true : false,
@@ -119,7 +117,7 @@ export const useCreateSelling = () => {
     const signingDomain = {
       name: 'SVVoucher',
       version: '1',
-      verifyingContract: marketContractAddress,
+      verifyingContract: marketContractAddress.toLowerCase(),
       chainId,
     }
 

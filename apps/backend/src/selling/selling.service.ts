@@ -116,7 +116,7 @@ export class SellingService {
           name: 'SVVoucher',
           version: '1',
           chainId: mintedNft.chainId,
-          verifyingContract: this.configService.get('MARKET_CONTRACT_ADDRESS'),
+          verifyingContract: this.configService.get('MARKET_CONTRACT_ADDRESS').toLowerCase(),
         },
         message: {
           nftContractAddress: voucher.nftContractAddress,
@@ -133,7 +133,7 @@ export class SellingService {
       version: sigUtil.SignTypedDataVersion.V4,
     });
 
-    console.log(voucher, seller, address);
+    console.log(voucher, seller, address, this.configService.get('MARKET_CONTRACT_ADDRESS'));
 
     return address.toLowerCase() !== seller.ethAddress.toLowerCase() ? false : true;
   }
@@ -168,7 +168,7 @@ export class SellingService {
       seller: seller._id,
       sellingVoucher: createSellingInput.sellingVoucher,
       nftType: createSellingInput.sellingVoucher.isMaster ? NftType.MASTER : NftType.LICENSE,
-      marketplaceContractAddress: this.configService.get('MARKET_CONTRACT_ADDRESS'),
+      marketplaceContractAddress: this.configService.get('MARKET_CONTRACT_ADDRESS').toLowerCase(),
       sellingStatus: SellingStatus.OPEN,
     });
 

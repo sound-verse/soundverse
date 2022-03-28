@@ -32,6 +32,10 @@ export const useCreateNFT = () => {
   const prepareMint = async (
     createNftProps: CreateNFT
   ): Promise<{ ipfsUrl: string; id: string }> => {
+    if (!chainId) {
+      console.log('No chainId provided')
+      return
+    }
     const {
       nftFile,
       pictureFile,

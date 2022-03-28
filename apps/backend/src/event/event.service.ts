@@ -99,7 +99,11 @@ export class EventService implements OnApplicationBootstrap {
         switch (eventType) {
           case EventType.UNLISTED_NFT: {
             const returnValues: IUnlistedNFT = event.returnValues;
-            await this.sellingService.unlistSelling('', returnValues.tokenUri, returnValues.contractAddress);
+            await this.sellingService.unlistSelling(
+              returnValues.caller,
+              returnValues.tokenUri,
+              returnValues.contractAddress,
+            );
           }
         }
       }

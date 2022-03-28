@@ -7,6 +7,7 @@ import axios, { AxiosResponse } from 'axios';
 import { AxiosRequestConfig } from 'axios';
 import { CreateNftMetadata } from '../nft/nft.service';
 import ipfsHasher from 'ipfs-only-hash';
+import crypto from 'crypto';
 
 export interface IPFSResult {
   IpfsHash: string;
@@ -115,7 +116,7 @@ export class IPFSService {
       const ipfsMetadata = { isDuplicate: false, IpfsHash: '' };
       return {
         ipfsMetadata,
-        ipfsMetadataUrl: '',
+        ipfsMetadataUrl: `http://ipfs.local/${crypto.randomBytes(16).toString('hex')}`,
         metadata: { ...nftData.metadata },
       };
     }
