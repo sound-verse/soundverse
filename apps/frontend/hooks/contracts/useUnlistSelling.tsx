@@ -41,12 +41,7 @@ export const useUnlistSelling = () => {
         : licenseContractAddress
 
     try {
-      await send(
-        contractAddress,
-        createSellingInputProps.nft.tokenId
-          ? createSellingInputProps.nft.tokenId
-          : 0
-      )
+      await send(contractAddress, createSellingInputProps.nft.ipfsUrl)
     } catch (error) {
       console.log(error)
       toast.error('Error listing your NFT!')
