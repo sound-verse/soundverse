@@ -93,9 +93,7 @@ export const useCreateSelling = () => {
     await send(
       authUser.ethAddress,
       contractAddress,
-      createSellingInputProps.nft.tokenId
-        ? createSellingInputProps.nft.tokenId
-        : 0
+      createSellingInputProps.nft.ipfsUrl
     )
   }
 
