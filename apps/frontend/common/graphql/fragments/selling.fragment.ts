@@ -22,6 +22,7 @@ export const SELLING_FRAGMENT = gql`
       signature
       sellCount
       supply
+      maxSupply
       currency
     }
     nftType

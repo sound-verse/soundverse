@@ -24,6 +24,9 @@ class SellingVoucher {
   @Field((type) => Int)
   supply: number;
 
+  @Field((type) => Int)
+  maxSupply: number;
+
   @Field()
   isMaster: boolean;
 

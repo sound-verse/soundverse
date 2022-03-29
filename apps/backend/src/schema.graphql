@@ -46,6 +46,7 @@ type SellingVoucher {
   tokenUri: String!
   tokenId: Int!
   supply: Int!
+  maxSupply: Int!
   isMaster: Boolean!
   signature: String!
   currency: String!
@@ -172,6 +173,7 @@ input SellingVoucherInput {
   tokenUri: String!
   tokenId: Int!
   supply: Int!
+  maxSupply: Int!
   isMaster: Boolean!
   signature: String!
   currency: String!

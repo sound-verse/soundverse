@@ -18,6 +18,7 @@ export type Voucher = {
   tokenUri: string;
   tokenId: number;
   supply: number;
+  maxSupply: number;
   isMaster: boolean;
   signature: string;
   currency: string;
@@ -86,6 +87,7 @@ export class SellingService {
         { name: 'tokenUri', type: 'string' },
         { name: 'tokenId', type: 'uint256' },
         { name: 'supply', type: 'uint256' },
+        { name: 'maxSupply', type: 'uint256' },
         { name: 'isMaster', type: 'bool' },
         { name: 'currency', type: 'string' },
       ],
@@ -125,6 +127,7 @@ export class SellingService {
           sellCount: voucher.sellCount,
           tokenUri: voucher.tokenUri,
           supply: voucher.supply,
+          maxSupply: voucher.maxSupply,
           isMaster: voucher.isMaster,
           currency: voucher.currency,
         },

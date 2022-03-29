@@ -95,7 +95,8 @@ type NftSelling {
 }
 
 input NftsFilter {
-  creatorEthAddress: String!
+  creatorEthAddress: String
+  hasSelling: Boolean
 }
 
 type Query {
@@ -119,6 +120,7 @@ type Selling {
 type SellingVoucher {
   currency: String!
   isMaster: Boolean!
+  maxSupply: Int!
   nftContractAddress: String!
   price: Float!
   sellCount: Int!
@@ -131,6 +133,7 @@ type SellingVoucher {
 input SellingVoucherInput {
   currency: String!
   isMaster: Boolean!
+  maxSupply: Int!
   nftContractAddress: String!
   price: Float!
   sellCount: Int!

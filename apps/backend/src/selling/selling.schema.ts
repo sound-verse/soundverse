@@ -37,6 +37,9 @@ class SellingVoucher {
   supply: number;
 
   @Prop()
+  maxSupply: number;
+
+  @Prop()
   isMaster: boolean;
 
   @Prop()

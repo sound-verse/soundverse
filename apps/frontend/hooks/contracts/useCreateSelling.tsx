@@ -25,6 +25,7 @@ export const sellingVoucherTypes = {
     { name: 'tokenUri', type: 'string' },
     { name: 'tokenId', type: 'uint256' },
     { name: 'supply', type: 'uint256' },
+    { name: 'maxSupply', type: 'uint256' },
     { name: 'isMaster', type: 'bool' },
     { name: 'currency', type: 'string' },
   ],
@@ -109,6 +110,7 @@ export const useCreateSelling = () => {
       sellCount: sellCount,
       tokenUri: createSellingInputProps.nft.ipfsUrl,
       supply: createSellingInputProps.amount,
+      maxSupply: createSellingInputProps.nft.supply,
       isMaster:
         createSellingInputProps.nftType === NftType.MASTER ? true : false,
       currency: 'MATIC',

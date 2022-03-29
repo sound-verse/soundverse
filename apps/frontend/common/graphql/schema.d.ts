@@ -148,7 +148,8 @@ export type NftSelling = {
 }
 
 export type NftsFilter = {
-  creatorEthAddress: Scalars['String']
+  creatorEthAddress?: InputMaybe<Scalars['String']>
+  hasSelling?: InputMaybe<Scalars['Boolean']>
 }
 
 export type Query = {
@@ -189,6 +190,7 @@ export type SellingVoucher = {
   __typename?: 'SellingVoucher'
   currency: Scalars['String']
   isMaster: Scalars['Boolean']
+  maxSupply: Scalars['Int']
   nftContractAddress: Scalars['String']
   price: Scalars['Float']
   sellCount: Scalars['Int']
@@ -201,6 +203,7 @@ export type SellingVoucher = {
 export type SellingVoucherInput = {
   currency: Scalars['String']
   isMaster: Scalars['Boolean']
+  maxSupply: Scalars['Int']
   nftContractAddress: Scalars['String']
   price: Scalars['Float']
   sellCount: Scalars['Int']
@@ -380,6 +383,7 @@ export type NftFragmentFragment = {
         signature: string
         sellCount: number
         supply: number
+        maxSupply: number
         currency: string
       }
     } | null
@@ -434,6 +438,7 @@ export type NftFragmentFragment = {
         signature: string
         sellCount: number
         supply: number
+        maxSupply: number
         currency: string
       }
     }> | null
@@ -491,6 +496,7 @@ export type SellingFragmentFragment = {
     signature: string
     sellCount: number
     supply: number
+    maxSupply: number
     currency: string
   }
 }
@@ -568,6 +574,7 @@ export type CreateSellingMutation = {
       signature: string
       sellCount: number
       supply: number
+      maxSupply: number
       currency: string
     }
   }
@@ -697,6 +704,7 @@ export type GetNftQuery = {
           signature: string
           sellCount: number
           supply: number
+          maxSupply: number
           currency: string
         }
       } | null
@@ -751,6 +759,7 @@ export type GetNftQuery = {
           signature: string
           sellCount: number
           supply: number
+          maxSupply: number
           currency: string
         }
       }> | null
@@ -884,6 +893,7 @@ export type GetNftsQuery = {
           signature: string
           sellCount: number
           supply: number
+          maxSupply: number
           currency: string
         }
       } | null
@@ -938,6 +948,7 @@ export type GetNftsQuery = {
           signature: string
           sellCount: number
           supply: number
+          maxSupply: number
           currency: string
         }
       }> | null
