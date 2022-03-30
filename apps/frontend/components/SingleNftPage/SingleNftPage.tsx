@@ -151,7 +151,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
             <div className="col-span-1">
               <div className="flex flex-col mt-10 mb-5">
                 <SoundCard className="h-full" nft={nft} nftType={nftType} />
-                {selectedSelling && (
+                {selectedSelling && nft.sellings.licenseSellings.length > 0 && (
                   <div className="flex flex-col mt-10">
                     <div className="font-bold text-3xl w-64 text-right mb-5">
                       {parseFloat(
