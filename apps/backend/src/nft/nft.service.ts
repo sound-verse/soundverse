@@ -311,7 +311,11 @@ export class NftService {
       if (!masterOwner) {
         return null;
       }
-      return this.nftModel.find({ verified: true, 'masterOwner.user': masterOwner._id });
+      return this.nftModel.find({
+        verified: true,
+        'masterOwner.user': masterOwner._id,
+        creator: { $ne: masterOwner._id },
+      });
     }
 
     if (filter?.licenseOwnerEthAddress) {
@@ -321,7 +325,11 @@ export class NftService {
       if (!licenseOwner) {
         return null;
       }
-      return this.nftModel.find({ verified: true, 'licenseOwners.user': licenseOwner._id });
+      return this.nftModel.find({
+        verified: true,
+        'licenseOwners.user': licenseOwner._id,
+        creator: { $ne: licenseOwner._id },
+      });
     }
 
     const findQuery = this.nftModel

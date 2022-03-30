@@ -118,13 +118,13 @@ export const EditProfileForm = ({
           >
             <Form>
               <div className="flex flex-col">
-                <div className="text-white font-bold text-base">
+                <div className="text-white font-bold text-sm">
                   Profile Image
                 </div>
                 <div>
                   <label
                     htmlFor="profileImage"
-                    className="text-white border-2 border-white rounded-full p-2 mt-5 inline-block cursor-pointer px-36 whitespace-nowrap"
+                    className="text-white border-2 border-white rounded-full p-2 mt-5 inline-block cursor-pointer px-36 whitespace-nowrap text-sm"
                   >
                     Choose Profile Picture
                   </label>
@@ -142,7 +142,7 @@ export const EditProfileForm = ({
                       )
                     }
                   ></Field>
-                  <div className="text-grey-light mt-3">
+                  <div className="text-grey-light mt-3 text-xs">
                     JPG, PNG - Max 100Mb
                   </div>
                   <div className="text-grey-light">
@@ -150,7 +150,7 @@ export const EditProfileForm = ({
                   </div>
                   <div className={styles.error}>{profileImageError}</div>
                 </div>
-                <div className="text-white font-bold text-base mt-10">
+                <div className="text-white font-bold mt-10 text-sm">
                   Profile Name
                 </div>
                 <div className="mt-3">
@@ -158,15 +158,17 @@ export const EditProfileForm = ({
                     id="name"
                     name="name"
                     placeholder="Music Rabbit"
-                    className="outline-none bg-grey-dark text-white"
+                    className="outline-none bg-grey-dark text-white text-sm"
                   />
                   <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
-                  <div className="text-grey-light mt-2">max. 20 characters</div>
+                  <div className="text-grey-light mt-2 text-xs">
+                    max. 20 characters
+                  </div>
                   <div className={styles.error}>
                     <ErrorMessage name="name" />
                   </div>
                 </div>
-                <div className="text-white font-bold text-base mt-10">
+                <div className="text-white font-bold mt-10 text-sm">
                   Description
                 </div>
                 <div className="mt-3">
@@ -174,7 +176,7 @@ export const EditProfileForm = ({
                     type="input"
                     as="textarea"
                     name="description"
-                    className="w-full text-white bg-transparent border-2 rounded-3xl p-5"
+                    className="w-full text-white bg-transparent border-2 rounded-3xl p-5 text-sm"
                     id="trac-desc"
                     placeholder="I am ..."
                     rows={8}
@@ -184,7 +186,7 @@ export const EditProfileForm = ({
                     <ErrorMessage name="description" />
                   </div>
                 </div>
-                <div className="text-white font-bold text-base mt-10">
+                <div className="text-white font-bold text-sm mt-10">
                   Twitter Handle
                 </div>
                 <div className="mt-3">
@@ -192,14 +194,14 @@ export const EditProfileForm = ({
                     id="twitter"
                     name="twitter"
                     placeholder="music_rabbit"
-                    className="outline-none bg-grey-dark text-white"
+                    className="outline-none bg-grey-dark text-white text-sm"
                   />
                   <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
                   <div className={styles.error}>
                     <ErrorMessage name="twitter" />
                   </div>
                 </div>
-                <div className="text-white font-bold text-base mt-10">
+                <div className="text-white font-bold text-sm mt-10">
                   Instagram Handle
                 </div>
                 <div className="mt-3">
@@ -207,14 +209,14 @@ export const EditProfileForm = ({
                     id="instagram"
                     name="instagram"
                     placeholder="music_rabbit"
-                    className="outline-none bg-grey-dark text-white"
+                    className="outline-none bg-grey-dark text-white  text-sm"
                   />
                   <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
                   <div className={styles.error}>
                     <ErrorMessage name="instagram" />
                   </div>
                 </div>
-                <div className="text-white font-bold text-base mt-10">
+                <div className="text-white font-bold text-sm mt-10">
                   Soundcloud Handle
                 </div>
                 <div className="mt-3">
@@ -222,14 +224,14 @@ export const EditProfileForm = ({
                     id="soundcloud"
                     name="soundcloud"
                     placeholder="music_rabbit"
-                    className="outline-none bg-grey-dark text-white"
+                    className="outline-none bg-grey-dark text-white text-sm"
                   />
                   <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
                   <div className={styles.error}>
                     <ErrorMessage name="soundcloud" />
                   </div>
                 </div>
-                <div className="text-white font-bold text-base mt-10">
+                <div className="text-white font-bold text-sm mt-10">
                   Spotify Handle
                 </div>
                 <div className="mt-3">
@@ -237,14 +239,14 @@ export const EditProfileForm = ({
                     id="spotify"
                     name="spotify"
                     placeholder="music_rabbit"
-                    className="outline-none bg-grey-dark text-white"
+                    className="outline-none bg-grey-dark text-white text-sm"
                   />
                   <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
                   <div className={styles.error}>
                     <ErrorMessage name="spotify" />
                   </div>
                 </div>
-                <div className="text-white font-bold text-base mt-10">
+                <div className="text-white font-bold text-sm mt-10">
                   Discord Handle
                 </div>
                 <div className="mt-3">
@@ -252,7 +254,7 @@ export const EditProfileForm = ({
                     id="discord"
                     name="discord"
                     placeholder="music_rabbit"
-                    className="outline-none bg-grey-dark text-white"
+                    className="outline-none bg-grey-dark text-white text-sm"
                   />
                   <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
                   <div className={styles.error}>
@@ -260,7 +262,7 @@ export const EditProfileForm = ({
                   </div>
                 </div>
                 <button
-                  className="text-white cursor-pointer rounded-full bg-purple px-24 py-4 ml-auto mt-10 font-bold"
+                  className="text-white cursor-pointer rounded-full bg-purple px-24 py-3 ml-auto mt-10 font-bold text-sm"
                   type="submit"
                 >
                   Update

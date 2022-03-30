@@ -153,7 +153,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                 <SoundCard className="h-full" nft={nft} nftType={nftType} />
                 {selectedSelling && nft.sellings.licenseSellings.length > 0 && (
                   <div className="flex flex-col mt-10">
-                    <div className="font-bold text-3xl w-64 text-right mb-5">
+                    <div className="font-bold w-64 text-right mb-5 text-2xl">
                       {parseFloat(
                         Web3.utils.fromWei(selectedSelling.sellingVoucher.price)
                       ).toFixed(2)}{' '}
@@ -175,7 +175,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                   <div className="w-[36rem]">
                     <div className="flex items-center">
                       <div className="mr-5">
-                        <div className="font-2xl hover:text-purple cursor-pointer">
+                        <div className="font-xl hover:text-purple cursor-pointer">
                           <div onClick={() => setShowCreateListing(false)}>
                             {'<- '}Back
                           </div>
@@ -205,7 +205,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                           }/${nft.id}`}
                         >
                           <a>
-                            <div className="font-2xl font-bold">
+                            <div className="font-xl font-bold">
                               {nft.metadata.name}
                             </div>
                           </a>
@@ -215,9 +215,9 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                           <Link
                             href={`/profile/${nft.masterOwner.user.ethAddress}`}
                           >
-                            <div className="font-2xl hover:text-purple cursor-pointer">
+                            <div className="font-xl hover:text-purple cursor-pointer">
                               <a>
-                                <div className="text-purple font-2xl ml-2">
+                                <div className="text-purple font-xl ml-2">
                                   <ProfileName
                                     name={nft.masterOwner.user.name}
                                     ethAddress={nft.masterOwner.user.ethAddress}
@@ -265,7 +265,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
               ) : (
                 <div className="flex flex-col m-16">
                   <div className="flex flex-col p-10">
-                    <div className="text-white font-extrabold text-2xl  font-AOCR ">
+                    <div className="text-white font-extrabold text-xl  font-AOCR ">
                       <Link href={`/profile/${nft.creator.ethAddress}`}>
                         <a>
                           <ProfileName
@@ -374,7 +374,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                         <Button
                           text="List Nft"
                           type="purple"
-                          className="w-64 mx-2"
+                          className="w-48 mx-2"
                           onClick={() => setShowCreateListing(true)}
                         />
                       )}
@@ -382,7 +382,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                         <Button
                           text="Unlist Nft"
                           type="purple"
-                          className="w-64 mx-2"
+                          className="w-48 mx-2"
                           onClick={handleUnlistNft}
                         />
                       )}
@@ -390,7 +390,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                         <Button
                           text="Select and BUY"
                           type="purple"
-                          className="w-64 mx-2"
+                          className="w-48 mx-2"
                           onClick={handleBuyNft}
                         />
                       )}
@@ -398,7 +398,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                         <Button
                           text="BUY"
                           type="purple"
-                          className="w-64 mx-2"
+                          className="w-48 mx-2"
                           onClick={() => setShowBuyLicense(true)}
                         />
                       )}
@@ -406,13 +406,13 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                         <Button
                           text="Not for sale"
                           type="disabled"
-                          className="w-64"
+                          className="w-48"
                         />
                       )}
                     </div>
                     <div className="mt-24">
                       <div className="flex flex-col">
-                        <div className="font-extrabold text-2xl uppercase font-AOCR border-b border-grey-medium pb-5">
+                        <div className="font-extrabold text-xl uppercase font-AOCR border-b border-grey-medium pb-5">
                           Details
                         </div>
                         <div className="text-white mt-5">

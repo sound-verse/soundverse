@@ -26,11 +26,6 @@ const Header = () => {
     <div className={styles.headerWrapper}>
       <Toaster position="top-right" />
       <div className={styles.headerWrapperToo}>
-        <Link href="#" passHref>
-          <span className={styles.nineByNineIcon}>
-            <CgMenuGridO size={70} />
-          </span>
-        </Link>
         <Link href="/marketplace" passHref>
           <p className={styles.soundverseText}>Soundverse</p>
         </Link>
@@ -70,8 +65,8 @@ const Header = () => {
                 <div>
                   <ProfileImage
                     ethAddress={authUser?.ethAddress}
-                    width={13}
-                    height={13}
+                    width={8}
+                    height={8}
                     imageUrl={authUser?.profileImage}
                   />
                 </div>
@@ -91,8 +86,8 @@ const Header = () => {
                 <div className={styles.chevronDown}>
                   <Image
                     src="/img/chevronDown.svg"
-                    width={25}
-                    height={25}
+                    width={18}
+                    height={18}
                     layout="fixed"
                   />
                 </div>

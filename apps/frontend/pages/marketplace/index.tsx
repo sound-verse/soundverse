@@ -40,37 +40,33 @@ export default function Landing() {
       <Layout>
         <div className="big-wrapper">
           <div className="marketplace-wrapper">
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-10">
+            <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-10">
               {nfts.map((nft, key) => {
                 if (!nft.filePictureUrl) {
                   return
                 }
 
                 return (
-                  <div key={`soundcard-wrapper-${key}`}>
+                  <>
                     {nft.sellings.masterSelling && (
-                      <div className="spacer">
-                        <SoundCard
-                          nft={nft}
-                          nftType={NftType.MASTER}
-                          key={key}
-                          playingCardId={playingCardId}
-                          onMusicClick={() => handleMusicClick(nft.id)}
-                        />
-                      </div>
+                      <SoundCard
+                        nft={nft}
+                        nftType={NftType.MASTER}
+                        key={key}
+                        playingCardId={playingCardId}
+                        onMusicClick={() => handleMusicClick(nft.id)}
+                      />
                     )}
                     {nft.sellings.licenseSellings[0] && (
-                      <div className="spacer">
-                        <SoundCard
-                          nft={nft}
-                          nftType={NftType.LICENSE}
-                          key={key}
-                          playingCardId={playingCardId}
-                          onMusicClick={() => handleMusicClick(nft.id)}
-                        />
-                      </div>
+                      <SoundCard
+                        nft={nft}
+                        nftType={NftType.LICENSE}
+                        key={key}
+                        playingCardId={playingCardId}
+                        onMusicClick={() => handleMusicClick(nft.id)}
+                      />
                     )}
-                  </div>
+                  </>
                 )
               })}
             </div>

@@ -33,7 +33,7 @@ export const ProfileNftTabs = ({
     <div className={className}>
       <div className="flex">
         <div
-          className="uppercase text-white font-extrabold text-3xl cursor-pointer mr-10"
+          className="uppercase text-white font-extrabold text-2xl cursor-pointer mr-10"
           onClick={() => setActiveTab(PROFILE_TAB.CREATED)}
         >
           <span
@@ -43,7 +43,7 @@ export const ProfileNftTabs = ({
           </span>
         </div>
         <div
-          className="uppercase text-white font-extrabold text-3xl cursor-pointer mr-10"
+          className="uppercase text-white font-extrabold text-2xl cursor-pointer mr-10"
           onClick={() => setActiveTab(PROFILE_TAB.COLECTED)}
         >
           <span
@@ -64,7 +64,7 @@ export const ProfileNftTabs = ({
         </div> */}
       </div>
       {activeTab === PROFILE_TAB.CREATED && (
-        <div className="grid xl:grid-cols-2 2xl:grid-cols-3 mt-16 gap-10">
+        <div className="grid xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 mt-16 gap-10">
           {createdNfts &&
             createdNfts.map((nft, key) => {
               if (!nft.filePictureUrl) {
@@ -97,7 +97,7 @@ export const ProfileNftTabs = ({
         </div>
       )}
       {activeTab === PROFILE_TAB.COLECTED && (
-        <div className="grid xl:grid-cols-2 2xl:grid-cols-3 mt-16 gap-10">
+        <div className="grid xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 mt-16 gap-10">
           {ownedMasterNfts &&
             ownedMasterNfts.map((nft, key) => {
               if (!nft.filePictureUrl) {
