@@ -41,7 +41,7 @@ type Auth {
 
 type SellingVoucher {
   nftContractAddress: String!
-  price: Float!
+  price: String!
   sellCount: Int!
   tokenUri: String!
   tokenId: Int!
@@ -170,7 +170,7 @@ input CreateSellingInput {
 
 input SellingVoucherInput {
   nftContractAddress: String!
-  price: Float!
+  price: String!
   sellCount: Int!
   tokenUri: String!
   tokenId: Int!

@@ -16,6 +16,7 @@ import { BigNumber, utils } from 'ethers'
 import { Contract } from '@ethersproject/contracts'
 import MarketContractAbi from '../../common/artifacts/MarketContract.json'
 import { useCallback, useEffect, useState } from 'react'
+import Web3 from 'web3'
 
 export const sellingVoucherTypes = {
   SVVoucher: [
@@ -56,7 +57,7 @@ export const useCreateSelling = () => {
   const abi = new utils.Interface(MarketContractAbi.abi)
   const contract = new Contract(marketContractAddress, abi)
 
-  const { state, send } = useContractFunction(contract, 'getSellCount')
+  const { state, send } = useContractFunction(contract as any, 'getSellCount')
 
   useEffect(() => {
     if (state.transaction) {
@@ -105,7 +106,7 @@ export const useCreateSelling = () => {
       nftContractAddress: await (
         await library._getAddress(contractAddress)
       ).toLowerCase(),
-      price: createSellingInputProps.price,
+      price: Web3.utils.toWei(createSellingInputProps.price.toString()),
       sellCount: sellCount,
       tokenUri: createSellingInputProps.nft.ipfsUrl,
       supply: createSellingInputProps.amount,

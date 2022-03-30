@@ -5,8 +5,8 @@ class SellingVoucherInput {
   @Field()
   nftContractAddress: string;
 
-  @Field((type) => Float)
-  price: number;
+  @Field()
+  price: string;
 
   @Field((type) => Int)
   sellCount: number;

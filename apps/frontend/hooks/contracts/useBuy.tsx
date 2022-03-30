@@ -27,7 +27,7 @@ export const useBuy = () => {
 
   const abi = new utils.Interface(MarketContractAbi.abi)
   const contract = new Contract(marketContractAddress, abi)
-  const { state, send } = useContractFunction(contract, 'redeemItem')
+  const { state, send } = useContractFunction(contract as any, 'redeemItem')
 
   useEffect(() => {
     if (buyProps) {
@@ -47,11 +47,7 @@ export const useBuy = () => {
         buyProps.amountToBuy,
         buyProps.selling.sellingVoucher,
         {
-          value: utils.parseEther(
-            calculateServiceFees(
-              buyProps.selling.sellingVoucher.price
-            ).toString()
-          ),
+          value: calculateServiceFees(buyProps.selling.sellingVoucher.price),
         }
       )
     } catch (error) {

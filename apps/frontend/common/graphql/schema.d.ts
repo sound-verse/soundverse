@@ -194,7 +194,7 @@ export type SellingVoucher = {
   isMaster: Scalars['Boolean']
   maxSupply: Scalars['Int']
   nftContractAddress: Scalars['String']
-  price: Scalars['Float']
+  price: Scalars['String']
   sellCount: Scalars['Int']
   signature: Scalars['String']
   supply: Scalars['Int']
@@ -207,7 +207,7 @@ export type SellingVoucherInput = {
   isMaster: Scalars['Boolean']
   maxSupply: Scalars['Int']
   nftContractAddress: Scalars['String']
-  price: Scalars['Float']
+  price: Scalars['String']
   sellCount: Scalars['Int']
   signature: Scalars['String']
   supply: Scalars['Int']
@@ -379,7 +379,7 @@ export type NftFragmentFragment = {
       sellingVoucher: {
         __typename?: 'SellingVoucher'
         nftContractAddress: string
-        price: number
+        price: string
         tokenId: number
         tokenUri: string
         isMaster: boolean
@@ -434,7 +434,7 @@ export type NftFragmentFragment = {
       sellingVoucher: {
         __typename?: 'SellingVoucher'
         nftContractAddress: string
-        price: number
+        price: string
         tokenId: number
         tokenUri: string
         isMaster: boolean
@@ -492,7 +492,7 @@ export type SellingFragmentFragment = {
   sellingVoucher: {
     __typename?: 'SellingVoucher'
     nftContractAddress: string
-    price: number
+    price: string
     tokenId: number
     tokenUri: string
     isMaster: boolean
@@ -570,7 +570,7 @@ export type CreateSellingMutation = {
     sellingVoucher: {
       __typename?: 'SellingVoucher'
       nftContractAddress: string
-      price: number
+      price: string
       tokenId: number
       tokenUri: string
       isMaster: boolean
@@ -701,7 +701,7 @@ export type GetNftQuery = {
         sellingVoucher: {
           __typename?: 'SellingVoucher'
           nftContractAddress: string
-          price: number
+          price: string
           tokenId: number
           tokenUri: string
           isMaster: boolean
@@ -756,7 +756,7 @@ export type GetNftQuery = {
         sellingVoucher: {
           __typename?: 'SellingVoucher'
           nftContractAddress: string
-          price: number
+          price: string
           tokenId: number
           tokenUri: string
           isMaster: boolean
@@ -891,7 +891,7 @@ export type GetNftsQuery = {
         sellingVoucher: {
           __typename?: 'SellingVoucher'
           nftContractAddress: string
-          price: number
+          price: string
           tokenId: number
           tokenUri: string
           isMaster: boolean
@@ -946,7 +946,7 @@ export type GetNftsQuery = {
         sellingVoucher: {
           __typename?: 'SellingVoucher'
           nftContractAddress: string
-          price: number
+          price: string
           tokenId: number
           tokenUri: string
           isMaster: boolean

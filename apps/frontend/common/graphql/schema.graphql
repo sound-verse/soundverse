@@ -124,7 +124,7 @@ type SellingVoucher {
   isMaster: Boolean!
   maxSupply: Int!
   nftContractAddress: String!
-  price: Float!
+  price: String!
   sellCount: Int!
   signature: String!
   supply: Int!
@@ -137,7 +137,7 @@ input SellingVoucherInput {
   isMaster: Boolean!
   maxSupply: Int!
   nftContractAddress: String!
-  price: Float!
+  price: String!
   sellCount: Int!
   signature: String!
   supply: Int!

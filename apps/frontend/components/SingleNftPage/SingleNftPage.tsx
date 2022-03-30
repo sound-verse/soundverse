@@ -16,6 +16,7 @@ import toast from 'react-hot-toast'
 import { useUnlistSelling } from '../../hooks/contracts/useUnlistSelling'
 import { BuyLicense } from '../selling/BuyLicense'
 import Modal from 'react-modal'
+import Web3 from 'web3'
 
 type SingleNftPageProps = {
   nft: Nft
@@ -153,7 +154,9 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                 {selectedSelling && (
                   <div className="flex flex-col mt-10">
                     <div className="font-bold text-3xl w-64 text-right mb-5">
-                      {selectedSelling.sellingVoucher.price.toFixed(2)}{' '}
+                      {parseFloat(
+                        Web3.utils.fromWei(selectedSelling.sellingVoucher.price)
+                      ).toFixed(2)}{' '}
                       {selectedSelling.sellingVoucher.currency}
                     </div>
                     <Button
@@ -331,9 +334,12 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                             <div className="flex flex-col mb-10">
                               <div className="flex mb-2">
                                 <div className="text-3xl text-bolder mr-2">
-                                  {nft.sellings.masterSelling.sellingVoucher.price.toFixed(
-                                    2
-                                  )}
+                                  {parseFloat(
+                                    Web3.utils.fromWei(
+                                      nft.sellings.masterSelling.sellingVoucher
+                                        .price
+                                    )
+                                  ).toFixed(2)}
                                 </div>
                                 <div className="text-grey-medium text-sm">
                                   {nft.sellings.masterSelling.sellingVoucher.currency.toUpperCase()}
@@ -348,9 +354,12 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                             <div className="flex flex-col mb-10">
                               <div className="flex mb-2">
                                 <div className="text-3xl text-bolder mr-2">
-                                  {nft.sellings.licenseSellings[0].sellingVoucher.price.toFixed(
-                                    2
-                                  )}
+                                  {parseFloat(
+                                    Web3.utils.fromWei(
+                                      nft.sellings.licenseSellings[0]
+                                        .sellingVoucher.price
+                                    )
+                                  ).toFixed(2)}
                                 </div>
                                 <div className="text-grey-medium text-sm">
                                   {nft.sellings.licenseSellings[0].sellingVoucher.currency.toUpperCase()}

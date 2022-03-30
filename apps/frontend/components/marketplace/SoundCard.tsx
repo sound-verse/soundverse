@@ -7,6 +7,7 @@ import { AudioPlayer } from '../AudioPlayer/AudioPlayer'
 import cn from 'classnames'
 import { NftType } from '../../common/types/nft-type.enum'
 import { Nft, Selling } from '../../common/graphql/schema'
+import Web3 from 'web3'
 
 export type SoundCardProp = {
   nftType: NftType
@@ -97,7 +98,11 @@ function SoundCard({
               <div className="text-grey-light">
                 Price:
                 <span className="font-bold ml-2 text-white">
-                  {nft.sellings.masterSelling.sellingVoucher.price}{' '}
+                  {parseFloat(
+                    Web3.utils.fromWei(
+                      nft.sellings.masterSelling.sellingVoucher.price
+                    )
+                  ).toFixed(2)}{' '}
                   {nft.sellings.masterSelling.sellingVoucher.currency}
                 </span>
               </div>
@@ -115,7 +120,11 @@ function SoundCard({
             <div className=" text-white">
               Lowest ask{' '}
               <span className="font-bold ml-2 text-white">
-                {nft.sellings.licenseSellings[0]?.sellingVoucher.price}{' '}
+                {parseFloat(
+                  Web3.utils.fromWei(
+                    nft.sellings.licenseSellings[0]?.sellingVoucher.price
+                  )
+                ).toFixed(2)}{' '}
                 {nft.sellings.licenseSellings[0]?.sellingVoucher.currency}
               </span>
             </div>

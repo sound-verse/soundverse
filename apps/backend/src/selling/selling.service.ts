@@ -10,10 +10,11 @@ import { ConfigService } from '@nestjs/config';
 import { CreateSellingInput } from './dto/input/create-selling.input';
 import { User, UserDocument } from '../user/user.schema';
 import { NftType } from '../common/enums/nftType.enum';
+import { BigNumber } from 'ethers';
 
 export type Voucher = {
   nftContractAddress: string;
-  price: number;
+  price: string;
   sellCount: number;
   tokenUri: string;
   tokenId: number;
