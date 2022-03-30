@@ -26,10 +26,6 @@ export const useUnlistSelling = () => {
 
   const { state, send } = useContractFunction(contract, 'unlistItem')
 
-  useEffect(() => {
-    console.log(state)
-  }, [state])
-
   const unlistNft = async (createSellingInputProps: UnlistSellingProps) => {
     if (!authUser || !chainId) {
       return
@@ -48,5 +44,5 @@ export const useUnlistSelling = () => {
     }
   }
 
-  return { unlistNft }
+  return { unlistNft, unlistNftState: state }
 }

@@ -30,8 +30,9 @@ export class EventService implements OnApplicationBootstrap {
     });
     const channelWrapper: amqpConMgr.ChannelWrapper = connection.createChannel({
       json: true,
-      setup: async (channel: amqp.ConfirmChannel): Promise<void> => {
+      setup: async (channel: amqp.ConfirmChannel) => {
         // tslint:disable-next-line:await-promise
+        // tslint:disable-next-line:no-misused-promises
         await channel.assertQueue(this.configService.get('RABBITMQ_RECOVERY_QUEUE_NAME'), { durable: true });
       },
     });
@@ -41,6 +42,7 @@ export class EventService implements OnApplicationBootstrap {
     const contractType: ContractType = event.contractType;
     const eventType: EventType = event.event;
     const nullAddress = '0x0000000000000000000000000000000000000000';
+    console.log(`Caught ${eventType} ${contractType}`);
     switch (contractType) {
       case ContractType.MASTER: {
         switch (eventType) {

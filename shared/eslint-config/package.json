@@ -17,15 +17,15 @@
     "url": "git+https://github.com/sound-verse/soundverse-backend.git"
   },
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.28.3",
-    "@typescript-eslint/parser": "^4.28.3",
-    "eslint-config-prettier": "^8.3.0",
-    "prettier": "^2.3.2"
+    "@typescript-eslint/eslint-plugin": "^5.17.0",
+    "@typescript-eslint/parser": "^5.17.0",
+    "eslint-config-prettier": "^8.5.0",
+    "prettier": "^2.6.1"
   },
   "peerDependencies": {
     "eslint-config-next": ">= 11",
     "eslint-plugin-react": ">= 7",
-    "eslint": ">= 7"
+    "eslint": ">= 8.12.0"
   },
   "peerDependenciesMeta": {
     "eslint-config-next": {

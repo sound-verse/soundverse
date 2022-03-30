@@ -136,8 +136,6 @@ export class SellingService {
       version: sigUtil.SignTypedDataVersion.V4,
     });
 
-    console.log(voucher, seller, address, this.configService.get('MARKET_CONTRACT_ADDRESS'));
-
     return address.toLowerCase() !== seller.ethAddress.toLowerCase() ? false : true;
   }
 

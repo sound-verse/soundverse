@@ -15,18 +15,22 @@ import { PorfileSocialBar } from '../../components/profile/ProfileSocialBar'
 import { GET_NFTS } from '../../common/graphql/queries/get-nfts.query'
 import { useAuthContext } from '../../context/AuthContext'
 import Custom404 from '../404'
+import { Nft } from '../../common/graphql/schema'
 
 type ProfileProps = {
   user: User
   queryEthAddress: String
-  //TODO: create NFT type from gql schema for frontend
-  createdNfts: any
+  createdNfts: Nft[]
+  ownedMasterNfts: Nft[]
+  ownedLicenseNfts: Nft[]
 }
 
 export default function Profile({
   user,
   queryEthAddress,
   createdNfts,
+  ownedMasterNfts,
+  ownedLicenseNfts,
 }: ProfileProps) {
   const { authUser } = useAuthContext()
   const [showEditProfile, setShowEditProfile] = useState<boolean>(false)
@@ -96,7 +100,11 @@ export default function Profile({
                     )}
                   </div>
                   <div className="mt-20">
-                    <ProfileNftTabs createdNfts={createdNfts} />
+                    <ProfileNftTabs
+                      createdNfts={createdNfts}
+                      ownedMasterNfts={ownedMasterNfts}
+                      ownedLicenseNfts={ownedLicenseNfts}
+                    />
                   </div>
                 </div>
               )}
@@ -125,10 +133,32 @@ export async function getServerSideProps(context) {
     },
   })
 
+  const ownedMasterNfts = await client.apolloClient.query({
+    query: GET_NFTS,
+    variables: {
+      filter: { masterOwnerEthAddress: ethAddress },
+      limit: 100,
+      skip: 0,
+    },
+  })
+
+  const ownedLicenseNfts = await client.apolloClient.query({
+    query: GET_NFTS,
+    variables: {
+      filter: { licenseOwnerEthAddress: ethAddress },
+      limit: 100,
+      skip: 0,
+    },
+  })
+
+  console.log(ownedMasterNfts)
+
   return {
     props: {
       user: user.data.user,
       createdNfts: createdNfts.data.nfts,
+      ownedMasterNfts: ownedMasterNfts.data.nfts,
+      ownedLicenseNfts: ownedLicenseNfts.data.nfts,
       queryEthAddress: ethAddress,
     },
   }

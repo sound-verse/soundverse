@@ -146,7 +146,7 @@ export const CreateSellingForm = ({
               </div>
               <div className="text-white font-bold text-base mt-10">Fees</div>
               <div className="text-grey-light text-md mt-5">
-                Service fee: 2.5%
+                Service fee: 3.5%
               </div>
               <button
                 className="text-white cursor-pointer rounded-full bg-purple px-24 py-4 ml-auto mt-10 font-bold"
@@ -161,7 +161,7 @@ export const CreateSellingForm = ({
       <Modal
         isOpen={loading}
         contentLabel="onRequestClose Example"
-        className="flex justify-center items-center h-full"
+        className="flex justify-center items-center h-full z-50"
       >
         <div className="w-1/2 h-1/2 rounded-3xl p-10 bg-grey-dark flex flex-col justify-between items-center">
           <div className="h-full w-full justify-center items-center flex flex-col">

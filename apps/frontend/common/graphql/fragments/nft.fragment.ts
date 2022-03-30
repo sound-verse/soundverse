@@ -10,7 +10,8 @@ export const NFT_FRAGMENT = gql`
   fragment NftFragment on Nft {
     id
     tokenId
-    contractAddress
+    masterContractAddress
+    licenseContractAddress
     fileUrl
     filePictureUrl
     ipfsUrl

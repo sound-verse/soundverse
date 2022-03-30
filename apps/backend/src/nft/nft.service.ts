@@ -21,7 +21,6 @@ export interface CreateNftMetadata {
 
 export interface CreateNftInput {
   metadata: CreateNftMetadata;
-  contractAddress: string;
   ipfsUrl: string;
   fileUrl: string;
   filePictureUrl: string;
@@ -53,11 +52,15 @@ export class NftService {
     }
 
     const newNft = await this.nftModel.findOneAndUpdate(
-      { ipfsUrl, contractAddress: createNftInput.contractAddress.toLowerCase() },
+      {
+        ipfsUrl,
+        chainId: createNftInput.chainId,
+      },
       {
         verified: true,
         metadata: createNftInput.metadata,
-        contractAddress: createNftInput.contractAddress.toLowerCase(),
+        masterContractAddress: this.configService.get('MASTER_CONTRACT_ADDRESS'),
+        licenseContractAddress: this.configService.get('LICENSE_CONTRACT_ADDRESS'),
         ipfsUrl: createNftInput.ipfsUrl,
         fileUrl: createNftInput.fileUrl,
         filePictureUrl: createNftInput.filePictureUrl,
@@ -101,22 +104,13 @@ export class NftService {
     return nftTagsObjectIds;
   }
 
-  async findNft({ contractAddress, ipfsUrl, tokenId, id }: NftFilter): Promise<Nft> {
+  async findNft({ ipfsUrl, tokenId, id }: NftFilter): Promise<Nft> {
     const searchObject = {
-      ...(contractAddress && { contractAddress }),
       ...(ipfsUrl && { ipfsUrl }),
       ...(tokenId && { tokenId }),
       ...(id && { _id: id }),
     };
     return await this.nftModel.findOne(searchObject);
-  }
-
-  async update(nftData: Partial<Nft>): Promise<Nft> {
-    return await this.nftModel.findOneAndUpdate(
-      { tokenId: nftData.tokenId, contractAddress: nftData.contractAddress.toLowerCase() },
-      { ...nftData },
-      { new: true },
-    );
   }
 
   async setTokenId(
@@ -147,7 +141,21 @@ export class NftService {
     chainId: number,
     transactionHash: string,
   ) {
-    const nft = await this.nftModel.findOne({ contractAddress, tokenId, chainId });
+    //TODO: Bad implementation! We need to find a way, to wait for the MasterMintEvent, before tansfer event is fireing!
+    await new Promise((resolve) =>
+      setTimeout(() => {
+        resolve(true);
+      }, 1000),
+    );
+
+    const nft = await this.nftModel.findOne({
+      $or: [
+        { masterContratAddress: contractAddress.toLowerCase() },
+        { licenseContratAddress: contractAddress.toLowerCase() },
+      ],
+      tokenId,
+      chainId,
+    });
 
     if (!nft) {
       console.log(
@@ -155,15 +163,21 @@ export class NftService {
       );
       return;
     }
-
     let currentSellerSupply;
     const buyer = await this.userModel.findOne({ ethAddress: buyerEthAddress.toLowerCase() });
     const seller = await this.userModel.findOne({ ethAddress: sellerEthAddress.toLowerCase() });
-    const licenseOwners = await this.getLicenseOwners(nft);
+
     const masterOwner = await this.userModel.findOne({ _id: nft.masterOwner.user._id });
-    const licenseOwner = licenseOwners.find(
-      (licenseOwner) => licenseOwner.user.ethAddress.toLowerCase() === sellerEthAddress.toLowerCase(),
+    const licenseOwner = nft.licenseOwners.find(
+      (licenseOwner) => licenseOwner.user._id.toString() === seller._id.toString(),
     );
+
+    const masterOwnerLicenseSupply = nft.licenseOwners.reduce((supply, license) => {
+      if (license.user._id.toString() === masterOwner.id.toString()) {
+        return supply + license.supply;
+      }
+      return supply;
+    }, 0);
 
     const selling = await this.sellingModel.findOne({
       nftType: isMaster ? NftType.MASTER : NftType.LICENSE,
@@ -173,9 +187,6 @@ export class NftService {
     });
 
     if (!selling) {
-      console.log(
-        `Error transferring ownership - no selling found! FROM: ${sellerEthAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
-      );
       return;
     }
 
@@ -188,19 +199,19 @@ export class NftService {
       return;
     }
 
-    const sellingSupplyLeft = selling.buyers.reduce((supply, buyer) => {
+    const alreadyBoughtSupply = selling.buyers.reduce((supply, buyer) => {
       return supply + buyer.supply;
     }, 0);
 
-    if (sellingSupplyLeft - amount < 0) {
+    if (selling.sellingVoucher.supply - alreadyBoughtSupply - amount < 0) {
       console.log(
-        `Error transferring ownership - selling has not enough supply! FROM: ${sellerEthAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
+        `Error transferring ownership - Selling has not enough supply! FROM: ${sellerEthAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
       );
       return;
     }
 
     if (isMaster) {
-      if (masterOwner.ethAddress.toLowerCase() !== sellerEthAddress) {
+      if (masterOwner._id.toString() !== seller._id.toString()) {
         console.log(
           `Error transferring ownership - Seller is not owner! FROM: ${sellerEthAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
         );
@@ -208,7 +219,7 @@ export class NftService {
       }
       currentSellerSupply = nft.masterOwner.supply;
     } else {
-      if (!licenseOwner && licenseOwner.user.ethAddress.toLowerCase() !== sellerEthAddress) {
+      if (!licenseOwner && licenseOwner.user._id.toString() !== seller._id.toString()) {
         console.log(
           `Error transferring ownership - Seller is not owner! FROM: ${sellerEthAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
         );
@@ -226,43 +237,18 @@ export class NftService {
     }
 
     if (isMaster) {
-      await this.nftModel.updateOne(
-        { contractAddress, tokenId, chainId },
-        {
-          $set: {
-            'masterOwner.user': buyer,
-          },
-        },
-      );
+      await this.setMasterOwner(nft, buyer);
+      await this.setLicenseOwner(nft, buyer, masterOwnerLicenseSupply);
+      await this.setLicenseOwner(nft, seller, -masterOwnerLicenseSupply);
     } else {
-      let isNewBuyer = true;
-      const newLicenseOwners = licenseOwners.map((licenseOwner_) => {
-        if (licenseOwner_.user._id === licenseOwner.user._id) {
-          return { user: licenseOwner.user, supply: licenseOwner_.supply - amount };
-        }
-        if (licenseOwner_.user._id === buyer._id) {
-          isNewBuyer = false;
-          return { user: buyer, supply: licenseOwner_.supply + amount };
-        }
-        return licenseOwner_;
-      });
-      if (isNewBuyer) {
-        newLicenseOwners.push({ user: buyer, supply: amount });
-      }
-      await this.nftModel.updateOne(
-        { contractAddress, tokenId, chainId },
-        {
-          $set: {
-            licenseOwners,
-          },
-        },
-      );
+      await this.setLicenseOwner(nft, buyer, amount);
+      await this.setLicenseOwner(nft, seller, -amount);
     }
 
     selling.buyers.push({ user: buyer._id, supply: amount, transactionHash });
     await this.sellingModel.updateOne({ _id: selling._id }, { $set: { buyers: selling.buyers } });
 
-    if (sellingSupplyLeft - amount === 0) {
+    if (selling.sellingVoucher.supply - alreadyBoughtSupply - amount === 0) {
       await this.sellingModel.updateOne(
         { _id: selling._id },
         { $set: { sellingStatus: SellingStatus.CLOSED } },
@@ -270,16 +256,45 @@ export class NftService {
     }
   }
 
-  async getLicenseOwners(nft: Nft) {
-    const ownerIds = nft.licenseOwners.map((owner) => owner.user._id);
-    const owners = await this.userModel.find({ _id: { $in: ownerIds } });
+  async setMasterOwner(nft: Nft, newMasterOwner: User) {
+    await this.nftModel.updateOne(
+      {
+        _id: nft._id,
+      },
+      {
+        $set: {
+          'masterOwner.user': newMasterOwner._id,
+        },
+      },
+    );
+  }
 
-    const licenseOwners = owners.map((owner) => {
-      const licenseOwner = nft.licenseOwners.find((licenseOwner) => licenseOwner.user._id === owner._id);
-      return { user: owner, supply: licenseOwner.supply };
-    });
+  async setLicenseOwner(nft: Nft, newLicenseOwner: User, supply: number) {
+    const existingLicenseOwner = nft.licenseOwners.find(
+      (licenseOwner) => licenseOwner.user._id.toString() === newLicenseOwner._id.toString(),
+    );
 
-    return licenseOwners;
+    const query = { _id: nft._id };
+    let updateOperation = {};
+
+    if (existingLicenseOwner && existingLicenseOwner.supply + supply > 0) {
+      query['licenseOwners.user'] = existingLicenseOwner.user._id;
+      updateOperation = {
+        $set: {
+          'licenseOwners.$': { ...existingLicenseOwner, supply: existingLicenseOwner.supply + supply },
+        },
+      };
+    } else if (existingLicenseOwner && existingLicenseOwner.supply + supply === 0) {
+      updateOperation = {
+        $pull: {
+          licenseOwners: { user: existingLicenseOwner.user._id },
+        },
+      };
+    } else if (!existingLicenseOwner) {
+      updateOperation = { $addToSet: { licenseOwners: { user: newLicenseOwner._id, supply } } };
+    }
+
+    await this.nftModel.updateOne(query, updateOperation);
   }
 
   async getNfts(limitOfDocuments = 100, documentsToSkip = 0, filter?: NftsFilter): Promise<Nft[]> {
@@ -289,6 +304,24 @@ export class NftService {
         return null;
       }
       return this.nftModel.find({ verified: true, creator: creator._id });
+    }
+
+    if (filter?.masterOwnerEthAddress) {
+      const masterOwner = await this.userService.findByETHAddress(filter.masterOwnerEthAddress.toLowerCase());
+      if (!masterOwner) {
+        return null;
+      }
+      return this.nftModel.find({ verified: true, 'masterOwner.user': masterOwner._id });
+    }
+
+    if (filter?.licenseOwnerEthAddress) {
+      const licenseOwner = await this.userService.findByETHAddress(
+        filter.licenseOwnerEthAddress.toLowerCase(),
+      );
+      if (!licenseOwner) {
+        return null;
+      }
+      return this.nftModel.find({ verified: true, 'licenseOwners.user': licenseOwner._id });
     }
 
     const findQuery = this.nftModel

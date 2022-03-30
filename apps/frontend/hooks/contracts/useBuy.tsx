@@ -35,12 +35,6 @@ export const useBuy = () => {
     }
   }, [buyProps])
 
-  useEffect(() => {
-    if (state) {
-      console.log(state)
-    }
-  }, [state])
-
   const executeBuy = async () => {
     if (!authUser || !chainId) {
       return
@@ -65,60 +59,6 @@ export const useBuy = () => {
     }
   }
 
-  const verifySignature = () => {
-    const sellingVoucherTypes = {
-      EIP712Domain: [
-        { name: 'name', type: 'string' },
-        { name: 'version', type: 'string' },
-        { name: 'chainId', type: 'uint256' },
-        { name: 'verifyingContract', type: 'address' },
-      ],
-      SVVoucher: [
-        { name: 'nftContractAddress', type: 'address' },
-        { name: 'price', type: 'uint256' },
-        { name: 'sellCount', type: 'uint256' },
-        { name: 'tokenId', type: 'uint256' },
-        { name: 'tokenUri', type: 'string' },
-        { name: 'supply', type: 'uint256' },
-        { name: 'maxSupply', type: 'uint256' },
-        { name: 'isMaster', type: 'bool' },
-        { name: 'currency', type: 'string' },
-      ],
-    }
-
-    const address = sigUtil.recoverTypedSignature({
-      data: {
-        types: sellingVoucherTypes,
-        primaryType: 'SVVoucher',
-        domain: {
-          name: 'SVVoucher',
-          version: '1',
-          chainId: buyProps.nft.chainId,
-          verifyingContract: marketContractAddress,
-        },
-        message: {
-          tokenId: buyProps.selling.sellingVoucher.tokenId,
-          nftContractAddress:
-            buyProps.selling.sellingVoucher.nftContractAddress,
-          price: buyProps.selling.sellingVoucher.price,
-          sellCount: buyProps.selling.sellingVoucher.sellCount,
-          tokenUri: buyProps.selling.sellingVoucher.tokenUri,
-          supply: buyProps.selling.sellingVoucher.supply,
-          maxSupply: buyProps.selling.sellingVoucher.maxSupply,
-          isMaster: buyProps.selling.sellingVoucher.isMaster,
-          currency: buyProps.selling.sellingVoucher.currency,
-        },
-      },
-      signature: buyProps.selling.sellingVoucher.signature,
-      version: sigUtil.SignTypedDataVersion.V4,
-    })
-
-    return address.toLowerCase() !==
-      buyProps.selling.seller.ethAddress.toLowerCase()
-      ? false
-      : true
-  }
-
   const buyNft = async (buyProps: BuyProps) => {
     if (!authUser || !chainId) {
       return
@@ -127,5 +67,5 @@ export const useBuy = () => {
     setBuyProps(buyProps)
   }
 
-  return { buyNft }
+  return { buyNft, buyNftState: state }
 }

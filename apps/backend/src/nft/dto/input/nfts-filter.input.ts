@@ -6,5 +6,11 @@ export class NftsFilter {
   creatorEthAddress?: string;
 
   @Field({ nullable: true })
+  licenseOwnerEthAddress?: string;
+
+  @Field({ nullable: true })
+  masterOwnerEthAddress?: string;
+
+  @Field({ nullable: true })
   hasSelling?: boolean;
 }

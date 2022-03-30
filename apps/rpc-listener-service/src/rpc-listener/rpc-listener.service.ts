@@ -13,7 +13,6 @@ import {
 import { AbiItem } from 'web3-utils';
 import { Contract } from 'web3-eth-contract';
 import { ClientProxy } from '@nestjs/microservices';
-import { utils } from 'ethers';
 
 interface Options {
   filter: {
@@ -68,15 +67,16 @@ export class RPCListenerService implements OnApplicationBootstrap, OnModuleDestr
     const contractEvents =
       this.configService.get('RPCListenerConfig')[this.configService.get('ENVIRONMENT')].contractEvents;
     contractEvents.forEach((contractEvent) => {
-      const abi = this.parseAbi(contractEvent.contractType);
+      const contractType: ContractType = contractEvent.contractType;
+      const abi = this.parseAbi(contractType);
 
       if (!abi) {
         return;
       }
 
-      const contract: Contract = new this.web3.eth.Contract(abi, contractEvent.contractAddress);
+      const contract: Contract = new this.web3.eth.Contract(abi, contractEvent.contractAddress as string);
       contractEvent.listensTo.forEach((eventType: EventType) => {
-        this.subscribeToEvent(eventType, contract, contractEvent.contractType);
+        this.subscribeToEvent(eventType, contract, contractType);
       });
     });
 

@@ -82,7 +82,8 @@ type Nft {
   id: String!
   tokenId: Float
   supply: Float!
-  contractAddress: String!
+  masterContractAddress: String!
+  licenseContractAddress: String!
   ipfsUrl: String!
   fileUrl: String!
   chainId: Int!
@@ -104,11 +105,12 @@ type Query {
 
 input NftsFilter {
   creatorEthAddress: String
+  licenseOwnerEthAddress: String
+  masterOwnerEthAddress: String
   hasSelling: Boolean
 }
 
 input NftFilter {
-  contractAddress: String
   tokenId: Float
   id: String
   ipfsUrl: String

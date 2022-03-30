@@ -15,6 +15,7 @@ import { useBuy } from '../../hooks/contracts/useBuy'
 import toast from 'react-hot-toast'
 import { useUnlistSelling } from '../../hooks/contracts/useUnlistSelling'
 import { BuyLicense } from '../selling/BuyLicense'
+import Modal from 'react-modal'
 
 type SingleNftPageProps = {
   nft: Nft
@@ -27,28 +28,90 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
   const [showBuyLicense, setShowBuyLicense] = useState<boolean>(false)
   const [selectedSelling, setSelectedSelling] = useState<Selling>(undefined)
   const router = useRouter()
+  const [showBoughtSuccess, setShowBoughtSuccess] = useState<boolean>(false)
+  const [showUnlistedSuccess, setShowUnlistedSuccess] = useState<boolean>(false)
 
-  useEffect(() => {
-    if (!authUser && router.isReady) {
-      router.push(`/marketplace`)
-    }
-  }, [router.isReady])
+  // useEffect(() => {
+  //   if (!authUser && router.isReady) {
+  //     router.push(`/marketplace`)
+  //   }
+  // }, [router.isReady])
 
-  const isMe =
-    nft.creator.ethAddress.toLowerCase() === authUser?.ethAddress?.toLowerCase()
+  const authMasterOwner =
+    nft.masterOwner.user.id === authUser?.id ? nft.masterOwner : undefined
+  const authLicenseOwner = nft.licenseOwners.find(
+    (licenseOwner) => licenseOwner.user.id === authUser?.id
+  )
+  const authMasterSelling =
+    nft.sellings.masterSelling?.seller?.id === authUser?.id
+      ? nft.sellings.masterSelling
+      : undefined
+  const authLicenseSellings = nft.sellings?.licenseSellings?.filter(
+    (selling) => selling.seller.id === authUser?.id
+  )
 
-  let owner: NftOwner = undefined
+  const authLicenseSellingsTotalAmount = authLicenseSellings.reduce(
+    (supply, selling) => supply + selling.sellingVoucher.supply,
+    0
+  )
 
+  let isListable = false
   if (nftType === NftType.MASTER) {
-    owner = nft.masterOwner
+    if (authMasterOwner && !authMasterSelling) {
+      isListable = true
+    }
   } else {
-    owner = nft.licenseOwners.find(
-      (licenseOwner) => licenseOwner.user.id === authUser?.id
-    )
+    if (
+      authLicenseOwner &&
+      authLicenseOwner.supply > authLicenseSellingsTotalAmount
+    ) {
+      isListable = true
+    }
   }
 
-  const { buyNft } = useBuy()
-  const { unlistNft } = useUnlistSelling()
+  let isUnlistable = false
+  if (nftType === NftType.MASTER) {
+    if (authMasterSelling) {
+      isUnlistable = true
+    }
+  } else {
+    if (authLicenseSellings.length > 0) {
+      isUnlistable = true
+    }
+  }
+
+  let isBuyable = false
+  if (nftType === NftType.MASTER) {
+    if (
+      nft.sellings.masterSelling &&
+      nft.sellings.masterSelling.seller.id !== authUser?.id
+    ) {
+      isBuyable = true
+    }
+  } else {
+    if (
+      nft.sellings.licenseSellings.length > 0 &&
+      nft.sellings.licenseSellings.length > authLicenseSellings.length
+    ) {
+      isBuyable = true
+    }
+  }
+
+  const { buyNft, buyNftState } = useBuy()
+  const { unlistNft, unlistNftState } = useUnlistSelling()
+
+  useEffect(() => {
+    if (buyNftState.status === 'Success') {
+      setShowBoughtSuccess(true)
+    }
+  }, [buyNftState])
+
+  useEffect(() => {
+    if (unlistNftState.status === 'Success') {
+      console.log('unlisted')
+      setShowUnlistedSuccess(true)
+    }
+  }, [unlistNftState])
 
   const handleBuyNft = async () => {
     await buyNft({
@@ -72,6 +135,8 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
       nft,
     })
   }
+
+  Modal.setAppElement('#__next')
 
   return (
     <div>
@@ -102,16 +167,16 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
               </div>
             </div>
             <div className="col-span-3">
-              {showCreateListing && isMe ? (
+              {showCreateListing && isListable ? (
                 <div className="flex flex-col items-center justify-center mt-12">
                   <div className="w-[36rem]">
                     <div className="flex items-center">
                       <div className="mr-5">
-                        <Link href={`/profile/${owner.user.ethAddress}`}>
-                          <div className="font-2xl hover:text-purple cursor-pointer">
-                            <a>{'<- '}Back</a>
+                        <div className="font-2xl hover:text-purple cursor-pointer">
+                          <div onClick={() => setShowCreateListing(false)}>
+                            {'<- '}Back
                           </div>
-                        </Link>
+                        </div>
                       </div>
                       <div>
                         <Link
@@ -296,42 +361,39 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                               </div>
                             </div>
                           )}
-                      {isMe ? (
-                        (nftType === NftType.MASTER &&
-                          nft.sellings.masterSelling) ||
-                        (nftType === NftType.LICENSE &&
-                          nft.sellings.licenseSellings[0]) ? (
-                          <Button
-                            text="Unlist Nft"
-                            type="purple"
-                            className="w-64"
-                            onClick={handleUnlistNft}
-                          />
-                        ) : (
-                          <Button
-                            text="List Nft"
-                            type="purple"
-                            className="w-64"
-                            onClick={() => setShowCreateListing(true)}
-                          />
-                        )
-                      ) : nftType === NftType.MASTER &&
-                        nft.sellings.masterSelling ? (
+                      {isListable && (
+                        <Button
+                          text="List Nft"
+                          type="purple"
+                          className="w-64 mx-2"
+                          onClick={() => setShowCreateListing(true)}
+                        />
+                      )}
+                      {isUnlistable && (
+                        <Button
+                          text="Unlist Nft"
+                          type="purple"
+                          className="w-64 mx-2"
+                          onClick={handleUnlistNft}
+                        />
+                      )}
+                      {isBuyable && nftType === NftType.MASTER && (
                         <Button
                           text="Select and BUY"
                           type="purple"
-                          className="w-64"
+                          className="w-64 mx-2"
                           onClick={handleBuyNft}
                         />
-                      ) : nftType === NftType.LICENSE &&
-                        nft.sellings.licenseSellings[0] ? (
+                      )}
+                      {isBuyable && nftType === NftType.LICENSE && (
                         <Button
                           text="BUY"
                           type="purple"
-                          className="w-64"
+                          className="w-64 mx-2"
                           onClick={() => setShowBuyLicense(true)}
                         />
-                      ) : (
+                      )}
+                      {!isBuyable && !isListable && !isUnlistable && (
                         <Button
                           text="Not for sale"
                           type="disabled"
@@ -356,6 +418,34 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
           </div>
         </main>
       </Layout>
+      <Modal
+        isOpen={showBoughtSuccess || showUnlistedSuccess}
+        contentLabel="onRequestClose Example"
+        className="flex justify-center items-center h-full"
+      >
+        <div className="w-1/2 h-1/2 rounded-3xl p-10 bg-grey-dark flex flex-col justify-between items-center">
+          <div className="h-full w-full justify-center items-center flex flex-col">
+            <div className="text-white text-3xl font-bold mb-10 text-center">
+              {showBoughtSuccess && 'You successfully bought your NFT!'}
+              {showUnlistedSuccess && 'You successfully unlisted your NFT!'}
+            </div>
+            <Button
+              type="purple"
+              text="Got it!"
+              className="!px-16 !py-4 text-xl"
+              onClick={() => {
+                setShowBoughtSuccess(false)
+                setShowUnlistedSuccess(false)
+                router.push(
+                  `/${nftType === NftType.LICENSE ? 'license' : 'master'}/${
+                    nft.id
+                  }`
+                )
+              }}
+            />
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }
