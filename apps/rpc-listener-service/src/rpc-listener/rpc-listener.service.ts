@@ -1,6 +1,6 @@
 import { Inject, Injectable, OnApplicationBootstrap, OnModuleDestroy } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import Web3 from 'web3';
+import { ethers, ContractInterface, Contract } from 'ethers';
 import _ from 'lodash';
 import {
   IEventMessage,
@@ -10,57 +10,28 @@ import {
   MarketplaceContract,
   LicenseContract,
 } from '@soundverse/shared-rpc-listener-service';
-import { AbiItem } from 'web3-utils';
-import { Contract } from 'web3-eth-contract';
 import { ClientProxy } from '@nestjs/microservices';
 
-interface Options {
-  filter: {
-    value: string[];
-  };
-  fromBlock: number;
-  chainId: number;
-}
-
 @Injectable()
-export class RPCListenerService implements OnApplicationBootstrap, OnModuleDestroy {
-  private web3: Web3;
-  private options: Options;
-
+export class RPCListenerService implements OnApplicationBootstrap {
+  private wsProvider: ethers.providers.WebSocketProvider;
+  private chainId: number;
   constructor(
     private configService: ConfigService,
     @Inject('SC_BLOCKCHAIN_EVENTS_SERVICE') private scBlockchainEventsService: ClientProxy,
   ) {
-    this.web3 = new Web3(configService.get('RPC_URL'));
+    this.wsProvider = new ethers.providers.WebSocketProvider(configService.get('RPC_URL'));
   }
 
   async onApplicationBootstrap() {
     try {
-      this.options = {
-        filter: {
-          value: [],
-        },
-        fromBlock: await this.getLatestBlock(),
-        chainId: await this.getChainId(),
-      };
-
+      const { chainId } = await this.wsProvider.getNetwork();
+      this.chainId = chainId;
       await this.scBlockchainEventsService.connect();
       this.listen();
     } catch (e) {
       console.log('ERROR: could not connect to RPC node!', e);
     }
-  }
-
-  onModuleDestroy() {
-    console.log(`Listener service shut down at block number: ${this.getLatestBlock()}`);
-  }
-
-  async getLatestBlock(): Promise<number> {
-    return await this.web3.eth.getBlockNumber();
-  }
-
-  async getChainId(): Promise<number> {
-    return await this.web3.eth.getChainId();
   }
 
   listen() {
@@ -69,12 +40,7 @@ export class RPCListenerService implements OnApplicationBootstrap, OnModuleDestr
     contractEvents.forEach((contractEvent) => {
       const contractType: ContractType = contractEvent.contractType;
       const abi = this.parseAbi(contractType);
-
-      if (!abi) {
-        return;
-      }
-
-      const contract: Contract = new this.web3.eth.Contract(abi, contractEvent.contractAddress as string);
+      const contract = new ethers.Contract(contractEvent.contractAddress as string, abi, this.wsProvider);
       contractEvent.listensTo.forEach((eventType: EventType) => {
         this.subscribeToEvent(eventType, contract, contractType);
       });
@@ -84,26 +50,13 @@ export class RPCListenerService implements OnApplicationBootstrap, OnModuleDestr
   }
 
   subscribeToEvent(eventType: EventType, contract: Contract, contractType: ContractType): void {
-    const eventCall = this.getEventCall(eventType, contract);
-
-    if (!eventCall) {
-      return;
-    }
-
+    contract.on(eventType, (...eventValues) => {
+      const event = eventValues.pop();
+      event['contractType'] = contractType;
+      event['chainId'] = this.chainId;
+      this.handleEvent(event);
+    });
     console.log(`RPC Listener listens to: ${contractType} ${eventType}`);
-
-    try {
-      eventCall(this.options, (error, event: IEventMessage) => {
-        if (error) {
-          console.log(`RPC Listener received error ${error}`);
-        }
-        event.contractType = contractType;
-        event.chainId = this.options.chainId;
-        this.handleEvent(event);
-      });
-    } catch (error) {
-      console.log(error);
-    }
   }
 
   handleEvent(event: IEventMessage): void {
@@ -114,53 +67,24 @@ export class RPCListenerService implements OnApplicationBootstrap, OnModuleDestr
     }
   }
 
-  getEventCall(eventType: EventType, contract: Contract) {
-    let event = undefined;
-    switch (eventType) {
-      case EventType.TRANSFER_SINGLE: {
-        event = contract.events.TransferSingle;
-        break;
-      }
-      case EventType.MASTER_MINT_EVENT: {
-        event = contract.events.MasterMintEvent;
-        break;
-      }
-      case EventType.UNLISTED_NFT: {
-        event = contract.events.UnlistedNFT;
-        break;
-      }
-      case EventType.TRANSFER: {
-        event = contract.events.Transfer;
-        break;
-      }
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return event;
-  }
-
   parseAbi(contractType: ContractType) {
-    let abi: AbiItem[] = undefined;
+    let abi: ContractInterface = undefined;
 
     switch (contractType) {
       case ContractType.MARKETPLACE: {
-        //Typecast reason: https://github.com/ChainSafe/web3.js/issues/3310
-        abi = MarketplaceContract as AbiItem[];
+        abi = MarketplaceContract;
         break;
       }
       case ContractType.MASTER: {
-        //Typecast reason: https://github.com/ChainSafe/web3.js/issues/3310
-        abi = MasterContract as AbiItem[];
+        abi = MasterContract;
         break;
       }
       case ContractType.LICENSE: {
-        //Typecast reason: https://github.com/ChainSafe/web3.js/issues/3310
-        abi = LicenseContract as AbiItem[];
+        abi = LicenseContract;
         break;
       }
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return abi;
   }
 }

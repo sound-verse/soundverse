@@ -1,6 +1,8 @@
+import { BigNumber } from "ethers";
+
 export interface ITransferSingle {
   from: string;
   to: string;
-  id: string;
-  value: string;
+  id: BigNumber;
+  value: BigNumber;
 }

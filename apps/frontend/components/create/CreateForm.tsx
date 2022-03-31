@@ -142,7 +142,7 @@ export const CreateForm = () => {
                 <div className="text-grey-light mt-3 text-xs">
                   MP3, WAVE - Max 100Mb
                 </div>
-                <div className="text-grey-light">
+                <div className="text-grey-light text-xs">
                   {nftFile && `Selected File: ${nftFile.name}`}
                 </div>
                 <div className={styles.error}>{nftFileError}</div>
@@ -172,7 +172,7 @@ export const CreateForm = () => {
                   JPG, PNG - Max 100Mb
                 </div>
               </div>
-              <div className="text-grey-light">
+              <div className="text-grey-light text-xs">
                 {pictureFile && `Selected File: ${pictureFile.name}`}
               </div>
               <div className={styles.error}>{pictureFileError}</div>
