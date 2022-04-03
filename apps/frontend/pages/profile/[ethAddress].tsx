@@ -151,8 +151,6 @@ export async function getServerSideProps(context) {
     },
   })
 
-  console.log(ownedMasterNfts)
-
   return {
     props: {
       user: user.data.user,
