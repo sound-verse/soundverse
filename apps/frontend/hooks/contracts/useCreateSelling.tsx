@@ -12,11 +12,11 @@ import {
 } from '../../common/graphql/schema'
 import { NftType } from '../../common/types/nft-type.enum'
 import { CREATE_SELLING } from '../../common/graphql/mutations/create-selling.mutation'
-import { BigNumber, utils } from 'ethers'
 import { Contract } from '@ethersproject/contracts'
 import MarketContractAbi from '../../common/artifacts/MarketContract.json'
 import { useCallback, useEffect, useState } from 'react'
 import Web3 from 'web3'
+import { BigNumber, utils } from 'ethers';
 
 export const sellingVoucherTypes = {
   SVVoucher: [
@@ -61,9 +61,8 @@ export const useCreateSelling = () => {
 
   useEffect(() => {
     if (state.transaction) {
-      const sellCount = parseInt(
-        utils.formatEther(state.transaction as unknown as BigNumber)
-      )
+      const sellCount = BigNumber.from(state.transaction).toNumber()
+      console.log(sellCount)
       setSellCount(sellCount)
     }
   }, [state])

@@ -5,19 +5,19 @@ export default () => ({
     local: {
       contractEvents: [
         {
-          contractAddress: '0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0',
-          listensTo: [EventType.TRANSFER, EventType.MASTER_MINT_EVENT],
-          contractType: ContractType.MASTER,
-          version: '0.1',
-        },
-        {
-          contractAddress: '0x610178dA211FEF7D417bC0e6FeD39F05609AD788',
+          contractAddress: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
           listensTo: [EventType.TRANSFER_SINGLE],
           contractType: ContractType.LICENSE,
           version: '0.1',
         },
         {
-          contractAddress: '0x9A676e781A523b5d0C0e43731313A708CB607508',
+          contractAddress: '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9',
+          listensTo: [EventType.TRANSFER, EventType.MASTER_MINT_EVENT],
+          contractType: ContractType.MASTER,
+          version: '0.1',
+        },
+        {
+          contractAddress: '0x0165878A594ca255338adfa4d48449f69242Eb8F',
           listensTo: [EventType.UNLISTED_NFT],
           contractType: ContractType.MARKETPLACE,
           version: '0.1',
