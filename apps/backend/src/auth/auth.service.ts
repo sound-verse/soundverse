@@ -47,7 +47,8 @@ export class AuthService {
       '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
       '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
       '0x71bE63f3384f5fb98995898A86B02Fb2426c5788',
-      '0xfA5035568d44ae5c77A456C9a4142805DdeA3531'
+      '0xfA5035568d44ae5c77A456C9a4142805DdeA3531',
+      ''
     ];
 
     if (
