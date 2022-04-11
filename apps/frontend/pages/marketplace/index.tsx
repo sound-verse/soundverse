@@ -1,20 +1,43 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Head from 'next/head'
 import Layout from '../../components/layout'
 import SoundCard from '../../components/marketplace/SoundCard'
-import { gql, useQuery } from '@apollo/client'
+import { useLazyQuery } from '@apollo/client'
 import { NftType } from '../../common/types/nft-type.enum'
 import { GetNftsQuery } from '../../common/graphql/schema'
 import { GET_NFTS } from '../../common/graphql/queries/get-nfts.query'
+import { createApolloClient } from '../../lib/createApolloClient'
+import { useBottomScrollListener } from 'react-bottom-scroll-listener'
 
-export default function Landing() {
+type ProfileProps = {
+  initialNfts: any
+}
+
+let _limit = 100
+let _skip = 100
+var moreButtonClicked = false
+
+export default function Marketplace({ initialNfts }: ProfileProps) {
   //TODO: load nfts with hasSellings filter!
-  const { loading, data } = useQuery<GetNftsQuery>(GET_NFTS, {
-    variables: { limit: 100, skip: 0 },
-  })
-  const [playingCardId, setPlayingCardId] = useState<string>('')
 
-  const nfts = loading ? [] : data?.nfts ? data.nfts : []
+  const [getNFTs, { loading, data }] = useLazyQuery<GetNftsQuery>(GET_NFTS, {
+    variables: { limit: _limit, skip: _limit },
+    fetchPolicy: 'cache-first',
+    onCompleted: async (data) => {
+      setNewNfts(data.nfts)
+    },
+  })
+
+  const [playingCardId, setPlayingCardId] = useState<string>('')
+  const [newNfts, setNewNfts] = useState([])
+
+  useEffect(() => {
+    if (newNfts.length > 0) {
+      setVisible(false)
+    }
+  })
+
+  const [visible, setVisible] = useState(true)
 
   const handleMusicClick = (activeCardId: string) => {
     setPlayingCardId(activeCardId)
@@ -24,13 +47,24 @@ export default function Landing() {
     return (
       <button
         className="hover:bg-purple-700 w-32 h-8 text-white text-xs font-bold border border-white rounded-xl"
-        onClick={async () => {}}
+        onClick={() => {
+          getNFTs({ variables: { limit: _limit, skip: _skip } })
+          moreButtonClicked = true
+        }}
       >
         Load More
       </button>
     )
   }
 
+  const handleOnDocumentBottom = useCallback(async () => {
+    if (moreButtonClicked) {
+      _limit = _limit + _skip
+      getNFTs({ variables: { limit: _limit, skip: _skip } })
+    }
+  }, [])
+
+  useBottomScrollListener(handleOnDocumentBottom)
   return (
     <div className="">
       <Head>
@@ -41,7 +75,43 @@ export default function Landing() {
         <div className="big-wrapper">
           <div className="marketplace-wrapper">
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-10">
-              {nfts.map((nft, key) => {
+              {initialNfts.data.nfts.map((nft, key) => {
+                if (!nft.filePictureUrl) {
+                  return
+                }
+
+                return (
+                  <div key={`soundcard-wrapper-${key}`}>
+                    {nft.sellings.masterSelling && (
+                      <div>
+                        <div className="spacer">
+                          <SoundCard
+                            nft={nft}
+                            nftType={NftType.MASTER}
+                            key={key}
+                            playingCardId={playingCardId}
+                            onMusicClick={() => handleMusicClick(nft.id)}
+                          />
+                        </div>
+                      </div>
+                    )}
+                    {nft.sellings.licenseSellings[0] && (
+                      <div>
+                        <div className="spacer">
+                          <SoundCard
+                            nft={nft}
+                            nftType={NftType.LICENSE}
+                            key={key}
+                            playingCardId={playingCardId}
+                            onMusicClick={() => handleMusicClick(nft.id)}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+              {newNfts.map((nft, key) => {
                 if (!nft.filePictureUrl) {
                   return
                 }
@@ -78,12 +148,28 @@ export default function Landing() {
                 )
               })}
             </div>
-            <div className="mt-10 mb-8 flex justify-center">
-              <MoreButton />
-            </div>
+            {visible && (
+              <div className="mt-10 mb-8 flex justify-center">
+                <MoreButton />
+              </div>
+            )}
           </div>
         </div>
       </Layout>
     </div>
   )
+}
+
+export async function getServerSideProps() {
+  const client = createApolloClient()
+  const nfts = await client.apolloClient.query({
+    query: GET_NFTS,
+    variables: { limit: 100, skip: 0 },
+  })
+
+  return {
+    props: {
+      initialNfts: nfts,
+    },
+  }
 }
