@@ -1,18 +1,9 @@
-import { Formik, Form, Field, ErrorMessage } from 'formik'
-import * as Yup from 'yup'
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
-import toast from 'react-hot-toast'
-import Modal from 'react-modal'
-import { Bars } from 'react-loader-spinner'
-import styles from './CreateSellingForm.module.css'
-import { useProfile } from '../../hooks/useProfile'
 import { LoggedInUser, useLogin } from '../../hooks/useLogin'
-import { useRouter } from 'next/router'
-import { useCreateSelling } from '../../hooks/contracts/useCreateSelling'
-import { NftType } from '../../common/types/nft-type.enum'
-import { Nft, NftOwner, Selling } from '../../common/graphql/schema'
+import { Selling } from '../../common/graphql/schema'
 import { ProfileName } from '../profile'
 import Link from 'next/link'
+import Web3 from 'web3'
 
 export type BuyLicenseProps = {
   user: LoggedInUser
@@ -58,7 +49,9 @@ export const BuyLicense = ({
               />
             </div>
             <div className="font-bold col-start-3">
-              {selling.sellingVoucher.price}
+              {parseFloat(
+                Web3.utils.fromWei(selling.sellingVoucher.price)
+              ).toFixed(2)}
               <span className="ml-2">{selling.sellingVoucher.currency}</span>
             </div>
             <div className="text-purple col-start-6">

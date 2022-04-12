@@ -117,34 +117,26 @@ export default function Marketplace({ initialNfts }: ProfileProps) {
                 }
 
                 return (
-                  <div key={`soundcard-wrapper-${key}`}>
+                   <div key={`soundcard-wrapper-${key}`}>
                     {nft.sellings.masterSelling && (
-                      <div>
-                        <div className="spacer">
-                          <SoundCard
-                            nft={nft}
-                            nftType={NftType.MASTER}
-                            key={key}
-                            playingCardId={playingCardId}
-                            onMusicClick={() => handleMusicClick(nft.id)}
-                          />
-                        </div>
-                      </div>
+                      <SoundCard
+                        nft={nft}
+                        nftType={NftType.MASTER}
+                        key={key}
+                        playingCardId={playingCardId}
+                        onMusicClick={() => handleMusicClick(nft.id)}
+                      />
                     )}
                     {nft.sellings.licenseSellings[0] && (
-                      <div>
-                        <div className="spacer">
-                          <SoundCard
-                            nft={nft}
-                            nftType={NftType.LICENSE}
-                            key={key}
-                            playingCardId={playingCardId}
-                            onMusicClick={() => handleMusicClick(nft.id)}
-                          />
-                        </div>
-                      </div>
+                      <SoundCard
+                        nft={nft}
+                        nftType={NftType.LICENSE}
+                        key={key}
+                        playingCardId={playingCardId}
+                        onMusicClick={() => handleMusicClick(nft.id)}
+                      />
                     )}
-                  </div>
+                  </>
                 )
               })}
             </div>

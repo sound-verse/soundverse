@@ -40,7 +40,10 @@ export class Nft extends BaseDBObject {
   tokenId?: number;
 
   @Prop({ lowercase: true })
-  contractAddress: string;
+  masterContractAddress: string;
+
+  @Prop({ lowercase: true })
+  licenseContractAddress: string;
 
   @Prop({ default: [] })
   metadata: NftMetadata;

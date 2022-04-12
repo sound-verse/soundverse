@@ -41,7 +41,10 @@ export class Nft {
   supply: number;
 
   @Field()
-  contractAddress: string;
+  masterContractAddress: string;
+
+  @Field()
+  licenseContractAddress: string;
 
   @Field()
   ipfsUrl: string;

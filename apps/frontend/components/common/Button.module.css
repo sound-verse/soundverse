@@ -1,5 +1,5 @@
 .root {
-  @apply px-8 py-4 border-white border text-white bg-grey-medium rounded-full cursor-pointer font-bold;
+  @apply px-4 py-3 border-white border text-white bg-grey-medium rounded-full cursor-pointer font-bold text-sm;
 }
 
 .disabled {

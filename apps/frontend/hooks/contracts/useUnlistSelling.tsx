@@ -24,11 +24,7 @@ export const useUnlistSelling = () => {
   const abi = new utils.Interface(MarketContractAbi.abi)
   const contract = new Contract(marketContractAddress, abi)
 
-  const { state, send } = useContractFunction(contract, 'unlistItem')
-
-  useEffect(() => {
-    console.log(state)
-  }, [state])
+  const { state, send } = useContractFunction(contract as any, 'unlistItem')
 
   const unlistNft = async (createSellingInputProps: UnlistSellingProps) => {
     if (!authUser || !chainId) {
@@ -48,5 +44,5 @@ export const useUnlistSelling = () => {
     }
   }
 
-  return { unlistNft }
+  return { unlistNft, unlistNftState: state }
 }

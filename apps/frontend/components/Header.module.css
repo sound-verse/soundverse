@@ -9,7 +9,7 @@
   align-items: center;
   background: #272727;
   border-radius: 0px 0px 15px 15px;
-  height: 100px;
+  height: 80px;
 }
 
 .nineByNineIcon {
@@ -24,19 +24,20 @@
   position: relative;
   justify-self: center;
   cursor: pointer;
-  font-size: 32px;
+  font-size: 24px;
   line-height: 38.4px;
+  margin-left: 50px;
 }
 .headerSearchbar {
   flex-grow: 4;
-  max-width: 1000px;
-  height: 50px;
+  max-width: 500px;
+  height: 40px;
   border-radius: 69px;
   border: 2px solid #707070;
   background-color: #272727;
   color: white;
   padding: 0px 10px 0px 40px;
-  background: transparent url('/img/searchIcon.svg') 12px 12px/22px 22px
+  background: transparent url('/img/searchIcon.svg') 12px 12px/14px 14px
     no-repeat;
 }
 .headerSearchbar:focus {
@@ -56,19 +57,19 @@
   font-family: Poppins;
   color: white;
   font-weight: 700;
-  font-size: 20px;
+  font-size: 16px;
   line-height: 30px;
 }
 .connectButton {
   margin-right: 50px;
-  height: 50px;
-  width: 200px;
+  height: 40px;
+  width: 170px;
   border-radius: 69px;
   padding: 0;
   background: #272727;
   border: 2px solid #7c4dff;
   font-family: Poppins;
-  font-size: 20px;
+  font-size: 16px;
   font-style: normal;
   font-weight: 900;
   line-height: 30px;
@@ -92,7 +93,7 @@
   height: 25px;
 }
 .connectButtonAddress {
-  font-size: 16px;
+  font-size: 12px;
 }
 .dropdownWrapper {
   position: absolute;

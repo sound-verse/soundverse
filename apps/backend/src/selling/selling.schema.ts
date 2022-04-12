@@ -22,7 +22,7 @@ class SellingVoucher {
   nftContractAddress: string;
 
   @Prop()
-  price: number;
+  price: string;
 
   @Prop()
   sellCount: number;

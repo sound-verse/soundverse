@@ -95,16 +95,16 @@ export const CreateSellingForm = ({
             enableReinitialize
           >
             <Form>
-              <div className="text-white font-bold text-base mt-10 mb-5">
+              <div className="text-white font-bold text-sm mt-10 mb-5">
                 Type
               </div>
-              <div className="flex flex-col bg-grey-medium border border-white p-6 w-36 rounded-2xl justify-center items-center cursor-pointer">
+              <div className="flex flex-col bg-grey-medium border border-white p-6 w-32 text-sm rounded-2xl justify-center items-center cursor-pointer">
                 <div>$</div>
                 <div>Fixed Price</div>
               </div>
-              <div className="text-white font-bold text-base mt-10">Price</div>
+              <div className="text-white font-bold text-sm mt-10">Price</div>
               <div className="flex justify-start items-baseline mt-5">
-                <div className="border border-white font-bold rounded-full px-7 py-2 mr-8 ">
+                <div className="border border-white font-bold rounded-full px-5 py-2 mr-8 text-sm ">
                   MATIC
                 </div>
                 <div className="">
@@ -120,7 +120,7 @@ export const CreateSellingForm = ({
                   </div>
                 </div>
               </div>
-              <div className="text-white font-bold text-base mt-10">Amount</div>
+              <div className="text-white font-bold text-sm mt-10">Amount</div>
               <div className="flex justify-start items-baseline mt-5">
                 <div className="mr-5">
                   <Field
@@ -144,12 +144,12 @@ export const CreateSellingForm = ({
                   </div>
                 </div>
               </div>
-              <div className="text-white font-bold text-base mt-10">Fees</div>
-              <div className="text-grey-light text-md mt-5">
-                Service fee: 2.5%
+              <div className="text-white font-bold text-sm mt-10">Fees</div>
+              <div className="text-grey-light text-md mt-5 text-sm">
+                Service fee: 3.5%
               </div>
               <button
-                className="text-white cursor-pointer rounded-full bg-purple px-24 py-4 ml-auto mt-10 font-bold"
+                className="text-white cursor-pointer rounded-full bg-purple px-24 py-3 ml-auto mt-10 font-bold text-sm"
                 type="submit"
               >
                 Complete Listing
@@ -161,7 +161,7 @@ export const CreateSellingForm = ({
       <Modal
         isOpen={loading}
         contentLabel="onRequestClose Example"
-        className="flex justify-center items-center h-full"
+        className="flex justify-center items-center h-full z-50"
       >
         <div className="w-1/2 h-1/2 rounded-3xl p-10 bg-grey-dark flex flex-col justify-between items-center">
           <div className="h-full w-full justify-center items-center flex flex-col">

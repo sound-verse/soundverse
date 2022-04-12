@@ -9,7 +9,7 @@ export type IEvent<T = any> = {
   logIndex: number;
   removed: boolean;
   id: string;
-  returnValues: T;
+  args: T;
   event: EventType;
   signature: string;
   raw: {

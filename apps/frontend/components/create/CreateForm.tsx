@@ -108,7 +108,7 @@ export const CreateForm = () => {
 
   return (
     <>
-      <div className="rounded-3xl bg-grey-dark max-w-3xl p-20 mx-auto mt-12 mb-36">
+      <div className="rounded-3xl bg-grey-dark max-w-2xl p-20 mx-auto mt-12 mb-36">
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -121,7 +121,7 @@ export const CreateForm = () => {
               <div>
                 <label
                   htmlFor="nftFile"
-                  className="text-white border-2 border-white rounded-full p-2 mt-5 inline-block cursor-pointer px-36 whitespace-nowrap"
+                  className="text-white border-2 border-white text-sm rounded-full p-2 mt-5 inline-block cursor-pointer px-28 whitespace-nowrap"
                 >
                   Choose Music File
                 </label>
@@ -139,10 +139,10 @@ export const CreateForm = () => {
                     )
                   }
                 ></Field>
-                <div className="text-grey-light mt-3">
+                <div className="text-grey-light mt-3 text-xs">
                   MP3, WAVE - Max 100Mb
                 </div>
-                <div className="text-grey-light">
+                <div className="text-grey-light text-xs">
                   {nftFile && `Selected File: ${nftFile.name}`}
                 </div>
                 <div className={styles.error}>{nftFileError}</div>
@@ -150,7 +150,7 @@ export const CreateForm = () => {
               <div>
                 <label
                   htmlFor="pictureFile"
-                  className="text-white border-2 border-white rounded-full p-2 mt-5 inline-block cursor-pointer px-36 whitespace-nowrap"
+                  className="text-white border-2 text-sm border-white rounded-full p-2 mt-5 inline-block cursor-pointer px-36 whitespace-nowrap"
                 >
                   Choose Nft Cover Picture
                 </label>
@@ -168,13 +168,15 @@ export const CreateForm = () => {
                     )
                   }
                 ></input>
-                <div className="text-grey-light mt-3">JPG, PNG - Max 100Mb</div>
+                <div className="text-grey-light mt-3 text-xs">
+                  JPG, PNG - Max 100Mb
+                </div>
               </div>
-              <div className="text-grey-light">
+              <div className="text-grey-light text-xs">
                 {pictureFile && `Selected File: ${pictureFile.name}`}
               </div>
               <div className={styles.error}>{pictureFileError}</div>
-              <div className="text-white font-bold text-base mt-10">
+              <div className="text-white font-bold text-sm mt-10">
                 Track Name
               </div>
               <div className="mt-3 w-full">
@@ -185,14 +187,14 @@ export const CreateForm = () => {
                   className="outline-none bg-grey-dark text-white w-full"
                 />
                 <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
-                <div className="text-grey-light mt-2">max. 20 characters</div>
+                <div className="text-grey-light mt-2 text-xs">
+                  max. 20 characters
+                </div>
                 <div className={styles.error}>
                   <ErrorMessage name="name" />
                 </div>
               </div>
-              <div className="text-white font-bold text-base mt-10">
-                Licenses
-              </div>
+              <div className="text-white font-bold text-sm mt-10">Licenses</div>
               <div className="mt-3 w-full">
                 <Field
                   id="licenses"
@@ -201,14 +203,14 @@ export const CreateForm = () => {
                   className="outline-none bg-grey-dark text-white w-full"
                 />
                 <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
-                <div className="text-grey-light mt-2">
+                <div className="text-grey-light mt-2 text-xs">
                   min. 2 - max. 100.000
                 </div>
                 <div className={styles.error}>
                   <ErrorMessage name="licenses" />
                 </div>
               </div>
-              <div className="text-white font-bold text-base mt-10">
+              <div className="text-white font-bold text-sm mt-10">
                 Description
               </div>
               <div className="mt-3">
@@ -216,7 +218,7 @@ export const CreateForm = () => {
                   type="input"
                   as="textarea"
                   name="description"
-                  className="w-full text-white bg-transparent border-2 rounded-3xl p-5"
+                  className="w-full text-white bg-transparent border-2 rounded-3xl p-5 text-sm"
                   id="trac-desc"
                   placeholder="I am ..."
                   rows={8}
@@ -227,7 +229,7 @@ export const CreateForm = () => {
                 </div>
               </div>
               <button
-                className="text-white cursor-pointer rounded-full bg-purple px-24 py-4 ml-auto mt-10 font-bold"
+                className="text-white cursor-pointer rounded-full bg-purple px-24 py-4 ml-auto mt-10 font-bold text-sm"
                 type="submit"
               >
                 Mint

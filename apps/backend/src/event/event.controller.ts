@@ -16,8 +16,9 @@ export class EventController {
       console.log(`Acknowledging event message with transaction hash ${event.transactionHash} ...`);
       channel.ack(originalMsg);
     } catch (error) {
+      console.log(error);
       console.log(
-        `An error occured while handling the event ${event.event} with transactionhash ${event.transactionHash}. Put event message in the recovery queue ...`,
+        `An error occured while handling the event ${event.event} with transactionhash ${event.transactionHash} ${error}. Put event message in the recovery queue ...`,
       );
       channel.reject(originalMsg, false);
     }

@@ -44,13 +44,14 @@ type Mutation {
 
 type Nft {
   chainId: Int!
-  contractAddress: String!
   creator: User
   filePictureUrl: String!
   fileUrl: String!
   id: String!
   ipfsUrl: String!
+  licenseContractAddress: String!
   licenseOwners: [NftOwner!]
+  masterContractAddress: String!
   masterOwner: NftOwner!
   metadata: NftMetadata!
   sellings: NftSelling!
@@ -60,7 +61,6 @@ type Nft {
 }
 
 input NftFilter {
-  contractAddress: String
   id: String
   ipfsUrl: String
   tokenId: Float
@@ -97,6 +97,8 @@ type NftSelling {
 input NftsFilter {
   creatorEthAddress: String
   hasSelling: Boolean
+  licenseOwnerEthAddress: String
+  masterOwnerEthAddress: String
 }
 
 type Query {
@@ -122,7 +124,7 @@ type SellingVoucher {
   isMaster: Boolean!
   maxSupply: Int!
   nftContractAddress: String!
-  price: Float!
+  price: String!
   sellCount: Int!
   signature: String!
   supply: Int!
@@ -135,7 +137,7 @@ input SellingVoucherInput {
   isMaster: Boolean!
   maxSupply: Int!
   nftContractAddress: String!
-  price: Float!
+  price: String!
   sellCount: Int!
   signature: String!
   supply: Int!

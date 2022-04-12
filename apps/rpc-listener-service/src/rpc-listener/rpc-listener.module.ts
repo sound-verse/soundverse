@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CoreModule } from '../core/core.module';
 import { RPCListenerService } from './rpc-listener.service';
-import { ClientProxyFactory, RmqOptions, Transport } from '@nestjs/microservices';
+import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [CoreModule, ConfigModule],

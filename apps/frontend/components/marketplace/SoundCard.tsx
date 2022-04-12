@@ -7,6 +7,7 @@ import { AudioPlayer } from '../AudioPlayer/AudioPlayer'
 import cn from 'classnames'
 import { NftType } from '../../common/types/nft-type.enum'
 import { Nft, Selling } from '../../common/graphql/schema'
+import Web3 from 'web3'
 
 export type SoundCardProp = {
   nftType: NftType
@@ -55,7 +56,7 @@ function SoundCard({
             {nftType === NftType.MASTER ? 'Master' : 'License'}
           </div>
           <div className={styles.soundCardHeaderBottom}>
-            <div className="font-semibold text-xl">
+            <div className="font-semibold text-md">
               {nft.metadata.name.length > 45
                 ? `${nft.metadata.name.substring(0, 45)}...`
                 : nft.metadata.name}
@@ -65,7 +66,7 @@ function SoundCard({
                 ethAddress={nft.creator.ethAddress}
                 name={nft.creator.name}
                 short={true}
-                className=""
+                className="text-sm"
               />
             </div>
           </div>
@@ -93,11 +94,15 @@ function SoundCard({
       <div className={styles.soundCardFooter}>
         {nftType === NftType.MASTER ? (
           nft.sellings.masterSelling ? (
-            <div className="flex flex-col w-full h-full ml-5 justify-center">
+            <div className="flex flex-col w-full h-full ml-5 justify-center text-sm">
               <div className="text-grey-light">
                 Price:
                 <span className="font-bold ml-2 text-white">
-                  {nft.sellings.masterSelling.sellingVoucher.price}{' '}
+                  {parseFloat(
+                    Web3.utils.fromWei(
+                      nft.sellings.masterSelling.sellingVoucher.price
+                    )
+                  ).toFixed(2)}{' '}
                   {nft.sellings.masterSelling.sellingVoucher.currency}
                 </span>
               </div>
@@ -108,14 +113,18 @@ function SoundCard({
             </div>
           )
         ) : nft.sellings.licenseSellings[0] ? (
-          <div className="flex flex-col w-full h-full ml-5 justify-center">
+          <div className="flex flex-col w-full h-full ml-5 justify-center text-sm">
             <div className="font-bold">
               {nft.sellings.licenseSellings.length} listings
             </div>
             <div className=" text-white">
               Lowest ask{' '}
               <span className="font-bold ml-2 text-white">
-                {nft.sellings.licenseSellings[0]?.sellingVoucher.price}{' '}
+                {parseFloat(
+                  Web3.utils.fromWei(
+                    nft.sellings.licenseSellings[0]?.sellingVoucher.price
+                  )
+                ).toFixed(2)}{' '}
                 {nft.sellings.licenseSellings[0]?.sellingVoucher.currency}
               </span>
             </div>

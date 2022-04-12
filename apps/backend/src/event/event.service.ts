@@ -13,6 +13,7 @@ import * as amqpConMgr from 'amqp-connection-manager';
 import { NftService } from '../nft/nft.service';
 import { ConfigService } from '@nestjs/config';
 import { SellingService } from '../selling/selling.service';
+import { BigNumber } from 'ethers';
 
 @Injectable()
 export class EventService implements OnApplicationBootstrap {
@@ -30,8 +31,9 @@ export class EventService implements OnApplicationBootstrap {
     });
     const channelWrapper: amqpConMgr.ChannelWrapper = connection.createChannel({
       json: true,
-      setup: async (channel: amqp.ConfirmChannel): Promise<void> => {
+      setup: async (channel: amqp.ConfirmChannel) => {
         // tslint:disable-next-line:await-promise
+        // tslint:disable-next-line:no-misused-promises
         await channel.assertQueue(this.configService.get('RABBITMQ_RECOVERY_QUEUE_NAME'), { durable: true });
       },
     });
@@ -45,27 +47,32 @@ export class EventService implements OnApplicationBootstrap {
       case ContractType.MASTER: {
         switch (eventType) {
           case EventType.MASTER_MINT_EVENT: {
-            const returnValues: IMasterMintEvent = event.returnValues;
+            const args = event.args;
+            const tokenId: number = BigNumber.from(args[0]).toNumber();
+            const tokenUri: string = args[1];
             await this.nftService.setTokenId(
-              parseInt(returnValues.id),
+              tokenId,
               event.address,
               event.chainId,
               event.transactionHash,
-              returnValues.uri,
+              tokenUri,
             );
             break;
           }
           case EventType.TRANSFER: {
-            const returnValues: ITransfer = event.returnValues;
-            if (returnValues.from === nullAddress) {
+            const args = event.args;
+            const from: string = args[0];
+            const to: string = args[1];
+            const tokenId: number = BigNumber.from(args[2]).toNumber();
+            if (from === nullAddress) {
               return;
             }
             await this.nftService.changeOwner(
-              returnValues.from,
-              returnValues.to,
+              from,
+              to,
               1,
               event.address,
-              parseInt(returnValues.tokenId),
+              tokenId,
               true,
               event.chainId,
               event.transactionHash,
@@ -77,16 +84,20 @@ export class EventService implements OnApplicationBootstrap {
       case ContractType.LICENSE: {
         switch (eventType) {
           case EventType.TRANSFER_SINGLE: {
-            const returnValues: ITransferSingle = event.returnValues;
-            if (returnValues.from === nullAddress) {
+            const args = event.args;
+            const from: string = args[1];
+            const to: string = args[2];
+            const tokenId: number = BigNumber.from(args[3]).toNumber();
+            const supply: number = BigNumber.from(args[4]).toNumber();
+            if (from === nullAddress) {
               return;
             }
             await this.nftService.changeOwner(
-              returnValues.from,
-              returnValues.to,
-              parseInt(returnValues.value),
+              from,
+              to,
+              supply,
               event.address,
-              parseInt(returnValues.id),
+              tokenId,
               false,
               event.chainId,
               event.transactionHash,
@@ -98,12 +109,11 @@ export class EventService implements OnApplicationBootstrap {
       case ContractType.MARKETPLACE: {
         switch (eventType) {
           case EventType.UNLISTED_NFT: {
-            const returnValues: IUnlistedNFT = event.returnValues;
-            await this.sellingService.unlistSelling(
-              returnValues.caller,
-              returnValues.tokenUri,
-              returnValues.contractAddress,
-            );
+            const args = event.args;
+            const tokenUri: string = args[0];
+            const contractAddress: string = args[1];
+            const caller: string = args[2];
+            await this.sellingService.unlistSelling(caller, tokenUri, contractAddress);
           }
         }
       }

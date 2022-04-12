@@ -65,7 +65,6 @@ export class NftResolver {
       return await this.nftService.createNft({
         metadata,
         ipfsUrl: ipfsMetadataUrl,
-        contractAddress: this.configService.get('MASTER_CONTRACT_ADDRESS'),
         fileUrl: fileNFTUrl,
         filePictureUrl,
         user,
@@ -124,12 +123,16 @@ export class NftResolver {
       nft.licenseOwners.map((licenseOwner) => licenseOwner.user),
     );
 
-    return licenseOwnersUser.map((licenseOwnerUser) => ({
-      user: licenseOwnerUser,
-      supply: nft.licenseOwners.find(
-        (licenseOwner) => licenseOwner.user.toString() === licenseOwnerUser._id.toString(),
-      ).supply,
-    }));
+    return licenseOwnersUser.map((licenseOwnerUser) => {
+      const owner = nft.licenseOwners.find(
+        (licenseOwner) => licenseOwner.user._id.toString() === licenseOwnerUser._id.toString(),
+      );
+
+      return {
+        user: licenseOwnerUser,
+        supply: owner.supply,
+      };
+    });
   }
 
   @ResolveField()

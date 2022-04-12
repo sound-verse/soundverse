@@ -1,4 +1,6 @@
+import { BigNumber } from "ethers";
+
 export interface IMasterMintEvent {
-  id: string;
+  id: BigNumber;
   uri: string;
 }

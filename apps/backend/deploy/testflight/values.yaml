@@ -152,8 +152,12 @@ env:
         key: do-secret-access-key
   - name: DO_SPACES_ENDPOINT
     value: ams3.digitaloceanspaces.com
+  - name: MARKET_CONTRACT_ADDRESS
+    value: '0xEFfD9087543cb093F34F165AA86830274CA8bC47'
   - name: MASTER_CONTRACT_ADDRESS
-    value: '0x2357a93fF873CA0CE783F71a87d1d38CaAd9fbCb'
+    value: '0xCd9ED3779D6f5eb65cDf86aB49119698fEd718A0'
+  - name: LICENSE_CONTRACT_ADDRESS
+    value: '0x4a8A068E7FeC8aEb84Ca940d6F82c2D483C8621C'
   - name: IPFS_GATEWAY_URL
     value: 'https://gateway.pinata.cloud/ipfs'
   - name: METADATA_EXTERNAL_URL_BASE
