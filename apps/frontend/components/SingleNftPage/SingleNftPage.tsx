@@ -17,6 +17,7 @@ import { useUnlistSelling } from '../../hooks/contracts/useUnlistSelling'
 import { BuyLicense } from '../selling/BuyLicense'
 import Modal from 'react-modal'
 import Web3 from 'web3'
+import { Bars } from 'react-loader-spinner'
 
 type SingleNftPageProps = {
   nft: Nft
@@ -31,6 +32,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
   const router = useRouter()
   const [showBoughtSuccess, setShowBoughtSuccess] = useState<boolean>(false)
   const [showUnlistedSuccess, setShowUnlistedSuccess] = useState<boolean>(false)
+  const [showing, setShowing] = useState<Boolean>(false)
 
   // useEffect(() => {
   //   if (!authUser && router.isReady) {
@@ -115,11 +117,13 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
   }, [unlistNftState])
 
   const handleBuyNft = async () => {
+    setShowing(true)
     await buyNft({
       nft,
       selling: nft.sellings.masterSelling,
       amountToBuy: 1,
     })
+    setShowing(false)
   }
 
   const handleBuyLicense = async () => {
@@ -452,6 +456,20 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                 )
               }}
             />
+          </div>
+        </div>
+      </Modal>
+      <Modal
+        isOpen={showing}
+        contentLabel="onRequestClose Example"
+        className="flex justify-center items-center h-full"
+      >
+        <div className="w-1/2 h-1/2 rounded-3xl p-10 bg-grey-dark flex flex-col justify-between items-center">
+          <div className="h-full w-full justify-center items-center flex flex-col">
+            <div className="text-white text-3xl font-bold mb-10">
+              Buying NFT
+            </div>
+            <Bars color="#7A64FF" height={80} width={80} />
           </div>
         </div>
       </Modal>
