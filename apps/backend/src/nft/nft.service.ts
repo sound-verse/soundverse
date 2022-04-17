@@ -11,6 +11,7 @@ import { NftFilter } from './dto/input/nft-filter.input';
 import { Selling, SellingDocument } from '../selling/selling.schema';
 import { NftType } from '../common/enums/nftType.enum';
 import { SellingStatus } from '../common/enums/sellingStatus.enum';
+import { UserNfts } from './dto/output/user-nfts.output';
 
 export interface CreateNftMetadata {
   name: string;
@@ -298,40 +299,6 @@ export class NftService {
   }
 
   async getNfts(limitOfDocuments = 100, documentsToSkip = 0, filter?: NftsFilter): Promise<Nft[]> {
-    if (filter?.creatorEthAddress) {
-      const creator = await this.userService.findByETHAddress(filter.creatorEthAddress.toLowerCase());
-      if (!creator) {
-        return null;
-      }
-      return this.nftModel.find({ verified: true, creator: creator._id });
-    }
-
-    if (filter?.masterOwnerEthAddress) {
-      const masterOwner = await this.userService.findByETHAddress(filter.masterOwnerEthAddress.toLowerCase());
-      if (!masterOwner) {
-        return null;
-      }
-      return this.nftModel.find({
-        verified: true,
-        'masterOwner.user': masterOwner._id,
-        creator: { $ne: masterOwner._id },
-      });
-    }
-
-    if (filter?.licenseOwnerEthAddress) {
-      const licenseOwner = await this.userService.findByETHAddress(
-        filter.licenseOwnerEthAddress.toLowerCase(),
-      );
-      if (!licenseOwner) {
-        return null;
-      }
-      return this.nftModel.find({
-        verified: true,
-        'licenseOwners.user': licenseOwner._id,
-        creator: { $ne: licenseOwner._id },
-      });
-    }
-
     const findQuery = this.nftModel
       .find({ verified: true })
       .sort({ _id: 1 })
@@ -340,5 +307,30 @@ export class NftService {
 
     const results = await findQuery;
     return results;
+  }
+
+  async getUserNfts(user: User): Promise<UserNfts> {
+    //TODO: use aggregate here
+
+    const ownedMasterNfts = await this.nftModel.find({
+      verified: true,
+      'masterOwner.user': user._id,
+    });
+
+    const ownedLicenseNfts = await this.nftModel.find({
+      verified: true,
+      'licenseOwners.user': user._id,
+    });
+
+    const createdMasterNfts = await this.nftModel.find({ verified: true, creator: user._id });
+
+    const createdLicenseNfts = createdMasterNfts;
+
+    return {
+      createdMasterNfts,
+      createdLicenseNfts,
+      ownedMasterNfts,
+      ownedLicenseNfts,
+    } as any;
   }
 }

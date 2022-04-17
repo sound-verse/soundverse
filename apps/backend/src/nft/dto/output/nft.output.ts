@@ -73,6 +73,6 @@ export class Nft {
   @Field((type) => NftOwner)
   masterOwner: NftOwner;
 
-  @Field((type) => NftSelling)
-  sellings: NftSelling;
+  @Field((type) => NftSelling, { nullable: true })
+  sellings?: NftSelling;
 }

@@ -7,8 +7,6 @@ export class BaseDBObject {
   // and will change the attribute name to `id`
   @Expose({ name: 'id' })
   @Transform((value) => value && value.toString())
-  @IsOptional()
-  // tslint:disable-next-line: variable-name
   _id: Types.ObjectId;
 
   toJSON() {

@@ -54,7 +54,7 @@ type Nft {
   masterContractAddress: String!
   masterOwner: NftOwner!
   metadata: NftMetadata!
-  sellings: NftSelling!
+  sellings: NftSelling
   supply: Float!
   tokenId: Float
   transactionHash: String
@@ -95,10 +95,7 @@ type NftSelling {
 }
 
 input NftsFilter {
-  creatorEthAddress: String
   hasSelling: Boolean
-  licenseOwnerEthAddress: String
-  masterOwnerEthAddress: String
 }
 
 type Query {
@@ -106,6 +103,7 @@ type Query {
   nft(filter: NftFilter!): Nft
   nfts(filter: NftsFilter, limit: Int!, skip: Int!): [Nft!]
   user(ethAddress: String!): User
+  userNfts(ethAddress: String): UserNfts!
 }
 
 type Selling {
@@ -175,6 +173,13 @@ type User {
   twitter: String
   verified: Boolean
   website: String
+}
+
+type UserNfts {
+  createdLicenseNfts: [Nft!]
+  createdMasterNfts: [Nft!]
+  ownedLicenseNfts: [Nft!]
+  ownedMasterNfts: [Nft!]
 }
 
 input VerificationTokenInput {

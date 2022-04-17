@@ -104,7 +104,7 @@ export type Nft = {
   masterContractAddress: Scalars['String']
   masterOwner: NftOwner
   metadata: NftMetadata
-  sellings: NftSelling
+  sellings?: Maybe<NftSelling>
   supply: Scalars['Float']
   tokenId?: Maybe<Scalars['Float']>
   transactionHash?: Maybe<Scalars['String']>
@@ -148,10 +148,7 @@ export type NftSelling = {
 }
 
 export type NftsFilter = {
-  creatorEthAddress?: InputMaybe<Scalars['String']>
   hasSelling?: InputMaybe<Scalars['Boolean']>
-  licenseOwnerEthAddress?: InputMaybe<Scalars['String']>
-  masterOwnerEthAddress?: InputMaybe<Scalars['String']>
 }
 
 export type Query = {
@@ -160,6 +157,7 @@ export type Query = {
   nft?: Maybe<Nft>
   nfts?: Maybe<Array<Nft>>
   user?: Maybe<User>
+  userNfts: UserNfts
 }
 
 export type QueryNftArgs = {
@@ -174,6 +172,10 @@ export type QueryNftsArgs = {
 
 export type QueryUserArgs = {
   ethAddress: Scalars['String']
+}
+
+export type QueryUserNftsArgs = {
+  ethAddress?: InputMaybe<Scalars['String']>
 }
 
 export type Selling = {
@@ -241,6 +243,14 @@ export type User = {
   twitter?: Maybe<Scalars['String']>
   verified?: Maybe<Scalars['Boolean']>
   website?: Maybe<Scalars['String']>
+}
+
+export type UserNfts = {
+  __typename?: 'UserNfts'
+  createdLicenseNfts?: Maybe<Array<Nft>>
+  createdMasterNfts?: Maybe<Array<Nft>>
+  ownedLicenseNfts?: Maybe<Array<Nft>>
+  ownedMasterNfts?: Maybe<Array<Nft>>
 }
 
 export type VerificationTokenInput = {
@@ -333,7 +343,7 @@ export type NftFragmentFragment = {
       verified?: boolean | null
     }
   }> | null
-  sellings: {
+  sellings?: {
     __typename?: 'NftSelling'
     masterSelling?: {
       __typename?: 'Selling'
@@ -445,7 +455,7 @@ export type NftFragmentFragment = {
         currency: string
       }
     }> | null
-  }
+  } | null
 }
 
 export type SellingFragmentFragment = {
@@ -655,7 +665,7 @@ export type GetNftQuery = {
         verified?: boolean | null
       }
     }> | null
-    sellings: {
+    sellings?: {
       __typename?: 'NftSelling'
       masterSelling?: {
         __typename?: 'Selling'
@@ -767,7 +777,7 @@ export type GetNftQuery = {
           currency: string
         }
       }> | null
-    }
+    } | null
   } | null
 }
 
@@ -845,7 +855,7 @@ export type GetNftsQuery = {
         verified?: boolean | null
       }
     }> | null
-    sellings: {
+    sellings?: {
       __typename?: 'NftSelling'
       masterSelling?: {
         __typename?: 'Selling'
@@ -957,6 +967,753 @@ export type GetNftsQuery = {
           currency: string
         }
       }> | null
-    }
+    } | null
   }> | null
+}
+
+export type GetUserNftsQueryVariables = Exact<{
+  ethAddress?: InputMaybe<Scalars['String']>
+}>
+
+export type GetUserNftsQuery = {
+  __typename?: 'Query'
+  userNfts: {
+    __typename?: 'UserNfts'
+    createdMasterNfts?: Array<{
+      __typename?: 'Nft'
+      id: string
+      tokenId?: number | null
+      masterContractAddress: string
+      licenseContractAddress: string
+      fileUrl: string
+      filePictureUrl: string
+      ipfsUrl: string
+      transactionHash?: string | null
+      supply: number
+      chainId: number
+      masterOwner: {
+        __typename?: 'NftOwner'
+        supply: number
+        user: {
+          __typename?: 'User'
+          id: string
+          name?: string | null
+          description?: string | null
+          ethAddress?: string | null
+          twitter?: string | null
+          instagram?: string | null
+          soundcloud?: string | null
+          discord?: string | null
+          spotify?: string | null
+          website?: string | null
+          profileImage?: string | null
+          verified?: boolean | null
+        }
+      }
+      metadata: {
+        __typename?: 'NftMetadata'
+        name: string
+        description: string
+      }
+      creator?: {
+        __typename?: 'User'
+        id: string
+        name?: string | null
+        description?: string | null
+        ethAddress?: string | null
+        twitter?: string | null
+        instagram?: string | null
+        soundcloud?: string | null
+        discord?: string | null
+        spotify?: string | null
+        website?: string | null
+        profileImage?: string | null
+        verified?: boolean | null
+      } | null
+      licenseOwners?: Array<{
+        __typename?: 'NftOwner'
+        supply: number
+        user: {
+          __typename?: 'User'
+          id: string
+          name?: string | null
+          description?: string | null
+          ethAddress?: string | null
+          twitter?: string | null
+          instagram?: string | null
+          soundcloud?: string | null
+          discord?: string | null
+          spotify?: string | null
+          website?: string | null
+          profileImage?: string | null
+          verified?: boolean | null
+        }
+      }> | null
+      sellings?: {
+        __typename?: 'NftSelling'
+        masterSelling?: {
+          __typename?: 'Selling'
+          id: string
+          nftType: string
+          marketplaceContractAddress: string
+          sellingStatus: string
+          transactionHash?: string | null
+          seller: {
+            __typename?: 'User'
+            id: string
+            name?: string | null
+            description?: string | null
+            ethAddress?: string | null
+            twitter?: string | null
+            instagram?: string | null
+            soundcloud?: string | null
+            discord?: string | null
+            spotify?: string | null
+            website?: string | null
+            profileImage?: string | null
+            verified?: boolean | null
+          }
+          buyers: Array<{
+            __typename?: 'NftOwner'
+            supply: number
+            user: {
+              __typename?: 'User'
+              id: string
+              name?: string | null
+              description?: string | null
+              ethAddress?: string | null
+              twitter?: string | null
+              instagram?: string | null
+              soundcloud?: string | null
+              discord?: string | null
+              spotify?: string | null
+              website?: string | null
+              profileImage?: string | null
+              verified?: boolean | null
+            }
+          }>
+          sellingVoucher: {
+            __typename?: 'SellingVoucher'
+            nftContractAddress: string
+            price: string
+            tokenId: number
+            tokenUri: string
+            isMaster: boolean
+            signature: string
+            sellCount: number
+            supply: number
+            maxSupply: number
+            currency: string
+          }
+        } | null
+        licenseSellings?: Array<{
+          __typename?: 'Selling'
+          id: string
+          nftType: string
+          marketplaceContractAddress: string
+          sellingStatus: string
+          transactionHash?: string | null
+          seller: {
+            __typename?: 'User'
+            id: string
+            name?: string | null
+            description?: string | null
+            ethAddress?: string | null
+            twitter?: string | null
+            instagram?: string | null
+            soundcloud?: string | null
+            discord?: string | null
+            spotify?: string | null
+            website?: string | null
+            profileImage?: string | null
+            verified?: boolean | null
+          }
+          buyers: Array<{
+            __typename?: 'NftOwner'
+            supply: number
+            user: {
+              __typename?: 'User'
+              id: string
+              name?: string | null
+              description?: string | null
+              ethAddress?: string | null
+              twitter?: string | null
+              instagram?: string | null
+              soundcloud?: string | null
+              discord?: string | null
+              spotify?: string | null
+              website?: string | null
+              profileImage?: string | null
+              verified?: boolean | null
+            }
+          }>
+          sellingVoucher: {
+            __typename?: 'SellingVoucher'
+            nftContractAddress: string
+            price: string
+            tokenId: number
+            tokenUri: string
+            isMaster: boolean
+            signature: string
+            sellCount: number
+            supply: number
+            maxSupply: number
+            currency: string
+          }
+        }> | null
+      } | null
+    }> | null
+    createdLicenseNfts?: Array<{
+      __typename?: 'Nft'
+      id: string
+      tokenId?: number | null
+      masterContractAddress: string
+      licenseContractAddress: string
+      fileUrl: string
+      filePictureUrl: string
+      ipfsUrl: string
+      transactionHash?: string | null
+      supply: number
+      chainId: number
+      masterOwner: {
+        __typename?: 'NftOwner'
+        supply: number
+        user: {
+          __typename?: 'User'
+          id: string
+          name?: string | null
+          description?: string | null
+          ethAddress?: string | null
+          twitter?: string | null
+          instagram?: string | null
+          soundcloud?: string | null
+          discord?: string | null
+          spotify?: string | null
+          website?: string | null
+          profileImage?: string | null
+          verified?: boolean | null
+        }
+      }
+      metadata: {
+        __typename?: 'NftMetadata'
+        name: string
+        description: string
+      }
+      creator?: {
+        __typename?: 'User'
+        id: string
+        name?: string | null
+        description?: string | null
+        ethAddress?: string | null
+        twitter?: string | null
+        instagram?: string | null
+        soundcloud?: string | null
+        discord?: string | null
+        spotify?: string | null
+        website?: string | null
+        profileImage?: string | null
+        verified?: boolean | null
+      } | null
+      licenseOwners?: Array<{
+        __typename?: 'NftOwner'
+        supply: number
+        user: {
+          __typename?: 'User'
+          id: string
+          name?: string | null
+          description?: string | null
+          ethAddress?: string | null
+          twitter?: string | null
+          instagram?: string | null
+          soundcloud?: string | null
+          discord?: string | null
+          spotify?: string | null
+          website?: string | null
+          profileImage?: string | null
+          verified?: boolean | null
+        }
+      }> | null
+      sellings?: {
+        __typename?: 'NftSelling'
+        masterSelling?: {
+          __typename?: 'Selling'
+          id: string
+          nftType: string
+          marketplaceContractAddress: string
+          sellingStatus: string
+          transactionHash?: string | null
+          seller: {
+            __typename?: 'User'
+            id: string
+            name?: string | null
+            description?: string | null
+            ethAddress?: string | null
+            twitter?: string | null
+            instagram?: string | null
+            soundcloud?: string | null
+            discord?: string | null
+            spotify?: string | null
+            website?: string | null
+            profileImage?: string | null
+            verified?: boolean | null
+          }
+          buyers: Array<{
+            __typename?: 'NftOwner'
+            supply: number
+            user: {
+              __typename?: 'User'
+              id: string
+              name?: string | null
+              description?: string | null
+              ethAddress?: string | null
+              twitter?: string | null
+              instagram?: string | null
+              soundcloud?: string | null
+              discord?: string | null
+              spotify?: string | null
+              website?: string | null
+              profileImage?: string | null
+              verified?: boolean | null
+            }
+          }>
+          sellingVoucher: {
+            __typename?: 'SellingVoucher'
+            nftContractAddress: string
+            price: string
+            tokenId: number
+            tokenUri: string
+            isMaster: boolean
+            signature: string
+            sellCount: number
+            supply: number
+            maxSupply: number
+            currency: string
+          }
+        } | null
+        licenseSellings?: Array<{
+          __typename?: 'Selling'
+          id: string
+          nftType: string
+          marketplaceContractAddress: string
+          sellingStatus: string
+          transactionHash?: string | null
+          seller: {
+            __typename?: 'User'
+            id: string
+            name?: string | null
+            description?: string | null
+            ethAddress?: string | null
+            twitter?: string | null
+            instagram?: string | null
+            soundcloud?: string | null
+            discord?: string | null
+            spotify?: string | null
+            website?: string | null
+            profileImage?: string | null
+            verified?: boolean | null
+          }
+          buyers: Array<{
+            __typename?: 'NftOwner'
+            supply: number
+            user: {
+              __typename?: 'User'
+              id: string
+              name?: string | null
+              description?: string | null
+              ethAddress?: string | null
+              twitter?: string | null
+              instagram?: string | null
+              soundcloud?: string | null
+              discord?: string | null
+              spotify?: string | null
+              website?: string | null
+              profileImage?: string | null
+              verified?: boolean | null
+            }
+          }>
+          sellingVoucher: {
+            __typename?: 'SellingVoucher'
+            nftContractAddress: string
+            price: string
+            tokenId: number
+            tokenUri: string
+            isMaster: boolean
+            signature: string
+            sellCount: number
+            supply: number
+            maxSupply: number
+            currency: string
+          }
+        }> | null
+      } | null
+    }> | null
+    ownedMasterNfts?: Array<{
+      __typename?: 'Nft'
+      id: string
+      tokenId?: number | null
+      masterContractAddress: string
+      licenseContractAddress: string
+      fileUrl: string
+      filePictureUrl: string
+      ipfsUrl: string
+      transactionHash?: string | null
+      supply: number
+      chainId: number
+      masterOwner: {
+        __typename?: 'NftOwner'
+        supply: number
+        user: {
+          __typename?: 'User'
+          id: string
+          name?: string | null
+          description?: string | null
+          ethAddress?: string | null
+          twitter?: string | null
+          instagram?: string | null
+          soundcloud?: string | null
+          discord?: string | null
+          spotify?: string | null
+          website?: string | null
+          profileImage?: string | null
+          verified?: boolean | null
+        }
+      }
+      metadata: {
+        __typename?: 'NftMetadata'
+        name: string
+        description: string
+      }
+      creator?: {
+        __typename?: 'User'
+        id: string
+        name?: string | null
+        description?: string | null
+        ethAddress?: string | null
+        twitter?: string | null
+        instagram?: string | null
+        soundcloud?: string | null
+        discord?: string | null
+        spotify?: string | null
+        website?: string | null
+        profileImage?: string | null
+        verified?: boolean | null
+      } | null
+      licenseOwners?: Array<{
+        __typename?: 'NftOwner'
+        supply: number
+        user: {
+          __typename?: 'User'
+          id: string
+          name?: string | null
+          description?: string | null
+          ethAddress?: string | null
+          twitter?: string | null
+          instagram?: string | null
+          soundcloud?: string | null
+          discord?: string | null
+          spotify?: string | null
+          website?: string | null
+          profileImage?: string | null
+          verified?: boolean | null
+        }
+      }> | null
+      sellings?: {
+        __typename?: 'NftSelling'
+        masterSelling?: {
+          __typename?: 'Selling'
+          id: string
+          nftType: string
+          marketplaceContractAddress: string
+          sellingStatus: string
+          transactionHash?: string | null
+          seller: {
+            __typename?: 'User'
+            id: string
+            name?: string | null
+            description?: string | null
+            ethAddress?: string | null
+            twitter?: string | null
+            instagram?: string | null
+            soundcloud?: string | null
+            discord?: string | null
+            spotify?: string | null
+            website?: string | null
+            profileImage?: string | null
+            verified?: boolean | null
+          }
+          buyers: Array<{
+            __typename?: 'NftOwner'
+            supply: number
+            user: {
+              __typename?: 'User'
+              id: string
+              name?: string | null
+              description?: string | null
+              ethAddress?: string | null
+              twitter?: string | null
+              instagram?: string | null
+              soundcloud?: string | null
+              discord?: string | null
+              spotify?: string | null
+              website?: string | null
+              profileImage?: string | null
+              verified?: boolean | null
+            }
+          }>
+          sellingVoucher: {
+            __typename?: 'SellingVoucher'
+            nftContractAddress: string
+            price: string
+            tokenId: number
+            tokenUri: string
+            isMaster: boolean
+            signature: string
+            sellCount: number
+            supply: number
+            maxSupply: number
+            currency: string
+          }
+        } | null
+        licenseSellings?: Array<{
+          __typename?: 'Selling'
+          id: string
+          nftType: string
+          marketplaceContractAddress: string
+          sellingStatus: string
+          transactionHash?: string | null
+          seller: {
+            __typename?: 'User'
+            id: string
+            name?: string | null
+            description?: string | null
+            ethAddress?: string | null
+            twitter?: string | null
+            instagram?: string | null
+            soundcloud?: string | null
+            discord?: string | null
+            spotify?: string | null
+            website?: string | null
+            profileImage?: string | null
+            verified?: boolean | null
+          }
+          buyers: Array<{
+            __typename?: 'NftOwner'
+            supply: number
+            user: {
+              __typename?: 'User'
+              id: string
+              name?: string | null
+              description?: string | null
+              ethAddress?: string | null
+              twitter?: string | null
+              instagram?: string | null
+              soundcloud?: string | null
+              discord?: string | null
+              spotify?: string | null
+              website?: string | null
+              profileImage?: string | null
+              verified?: boolean | null
+            }
+          }>
+          sellingVoucher: {
+            __typename?: 'SellingVoucher'
+            nftContractAddress: string
+            price: string
+            tokenId: number
+            tokenUri: string
+            isMaster: boolean
+            signature: string
+            sellCount: number
+            supply: number
+            maxSupply: number
+            currency: string
+          }
+        }> | null
+      } | null
+    }> | null
+    ownedLicenseNfts?: Array<{
+      __typename?: 'Nft'
+      id: string
+      tokenId?: number | null
+      masterContractAddress: string
+      licenseContractAddress: string
+      fileUrl: string
+      filePictureUrl: string
+      ipfsUrl: string
+      transactionHash?: string | null
+      supply: number
+      chainId: number
+      masterOwner: {
+        __typename?: 'NftOwner'
+        supply: number
+        user: {
+          __typename?: 'User'
+          id: string
+          name?: string | null
+          description?: string | null
+          ethAddress?: string | null
+          twitter?: string | null
+          instagram?: string | null
+          soundcloud?: string | null
+          discord?: string | null
+          spotify?: string | null
+          website?: string | null
+          profileImage?: string | null
+          verified?: boolean | null
+        }
+      }
+      metadata: {
+        __typename?: 'NftMetadata'
+        name: string
+        description: string
+      }
+      creator?: {
+        __typename?: 'User'
+        id: string
+        name?: string | null
+        description?: string | null
+        ethAddress?: string | null
+        twitter?: string | null
+        instagram?: string | null
+        soundcloud?: string | null
+        discord?: string | null
+        spotify?: string | null
+        website?: string | null
+        profileImage?: string | null
+        verified?: boolean | null
+      } | null
+      licenseOwners?: Array<{
+        __typename?: 'NftOwner'
+        supply: number
+        user: {
+          __typename?: 'User'
+          id: string
+          name?: string | null
+          description?: string | null
+          ethAddress?: string | null
+          twitter?: string | null
+          instagram?: string | null
+          soundcloud?: string | null
+          discord?: string | null
+          spotify?: string | null
+          website?: string | null
+          profileImage?: string | null
+          verified?: boolean | null
+        }
+      }> | null
+      sellings?: {
+        __typename?: 'NftSelling'
+        masterSelling?: {
+          __typename?: 'Selling'
+          id: string
+          nftType: string
+          marketplaceContractAddress: string
+          sellingStatus: string
+          transactionHash?: string | null
+          seller: {
+            __typename?: 'User'
+            id: string
+            name?: string | null
+            description?: string | null
+            ethAddress?: string | null
+            twitter?: string | null
+            instagram?: string | null
+            soundcloud?: string | null
+            discord?: string | null
+            spotify?: string | null
+            website?: string | null
+            profileImage?: string | null
+            verified?: boolean | null
+          }
+          buyers: Array<{
+            __typename?: 'NftOwner'
+            supply: number
+            user: {
+              __typename?: 'User'
+              id: string
+              name?: string | null
+              description?: string | null
+              ethAddress?: string | null
+              twitter?: string | null
+              instagram?: string | null
+              soundcloud?: string | null
+              discord?: string | null
+              spotify?: string | null
+              website?: string | null
+              profileImage?: string | null
+              verified?: boolean | null
+            }
+          }>
+          sellingVoucher: {
+            __typename?: 'SellingVoucher'
+            nftContractAddress: string
+            price: string
+            tokenId: number
+            tokenUri: string
+            isMaster: boolean
+            signature: string
+            sellCount: number
+            supply: number
+            maxSupply: number
+            currency: string
+          }
+        } | null
+        licenseSellings?: Array<{
+          __typename?: 'Selling'
+          id: string
+          nftType: string
+          marketplaceContractAddress: string
+          sellingStatus: string
+          transactionHash?: string | null
+          seller: {
+            __typename?: 'User'
+            id: string
+            name?: string | null
+            description?: string | null
+            ethAddress?: string | null
+            twitter?: string | null
+            instagram?: string | null
+            soundcloud?: string | null
+            discord?: string | null
+            spotify?: string | null
+            website?: string | null
+            profileImage?: string | null
+            verified?: boolean | null
+          }
+          buyers: Array<{
+            __typename?: 'NftOwner'
+            supply: number
+            user: {
+              __typename?: 'User'
+              id: string
+              name?: string | null
+              description?: string | null
+              ethAddress?: string | null
+              twitter?: string | null
+              instagram?: string | null
+              soundcloud?: string | null
+              discord?: string | null
+              spotify?: string | null
+              website?: string | null
+              profileImage?: string | null
+              verified?: boolean | null
+            }
+          }>
+          sellingVoucher: {
+            __typename?: 'SellingVoucher'
+            nftContractAddress: string
+            price: string
+            tokenId: number
+            tokenUri: string
+            isMaster: boolean
+            signature: string
+            sellCount: number
+            supply: number
+            maxSupply: number
+            currency: string
+          }
+        }> | null
+      } | null
+    }> | null
+  }
 }

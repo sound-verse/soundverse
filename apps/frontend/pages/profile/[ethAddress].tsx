@@ -15,22 +15,24 @@ import { PorfileSocialBar } from '../../components/profile/ProfileSocialBar'
 import { GET_NFTS } from '../../common/graphql/queries/get-nfts.query'
 import { useAuthContext } from '../../context/AuthContext'
 import Custom404 from '../404'
-import { Nft } from '../../common/graphql/schema'
+import {
+  GetUserNftsQuery,
+  GetUserNftsQueryVariables,
+  Nft,
+  UserNfts,
+} from '../../common/graphql/schema'
+import { GET_USER_NFTS } from '../../common/graphql/queries/get-user-nfts.query'
 
 type ProfileProps = {
   user: User
   queryEthAddress: String
-  createdNfts: Nft[]
-  ownedMasterNfts: Nft[]
-  ownedLicenseNfts: Nft[]
+  userNfts: UserNfts
 }
 
 export default function Profile({
   user,
   queryEthAddress,
-  createdNfts,
-  ownedMasterNfts,
-  ownedLicenseNfts,
+  userNfts,
 }: ProfileProps) {
   const { authUser } = useAuthContext()
   const [showEditProfile, setShowEditProfile] = useState<boolean>(false)
@@ -101,9 +103,9 @@ export default function Profile({
                   </div>
                   <div className="mt-20">
                     <ProfileNftTabs
-                      createdNfts={createdNfts}
-                      ownedMasterNfts={ownedMasterNfts}
-                      ownedLicenseNfts={ownedLicenseNfts}
+                      createdNfts={userNfts.createdMasterNfts}
+                      ownedMasterNfts={userNfts.ownedMasterNfts}
+                      ownedLicenseNfts={userNfts.ownedLicenseNfts}
                     />
                   </div>
                 </div>
@@ -124,39 +126,18 @@ export async function getServerSideProps(context) {
     variables: { ethAddress },
   })
 
-  const createdNfts = await client.apolloClient.query({
-    query: GET_NFTS,
-    variables: {
-      filter: { creatorEthAddress: ethAddress },
-      limit: 100,
-      skip: 0,
-    },
-  })
-
-  const ownedMasterNfts = await client.apolloClient.query({
-    query: GET_NFTS,
-    variables: {
-      filter: { masterOwnerEthAddress: ethAddress },
-      limit: 100,
-      skip: 0,
-    },
-  })
-
-  const ownedLicenseNfts = await client.apolloClient.query({
-    query: GET_NFTS,
-    variables: {
-      filter: { licenseOwnerEthAddress: ethAddress },
-      limit: 100,
-      skip: 0,
-    },
+  const userNfts = await client.apolloClient.query<
+    GetUserNftsQuery,
+    GetUserNftsQueryVariables
+  >({
+    query: GET_USER_NFTS,
+    variables: { ethAddress },
   })
 
   return {
     props: {
       user: user.data.user,
-      createdNfts: createdNfts.data.nfts,
-      ownedMasterNfts: ownedMasterNfts.data.nfts,
-      ownedLicenseNfts: ownedLicenseNfts.data.nfts,
+      userNfts: userNfts.data.userNfts,
       queryEthAddress: ethAddress,
     },
   }

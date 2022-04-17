@@ -30,11 +30,17 @@ const Header = () => {
           <p className={styles.soundverseText}>Soundverse</p>
         </Link>
         <div className={styles.headerSpacer} />
-        <input
+        {/* <input
           type="text"
           placeholder="find unpublished music NFTs"
           className={styles.headerSearchbar}
-        ></input>
+        ></input> */}
+        <div className={styles.headerSpacer} />
+        <div className={styles.headerSpacer} />
+        <div className={styles.headerSpacer} />
+        <div className={styles.headerSpacer} />
+        <div className={styles.headerSpacer} />
+        <div className={styles.headerSpacer} />
         <div className={styles.headerSpacer} />
         <Link href="/marketplace" passHref>
           <p className={styles.marketplaceLink}>Marketplace</p>
@@ -42,6 +48,10 @@ const Header = () => {
         <div className={styles.headerSpacer} />
         <Link href="/create" passHref>
           <p className={styles.marketplaceLink}>Create</p>
+        </Link>
+        <div className={styles.headerSpacer} />
+        <Link href="/my-library" passHref>
+          <p className={styles.marketplaceLink}>My Library</p>
         </Link>
         <div className={styles.headerSpacer} />
         <div>

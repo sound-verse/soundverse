@@ -17,6 +17,8 @@ import { UserService } from '../user/user.service';
 import { User } from '../user/user.schema';
 import { NftOwner } from './dto/output/nft.output';
 import { NftSelling, SellingService } from '../selling/selling.service';
+import { UserNfts } from './dto/output/user-nfts.output';
+import { GqlAuthGuardContinue } from '../auth/gql-auth-continue.guard';
 
 @Resolver(() => Nft)
 export class NftResolver {
@@ -95,6 +97,22 @@ export class NftResolver {
   async unpinAll(): Promise<boolean> {
     await this.ipfsService.unPinAll();
     return true;
+  }
+
+  @UseGuards(GqlAuthGuardContinue)
+  @Query(() => UserNfts)
+  async userNfts(
+    @CurrentUser() user: LoggedinUser,
+    @Args('ethAddress', { nullable: true }) ethAddress?: string,
+  ): Promise<UserNfts> {
+    let fetchedUser = null;
+    if (!user) {
+      if (!ethAddress) {
+        return;
+      }
+      fetchedUser = await this.userService.findByETHAddress(ethAddress);
+    }
+    return await this.nftService.getUserNfts(user ? user : fetchedUser);
   }
 
   @ResolveField()

@@ -93,7 +93,14 @@ type Nft {
   creator: User
   licenseOwners: [NftOwner!]
   masterOwner: NftOwner!
-  sellings: NftSelling!
+  sellings: NftSelling
+}
+
+type UserNfts {
+  createdMasterNfts: [Nft!]
+  createdLicenseNfts: [Nft!]
+  ownedMasterNfts: [Nft!]
+  ownedLicenseNfts: [Nft!]
 }
 
 type Query {
@@ -101,12 +108,10 @@ type Query {
   me: User!
   nfts(skip: Int!, limit: Int!, filter: NftsFilter): [Nft!]
   nft(filter: NftFilter!): Nft
+  userNfts(ethAddress: String): UserNfts!
 }
 
 input NftsFilter {
-  creatorEthAddress: String
-  licenseOwnerEthAddress: String
-  masterOwnerEthAddress: String
   hasSelling: Boolean
 }
 
