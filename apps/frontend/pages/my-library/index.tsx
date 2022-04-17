@@ -105,7 +105,7 @@ export default function MyLibrary() {
                   />
                 </div>
                 <div className="pt-4">
-                  <Heading>My NFT's</Heading>
+                  <Heading>My NFTs</Heading>
                   <div className="flex mt-6 flex-wrap cursor-pointer">
                     {userNfts &&
                       userNfts.map((nft, key) => {
