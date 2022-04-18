@@ -13,12 +13,20 @@ import { Heading } from '../../components/common/Heading'
 import { ModuleBg } from '../../components/common/ModuleBg'
 import { MiniNft } from '../../components/common/MiniNft'
 import Button from '../../components/common/Button'
+import { useCreateRoom } from '../../hooks/rooms/useCreateRoom'
+import toast from 'react-hot-toast'
+import Modal from 'react-modal'
+import { Bars } from 'react-loader-spinner'
+import { useRouter } from 'next/router'
 
 export default function MyLibrary() {
   const { authUser } = useAuthContext()
   const [showLibrary, setShowLibrary] = useState<boolean>(false)
   const [userNfts, setUserNfts] = useState<Nft[]>([])
   const [selectedNfts, setSelectedNfts] = useState<Nft[]>([])
+  const { createRoom } = useCreateRoom()
+  const [modalLoading, setModalLoading] = useState<boolean>(false)
+  const router = useRouter()
 
   const handleClick = (nft: Nft) => {
     const foundNft = selectedNfts.find(
@@ -31,6 +39,20 @@ export default function MyLibrary() {
       )
     } else {
       setSelectedNfts([...selectedNfts, nft])
+    }
+  }
+
+  const handleCreateRoom = async () => {
+    const selectedNftIds = selectedNfts.map((nft) => nft.id)
+    try {
+      setModalLoading(true)
+      await createRoom({ nftIds: selectedNftIds })
+      setModalLoading(false)
+      setSelectedNfts([])
+      router.push('/landing')
+    } catch {
+      toast.error('Could not create room')
+      setModalLoading(false)
     }
   }
 
@@ -68,7 +90,6 @@ export default function MyLibrary() {
       <Head>
         <title>My Library</title>
       </Head>
-
       <Layout>
         {!authUser && !loading ? (
           <div className="text-white text-2xl font-bold flex h-screen justify-center self-center items-center -mt-36">
@@ -102,6 +123,7 @@ export default function MyLibrary() {
                     className="flex mx-auto"
                     text="Launch your room now"
                     type="purple"
+                    onClick={handleCreateRoom}
                   />
                 </div>
                 <div className="pt-4">
@@ -135,7 +157,21 @@ export default function MyLibrary() {
             </ModuleBg>
           </main>
         )}
-      </Layout>
+      </Layout>{' '}
+      <Modal
+        isOpen={modalLoading}
+        contentLabel="onRequestClose Example"
+        className="flex justify-center items-center h-full"
+      >
+        <div className="w-1/2 h-1/2 rounded-3xl p-10 bg-grey-dark flex flex-col justify-between items-center">
+          <div className="h-full w-full justify-center items-center flex flex-col">
+            <div className="text-white text-3xl font-bold mb-10">
+              Creating your room...
+            </div>
+            <Bars color="#7A64FF" height={80} width={80} />
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

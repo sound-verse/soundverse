@@ -23,7 +23,6 @@ type AuthUser {
 }
 
 input CreateRoomInput {
-  name: String!
   nftIds: [String!]!
 }
 

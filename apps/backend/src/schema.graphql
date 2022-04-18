@@ -214,6 +214,5 @@ input SellingVoucherInput {
 }
 
 input CreateRoomInput {
-  name: String!
   nftIds: [String!]!
 }

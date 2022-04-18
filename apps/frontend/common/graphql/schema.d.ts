@@ -45,7 +45,6 @@ export type AuthUser = {
 }
 
 export type CreateRoomInput = {
-  name: Scalars['String']
   nftIds: Array<Scalars['String']>
 }
 
