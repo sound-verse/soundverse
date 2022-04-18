@@ -333,4 +333,8 @@ export class NftService {
       ownedLicenseNfts,
     } as any;
   }
+
+  async getByIds(ids: string[]): Promise<Nft[]> {
+    return await this.nftModel.find({ _id: { $in: ids } });
+  }
 }

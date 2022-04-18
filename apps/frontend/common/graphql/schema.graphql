@@ -22,9 +22,19 @@ type AuthUser {
   website: String
 }
 
+input CreateRoomInput {
+  name: String!
+  nftIds: [String!]!
+}
+
 input CreateSellingInput {
   nftId: String!
   sellingVoucher: SellingVoucherInput!
+}
+
+type CurrentTrack {
+  currentPosition: Int!
+  nft: Nft!
 }
 
 input LoginInput {
@@ -34,6 +44,7 @@ input LoginInput {
 
 type Mutation {
   createNft(NFTFile: Upload!, data: NftInput!, pictureFile: Upload!): Nft!
+  createRoom(createRoomInput: CreateRoomInput!): Room!
   createSelling(createSellingInput: CreateSellingInput!): Selling!
   generateVerificationToken(data: VerificationTokenInput!): Int!
   login(data: LoginInput!): Auth!
@@ -102,8 +113,29 @@ type Query {
   me: User!
   nft(filter: NftFilter!): Nft
   nfts(filter: NftsFilter, limit: Int!, skip: Int!): [Nft!]
+  room(roomFilter: RoomFilter!): Room!
+  rooms: Rooms!
   user(ethAddress: String!): User
   userNfts(ethAddress: String): UserNfts!
+}
+
+type Room {
+  active: Boolean!
+  activeUsers: [User!]
+  creator: User!
+  currentTrack: CurrentTrack
+  id: String!
+  name: String!
+  playlist: [Nft!]!
+}
+
+input RoomFilter {
+  creatorId: String
+  id: String
+}
+
+type Rooms {
+  rooms: [Room!]
 }
 
 type Selling {

@@ -103,12 +103,33 @@ type UserNfts {
   ownedLicenseNfts: [Nft!]
 }
 
+type CurrentTrack {
+  nft: Nft!
+  currentPosition: Int!
+}
+
+type Room {
+  id: String!
+  name: String!
+  playlist: [Nft!]!
+  currentTrack: CurrentTrack
+  activeUsers: [User!]
+  active: Boolean!
+  creator: User!
+}
+
+type Rooms {
+  rooms: [Room!]
+}
+
 type Query {
   user(ethAddress: String!): User
   me: User!
   nfts(skip: Int!, limit: Int!, filter: NftsFilter): [Nft!]
   nft(filter: NftFilter!): Nft
   userNfts(ethAddress: String): UserNfts!
+  room(roomFilter: RoomFilter!): Room!
+  rooms: Rooms!
 }
 
 input NftsFilter {
@@ -121,6 +142,11 @@ input NftFilter {
   ipfsUrl: String
 }
 
+input RoomFilter {
+  id: String
+  creatorId: String
+}
+
 type Mutation {
   updateUser(data: UpdateUserInput!): User!
   uploadProfilePicture(file: Upload!): User!
@@ -129,6 +155,7 @@ type Mutation {
   createNft(NFTFile: Upload!, pictureFile: Upload!, data: NftInput!): Nft!
   unpinAll: Boolean!
   createSelling(createSellingInput: CreateSellingInput!): Selling!
+  createRoom(createRoomInput: CreateRoomInput!): Room!
 }
 
 input UpdateUserInput {
@@ -184,4 +211,9 @@ input SellingVoucherInput {
   isMaster: Boolean!
   signature: String!
   currency: String!
+}
+
+input CreateRoomInput {
+  name: String!
+  nftIds: [String!]!
 }

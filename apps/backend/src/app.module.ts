@@ -9,6 +9,7 @@ import { NftModule } from './nft/nft.module';
 import { EventModule } from './event/event.module';
 import { TagModule } from './tag/tag.module';
 import { SellingModule } from './selling/selling.module';
+import { RoomModule } from './room/room.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { SellingModule } from './selling/selling.module';
     EventModule,
     TagModule,
     SellingModule,
+    RoomModule,
   ],
   controllers: [AppController],
   providers: [],

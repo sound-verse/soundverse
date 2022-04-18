@@ -7,11 +7,6 @@ import { User } from '../user/user.schema';
 
 export type RoomDocument = Room & Document<Types.ObjectId>;
 
-export class RoomOwner {
-  @Prop({ type: Types.ObjectId, ref: User.name })
-  user: Types.ObjectId;
-}
-
 export class CurrentTrack {
   @Prop({ type: [{ type: Types.ObjectId, ref: Nft.name }] })
   @Type(() => Nft)
@@ -38,6 +33,18 @@ export class Room extends BaseDBObject {
 
   @Prop()
   currentTrack?: CurrentTrack;
+
+  @Prop({ type: [{ type: Types.ObjectId, ref: User.name }] })
+  @Type(() => User)
+  activeUsers?: User[];
+
+  @Prop()
+  active: boolean;
+
+  @Prop({ default: () => Date.now() })
+  createdAt: Date;
 }
 
 export const RoomSchema = SchemaFactory.createForClass(Room);
+
+RoomSchema.index({ active: 1 });
