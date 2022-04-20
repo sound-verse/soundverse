@@ -31,6 +31,9 @@ class SellingVoucherInput {
 
   @Field()
   currency: string;
+
+  @Field((type) => Int)
+  royaltyFeeInBeeps: number;
 }
 
 @InputType()

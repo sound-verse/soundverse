@@ -154,6 +154,7 @@ type SellingVoucher {
   maxSupply: Int!
   nftContractAddress: String!
   price: String!
+  royaltyFeeInBeeps: Float!
   sellCount: Int!
   signature: String!
   supply: Int!
@@ -167,6 +168,7 @@ input SellingVoucherInput {
   maxSupply: Int!
   nftContractAddress: String!
   price: String!
+  royaltyFeeInBeeps: Int!
   sellCount: Int!
   signature: String!
   supply: Int!

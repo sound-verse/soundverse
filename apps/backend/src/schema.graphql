@@ -50,6 +50,7 @@ type SellingVoucher {
   isMaster: Boolean!
   signature: String!
   currency: String!
+  royaltyFeeInBeeps: Float!
 }
 
 type Selling {
@@ -211,6 +212,7 @@ input SellingVoucherInput {
   isMaster: Boolean!
   signature: String!
   currency: String!
+  royaltyFeeInBeeps: Int!
 }
 
 input CreateRoomInput {

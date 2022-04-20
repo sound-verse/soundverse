@@ -29,6 +29,7 @@ export const sellingVoucherTypes = {
     { name: 'maxSupply', type: 'uint256' },
     { name: 'isMaster', type: 'bool' },
     { name: 'currency', type: 'string' },
+    { name: 'royaltyFeeInBeeps', type: 'uint96' },
   ],
 }
 
@@ -37,6 +38,7 @@ export type CreateSellingInputProps = {
   amount: number
   nftType: NftType
   nft: Nft
+  royaltyFeeInBeeps: number
 }
 
 const masterContractAddress = process.env.NEXT_PUBLIC_MASTER_CONTRACT_ADDRESS
@@ -113,6 +115,7 @@ export const useCreateSelling = () => {
       isMaster:
         createSellingInputProps.nftType === NftType.MASTER ? true : false,
       currency: 'MATIC',
+      royaltyFeeInBeeps: createSellingInputProps.royaltyFeeInBeeps,
     }
 
     const signingDomain = {
