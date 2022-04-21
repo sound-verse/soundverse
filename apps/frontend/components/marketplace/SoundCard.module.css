@@ -51,3 +51,9 @@
 .audioWaves {
   @apply border-grey-medium bg-grey-medium;
 }
+
+.textOverflow {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
