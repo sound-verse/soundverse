@@ -56,7 +56,7 @@ function SoundCard({
             {nftType === NftType.MASTER ? 'Master' : 'License'}
           </div>
           <div className={styles.soundCardHeaderBottom}>
-            <div className="font-semibold text-md">
+            <div className="font-semibold text-md SoundCard_textOverflow__3Evv_">
               {nft.metadata.name.length > 45
                 ? `${nft.metadata.name.substring(0, 45)}...`
                 : nft.metadata.name}
