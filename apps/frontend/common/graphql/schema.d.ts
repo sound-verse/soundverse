@@ -119,6 +119,7 @@ export type Nft = {
   masterContractAddress: Scalars['String']
   masterOwner: NftOwner
   metadata: NftMetadata
+  royaltyFeeInBeeps: Scalars['Float']
   sellings?: Maybe<NftSelling>
   supply: Scalars['Float']
   tokenId?: Maybe<Scalars['Float']>
@@ -134,6 +135,7 @@ export type NftFilter = {
 export type NftInput = {
   chainId?: InputMaybe<Scalars['Float']>
   metadata: NftMetadataInput
+  royaltyFeeInBeeps: Scalars['Int']
   supply: Scalars['Float']
   tags: Array<Scalars['String']>
   transactionHash?: InputMaybe<Scalars['String']>
@@ -333,6 +335,7 @@ export type NftFragmentFragment = {
   transactionHash?: string | null
   supply: number
   chainId: number
+  royaltyFeeInBeeps: number
   masterOwner: {
     __typename?: 'NftOwner'
     supply: number
@@ -535,6 +538,7 @@ export type RoomFragmentFragment = {
     transactionHash?: string | null
     supply: number
     chainId: number
+    royaltyFeeInBeeps: number
     masterOwner: {
       __typename?: 'NftOwner'
       supply: number
@@ -720,6 +724,7 @@ export type RoomFragmentFragment = {
       transactionHash?: string | null
       supply: number
       chainId: number
+      royaltyFeeInBeeps: number
       masterOwner: {
         __typename?: 'NftOwner'
         supply: number
@@ -1022,6 +1027,7 @@ export type CreateRoomMutation = {
       transactionHash?: string | null
       supply: number
       chainId: number
+      royaltyFeeInBeeps: number
       masterOwner: {
         __typename?: 'NftOwner'
         supply: number
@@ -1211,6 +1217,7 @@ export type CreateRoomMutation = {
         transactionHash?: string | null
         supply: number
         chainId: number
+        royaltyFeeInBeeps: number
         masterOwner: {
           __typename?: 'NftOwner'
           supply: number
@@ -1486,6 +1493,7 @@ export type GetNftQuery = {
     transactionHash?: string | null
     supply: number
     chainId: number
+    royaltyFeeInBeeps: number
     masterOwner: {
       __typename?: 'NftOwner'
       supply: number
@@ -1678,6 +1686,7 @@ export type GetNftsQuery = {
     transactionHash?: string | null
     supply: number
     chainId: number
+    royaltyFeeInBeeps: number
     masterOwner: {
       __typename?: 'NftOwner'
       supply: number
@@ -1887,6 +1896,7 @@ export type GetRoomQuery = {
       transactionHash?: string | null
       supply: number
       chainId: number
+      royaltyFeeInBeeps: number
       masterOwner: {
         __typename?: 'NftOwner'
         supply: number
@@ -2076,6 +2086,7 @@ export type GetRoomQuery = {
         transactionHash?: string | null
         supply: number
         chainId: number
+        royaltyFeeInBeeps: number
         masterOwner: {
           __typename?: 'NftOwner'
           supply: number
@@ -2306,6 +2317,7 @@ export type GetRoomsQuery = {
         transactionHash?: string | null
         supply: number
         chainId: number
+        royaltyFeeInBeeps: number
         masterOwner: {
           __typename?: 'NftOwner'
           supply: number
@@ -2495,6 +2507,7 @@ export type GetRoomsQuery = {
           transactionHash?: string | null
           supply: number
           chainId: number
+          royaltyFeeInBeeps: number
           masterOwner: {
             __typename?: 'NftOwner'
             supply: number
@@ -2709,6 +2722,7 @@ export type GetUserNftsQuery = {
       transactionHash?: string | null
       supply: number
       chainId: number
+      royaltyFeeInBeeps: number
       masterOwner: {
         __typename?: 'NftOwner'
         supply: number
@@ -2895,6 +2909,7 @@ export type GetUserNftsQuery = {
       transactionHash?: string | null
       supply: number
       chainId: number
+      royaltyFeeInBeeps: number
       masterOwner: {
         __typename?: 'NftOwner'
         supply: number
@@ -3081,6 +3096,7 @@ export type GetUserNftsQuery = {
       transactionHash?: string | null
       supply: number
       chainId: number
+      royaltyFeeInBeeps: number
       masterOwner: {
         __typename?: 'NftOwner'
         supply: number
@@ -3267,6 +3283,7 @@ export type GetUserNftsQuery = {
       transactionHash?: string | null
       supply: number
       chainId: number
+      royaltyFeeInBeeps: number
       masterOwner: {
         __typename?: 'NftOwner'
         supply: number

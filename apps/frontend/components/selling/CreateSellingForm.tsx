@@ -29,7 +29,7 @@ export const CreateSellingForm = ({
   const router = useRouter()
   const { createSelling, selling } = useCreateSelling()
 
-  const initialValues = { price: 0, amount: 0, royaltyFeeInBeeps: 0}
+  const initialValues = { price: 0, amount: 0 }
 
   let userSupply = 0
 
@@ -59,7 +59,7 @@ export const CreateSellingForm = ({
         amount: parseInt(values.amount),
         nftType,
         nft,
-        royaltyFeeInBeeps: parseInt(values.royaltyFeeInBeeps)
+        royaltyFeeInBeeps: nft.royaltyFeeInBeeps,
       })
     } catch (error) {
       setLoading(false)
@@ -81,11 +81,6 @@ export const CreateSellingForm = ({
       .min(1, 'You have to enter a minimum amount of 1')
       .max(userSupply, `Your max supply on this nft is ${userSupply}`)
       .required('Please enter a number'),
-    royaltyFeeInBeeps: Yup.number()
-    .typeError('Please enter the amount you want to sell')
-    .min(0, 'You have to enter a minimum amount of 0')
-    .max(100, `Your max supply on this nft is ${userSupply}`)
-    .required('Please enter a number'),  
   })
 
   Modal.setAppElement('#__next')
@@ -146,31 +141,7 @@ export const CreateSellingForm = ({
                   <div>{userSupply}</div>
                   <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
                   <div className="text-grey-light mt-2 text-xs">
-                    Total numnber of licenses available
-                  </div>
-                </div>
-              </div>
-              <div className="text-white font-bold text-sm mt-10">Royalty fees</div>
-              <div className="flex justify-start items-baseline mt-5">
-                <div className="mr-5">
-                  <Field
-                    id="royaltyFeeInBeeps"
-                    name="royaltyFeeInBeeps"
-                    className="outline-none bg-grey-dark text-white w-full"
-                  />
-                  <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
-                  <div className="text-grey-light mt-2 text-xs">
-                    Royalty percentage between 0 and 100
-                  </div>
-                  <div className={styles.error}>
-                    <ErrorMessage name="royaltyFeeInBeeps" />
-                  </div>
-                </div>
-                <div>
-                  <div>{userSupply}</div>
-                  <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
-                  <div className="text-grey-light mt-2 text-xs">
-                    Total numnber of licenses available
+                    Total number of licenses available
                   </div>
                 </div>
               </div>

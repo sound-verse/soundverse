@@ -30,6 +30,7 @@ export interface CreateNftInput {
   tags: string[];
   transactionHash: string;
   chainId: number;
+  royaltyFeeInBeeps;
 }
 
 @Injectable()
@@ -70,6 +71,7 @@ export class NftService {
         transactionHash: createNftInput.transactionHash ? createNftInput.transactionHash : '',
         chainId: createNftInput.chainId ? createNftInput.chainId : 0,
         supply: createNftInput.supply,
+        royaltyFeeInBeeps: createNftInput.royaltyFeeInBeeps,
         masterOwner: {
           user: createNftInput.user._id,
           supply: 1,

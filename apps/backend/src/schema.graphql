@@ -91,6 +91,7 @@ type Nft {
   filePictureUrl: String!
   transactionHash: String
   metadata: NftMetadata!
+  royaltyFeeInBeeps: Float!
   creator: User
   licenseOwners: [NftOwner!]
   masterOwner: NftOwner!
@@ -187,6 +188,7 @@ input NftInput {
   metadata: NftMetadataInput!
   supply: Float!
   tags: [String!]!
+  royaltyFeeInBeeps: Int!
   transactionHash: String
   chainId: Float
 }

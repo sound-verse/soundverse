@@ -1,6 +1,6 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, InputType, Int } from '@nestjs/graphql';
 import { Transform } from 'class-transformer';
-import { MaxLength } from 'class-validator';
+import { Max, MaxLength } from 'class-validator';
 import xss from 'xss';
 
 @InputType()
@@ -27,6 +27,10 @@ export class NftInput {
 
   @Field(() => [String])
   tags: string[];
+
+  @Field(() => Int)
+  @Max(10000)
+  royaltyFeeInBeeps: number;
 
   @Field({ nullable: true })
   transactionHash?: string;

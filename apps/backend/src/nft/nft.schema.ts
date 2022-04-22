@@ -78,6 +78,9 @@ export class Nft extends BaseDBObject {
   @Prop()
   filePictureUrl: string;
 
+  @Prop()
+  royaltyFeeInBeeps: number;
+
   @Prop({ type: [Types.ObjectId], ref: 'Tag' })
   tags: [Types.ObjectId];
 
