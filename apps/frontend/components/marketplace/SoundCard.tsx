@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import styles from './SoundCard.module.css'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -8,6 +8,7 @@ import cn from 'classnames'
 import { NftType } from '../../common/types/nft-type.enum'
 import { Nft, Selling } from '../../common/graphql/schema'
 import Web3 from 'web3'
+import { useAudioContext } from '../../context/AudioContext'
 
 export type SoundCardProp = {
   nftType: NftType
@@ -15,6 +16,7 @@ export type SoundCardProp = {
   playingCardId?: string
   onMusicClick?(): void
   className?: string
+  contractAddress?: string
 }
 
 function SoundCard({
@@ -22,16 +24,31 @@ function SoundCard({
   playingCardId = '',
   className,
   nftType,
+  contractAddress,
   onMusicClick = () => {},
 }: SoundCardProp) {
   const [playCard, setPlayCard] = useState<boolean>(false)
+  const { setCurrentTrack, currentTrack } = useAudioContext()
 
   useEffect(() => {
     setPlayCard(playingCardId === nft.id ? true : false)
   }, [playingCardId])
 
   const handleMusicClick = () => {
-    onMusicClick()
+    // Checking "currentTrack == true" slows the track loading for some reason
+    setCurrentTrack({
+      url: nft.fileUrl,
+      trackName: nft.metadata.name,
+      currentPosition: 0, // FIXME track is not restarting at position 0, probably because the track is saved globally at current position
+      creatorName: nft.creator.name,
+      trackPictureUrl: nft.filePictureUrl,
+      creatorEthAddress: nft.creator.ethAddress,
+      id: nft.id,
+      contractAddress,
+      isPlaying: true,
+      play: true,
+      nftType,
+    })
   }
 
   const rootClassName = cn(
@@ -79,17 +96,11 @@ function SoundCard({
         <Image src={nft.filePictureUrl} layout="fill" objectFit="contain" />
       </div>
       <div className={styles.soundCardAudio} onClick={handleMusicClick}>
-        <AudioPlayer
-          url={nft.fileUrl}
-          className={styles.audioWaves}
-          play={playCard}
-          name={nft.metadata.name}
-          creatorName={nft.creator.name}
-          creatorEthAddress={nft.creator.ethAddress}
-          trackPictureUrl={nft.filePictureUrl}
-          id={nft.id}
-          nftType={nftType}
-        />
+      <Image
+        src="/img/soundwave.svg"
+        objectFit="contain"
+        layout="fill"
+      />
       </div>
       <div className={styles.soundCardFooter}>
         {nftType === NftType.MASTER ? (
