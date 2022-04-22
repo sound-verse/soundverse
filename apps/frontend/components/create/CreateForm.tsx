@@ -62,7 +62,9 @@ export const CreateForm = () => {
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Please enter a title'),
-    description: Yup.string().required('Please enter a description'),
+    description: Yup.string()
+      .required('Please enter a description')
+      .max(1000, 'Maximum number of characters of 1000 exceeded'),
     licenses: Yup.number()
       .typeError('Please enter a number')
       .min(2, 'You have to set a minium of 2 licenses')
