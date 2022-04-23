@@ -219,7 +219,7 @@ export const CreateForm = () => {
                 </div>
               </div>
               <div className="text-white font-bold text-sm mt-10">
-                Royaylty Fees
+                Royalty Fees
               </div>
               <div className="mt-3 w-full">
                 <Field
