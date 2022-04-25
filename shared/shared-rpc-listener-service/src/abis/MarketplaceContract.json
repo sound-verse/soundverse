@@ -440,6 +440,11 @@
             "internalType": "string",
             "name": "currency",
             "type": "string"
+          },
+          {
+            "internalType": "uint96",
+            "name": "royaltyFeeInBeeps",
+            "type": "uint96"
           }
         ],
         "internalType": "struct MarketContract.NFTVoucher",
