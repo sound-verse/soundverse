@@ -119,7 +119,7 @@ export type Nft = {
   masterContractAddress: Scalars['String']
   masterOwner: NftOwner
   metadata: NftMetadata
-  royaltyFeeInBeeps: Scalars['Float']
+  royaltyFeeInBips: Scalars['Float']
   sellings?: Maybe<NftSelling>
   supply: Scalars['Float']
   tokenId?: Maybe<Scalars['Float']>
@@ -135,7 +135,7 @@ export type NftFilter = {
 export type NftInput = {
   chainId?: InputMaybe<Scalars['Float']>
   metadata: NftMetadataInput
-  royaltyFeeInBeeps: Scalars['Int']
+  royaltyFeeInBips: Scalars['Int']
   supply: Scalars['Float']
   tags: Array<Scalars['String']>
   transactionHash?: InputMaybe<Scalars['String']>
@@ -241,7 +241,7 @@ export type SellingVoucher = {
   maxSupply: Scalars['Int']
   nftContractAddress: Scalars['String']
   price: Scalars['String']
-  royaltyFeeInBeeps: Scalars['Float']
+  royaltyFeeInBips: Scalars['Float']
   sellCount: Scalars['Int']
   signature: Scalars['String']
   supply: Scalars['Int']
@@ -255,7 +255,7 @@ export type SellingVoucherInput = {
   maxSupply: Scalars['Int']
   nftContractAddress: Scalars['String']
   price: Scalars['String']
-  royaltyFeeInBeeps: Scalars['Int']
+  royaltyFeeInBips: Scalars['Int']
   sellCount: Scalars['Int']
   signature: Scalars['String']
   supply: Scalars['Int']
@@ -335,7 +335,7 @@ export type NftFragmentFragment = {
   transactionHash?: string | null
   supply: number
   chainId: number
-  royaltyFeeInBeeps: number
+  royaltyFeeInBips: number
   masterOwner: {
     __typename?: 'NftOwner'
     supply: number
@@ -445,7 +445,7 @@ export type NftFragmentFragment = {
         supply: number
         maxSupply: number
         currency: string
-        royaltyFeeInBeeps: number
+        royaltyFeeInBips: number
       }
     } | null
     licenseSellings?: Array<{
@@ -501,7 +501,7 @@ export type NftFragmentFragment = {
         supply: number
         maxSupply: number
         currency: string
-        royaltyFeeInBeeps: number
+        royaltyFeeInBips: number
       }
     }> | null
   } | null
@@ -538,7 +538,7 @@ export type RoomFragmentFragment = {
     transactionHash?: string | null
     supply: number
     chainId: number
-    royaltyFeeInBeeps: number
+    royaltyFeeInBips: number
     masterOwner: {
       __typename?: 'NftOwner'
       supply: number
@@ -648,7 +648,7 @@ export type RoomFragmentFragment = {
           supply: number
           maxSupply: number
           currency: string
-          royaltyFeeInBeeps: number
+          royaltyFeeInBips: number
         }
       } | null
       licenseSellings?: Array<{
@@ -704,7 +704,7 @@ export type RoomFragmentFragment = {
           supply: number
           maxSupply: number
           currency: string
-          royaltyFeeInBeeps: number
+          royaltyFeeInBips: number
         }
       }> | null
     } | null
@@ -724,7 +724,7 @@ export type RoomFragmentFragment = {
       transactionHash?: string | null
       supply: number
       chainId: number
-      royaltyFeeInBeeps: number
+      royaltyFeeInBips: number
       masterOwner: {
         __typename?: 'NftOwner'
         supply: number
@@ -838,7 +838,7 @@ export type RoomFragmentFragment = {
             supply: number
             maxSupply: number
             currency: string
-            royaltyFeeInBeeps: number
+            royaltyFeeInBips: number
           }
         } | null
         licenseSellings?: Array<{
@@ -894,7 +894,7 @@ export type RoomFragmentFragment = {
             supply: number
             maxSupply: number
             currency: string
-            royaltyFeeInBeeps: number
+            royaltyFeeInBips: number
           }
         }> | null
       } | null
@@ -970,7 +970,7 @@ export type SellingFragmentFragment = {
     supply: number
     maxSupply: number
     currency: string
-    royaltyFeeInBeeps: number
+    royaltyFeeInBips: number
   }
 }
 
@@ -1027,7 +1027,7 @@ export type CreateRoomMutation = {
       transactionHash?: string | null
       supply: number
       chainId: number
-      royaltyFeeInBeeps: number
+      royaltyFeeInBips: number
       masterOwner: {
         __typename?: 'NftOwner'
         supply: number
@@ -1141,7 +1141,7 @@ export type CreateRoomMutation = {
             supply: number
             maxSupply: number
             currency: string
-            royaltyFeeInBeeps: number
+            royaltyFeeInBips: number
           }
         } | null
         licenseSellings?: Array<{
@@ -1197,7 +1197,7 @@ export type CreateRoomMutation = {
             supply: number
             maxSupply: number
             currency: string
-            royaltyFeeInBeeps: number
+            royaltyFeeInBips: number
           }
         }> | null
       } | null
@@ -1217,7 +1217,7 @@ export type CreateRoomMutation = {
         transactionHash?: string | null
         supply: number
         chainId: number
-        royaltyFeeInBeeps: number
+        royaltyFeeInBips: number
         masterOwner: {
           __typename?: 'NftOwner'
           supply: number
@@ -1331,7 +1331,7 @@ export type CreateRoomMutation = {
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBeeps: number
+              royaltyFeeInBips: number
             }
           } | null
           licenseSellings?: Array<{
@@ -1387,7 +1387,7 @@ export type CreateRoomMutation = {
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBeeps: number
+              royaltyFeeInBips: number
             }
           }> | null
         } | null
@@ -1470,7 +1470,7 @@ export type CreateSellingMutation = {
       supply: number
       maxSupply: number
       currency: string
-      royaltyFeeInBeeps: number
+      royaltyFeeInBips: number
     }
   }
 }
@@ -1493,7 +1493,7 @@ export type GetNftQuery = {
     transactionHash?: string | null
     supply: number
     chainId: number
-    royaltyFeeInBeeps: number
+    royaltyFeeInBips: number
     masterOwner: {
       __typename?: 'NftOwner'
       supply: number
@@ -1603,7 +1603,7 @@ export type GetNftQuery = {
           supply: number
           maxSupply: number
           currency: string
-          royaltyFeeInBeeps: number
+          royaltyFeeInBips: number
         }
       } | null
       licenseSellings?: Array<{
@@ -1659,7 +1659,7 @@ export type GetNftQuery = {
           supply: number
           maxSupply: number
           currency: string
-          royaltyFeeInBeeps: number
+          royaltyFeeInBips: number
         }
       }> | null
     } | null
@@ -1686,7 +1686,7 @@ export type GetNftsQuery = {
     transactionHash?: string | null
     supply: number
     chainId: number
-    royaltyFeeInBeeps: number
+    royaltyFeeInBips: number
     masterOwner: {
       __typename?: 'NftOwner'
       supply: number
@@ -1796,7 +1796,7 @@ export type GetNftsQuery = {
           supply: number
           maxSupply: number
           currency: string
-          royaltyFeeInBeeps: number
+          royaltyFeeInBips: number
         }
       } | null
       licenseSellings?: Array<{
@@ -1852,7 +1852,7 @@ export type GetNftsQuery = {
           supply: number
           maxSupply: number
           currency: string
-          royaltyFeeInBeeps: number
+          royaltyFeeInBips: number
         }
       }> | null
     } | null
@@ -1896,7 +1896,7 @@ export type GetRoomQuery = {
       transactionHash?: string | null
       supply: number
       chainId: number
-      royaltyFeeInBeeps: number
+      royaltyFeeInBips: number
       masterOwner: {
         __typename?: 'NftOwner'
         supply: number
@@ -2010,7 +2010,7 @@ export type GetRoomQuery = {
             supply: number
             maxSupply: number
             currency: string
-            royaltyFeeInBeeps: number
+            royaltyFeeInBips: number
           }
         } | null
         licenseSellings?: Array<{
@@ -2066,7 +2066,7 @@ export type GetRoomQuery = {
             supply: number
             maxSupply: number
             currency: string
-            royaltyFeeInBeeps: number
+            royaltyFeeInBips: number
           }
         }> | null
       } | null
@@ -2086,7 +2086,7 @@ export type GetRoomQuery = {
         transactionHash?: string | null
         supply: number
         chainId: number
-        royaltyFeeInBeeps: number
+        royaltyFeeInBips: number
         masterOwner: {
           __typename?: 'NftOwner'
           supply: number
@@ -2200,7 +2200,7 @@ export type GetRoomQuery = {
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBeeps: number
+              royaltyFeeInBips: number
             }
           } | null
           licenseSellings?: Array<{
@@ -2256,7 +2256,7 @@ export type GetRoomQuery = {
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBeeps: number
+              royaltyFeeInBips: number
             }
           }> | null
         } | null
@@ -2317,7 +2317,7 @@ export type GetRoomsQuery = {
         transactionHash?: string | null
         supply: number
         chainId: number
-        royaltyFeeInBeeps: number
+        royaltyFeeInBips: number
         masterOwner: {
           __typename?: 'NftOwner'
           supply: number
@@ -2431,7 +2431,7 @@ export type GetRoomsQuery = {
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBeeps: number
+              royaltyFeeInBips: number
             }
           } | null
           licenseSellings?: Array<{
@@ -2487,7 +2487,7 @@ export type GetRoomsQuery = {
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBeeps: number
+              royaltyFeeInBips: number
             }
           }> | null
         } | null
@@ -2507,7 +2507,7 @@ export type GetRoomsQuery = {
           transactionHash?: string | null
           supply: number
           chainId: number
-          royaltyFeeInBeeps: number
+          royaltyFeeInBips: number
           masterOwner: {
             __typename?: 'NftOwner'
             supply: number
@@ -2621,7 +2621,7 @@ export type GetRoomsQuery = {
                 supply: number
                 maxSupply: number
                 currency: string
-                royaltyFeeInBeeps: number
+                royaltyFeeInBips: number
               }
             } | null
             licenseSellings?: Array<{
@@ -2677,7 +2677,7 @@ export type GetRoomsQuery = {
                 supply: number
                 maxSupply: number
                 currency: string
-                royaltyFeeInBeeps: number
+                royaltyFeeInBips: number
               }
             }> | null
           } | null
@@ -2722,7 +2722,7 @@ export type GetUserNftsQuery = {
       transactionHash?: string | null
       supply: number
       chainId: number
-      royaltyFeeInBeeps: number
+      royaltyFeeInBips: number
       masterOwner: {
         __typename?: 'NftOwner'
         supply: number
@@ -2836,7 +2836,7 @@ export type GetUserNftsQuery = {
             supply: number
             maxSupply: number
             currency: string
-            royaltyFeeInBeeps: number
+            royaltyFeeInBips: number
           }
         } | null
         licenseSellings?: Array<{
@@ -2892,7 +2892,7 @@ export type GetUserNftsQuery = {
             supply: number
             maxSupply: number
             currency: string
-            royaltyFeeInBeeps: number
+            royaltyFeeInBips: number
           }
         }> | null
       } | null
@@ -2909,7 +2909,7 @@ export type GetUserNftsQuery = {
       transactionHash?: string | null
       supply: number
       chainId: number
-      royaltyFeeInBeeps: number
+      royaltyFeeInBips: number
       masterOwner: {
         __typename?: 'NftOwner'
         supply: number
@@ -3023,7 +3023,7 @@ export type GetUserNftsQuery = {
             supply: number
             maxSupply: number
             currency: string
-            royaltyFeeInBeeps: number
+            royaltyFeeInBips: number
           }
         } | null
         licenseSellings?: Array<{
@@ -3079,7 +3079,7 @@ export type GetUserNftsQuery = {
             supply: number
             maxSupply: number
             currency: string
-            royaltyFeeInBeeps: number
+            royaltyFeeInBips: number
           }
         }> | null
       } | null
@@ -3096,7 +3096,7 @@ export type GetUserNftsQuery = {
       transactionHash?: string | null
       supply: number
       chainId: number
-      royaltyFeeInBeeps: number
+      royaltyFeeInBips: number
       masterOwner: {
         __typename?: 'NftOwner'
         supply: number
@@ -3210,7 +3210,7 @@ export type GetUserNftsQuery = {
             supply: number
             maxSupply: number
             currency: string
-            royaltyFeeInBeeps: number
+            royaltyFeeInBips: number
           }
         } | null
         licenseSellings?: Array<{
@@ -3266,7 +3266,7 @@ export type GetUserNftsQuery = {
             supply: number
             maxSupply: number
             currency: string
-            royaltyFeeInBeeps: number
+            royaltyFeeInBips: number
           }
         }> | null
       } | null
@@ -3283,7 +3283,7 @@ export type GetUserNftsQuery = {
       transactionHash?: string | null
       supply: number
       chainId: number
-      royaltyFeeInBeeps: number
+      royaltyFeeInBips: number
       masterOwner: {
         __typename?: 'NftOwner'
         supply: number
@@ -3397,7 +3397,7 @@ export type GetUserNftsQuery = {
             supply: number
             maxSupply: number
             currency: string
-            royaltyFeeInBeeps: number
+            royaltyFeeInBips: number
           }
         } | null
         licenseSellings?: Array<{
@@ -3453,7 +3453,7 @@ export type GetUserNftsQuery = {
             supply: number
             maxSupply: number
             currency: string
-            royaltyFeeInBeeps: number
+            royaltyFeeInBips: number
           }
         }> | null
       } | null

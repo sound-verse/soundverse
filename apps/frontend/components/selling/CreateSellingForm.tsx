@@ -59,7 +59,7 @@ export const CreateSellingForm = ({
         amount: parseInt(values.amount),
         nftType,
         nft,
-        royaltyFeeInBeeps: nft.royaltyFeeInBeeps,
+        royaltyFeeInBips: nft.royaltyFeeInBips,
       })
     } catch (error) {
       setLoading(false)

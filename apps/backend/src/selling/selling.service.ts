@@ -23,7 +23,7 @@ export type Voucher = {
   isMaster: boolean;
   signature: string;
   currency: string;
-  royaltyFeeInBeeps: number;
+  royaltyFeeInBips: number;
 };
 
 export type NftSelling = {
@@ -92,7 +92,7 @@ export class SellingService {
         { name: 'maxSupply', type: 'uint256' },
         { name: 'isMaster', type: 'bool' },
         { name: 'currency', type: 'string' },
-        { name: 'royaltyFeeInBeeps', type: 'uint96' },
+        { name: 'royaltyFeeInBips', type: 'uint96' },
       ],
     };
 
@@ -133,7 +133,7 @@ export class SellingService {
           maxSupply: voucher.maxSupply,
           isMaster: voucher.isMaster,
           currency: voucher.currency,
-          royaltyFeeInBeeps: voucher.royaltyFeeInBeeps
+          royaltyFeeInBips: voucher.royaltyFeeInBips,
         },
       },
       signature: voucher.signature,

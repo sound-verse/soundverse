@@ -24,7 +24,7 @@ export const SELLING_FRAGMENT = gql`
       supply
       maxSupply
       currency
-      royaltyFeeInBeeps
+      royaltyFeeInBips
     }
     nftType
     marketplaceContractAddress

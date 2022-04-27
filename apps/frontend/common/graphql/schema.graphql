@@ -64,7 +64,7 @@ type Nft {
   masterContractAddress: String!
   masterOwner: NftOwner!
   metadata: NftMetadata!
-  royaltyFeeInBeeps: Float!
+  royaltyFeeInBips: Float!
   sellings: NftSelling
   supply: Float!
   tokenId: Float
@@ -80,7 +80,7 @@ input NftFilter {
 input NftInput {
   chainId: Float
   metadata: NftMetadataInput!
-  royaltyFeeInBeeps: Int!
+  royaltyFeeInBips: Int!
   supply: Float!
   tags: [String!]!
   transactionHash: String
@@ -156,7 +156,7 @@ type SellingVoucher {
   maxSupply: Int!
   nftContractAddress: String!
   price: String!
-  royaltyFeeInBeeps: Float!
+  royaltyFeeInBips: Float!
   sellCount: Int!
   signature: String!
   supply: Int!
@@ -170,7 +170,7 @@ input SellingVoucherInput {
   maxSupply: Int!
   nftContractAddress: String!
   price: String!
-  royaltyFeeInBeeps: Int!
+  royaltyFeeInBips: Int!
   sellCount: Int!
   signature: String!
   supply: Int!

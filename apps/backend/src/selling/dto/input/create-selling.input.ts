@@ -33,7 +33,7 @@ class SellingVoucherInput {
   currency: string;
 
   @Field((type) => Int)
-  royaltyFeeInBeeps: number;
+  royaltyFeeInBips: number;
 }
 
 @InputType()

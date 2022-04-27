@@ -50,7 +50,7 @@ type SellingVoucher {
   isMaster: Boolean!
   signature: String!
   currency: String!
-  royaltyFeeInBeeps: Float!
+  royaltyFeeInBips: Float!
 }
 
 type Selling {
@@ -91,7 +91,7 @@ type Nft {
   filePictureUrl: String!
   transactionHash: String
   metadata: NftMetadata!
-  royaltyFeeInBeeps: Float!
+  royaltyFeeInBips: Float!
   creator: User
   licenseOwners: [NftOwner!]
   masterOwner: NftOwner!
@@ -188,7 +188,7 @@ input NftInput {
   metadata: NftMetadataInput!
   supply: Float!
   tags: [String!]!
-  royaltyFeeInBeeps: Int!
+  royaltyFeeInBips: Int!
   transactionHash: String
   chainId: Float
 }
@@ -214,7 +214,7 @@ input SellingVoucherInput {
   isMaster: Boolean!
   signature: String!
   currency: String!
-  royaltyFeeInBeeps: Int!
+  royaltyFeeInBips: Int!
 }
 
 input CreateRoomInput {

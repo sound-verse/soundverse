@@ -16,7 +16,7 @@ import { Contract } from '@ethersproject/contracts'
 import MarketContractAbi from '../../common/artifacts/MarketContract.json'
 import { useCallback, useEffect, useState } from 'react'
 import Web3 from 'web3'
-import { BigNumber, utils } from 'ethers';
+import { BigNumber, utils } from 'ethers'
 
 export const sellingVoucherTypes = {
   SVVoucher: [
@@ -29,7 +29,7 @@ export const sellingVoucherTypes = {
     { name: 'maxSupply', type: 'uint256' },
     { name: 'isMaster', type: 'bool' },
     { name: 'currency', type: 'string' },
-    { name: 'royaltyFeeInBeeps', type: 'uint96' },
+    { name: 'royaltyFeeInBips', type: 'uint96' },
   ],
 }
 
@@ -38,7 +38,7 @@ export type CreateSellingInputProps = {
   amount: number
   nftType: NftType
   nft: Nft
-  royaltyFeeInBeeps: number
+  royaltyFeeInBips: number
 }
 
 const masterContractAddress = process.env.NEXT_PUBLIC_MASTER_CONTRACT_ADDRESS
@@ -115,7 +115,7 @@ export const useCreateSelling = () => {
       isMaster:
         createSellingInputProps.nftType === NftType.MASTER ? true : false,
       currency: 'MATIC',
-      royaltyFeeInBeeps: createSellingInputProps.royaltyFeeInBeeps,
+      royaltyFeeInBips: createSellingInputProps.royaltyFeeInBips,
     }
 
     const signingDomain = {

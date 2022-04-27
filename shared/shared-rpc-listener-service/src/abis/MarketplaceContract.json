@@ -443,7 +443,7 @@
           },
           {
             "internalType": "uint96",
-            "name": "royaltyFeeInBeeps",
+            "name": "royaltyFeeInBips",
             "type": "uint96"
           }
         ],

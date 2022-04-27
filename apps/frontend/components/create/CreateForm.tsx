@@ -34,7 +34,7 @@ export const CreateForm = () => {
     description: '',
     tags: [],
     licenses: 2,
-    royaltyFeeInBeeps: 0,
+    royaltyFeeInBips: 0,
   }
 
   const onFileChange = (
@@ -71,7 +71,7 @@ export const CreateForm = () => {
       .min(2, 'You have to set a minium of 2 licenses')
       .max(100000, 'You can only set a maximum of 100.000 licenses')
       .required('Please enter a number'),
-    royaltyFeeInBeeps: Yup.number()
+    royaltyFeeInBips: Yup.number()
       .typeError('Please enter a number')
       .max(100, 'You can enter a number up to 100')
       .required('Please enter a number'),
@@ -95,7 +95,7 @@ export const CreateForm = () => {
         name: values.name,
         description: values.description,
         licenses: values.licenses,
-        royaltyFeeInBeeps: values.royaltyFeeInBeeps,
+        royaltyFeeInBips: values.royaltyFeeInBips,
       })
       if (id) {
         router.push(`/master/${id}`)
@@ -223,8 +223,8 @@ export const CreateForm = () => {
               </div>
               <div className="mt-3 w-full">
                 <Field
-                  id="royaltyFeeInBeeps"
-                  name="royaltyFeeInBeeps"
+                  id="royaltyFeeInBips"
+                  name="royaltyFeeInBips"
                   placeholder="2"
                   className="outline-none bg-grey-dark text-white w-full"
                 />
@@ -233,7 +233,7 @@ export const CreateForm = () => {
                   Enter a number between 0 and 100
                 </div>
                 <div className={styles.error}>
-                  <ErrorMessage name="royaltyFeeInBeeps" />
+                  <ErrorMessage name="royaltyFeeInBips" />
                 </div>
               </div>
               <div className="text-white font-bold text-sm mt-10">

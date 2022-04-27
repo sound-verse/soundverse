@@ -37,7 +37,7 @@ class SellingVoucher {
   currency: string;
 
   @Field()
-  royaltyFeeInBeeps: number;
+  royaltyFeeInBips: number;
 }
 
 @ObjectType()

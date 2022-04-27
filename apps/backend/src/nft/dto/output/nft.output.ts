@@ -65,7 +65,7 @@ export class Nft {
   metadata: NftMetadata;
 
   @Field()
-  royaltyFeeInBeeps: number;
+  royaltyFeeInBips: number;
 
   @Field({ nullable: true })
   creator?: User;

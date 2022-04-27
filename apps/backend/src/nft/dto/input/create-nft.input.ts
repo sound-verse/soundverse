@@ -30,7 +30,7 @@ export class NftInput {
 
   @Field(() => Int)
   @Max(10000)
-  royaltyFeeInBeeps: number;
+  royaltyFeeInBips: number;
 
   @Field({ nullable: true })
   transactionHash?: string;

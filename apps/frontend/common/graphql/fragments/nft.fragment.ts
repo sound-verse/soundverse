@@ -18,7 +18,7 @@ export const NFT_FRAGMENT = gql`
     transactionHash
     supply
     chainId
-    royaltyFeeInBeeps
+    royaltyFeeInBips
     masterOwner {
       ...NftOwnerFragment
     }
