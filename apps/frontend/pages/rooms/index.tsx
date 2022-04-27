@@ -20,7 +20,7 @@ export default function Rooms() {
         <title>Soundverses</title>
       </Head>
 
-      <Layout>wtf</Layout>
+      <Layout>Rooms</Layout>
     </div>
   )
 }
