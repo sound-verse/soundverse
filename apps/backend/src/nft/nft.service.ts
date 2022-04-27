@@ -336,7 +336,7 @@ export class NftService {
     } as any;
   }
 
-  async getByIds(ids: string[]): Promise<Nft[]> {
+  async getByIds(ids: (string | Types.ObjectId)[]): Promise<Nft[]> {
     return await this.nftModel.find({ _id: { $in: ids } });
   }
 }

@@ -1,4 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { BaseModel } from '../../../graphql/types/base-model.types';
 import { Nft } from '../../../nft/dto/output/nft.output';
 import { User } from '../../../user/dto/output/user.output';
 
@@ -15,9 +16,6 @@ export class CurrentTrack {
 export class Room {
   @Field()
   id: string;
-
-  @Field()
-  name: string;
 
   @Field(() => [Nft])
   playlist: Nft[];

@@ -29,7 +29,7 @@ export class Room extends BaseDBObject {
 
   @Prop({ type: [{ type: Types.ObjectId, ref: Nft.name }] })
   @Type(() => Nft)
-  playlist: Nft;
+  playlist: [Nft];
 
   @Prop()
   currentTrack?: CurrentTrack;
@@ -38,7 +38,7 @@ export class Room extends BaseDBObject {
   @Type(() => User)
   activeUsers?: User[];
 
-  @Prop()
+  @Prop({ default: true })
   active: boolean;
 
   @Prop({ default: () => Date.now() })

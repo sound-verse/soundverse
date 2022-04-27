@@ -26,7 +26,8 @@ export class RoomService {
   }
 
   async getActiveRooms() {
-    return await this.roomModel.find({ active: true });
+    const rooms = await this.roomModel.find({ active: true });
+    return rooms;
   }
 
   async getRoom(roomFilter: RoomFilter) {

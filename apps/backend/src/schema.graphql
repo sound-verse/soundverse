@@ -112,7 +112,6 @@ type CurrentTrack {
 
 type Room {
   id: String!
-  name: String!
   playlist: [Nft!]!
   currentTrack: CurrentTrack
   activeUsers: [User!]
