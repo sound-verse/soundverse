@@ -12,6 +12,8 @@ import { Room } from './dto/output/room.output';
 import { Rooms } from './dto/output/rooms.output';
 import { RoomService } from './room.service';
 import { Types } from 'mongoose';
+import { PlaylistItem } from './room.schema';
+import { Room as RoomSchema } from './room.schema';
 
 @Resolver(() => Room)
 export class RoomResolver {
@@ -27,7 +29,8 @@ export class RoomResolver {
     @CurrentUser() user: LoggedinUser,
     @Args('createRoomInput') createRoomInput: CreateRoomInput,
   ) {
-    return this.roomService.createRoom(createRoomInput, user);
+    const newRoom = await this.roomService.createRoom(createRoomInput, user);
+    return newRoom;
   }
 
   @Query(() => Room)
@@ -46,8 +49,17 @@ export class RoomResolver {
     return await this.userService.findUserById(room.creator._id);
   }
 
-  @ResolveField(() => [Nft])
-  async playlist(@Parent() room: Room) {
-    return await this.nftService.getByIds(room.playlist.map((nft) => new Types.ObjectId(nft.id)));
+  @ResolveField(() => [PlaylistItem])
+  async playlistItems(@Parent() room: RoomSchema) {
+    const nfts = await this.nftService.getByIds(
+      room.playlistItems.map((nft) => new Types.ObjectId(nft.nft._id)),
+    );
+
+    const playlistItems = room.playlistItems.map((item) => ({
+      ...item,
+      nft: nfts.find((nft) => nft._id.toString() === item.nft._id.toString()),
+    }));
+
+    return playlistItems;
   }
 }

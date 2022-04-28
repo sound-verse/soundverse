@@ -7,20 +7,23 @@ import {
   GetRoomsQuery,
   GetRoomsQueryVariables,
 } from '../../common/graphql/schema'
+import { RoomList } from '../../components/Room/RoomList'
 
-export default function Rooms() {
+export default function Soudnverses() {
   const { data: roomsData } = useQuery<GetRoomsQuery, GetRoomsQueryVariables>(
     GET_ROOMS
   )
 
-  console.log(roomsData)
+  const rooms = roomsData?.rooms?.rooms ?? []
   return (
     <div>
       <Head>
         <title>Soundverses</title>
       </Head>
 
-      <Layout>Rooms</Layout>
+      <Layout>
+        <RoomList rooms={rooms} />
+      </Layout>
     </div>
   )
 }

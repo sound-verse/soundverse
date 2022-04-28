@@ -4,7 +4,7 @@ import { User } from '../../hooks/useProfile'
 import Custom404 from '../404'
 import { GET_NFT } from '../../common/graphql/queries/get-nft.query'
 import SingleNftPage from '../../components/SingleNftPage/SingleNftPage'
-import { Nft, Selling } from '../../common/graphql/schema'
+import { Nft, Selling } from '../../common/graphql/schema.d'
 import { NftType } from '../../common/types/nft-type.enum'
 
 type ProfileProps = {
@@ -20,7 +20,7 @@ export default function MasterNft({ nft }: ProfileProps) {
     return <Custom404 />
   }
 
-  return <SingleNftPage nft={nft} nftType={NftType.MASTER} />
+  return <SingleNftPage nft={nft} nftType={NftType.Master} />
 }
 
 export async function getServerSideProps(context) {

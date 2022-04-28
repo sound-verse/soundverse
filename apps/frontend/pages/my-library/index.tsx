@@ -6,7 +6,8 @@ import {
   GetUserNftsQuery,
   GetUserNftsQueryVariables,
   Nft,
-} from '../../common/graphql/schema'
+  NftType,
+} from '../../common/graphql/schema.d'
 import { useQuery } from '@apollo/client'
 import { GET_USER_NFTS } from '../../common/graphql/queries/get-user-nfts.query'
 import { Heading } from '../../components/common/Heading'
@@ -22,34 +23,59 @@ import { useRouter } from 'next/router'
 export default function MyLibrary() {
   const { authUser } = useAuthContext()
   const [showLibrary, setShowLibrary] = useState<boolean>(false)
-  const [userNfts, setUserNfts] = useState<Nft[]>([])
-  const [selectedNfts, setSelectedNfts] = useState<Nft[]>([])
+  const [userLicenseNfts, setLicenseNfts] = useState<Nft[]>([])
+  const [userMasterNfts, setMasterNfts] = useState<Nft[]>([])
+  const [selectedNfts, setSelectedNfts] = useState<
+    { nft: Nft; nftType: NftType }[]
+  >([])
   const { createRoom } = useCreateRoom()
   const [modalLoading, setModalLoading] = useState<boolean>(false)
   const router = useRouter()
 
-  const handleClick = (nft: Nft) => {
+  const deduplicateNfts = (nfts: Nft[]) => {
+    const nftIds = []
+    const uniqueUserNfts = nfts.filter((nft) => {
+      const isDuplicate = nftIds.find((id) => id === nft.id)
+
+      if (!isDuplicate) {
+        nftIds.push(nft.id)
+        return true
+      }
+    })
+
+    return uniqueUserNfts
+  }
+
+  const handleClick = (nft: Nft, nftType: NftType) => {
     const foundNft = selectedNfts.find(
-      (selectedNft) => selectedNft.id === nft.id
+      (selectedNft) =>
+        selectedNft.nft.id === nft.id && selectedNft.nftType === nftType
     )
 
     if (foundNft) {
       setSelectedNfts(
-        selectedNfts.filter((selectedNft) => selectedNft.id !== foundNft.id)
+        selectedNfts.filter(
+          (selectedNft) =>
+            selectedNft.nft.id !== foundNft.nft.id ||
+            selectedNft.nftType !== nftType
+        )
       )
     } else {
-      setSelectedNfts([...selectedNfts, nft])
+      setSelectedNfts([...selectedNfts, { nft, nftType }])
     }
   }
 
   const handleCreateRoom = async () => {
-    const selectedNftIds = selectedNfts.map((nft) => nft.id)
+    const playlistItems = selectedNfts.map((selectedNft) => ({
+      nftId: selectedNft.nft.id,
+      nftType: selectedNft.nftType,
+    }))
     try {
       setModalLoading(true)
-      await createRoom({ nftIds: selectedNftIds })
+      await createRoom({ playlistItems: playlistItems })
       setModalLoading(false)
       setSelectedNfts([])
-      router.push('/landing')
+      router.push('/rooms')
     } catch {
       toast.error('Could not create room')
       setModalLoading(false)
@@ -65,24 +91,18 @@ export default function MyLibrary() {
     if (!data) {
       return
     }
-    const userNfts = [
+    const userLicenseNfts = deduplicateNfts([
       ...data.userNfts.createdLicenseNfts,
-      ...data.userNfts.createdMasterNfts,
       ...data.userNfts.ownedLicenseNfts,
+    ])
+
+    const userMasterNfts = deduplicateNfts([
+      ...data.userNfts.createdMasterNfts,
       ...data.userNfts.ownedMasterNfts,
-    ]
+    ])
 
-    const nftIds = []
-    const uniqueUserNfts = userNfts.filter((nft) => {
-      const isDuplicate = nftIds.find((id) => id === nft.id)
-
-      if (!isDuplicate) {
-        nftIds.push(nft.id)
-        return true
-      }
-    })
-
-    setUserNfts(uniqueUserNfts)
+    setLicenseNfts(userLicenseNfts)
+    setMasterNfts(userMasterNfts)
   }, [data])
 
   return (
@@ -109,9 +129,9 @@ export default function MyLibrary() {
                           <div
                             key={key}
                             className="border-b pb-2 border-grey-medium mr-4 mt-4"
-                            onClick={() => handleClick(nft)}
+                            onClick={() => handleClick(nft.nft, nft.nftType)}
                           >
-                            <MiniNft nft={nft} />
+                            <MiniNft nft={nft.nft} nftType={nft.nftType} />
                           </div>
                         )
                       })}
@@ -129,16 +149,18 @@ export default function MyLibrary() {
                 <div className="pt-4">
                   <Heading>My NFTs</Heading>
                   <div className="flex mt-6 flex-wrap cursor-pointer">
-                    {userNfts &&
-                      userNfts.map((nft, key) => {
+                    {userMasterNfts &&
+                      userMasterNfts.map((nft, key) => {
                         const isSelected = selectedNfts.find(
-                          (selectedNft) => selectedNft.id === nft.id
+                          (selectedNft) =>
+                            selectedNft.nft.id === nft.id &&
+                            selectedNft.nftType === NftType.Master
                         )
                         return (
                           <div
                             key={key}
                             className="border-b pb-2 border-grey-medium mr-4 mt-4"
-                            onClick={() => handleClick(nft)}
+                            onClick={() => handleClick(nft, NftType.Master)}
                           >
                             <div className="flex items-center justify-center">
                               <div
@@ -146,7 +168,31 @@ export default function MyLibrary() {
                                   isSelected ? 'bg-purple' : ''
                                 }`}
                               ></div>
-                              <MiniNft nft={nft} />
+                              <MiniNft nft={nft} nftType={NftType.Master} />
+                            </div>
+                          </div>
+                        )
+                      })}
+                    {userLicenseNfts &&
+                      userLicenseNfts.map((nft, key) => {
+                        const isSelected = selectedNfts.find(
+                          (selectedNft) =>
+                            selectedNft.nft.id === nft.id &&
+                            selectedNft.nftType === NftType.License
+                        )
+                        return (
+                          <div
+                            key={key}
+                            className="border-b pb-2 border-grey-medium mr-4 mt-4"
+                            onClick={() => handleClick(nft, NftType.License)}
+                          >
+                            <div className="flex items-center justify-center">
+                              <div
+                                className={`mr-4 w-4 h-4 border border-grey-medium rounded ${
+                                  isSelected ? 'bg-purple' : ''
+                                }`}
+                              ></div>
+                              <MiniNft nft={nft} nftType={NftType.License} />
                             </div>
                           </div>
                         )

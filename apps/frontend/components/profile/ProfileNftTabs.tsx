@@ -5,8 +5,7 @@ import { generateShortEthAddress } from '../../utils/common'
 import SoundCard from '../marketplace/SoundCard'
 import styles from './ProfileNftTabs.module.css'
 import { connectContractToSigner } from '@usedapp/core'
-import { NftType } from '../../common/types/nft-type.enum'
-import { Nft } from '../../common/graphql/schema'
+import { Nft, NftType } from '../../common/graphql/schema.d'
 
 export type ProfileNftTabsProps = {
   createdNfts: Nft[]
@@ -74,7 +73,7 @@ export const ProfileNftTabs = ({
               return (
                 <div key={`soundcard-wrapper-${key}`}>
                   <div className="spacer">
-                    <SoundCard nft={nft} nftType={NftType.MASTER} key={key} />
+                    <SoundCard nft={nft} nftType={NftType.Master} key={key} />
                   </div>
                 </div>
               )
@@ -89,7 +88,7 @@ export const ProfileNftTabs = ({
               return (
                 <div key={`soundcard-wrapper-${key}`}>
                   <div className="spacer">
-                    <SoundCard nft={nft} nftType={NftType.LICENSE} key={key} />
+                    <SoundCard nft={nft} nftType={NftType.License} key={key} />
                   </div>
                 </div>
               )
@@ -107,7 +106,7 @@ export const ProfileNftTabs = ({
               return (
                 <div key={`soundcard-wrapper-${key}`}>
                   <div className="spacer">
-                    <SoundCard nft={nft} nftType={NftType.MASTER} key={key} />
+                    <SoundCard nft={nft} nftType={NftType.Master} key={key} />
                   </div>
                 </div>
               )
@@ -122,7 +121,7 @@ export const ProfileNftTabs = ({
               return (
                 <div key={`soundcard-wrapper-${key}`}>
                   <div className="spacer">
-                    <SoundCard nft={nft} nftType={NftType.LICENSE} key={key} />
+                    <SoundCard nft={nft} nftType={NftType.License} key={key} />
                   </div>
                 </div>
               )

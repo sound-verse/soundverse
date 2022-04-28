@@ -1,8 +1,7 @@
 import { useContractFunction, useEthers } from '@usedapp/core'
 import { useAuthContext } from '../../context/AuthContext'
 import toast from 'react-hot-toast'
-import { Nft } from '../../common/graphql/schema'
-import { NftType } from '../../common/types/nft-type.enum'
+import { Nft, NftType } from '../../common/graphql/schema.d'
 import { utils } from 'ethers'
 import { Contract } from '@ethersproject/contracts'
 import MarketContractAbi from '../../common/artifacts/MarketContract.json'
@@ -32,7 +31,7 @@ export const useUnlistSelling = () => {
     }
 
     const contractAddress =
-      createSellingInputProps.nftType === NftType.MASTER
+      createSellingInputProps.nftType === NftType.Master
         ? masterContractAddress
         : licenseContractAddress
 

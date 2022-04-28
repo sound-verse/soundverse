@@ -6,8 +6,7 @@ import SoundCard from '../../components/marketplace/SoundCard'
 import { ProfileName } from '../../components/profile'
 import Button from '../../components/common/Button'
 import Link from 'next/link'
-import { Nft, NftOwner, Selling } from '../../common/graphql/schema'
-import { NftType } from '../../common/types/nft-type.enum'
+import { Nft, NftOwner, NftType, Selling } from '../../common/graphql/schema.d'
 import { CreateSellingForm } from '../selling/CreateSellingForm'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
@@ -59,7 +58,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
   )
 
   let isListable = false
-  if (nftType === NftType.MASTER) {
+  if (nftType === NftType.Master) {
     if (authMasterOwner && !authMasterSelling) {
       isListable = true
     }
@@ -73,7 +72,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
   }
 
   let isUnlistable = false
-  if (nftType === NftType.MASTER) {
+  if (nftType === NftType.Master) {
     if (authMasterSelling) {
       isUnlistable = true
     }
@@ -84,7 +83,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
   }
 
   let isBuyable = false
-  if (nftType === NftType.MASTER) {
+  if (nftType === NftType.Master) {
     if (
       nft.sellings.masterSelling &&
       nft.sellings.masterSelling.seller.id !== authUser?.id
@@ -188,7 +187,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                       <div>
                         <Link
                           href={`/${
-                            nftType === NftType.MASTER ? 'master' : 'license'
+                            nftType === NftType.Master ? 'master' : 'license'
                           }/${nft.id}`}
                         >
                           <a className="flex items-center justify-center">
@@ -205,7 +204,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                       <div className="flex flex-col ml-5">
                         <Link
                           href={`/${
-                            nftType === NftType.MASTER ? 'master' : 'license'
+                            nftType === NftType.Master ? 'master' : 'license'
                           }/${nft.id}`}
                         >
                           <a>
@@ -287,7 +286,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                       <div className="mt-12">
                         Owned by: <br />
                         <br />
-                        {nftType === NftType.LICENSE ? (
+                        {nftType === NftType.License ? (
                           nft.licenseOwners.map((licenseOwner, key) => {
                             return (
                               <div key={key}>
@@ -328,12 +327,12 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                       <div>
                         Type:{' '}
                         <span className="font-bold">
-                          {nftType === NftType.MASTER ? 'Master' : 'License'}
+                          {nftType === NftType.Master ? 'Master' : 'License'}
                         </span>
                       </div>
                     </div>
                     <div className="mt-10">
-                      {NftType.MASTER
+                      {NftType.Master
                         ? nft.sellings.masterSelling && (
                             <div className="flex flex-col mb-10">
                               <div className="flex mb-2">
@@ -390,7 +389,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                           onClick={handleUnlistNft}
                         />
                       )}
-                      {isBuyable && nftType === NftType.MASTER && (
+                      {isBuyable && nftType === NftType.Master && (
                         <Button
                           text="Select and BUY"
                           type="purple"
@@ -398,7 +397,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                           onClick={handleBuyNft}
                         />
                       )}
-                      {isBuyable && nftType === NftType.LICENSE && (
+                      {isBuyable && nftType === NftType.License && (
                         <Button
                           text="BUY"
                           type="purple"
@@ -450,7 +449,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                 setShowBoughtSuccess(false)
                 setShowUnlistedSuccess(false)
                 router.push(
-                  `/${nftType === NftType.LICENSE ? 'license' : 'master'}/${
+                  `/${nftType === NftType.License ? 'license' : 'master'}/${
                     nft.id
                   }`
                 )

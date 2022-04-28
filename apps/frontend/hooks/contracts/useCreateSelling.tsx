@@ -9,8 +9,8 @@ import {
   CreateSellingInput,
   Selling,
   CreateSellingMutation,
-} from '../../common/graphql/schema'
-import { NftType } from '../../common/types/nft-type.enum'
+  NftType,
+} from '../../common/graphql/schema.d'
 import { CREATE_SELLING } from '../../common/graphql/mutations/create-selling.mutation'
 import { Contract } from '@ethersproject/contracts'
 import MarketContractAbi from '../../common/artifacts/MarketContract.json'
@@ -84,7 +84,7 @@ export const useCreateSelling = () => {
   useEffect(() => {
     if (createSellingInputProps) {
       const contractAddress =
-        createSellingInputProps.nftType === NftType.MASTER
+        createSellingInputProps.nftType === NftType.Master
           ? masterContractAddress
           : licenseContractAddress
       setContractAddress(contractAddress)
@@ -113,7 +113,7 @@ export const useCreateSelling = () => {
       supply: createSellingInputProps.amount,
       maxSupply: createSellingInputProps.nft.supply,
       isMaster:
-        createSellingInputProps.nftType === NftType.MASTER ? true : false,
+        createSellingInputProps.nftType === NftType.Master ? true : false,
       currency: 'MATIC',
       royaltyFeeInBips: createSellingInputProps.royaltyFeeInBips,
     }

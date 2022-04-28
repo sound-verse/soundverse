@@ -10,14 +10,19 @@ export const ROOM_FRAGMENT = gql`
     creator {
       ...UserFragment
     }
-    playlist {
-      ...NftFragment
+    playlistItems {
+      nft {
+        ...NftFragment
+      }
+      currentPosition
+      nftType
     }
     currentTrack {
       nft {
         ...NftFragment
       }
       currentPosition
+      nftType
     }
     activeUsers {
       ...UserFragment

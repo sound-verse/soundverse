@@ -105,15 +105,21 @@ type UserNfts {
   ownedLicenseNfts: [Nft!]
 }
 
-type CurrentTrack {
-  nft: Nft!
-  currentPosition: Int!
+type PlaylistItem {
+  nft: Nft
+  nftType: NftType!
+  currentPosition: Int
+}
+
+enum NftType {
+  MASTER
+  LICENSE
 }
 
 type Room {
   id: String!
-  playlist: [Nft!]!
-  currentTrack: CurrentTrack
+  currentTrack: PlaylistItem
+  playlistItems: [PlaylistItem!]!
   activeUsers: [User!]
   active: Boolean!
   creator: User!
@@ -217,5 +223,10 @@ input SellingVoucherInput {
 }
 
 input CreateRoomInput {
-  nftIds: [String!]!
+  playlistItems: [PlaylistItemInput!]!
+}
+
+input PlaylistItemInput {
+  nftId: String!
+  nftType: String!
 }

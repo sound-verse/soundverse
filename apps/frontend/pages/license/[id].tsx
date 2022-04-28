@@ -4,7 +4,7 @@ import { User } from '../../hooks/useProfile'
 import Custom404 from '../404'
 import SingleNftPage from '../../components/SingleNftPage/SingleNftPage'
 import { GET_NFT } from '../../common/graphql/queries/get-nft.query'
-import { Nft, Selling } from '../../common/graphql/schema'
+import { Nft, Selling } from '../../common/graphql/schema.d'
 import { NftType } from '../../common/types/nft-type.enum'
 
 type ProfileProps = {
@@ -22,7 +22,7 @@ export default function LicenseNft({ nft }: ProfileProps) {
     return <Custom404 />
   }
 
-  return <SingleNftPage nft={nft} nftType={NftType.LICENSE} />
+  return <SingleNftPage nft={nft} nftType={NftType.License} />
 }
 
 export async function getServerSideProps(context) {

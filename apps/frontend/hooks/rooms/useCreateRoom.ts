@@ -5,7 +5,7 @@ import {
   CreateRoomInput,
   CreateRoomMutation,
   CreateRoomMutationVariables,
-} from '../../common/graphql/schema'
+} from '../../common/graphql/schema.d'
 
 export const useCreateRoom = () => {
   const [createRoomMutation, { data: createRoomData }] = useMutation<

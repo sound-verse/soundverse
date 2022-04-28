@@ -1,7 +1,7 @@
 import { useContractFunction, useEthers } from '@usedapp/core'
 import { useAuthContext } from '../../context/AuthContext'
 import toast from 'react-hot-toast'
-import { Nft, NftOwner, Selling } from '../../common/graphql/schema'
+import { Nft, NftOwner, Selling } from '../../common/graphql/schema.d'
 import { ethers, utils } from 'ethers'
 import { Contract } from '@ethersproject/contracts'
 import MarketContractAbi from '../../common/artifacts/MarketContract.json'

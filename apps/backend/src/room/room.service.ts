@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Room, RoomDocument } from './room.schema';
 import { Types, Model } from 'mongoose';
@@ -14,11 +14,26 @@ export class RoomService {
     private nftService: NftService,
   ) {}
 
-  async createRoom(createRoomInput: CreateRoomInput, user: User) {
-    const playlist = await this.nftService.getByIds(createRoomInput.nftIds);
+  async createRoom(createRoomInput: CreateRoomInput, user: User): Promise<Room> {
+    const nftIds = createRoomInput.playlistItems.map((playlistItem) => playlistItem.nftId);
+    const nfts = await this.nftService.getByIds(nftIds);
+
+    const nftCheck = nfts.filter(
+      (nft) => nft._id.toString() !== nftIds.find((nftId) => nft._id.toString() === nftId),
+    );
+
+    if (nftCheck.length > 0) {
+      throw new BadRequestException('Error selecting the playlist');
+    }
+
+    const playlistItems = createRoomInput.playlistItems.map((item) => ({
+      nft: new Types.ObjectId(item.nftId),
+      nftType: item.nftType,
+    }));
+
     const newRoom = await this.roomModel.create({
       creator: user._id,
-      playlist,
+      playlistItems,
       active: true,
     });
 
