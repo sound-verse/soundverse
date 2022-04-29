@@ -45,9 +45,9 @@ function SoundCard({
       creatorEthAddress: nft.creator.ethAddress,
       id: nft.id,
       contractAddress,
-      isPlaying: true,
       play: true,
       nftType,
+      restart: true,
     })
   }
 

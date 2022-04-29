@@ -30,6 +30,7 @@ export type Track = {
   playTime?: number
   isPlaying?: boolean
   nftType?: NftType
+  restart?: boolean
 }
 
 export type State = {
@@ -64,6 +65,7 @@ const initialState: State = {
     isLoading: false,
     isPlaying: false,
     nftType: NftType.MASTER,
+    restart: false,
   } as Track,
 }
 
