@@ -4,8 +4,7 @@ import { User } from '../../hooks/useProfile'
 import Custom404 from '../404'
 import SingleNftPage from '../../components/SingleNftPage/SingleNftPage'
 import { GET_NFT } from '../../common/graphql/queries/get-nft.query'
-import { Nft, Selling } from '../../common/graphql/schema.d'
-import { NftType } from '../../common/types/nft-type.enum'
+import { Nft, Selling, NftType } from '../../common/graphql/schema.d'
 
 type ProfileProps = {
   query: {
