@@ -10,6 +10,7 @@ import { EventModule } from './event/event.module';
 import { TagModule } from './tag/tag.module';
 import { SellingModule } from './selling/selling.module';
 import { RoomModule } from './room/room.module';
+import { PubSubModule } from './core/pubSub.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { RoomModule } from './room/room.module';
     TagModule,
     SellingModule,
     RoomModule,
+    PubSubModule,
   ],
   controllers: [AppController],
   providers: [],

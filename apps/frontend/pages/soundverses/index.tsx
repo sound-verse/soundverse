@@ -1,7 +1,7 @@
 import React from 'react'
 import Head from 'next/head'
 import Layout from '../../components/layout'
-import { GET_ROOMS } from '../../common/graphql/queries/get-rooms'
+import { GET_ROOMS } from '../../common/graphql/queries/get-rooms.query'
 import { useQuery } from '@apollo/client'
 import {
   GetRoomsQuery,

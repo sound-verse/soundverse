@@ -1,5 +1,5 @@
 import { Inject, UseGuards } from '@nestjs/common';
-import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Parent, Query, ResolveField, Resolver, Subscription } from '@nestjs/graphql';
 import { GqlAuthGuard } from '../auth/gql-auth.guard';
 import { Nft } from '../nft/nft.schema';
 import { NftService } from '../nft/nft.service';
@@ -14,6 +14,14 @@ import { RoomService } from './room.service';
 import { Types } from 'mongoose';
 import { PlaylistItem } from './room.schema';
 import { Room as RoomSchema } from './room.schema';
+import { JoinRoomInput } from './dto/input/join-room.input';
+import { User as UserSchema } from '../user/user.schema';
+import { LeaveRoomInput } from './dto/input/leave-room.input';
+import { PUB_SUB } from '../core/pubSub.module';
+import { RedisPubSub } from 'graphql-redis-subscriptions';
+import { valueFromAST } from 'graphql';
+
+export const ROOM_UPDATED_EVENT = 'roomUpdated';
 
 @Resolver(() => Room)
 export class RoomResolver {
@@ -21,6 +29,7 @@ export class RoomResolver {
     private roomService: RoomService,
     private userService: UserService,
     private nftService: NftService,
+    @Inject(PUB_SUB) private pubSub: RedisPubSub,
   ) {}
 
   @UseGuards(GqlAuthGuard)
@@ -35,7 +44,8 @@ export class RoomResolver {
 
   @Query(() => Room)
   async room(@Args('roomFilter') roomFilter: RoomFilter) {
-    return await this.roomService.getRoom(roomFilter);
+    const room = await this.roomService.getRoom(roomFilter);
+    return room;
   }
 
   @Query(() => Rooms)
@@ -44,9 +54,43 @@ export class RoomResolver {
     return { rooms: activeRooms };
   }
 
+  @UseGuards(GqlAuthGuard)
+  @Mutation(() => Room)
+  async joinRoom(@CurrentUser() user: UserSchema, @Args('joinRoomInput') joinRoomInput: JoinRoomInput) {
+    const room = await this.roomService.addUserToRoom(user, joinRoomInput);
+    this.pubSub.publish(ROOM_UPDATED_EVENT, { roomUpdated: room });
+    return room;
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Mutation(() => Room)
+  async leaveRoom(@CurrentUser() user: UserSchema, @Args('leaveRoomInput') leaveRoomInput: LeaveRoomInput) {
+    const room = await this.roomService.addUserToRoom(user, leaveRoomInput);
+    this.pubSub.publish(ROOM_UPDATED_EVENT, { roomUpdated: room });
+    return room;
+  }
+
+  @Subscription(() => Room, {
+    filter: (payload, variables) => {
+      return payload?.roomUpdated?._id && payload.roomUpdated._id === variables?.roomId;
+    },
+    resolve: async function (this: RoomResolver, value) {
+      const room = await this.roomService.getPopulatedRoom(value.roomUpdated);
+      return room;
+    },
+  })
+  roomUpdated(@Args('roomId') roomId: string) {
+    return this.pubSub.asyncIterator(ROOM_UPDATED_EVENT);
+  }
+
   @ResolveField(() => User)
   async creator(@Parent() room: Room) {
     return await this.userService.findUserById(room.creator._id);
+  }
+
+  @ResolveField(() => User)
+  async activeUsers(@Parent() room: Room) {
+    return await this.userService.findUserByIds(room.activeUsers.map((user) => user._id));
   }
 
   @ResolveField(() => [PlaylistItem])

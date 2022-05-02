@@ -13,6 +13,7 @@ type AuthUser {
   ethAddress: String
   id: String!
   instagram: String
+  joinedRoomId: String
   name: String
   profileImage: String
   soundcloud: String
@@ -31,6 +32,14 @@ input CreateSellingInput {
   sellingVoucher: SellingVoucherInput!
 }
 
+input JoinRoomInput {
+  roomId: String!
+}
+
+input LeaveRoomInput {
+  roomId: String!
+}
+
 input LoginInput {
   ethAddress: String!
   signature: String!
@@ -41,6 +50,8 @@ type Mutation {
   createRoom(createRoomInput: CreateRoomInput!): Room!
   createSelling(createSellingInput: CreateSellingInput!): Selling!
   generateVerificationToken(data: VerificationTokenInput!): Int!
+  joinRoom(joinRoomInput: JoinRoomInput!): Room!
+  leaveRoom(leaveRoomInput: LeaveRoomInput!): Room!
   login(data: LoginInput!): Auth!
   unpinAll: Boolean!
   updateUser(data: UpdateUserInput!): User!
@@ -186,6 +197,10 @@ input SellingVoucherInput {
   supply: Int!
   tokenId: Int!
   tokenUri: String!
+}
+
+type Subscription {
+  roomUpdated(roomId: String!): Room!
 }
 
 input UpdateUserInput {

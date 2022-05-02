@@ -4,6 +4,18 @@ import { gql, useMutation, useQuery } from '@apollo/client'
 import { useAuthContext } from '../context/AuthContext'
 import jwt_decode from 'jwt-decode'
 import toast from 'react-hot-toast'
+import {
+  GenerateVerificationTokenMutation,
+  GenerateVerificationTokenMutationVariables,
+  LoginMutation,
+  LoginMutationVariables,
+  MeQuery,
+  MeQueryVariables,
+  User,
+} from '../common/graphql/schema.d'
+import { LOGIN } from '../common/graphql/mutations/login.mutation'
+import { GENERATE_VERIFICATION_TOKEN } from '../common/graphql/mutations/generate-verification-token.mutation'
+import { ME } from '../common/graphql/queries/me.query'
 
 export type JwtObject = {
   id?: string
@@ -12,59 +24,14 @@ export type JwtObject = {
   exp?: number
 }
 
-const GENERATE_VERIFICATION_TOKEN = gql`
-  mutation generateVerificationToken($data: VerificationTokenInput!) {
-    generateVerificationToken(data: $data)
-  }
-`
-
-const LOGIN = gql`
-  mutation login($data: LoginInput!) {
-    login(data: $data) {
-      token
-    }
-  }
-`
-
-export type LoggedInUser = {
-  id?: string
-  name?: string
-  description?: string
-  ethAddress?: string
-  twitter?: string
-  instagram?: string
-  soundcloud?: string
-  discord?: string
-  spotify?: string
-  website?: string
-  profileImage?: string
-  verified?: Boolean
-}
-
-export const ME = gql`
-  query me {
-    me {
-      id
-      name
-      description
-      ethAddress
-      twitter
-      instagram
-      soundcloud
-      discord
-      spotify
-      website
-      profileImage
-      verified
-    }
-  }
-`
-
 export const useLogin = () => {
-  const [generateVerificationToken] = useMutation(GENERATE_VERIFICATION_TOKEN)
-  const [login] = useMutation(LOGIN)
+  const [generateVerificationToken] = useMutation<
+    GenerateVerificationTokenMutation,
+    GenerateVerificationTokenMutationVariables
+  >(GENERATE_VERIFICATION_TOKEN)
+  const [login] = useMutation<LoginMutation, LoginMutationVariables>(LOGIN)
   const { jwtToken, setAuthToken, setLoggedInUser } = useAuthContext()
-  const { data, loading, refetch } = useQuery(ME)
+  const { data, loading, refetch } = useQuery<MeQuery, MeQueryVariables>(ME)
   const {
     account,
     library: ethLibraray,
@@ -121,7 +88,7 @@ export const useLogin = () => {
   const [jwtUser, setJwtUser] = useState<JwtObject>(getJwtUser(jwtToken))
 
   const setAuthUser = useCallback(
-    (authUser: LoggedInUser) => {
+    (authUser: User) => {
       setLoggedInUser(authUser)
       setAuthenticated(authUser ? true : false)
     },
@@ -131,7 +98,7 @@ export const useLogin = () => {
   useEffect(() => {
     if (!loading && data && jwtUser) {
       if (
-        jwtUser.ethAddress.toLowerCase() === data.me.ethAddress.toLowerCase()
+        jwtUser.ethAddress?.toLowerCase() === data.me.ethAddress?.toLowerCase()
       ) {
         setAuthUser(data.me)
       }

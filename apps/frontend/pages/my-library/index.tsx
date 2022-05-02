@@ -75,7 +75,7 @@ export default function MyLibrary() {
       await createRoom({ playlistItems: playlistItems })
       setModalLoading(false)
       setSelectedNfts([])
-      router.push('/rooms')
+      router.push('/soundverses')
     } catch {
       toast.error('Could not create room')
       setModalLoading(false)
