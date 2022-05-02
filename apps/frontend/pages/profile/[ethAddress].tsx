@@ -20,7 +20,7 @@ import {
   GetUserNftsQueryVariables,
   Nft,
   UserNfts,
-} from '../../common/graphql/schema'
+} from '../../common/graphql/schema.d'
 import { GET_USER_NFTS } from '../../common/graphql/queries/get-user-nfts.query'
 
 type ProfileProps = {

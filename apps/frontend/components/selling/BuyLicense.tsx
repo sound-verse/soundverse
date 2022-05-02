@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 import { LoggedInUser, useLogin } from '../../hooks/useLogin'
-import { Selling } from '../../common/graphql/schema'
+import { Selling } from '../../common/graphql/schema.d'
 import { ProfileName } from '../profile'
 import Link from 'next/link'
 import Web3 from 'web3'

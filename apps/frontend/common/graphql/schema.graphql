@@ -23,17 +23,12 @@ type AuthUser {
 }
 
 input CreateRoomInput {
-  nftIds: [String!]!
+  playlistItems: [PlaylistItemInput!]!
 }
 
 input CreateSellingInput {
   nftId: String!
   sellingVoucher: SellingVoucherInput!
-}
-
-type CurrentTrack {
-  currentPosition: Int!
-  nft: Nft!
 }
 
 input LoginInput {
@@ -64,6 +59,7 @@ type Nft {
   masterContractAddress: String!
   masterOwner: NftOwner!
   metadata: NftMetadata!
+  royaltyFeeInBips: Float!
   sellings: NftSelling
   supply: Float!
   tokenId: Float
@@ -79,6 +75,7 @@ input NftFilter {
 input NftInput {
   chainId: Float
   metadata: NftMetadataInput!
+  royaltyFeeInBips: Int!
   supply: Float!
   tags: [String!]!
   transactionHash: String
@@ -104,8 +101,24 @@ type NftSelling {
   masterSelling: Selling
 }
 
+enum NftType {
+  LICENSE
+  MASTER
+}
+
 input NftsFilter {
   hasSelling: Boolean
+}
+
+type PlaylistItem {
+  currentPosition: Int
+  nft: Nft
+  nftType: NftType!
+}
+
+input PlaylistItemInput {
+  nftId: String!
+  nftType: String!
 }
 
 type Query {
@@ -122,10 +135,9 @@ type Room {
   active: Boolean!
   activeUsers: [User!]
   creator: User!
-  currentTrack: CurrentTrack
+  currentTrack: PlaylistItem
   id: String!
-  name: String!
-  playlist: [Nft!]!
+  playlistItems: [PlaylistItem!]!
 }
 
 input RoomFilter {
@@ -154,6 +166,7 @@ type SellingVoucher {
   maxSupply: Int!
   nftContractAddress: String!
   price: String!
+  royaltyFeeInBips: Float!
   sellCount: Int!
   signature: String!
   supply: Int!
@@ -167,6 +180,7 @@ input SellingVoucherInput {
   maxSupply: Int!
   nftContractAddress: String!
   price: String!
+  royaltyFeeInBips: Int!
   sellCount: Int!
   signature: String!
   supply: Int!

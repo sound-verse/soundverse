@@ -47,6 +47,9 @@ class SellingVoucher {
 
   @Prop()
   currency: string;
+
+  @Prop()
+  royaltyFeeInBips: number;
 }
 
 @Schema()

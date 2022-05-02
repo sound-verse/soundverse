@@ -9,8 +9,7 @@ import { useProfile } from '../../hooks/useProfile'
 import { LoggedInUser, useLogin } from '../../hooks/useLogin'
 import { useRouter } from 'next/router'
 import { useCreateSelling } from '../../hooks/contracts/useCreateSelling'
-import { NftType } from '../../common/types/nft-type.enum'
-import { Nft } from '../../common/graphql/schema'
+import { Nft, NftType } from '../../common/graphql/schema.d'
 
 export type CreateSellingFormProps = {
   user: LoggedInUser
@@ -33,7 +32,7 @@ export const CreateSellingForm = ({
 
   let userSupply = 0
 
-  if (nftType === NftType.MASTER) {
+  if (nftType === NftType.Master) {
     userSupply = nft.masterOwner.supply
   } else {
     userSupply = nft.licenseOwners.find(
@@ -45,7 +44,7 @@ export const CreateSellingForm = ({
     if (selling) {
       showSingleNftPage(false)
       router.push(
-        `/${nftType === NftType.MASTER ? 'master' : 'license'}/${nft.id}`
+        `/${nftType === NftType.Master ? 'master' : 'license'}/${nft.id}`
       )
       setLoading(false)
     }
@@ -59,6 +58,7 @@ export const CreateSellingForm = ({
         amount: parseInt(values.amount),
         nftType,
         nft,
+        royaltyFeeInBips: nft.royaltyFeeInBips,
       })
     } catch (error) {
       setLoading(false)
@@ -140,7 +140,7 @@ export const CreateSellingForm = ({
                   <div>{userSupply}</div>
                   <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
                   <div className="text-grey-light mt-2 text-xs">
-                    Total numnber of licenses available
+                    Total number of licenses available
                   </div>
                 </div>
               </div>

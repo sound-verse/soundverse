@@ -42,6 +42,10 @@ const Header = () => {
         <div className={styles.headerSpacer} />
         <div className={styles.headerSpacer} />
         <div className={styles.headerSpacer} />
+        <Link href="/soundverses" passHref>
+          <p className={styles.marketplaceLink}>Soundverses</p>
+        </Link>
+        <div className={styles.headerSpacer} />
         <Link href="/marketplace" passHref>
           <p className={styles.marketplaceLink}>Marketplace</p>
         </Link>

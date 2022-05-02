@@ -6,7 +6,6 @@ import { Types } from 'mongoose';
 export class BaseModel {
   @Field(() => String, { name: 'id' })
   @Transform(({ value }) => {
-    console.log(value.toString());
     return value?.toString() as string;
   })
   _id: Types.ObjectId | string;

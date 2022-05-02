@@ -3,8 +3,7 @@ import Head from 'next/head'
 import Layout from '../../components/layout'
 import SoundCard from '../../components/marketplace/SoundCard'
 import { useLazyQuery } from '@apollo/client'
-import { NftType } from '../../common/types/nft-type.enum'
-import { GetNftsQuery } from '../../common/graphql/schema'
+import { GetNftsQuery, NftType } from '../../common/graphql/schema.d'
 import { GET_NFTS } from '../../common/graphql/queries/get-nfts.query'
 import { createApolloClient } from '../../lib/createApolloClient'
 import { useBottomScrollListener } from 'react-bottom-scroll-listener'
@@ -85,7 +84,7 @@ export default function Marketplace({ initialNfts }: ProfileProps) {
                     {nft.sellings.masterSelling && (
                       <SoundCard
                         nft={nft}
-                        nftType={NftType.MASTER}
+                        nftType={NftType.Master}
                         key={key}
                         playingCardId={playingCardId}
                         onMusicClick={() => handleMusicClick(nft.id)}
@@ -94,7 +93,7 @@ export default function Marketplace({ initialNfts }: ProfileProps) {
                     {nft.sellings.licenseSellings[0] && (
                       <SoundCard
                         nft={nft}
-                        nftType={NftType.LICENSE}
+                        nftType={NftType.License}
                         key={key}
                         playingCardId={playingCardId}
                         onMusicClick={() => handleMusicClick(nft.id)}
@@ -113,7 +112,7 @@ export default function Marketplace({ initialNfts }: ProfileProps) {
                     {nft.sellings.masterSelling && (
                       <SoundCard
                         nft={nft}
-                        nftType={NftType.MASTER}
+                        nftType={NftType.Master}
                         key={key}
                         playingCardId={playingCardId}
                         onMusicClick={() => handleMusicClick(nft.id)}
@@ -122,7 +121,7 @@ export default function Marketplace({ initialNfts }: ProfileProps) {
                     {nft.sellings.licenseSellings[0] && (
                       <SoundCard
                         nft={nft}
-                        nftType={NftType.LICENSE}
+                        nftType={NftType.License}
                         key={key}
                         playingCardId={playingCardId}
                         onMusicClick={() => handleMusicClick(nft.id)}

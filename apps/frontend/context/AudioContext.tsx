@@ -6,7 +6,7 @@ import React, {
   useContext,
   createContext,
 } from 'react'
-import { NftType } from '../common/types/nft-type.enum'
+import { NftType } from '../common/graphql/schema.d'
 
 export enum PLAYER_STATUS {
   PLAYING = 'playing',
@@ -64,8 +64,8 @@ const initialState: State = {
     visible: false,
     isLoading: false,
     isPlaying: false,
-    nftType: NftType.MASTER,
     restart: false,
+    nftType: NftType.Master,
   } as Track,
 }
 

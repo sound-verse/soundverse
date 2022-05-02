@@ -243,6 +243,11 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "name": "_creators",
@@ -345,6 +350,13 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "cleanUpCreators",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -360,6 +372,11 @@
         "internalType": "uint256",
         "name": "_licensesAmount",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint96",
+        "name": "_royaltyFeeInBips",
+        "type": "uint96"
       }
     ],
     "name": "createMasterItem",
@@ -371,6 +388,25 @@
       }
     ],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "creatorArray",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -631,6 +667,35 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "_tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_salePrice",
+        "type": "uint256"
+      }
+    ],
+    "name": "royaltyInfo",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "from",
         "type": "address"
@@ -693,6 +758,24 @@
       }
     ],
     "name": "setApprovalForAll",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_creatorsArray",
+        "type": "address[]"
+      }
+    ],
+    "name": "setTokenCreators",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -817,7 +900,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "_currentTokenId",
+        "name": "_tokenId",
         "type": "uint256"
       }
     ],

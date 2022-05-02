@@ -9,14 +9,14 @@ import {
   CreateSellingInput,
   Selling,
   CreateSellingMutation,
-} from '../../common/graphql/schema'
-import { NftType } from '../../common/types/nft-type.enum'
+  NftType,
+} from '../../common/graphql/schema.d'
 import { CREATE_SELLING } from '../../common/graphql/mutations/create-selling.mutation'
 import { Contract } from '@ethersproject/contracts'
 import MarketContractAbi from '../../common/artifacts/MarketContract.json'
 import { useCallback, useEffect, useState } from 'react'
 import Web3 from 'web3'
-import { BigNumber, utils } from 'ethers';
+import { BigNumber, utils } from 'ethers'
 
 export const sellingVoucherTypes = {
   SVVoucher: [
@@ -29,6 +29,7 @@ export const sellingVoucherTypes = {
     { name: 'maxSupply', type: 'uint256' },
     { name: 'isMaster', type: 'bool' },
     { name: 'currency', type: 'string' },
+    { name: 'royaltyFeeInBips', type: 'uint96' },
   ],
 }
 
@@ -37,6 +38,7 @@ export type CreateSellingInputProps = {
   amount: number
   nftType: NftType
   nft: Nft
+  royaltyFeeInBips: number
 }
 
 const masterContractAddress = process.env.NEXT_PUBLIC_MASTER_CONTRACT_ADDRESS
@@ -82,7 +84,7 @@ export const useCreateSelling = () => {
   useEffect(() => {
     if (createSellingInputProps) {
       const contractAddress =
-        createSellingInputProps.nftType === NftType.MASTER
+        createSellingInputProps.nftType === NftType.Master
           ? masterContractAddress
           : licenseContractAddress
       setContractAddress(contractAddress)
@@ -111,8 +113,9 @@ export const useCreateSelling = () => {
       supply: createSellingInputProps.amount,
       maxSupply: createSellingInputProps.nft.supply,
       isMaster:
-        createSellingInputProps.nftType === NftType.MASTER ? true : false,
+        createSellingInputProps.nftType === NftType.Master ? true : false,
       currency: 'MATIC',
+      royaltyFeeInBips: createSellingInputProps.royaltyFeeInBips,
     }
 
     const signingDomain = {

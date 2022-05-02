@@ -30,6 +30,7 @@ export interface CreateNftInput {
   tags: string[];
   transactionHash: string;
   chainId: number;
+  royaltyFeeInBips;
 }
 
 @Injectable()
@@ -70,6 +71,7 @@ export class NftService {
         transactionHash: createNftInput.transactionHash ? createNftInput.transactionHash : '',
         chainId: createNftInput.chainId ? createNftInput.chainId : 0,
         supply: createNftInput.supply,
+        royaltyFeeInBips: createNftInput.royaltyFeeInBips,
         masterOwner: {
           user: createNftInput.user._id,
           supply: 1,
@@ -334,7 +336,7 @@ export class NftService {
     } as any;
   }
 
-  async getByIds(ids: string[]): Promise<Nft[]> {
+  async getByIds(ids: (string | Types.ObjectId)[]): Promise<Nft[]> {
     return await this.nftModel.find({ _id: { $in: ids } });
   }
 }

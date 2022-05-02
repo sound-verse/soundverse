@@ -50,6 +50,7 @@ type SellingVoucher {
   isMaster: Boolean!
   signature: String!
   currency: String!
+  royaltyFeeInBips: Float!
 }
 
 type Selling {
@@ -90,6 +91,7 @@ type Nft {
   filePictureUrl: String!
   transactionHash: String
   metadata: NftMetadata!
+  royaltyFeeInBips: Float!
   creator: User
   licenseOwners: [NftOwner!]
   masterOwner: NftOwner!
@@ -103,16 +105,21 @@ type UserNfts {
   ownedLicenseNfts: [Nft!]
 }
 
-type CurrentTrack {
-  nft: Nft!
-  currentPosition: Int!
+type PlaylistItem {
+  nft: Nft
+  nftType: NftType!
+  currentPosition: Int
+}
+
+enum NftType {
+  MASTER
+  LICENSE
 }
 
 type Room {
   id: String!
-  name: String!
-  playlist: [Nft!]!
-  currentTrack: CurrentTrack
+  currentTrack: PlaylistItem
+  playlistItems: [PlaylistItem!]!
   activeUsers: [User!]
   active: Boolean!
   creator: User!
@@ -186,6 +193,7 @@ input NftInput {
   metadata: NftMetadataInput!
   supply: Float!
   tags: [String!]!
+  royaltyFeeInBips: Int!
   transactionHash: String
   chainId: Float
 }
@@ -211,8 +219,14 @@ input SellingVoucherInput {
   isMaster: Boolean!
   signature: String!
   currency: String!
+  royaltyFeeInBips: Int!
 }
 
 input CreateRoomInput {
-  nftIds: [String!]!
+  playlistItems: [PlaylistItemInput!]!
+}
+
+input PlaylistItemInput {
+  nftId: String!
+  nftType: String!
 }

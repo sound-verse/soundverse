@@ -3,14 +3,15 @@ import Link from 'next/link'
 import React, { FC } from 'react'
 import { ProfileName } from '../profile'
 import Image from 'next/image'
-import { Nft } from '../../common/graphql/schema'
+import { Nft, NftType } from '../../common/graphql/schema.d'
 
 interface MiniNftProps {
   className?: string
   nft: Nft
+  nftType: NftType
 }
 
-export const MiniNft: FC<MiniNftProps> = ({ className, nft }) => {
+export const MiniNft: FC<MiniNftProps> = ({ className, nft, nftType }) => {
   const classNames = cn(className)
   return (
     <div className={classNames}>
@@ -33,7 +34,7 @@ export const MiniNft: FC<MiniNftProps> = ({ className, nft }) => {
               : nft.metadata.name}
           </div>
           <div className="flex">
-            <div className="text-grey-light text-sm mr-2">by</div>
+            <div className="text-grey-light text-sm mr-2"> [{nftType}] by</div>
             <div className="text-purple inline-block">
               <ProfileName
                 ethAddress={nft.creator.ethAddress}

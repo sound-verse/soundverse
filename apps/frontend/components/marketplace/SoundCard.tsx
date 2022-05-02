@@ -5,8 +5,7 @@ import Link from 'next/link'
 import { ProfileName } from '../profile'
 import { AudioPlayer } from '../AudioPlayer/AudioPlayer'
 import cn from 'classnames'
-import { NftType } from '../../common/types/nft-type.enum'
-import { Nft, Selling } from '../../common/graphql/schema'
+import { Nft, NftType, Selling } from '../../common/graphql/schema.d'
 import Web3 from 'web3'
 import { useAudioContext } from '../../context/AudioContext'
 
@@ -54,8 +53,8 @@ function SoundCard({
   const rootClassName = cn(
     styles.soundCardWrapper,
     {
-      [styles.master]: nftType === NftType.MASTER,
-      [styles.license]: nftType === NftType.LICENSE,
+      [styles.master]: nftType === NftType.Master,
+      [styles.license]: nftType === NftType.License,
     },
     className
   )
@@ -66,14 +65,14 @@ function SoundCard({
   return (
     <div className={rootClassName}>
       <Link
-        href={`/${nftType === NftType.MASTER ? 'master' : 'license'}/${nft.id}`}
+        href={`/${nftType === NftType.Master ? 'master' : 'license'}/${nft.id}`}
       >
         <a>
           <div className={styles.soundCardHeaderTop}>
-            {nftType === NftType.MASTER ? 'Master' : 'License'}
+            {nftType === NftType.Master ? 'Master' : 'License'}
           </div>
           <div className={styles.soundCardHeaderBottom}>
-            <div className="font-semibold text-md">
+            <div className={cn(styles.textOverflow, 'font-semibold text-md')}>
               {nft.metadata.name.length > 45
                 ? `${nft.metadata.name.substring(0, 45)}...`
                 : nft.metadata.name}
@@ -103,7 +102,7 @@ function SoundCard({
       />
       </div>
       <div className={styles.soundCardFooter}>
-        {nftType === NftType.MASTER ? (
+        {nftType === NftType.Master ? (
           nft.sellings.masterSelling ? (
             <div className="flex flex-col w-full h-full ml-5 justify-center text-sm">
               <div className="text-grey-light">
