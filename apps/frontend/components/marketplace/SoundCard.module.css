@@ -52,6 +52,15 @@
   @apply border-grey-medium bg-grey-medium;
 }
 
+.soundCardAudio {
+  z-index: 50;
+  position: relative;
+  align-self: center;
+  width: 100%;
+  height: 38px;
+  margin: 0 auto;
+}
+
 .textOverflow {
   text-overflow: ellipsis;
   white-space: nowrap;
