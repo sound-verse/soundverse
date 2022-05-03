@@ -41,6 +41,15 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
 
   useEffect(() => {
     if (!wavesurfer.current) {
+      setCurrentTrack({ restart: false })
+      return
+    }
+    wavesurfer.current.seekTo(currentTrack.currentPosition)
+    setCurrentTrack({ restart: false })
+  }, [currentTrack.restart])
+
+  useEffect(() => {
+    if (!wavesurfer.current) {
       return
     }
     wavesurfer.current.setMute(currentTrack.mute)
@@ -82,13 +91,6 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
   }, [revalidate])
 
   useEffect(() => {
-    if (!wavesurfer.current) {
-      return
-    }
-    wavesurfer.current.seekTo(currentTrack.currentPosition)
-  }, [currentTrack.currentPosition])
-
-  useEffect(() => {
     if (!currentTrack.url) {
       return
     }
@@ -117,9 +119,6 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
         mute: false,
       })
       setRevalidate(true)
-    })
-    wavesurfer.current.on('audioprocess', () => {
-      setCurrentTrack({ playTime: wavesurfer.current.getCurrentTime() })
     })
     wavesurfer.current.on('finish', () => {
       setCurrentTrack({ isPlaying: false, play: false })
@@ -256,6 +255,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
                 visible: false,
                 mute: true,
                 play: false,
+                restart: true,
               })
             }}
           >
