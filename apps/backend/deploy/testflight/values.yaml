@@ -188,3 +188,8 @@ env:
       secretKeyRef:
         name: redis-password-soundverse-testflight
         key: redis-password
+  - name: REDIS_CA
+    valueFrom:
+      secretKeyRef:
+        name: redis-ca-testflight
+        key: redis-ca
