@@ -13,7 +13,8 @@ import Modal from 'react-modal'
 import { Bars } from 'react-loader-spinner'
 import styles from './EditProfileForm.module.css'
 import { useProfile } from '../../hooks/useProfile'
-import { LoggedInUser, useLogin } from '../../hooks/useLogin'
+import { useLogin } from '../../hooks/useLogin'
+import { AuthUser } from '../../common/graphql/schema'
 
 const FILE_SIZE = 100000000
 
@@ -25,7 +26,7 @@ export const SUPPORTED_FORMATS_PICTURE = [
 ]
 
 export type EditProfileFormProps = {
-  user: LoggedInUser
+  user: AuthUser
   setShowEditProfile: Dispatch<SetStateAction<boolean>>
 }
 
