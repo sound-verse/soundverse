@@ -21,9 +21,6 @@ export const PUB_SUB = 'PUB_SUB';
           });
         }
 
-        const caPath = './ca-redis.crt';
-        fs.writeFileSync(caPath, Buffer.from(configService.get<string>('REDIS_CA'), 'base64'));
-
         return new RedisPubSub({
           connection: {
             host: configService.get('REDIS_HOST'),
