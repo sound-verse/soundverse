@@ -7,7 +7,7 @@ import React, {
   useState,
 } from 'react'
 import Cookies from 'js-cookie'
-import { LoggedInUser } from '../hooks/useLogin'
+import { AuthUser } from '../common/graphql/schema'
 
 const AuthContext = createContext(undefined)
 
@@ -21,7 +21,7 @@ export const useAuthContext = () => {
 
 export const AuthProvider: FC = ({ children }) => {
   const [jwtToken, setJwtToken] = useState(Cookies.get('JWT_TOKEN'))
-  const [authUser, setAuthUser] = useState<LoggedInUser>(undefined)
+  const [authUser, setAuthUser] = useState<AuthUser>(undefined)
 
   const setAuthToken = useCallback((jwtToken: string) => {
     if (!jwtToken) {
@@ -32,7 +32,7 @@ export const AuthProvider: FC = ({ children }) => {
     setJwtToken(jwtToken)
   }, [])
 
-  const setLoggedInUser = useCallback((authUser: LoggedInUser) => {
+  const setLoggedInUser = useCallback((authUser: AuthUser) => {
     setAuthUser(authUser)
   }, [])
 

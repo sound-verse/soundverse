@@ -31,6 +31,15 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
   const { setCurrentTrack, currentTrack } = useAudioContext()
   const [revalidate, setRevalidate] = useState<boolean>(false)
 
+  const gotoTrackPosition = (trackPosition: number) => {
+    if (!wavesurfer.current || trackPosition === 0) {
+      return
+    }
+    const totalDuration = wavesurfer.current.getDuration()
+    const seekToValue = trackPosition / totalDuration
+    wavesurfer.current.seekTo(seekToValue)
+  }
+
   useEffect(() => {
     return () => {
       if (wavesurfer.current) {
@@ -44,7 +53,10 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
       setCurrentTrack({ restart: false })
       return
     }
-    wavesurfer.current.seekTo(currentTrack.currentPosition)
+    gotoTrackPosition(currentTrack.currentPosition)
+    if (currentTrack.play) {
+      wavesurfer.current.play()
+    }
     setCurrentTrack({ restart: false })
   }, [currentTrack.restart])
 
@@ -80,7 +92,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
       return
     }
     if (revalidate) {
-      wavesurfer.current.seekTo(currentTrack.currentPosition)
+      gotoTrackPosition(currentTrack.currentPosition)
       wavesurfer.current.setMute(currentTrack.mute)
       wavesurfer.current.setVolume(currentTrack.volume)
       if (currentTrack.play) {
@@ -107,7 +119,10 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
       WavesurferLibrary.current = await (await import('wavesurfer.js')).default
     }
     const options = formWaveSurferOptions(waveformRef.current)
-    wavesurfer.current = await WavesurferLibrary.current.create(options)
+    wavesurfer.current = await WavesurferLibrary.current.create({
+      ...options,
+      ...(currentTrack.isRoomPlayer && { interact: false }),
+    })
     wavesurfer.current.load(url)
 
     wavesurfer.current.on('ready', () => {
@@ -122,6 +137,13 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
     })
     wavesurfer.current.on('finish', () => {
       setCurrentTrack({ isPlaying: false, play: false })
+      currentTrack.onTrackFinish()
+    })
+
+    wavesurfer.current.on('audioprocess', (progress) => {
+      if (progress % 10 == 0) {
+        currentTrack.onTrackProgress({ currentPosition: progress })
+      }
     })
   }
 
@@ -177,38 +199,36 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
           </div>
         </div>
         <div className="grid grid-cols-5 algin-center items-center">
-          <div
-            className="col-span-1 cursor-pointer text-right mr-3"
-            onClick={() => {
-              setCurrentTrack({
-                play: !wavesurfer.current?.isPlaying(),
-              })
-            }}
-          >
-            {currentTrack.isPlaying ? (
-              <Image
-                src="/img/pauseButton.svg"
-                width={40}
-                height={40}
-                layout="fixed"
-              />
-            ) : (
-              <Image
-                src="/img/playButton.svg"
-                width={40}
-                height={40}
-                layout="fixed"
-              />
-            )}
-          </div>
+          {!currentTrack.isRoomPlayer ? (
+            <div
+              className="col-span-1 cursor-pointer text-right mr-3"
+              onClick={() => {
+                setCurrentTrack({
+                  play: !wavesurfer.current?.isPlaying(),
+                })
+              }}
+            >
+              {currentTrack.isPlaying ? (
+                <Image
+                  src="/img/pauseButton.svg"
+                  width={40}
+                  height={40}
+                  layout="fixed"
+                />
+              ) : (
+                <Image
+                  src="/img/playButton.svg"
+                  width={40}
+                  height={40}
+                  layout="fixed"
+                />
+              )}
+            </div>
+          ) : (
+            <div className="col-span-1"></div>
+          )}
           <div className={cn('col-span-3', styles.noOverflow)}>
             <div ref={waveformRef} />
-          </div>
-          <div className="col-span-1 text-white text-left ml-3">
-            {currentTrack.playTime &&
-              new Date(currentTrack.playTime * 1000)
-                .toISOString()
-                .substr(11, 8)}
           </div>
         </div>
         <div className="hidden lg:flex justify-start">
@@ -248,19 +268,26 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
               className={styles.volume}
             />
           </div>
-          <div
-            className="cursor-pointer ml-5 flex items-center"
-            onClick={() => {
-              setCurrentTrack({
-                visible: false,
-                mute: true,
-                play: false,
-                restart: true,
-              })
-            }}
-          >
-            <Image src="/img/close.svg" width={40} height={40} layout="fixed" />
-          </div>
+          {!currentTrack.isRoomPlayer && (
+            <div
+              className="cursor-pointer ml-5 flex items-center"
+              onClick={() => {
+                setCurrentTrack({
+                  visible: false,
+                  mute: true,
+                  play: false,
+                  restart: true,
+                })
+              }}
+            >
+              <Image
+                src="/img/close.svg"
+                width={40}
+                height={40}
+                layout="fixed"
+              />
+            </div>
+          )}
         </div>
       </div>
       {currentTrack.isLoading && (

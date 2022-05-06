@@ -3,13 +3,13 @@ import Head from 'next/head'
 import Layout from '../../components/layout'
 import SoundCard from '../../components/marketplace/SoundCard'
 import { useLazyQuery } from '@apollo/client'
-import { GetNftsQuery, NftType } from '../../common/graphql/schema.d'
+import { GetNftsQuery, Nft, NftType } from '../../common/graphql/schema.d'
 import { GET_NFTS } from '../../common/graphql/queries/get-nfts.query'
 import { createApolloClient } from '../../lib/createApolloClient'
 import { useBottomScrollListener } from 'react-bottom-scroll-listener'
 
 type ProfileProps = {
-  initialNfts: any
+  initialNfts: Nft[]
 }
 
 let _limit = 100
@@ -18,6 +18,8 @@ var moreButtonClicked = false
 
 export default function Marketplace({ initialNfts }: ProfileProps) {
   //TODO: load nfts with hasSellings filter!
+
+  console.log(initialNfts)
 
   const [getNFTs, { loading, data }] = useLazyQuery<GetNftsQuery>(GET_NFTS, {
     variables: { limit: _limit, skip: _limit },
@@ -71,73 +73,79 @@ export default function Marketplace({ initialNfts }: ProfileProps) {
       </Head>
 
       <Layout>
-        <div className="big-wrapper">
-          <div className="marketplace-wrapper">
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-10">
-              {initialNfts.data.nfts.map((nft, key) => {
-                if (!nft.filePictureUrl) {
-                  return
-                }
-
-                return (
-                  <>
-                    {nft.sellings.masterSelling && (
-                      <SoundCard
-                        nft={nft}
-                        nftType={NftType.Master}
-                        key={key}
-                        playingCardId={playingCardId}
-                        onMusicClick={() => handleMusicClick(nft.id)}
-                      />
-                    )}
-                    {nft.sellings.licenseSellings[0] && (
-                      <SoundCard
-                        nft={nft}
-                        nftType={NftType.License}
-                        key={key}
-                        playingCardId={playingCardId}
-                        onMusicClick={() => handleMusicClick(nft.id)}
-                      />
-                    )}
-                  </>
-                )
-              })}
-              {newNfts.map((nft, key) => {
-                if (!nft.filePictureUrl) {
-                  return
-                }
-
-                return (
-                  <>
-                    {nft.sellings.masterSelling && (
-                      <SoundCard
-                        nft={nft}
-                        nftType={NftType.Master}
-                        key={key}
-                        playingCardId={playingCardId}
-                        onMusicClick={() => handleMusicClick(nft.id)}
-                      />
-                    )}
-                    {nft.sellings.licenseSellings[0] && (
-                      <SoundCard
-                        nft={nft}
-                        nftType={NftType.License}
-                        key={key}
-                        playingCardId={playingCardId}
-                        onMusicClick={() => handleMusicClick(nft.id)}
-                      />
-                    )}
-                  </>
-                )
-              })}
-            </div>
-            {visible && (
-              <div className="mt-10 mb-8 flex justify-center">
-                <MoreButton />
-              </div>
-            )}
+        {!initialNfts.length ? (
+          <div className="text-white text-2xl font-bold flex h-screen justify-center self-center items-center -mt-36">
+            No Marketplace items here yet, stay tuned!
           </div>
-        </div>
+        ) : (
+          <div className="big-wrapper">
+            <div className="marketplace-wrapper">
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-10">
+                {initialNfts.map((nft, key) => {
+                  if (!nft.filePictureUrl) {
+                    return
+                  }
+
+                  return (
+                    <>
+                      {nft.sellings.masterSelling && (
+                        <SoundCard
+                          nft={nft}
+                          nftType={NftType.Master}
+                          key={key}
+                          playingCardId={playingCardId}
+                          onMusicClick={() => handleMusicClick(nft.id)}
+                        />
+                      )}
+                      {nft.sellings.licenseSellings[0] && (
+                        <SoundCard
+                          nft={nft}
+                          nftType={NftType.License}
+                          key={key}
+                          playingCardId={playingCardId}
+                          onMusicClick={() => handleMusicClick(nft.id)}
+                        />
+                      )}
+                    </>
+                  )
+                })}
+                {newNfts.map((nft, key) => {
+                  if (!nft.filePictureUrl) {
+                    return
+                  }
+
+                  return (
+                    <>
+                      {nft.sellings.masterSelling && (
+                        <SoundCard
+                          nft={nft}
+                          nftType={NftType.Master}
+                          key={key}
+                          playingCardId={playingCardId}
+                          onMusicClick={() => handleMusicClick(nft.id)}
+                        />
+                      )}
+                      {nft.sellings.licenseSellings[0] && (
+                        <SoundCard
+                          nft={nft}
+                          nftType={NftType.License}
+                          key={key}
+                          playingCardId={playingCardId}
+                          onMusicClick={() => handleMusicClick(nft.id)}
+                        />
+                      )}
+                    </>
+                  )
+                })}
+              </div>
+              {visible && (
+                <div className="mt-10 mb-8 flex justify-center">
+                  <MoreButton />
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </Layout>
     </div>
   )
@@ -152,7 +160,7 @@ export async function getServerSideProps() {
 
   return {
     props: {
-      initialNfts: nfts,
+      initialNfts: nfts.data.nfts,
     },
   }
 }

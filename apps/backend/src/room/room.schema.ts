@@ -16,7 +16,7 @@ export class PlaylistItem {
   @Prop()
   nftType: NftType;
 
-  @Prop()
+  @Prop({ default: 0 })
   currentPosition?: number;
 }
 
@@ -46,6 +46,9 @@ export class Room extends BaseDBObject {
 
   @Prop({ default: () => Date.now() })
   createdAt: Date;
+
+  @Prop({ default: () => Date.now() })
+  updatedAt: Date;
 }
 
 export const RoomSchema = SchemaFactory.createForClass(Room);

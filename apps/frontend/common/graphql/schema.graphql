@@ -53,7 +53,11 @@ type Mutation {
   joinRoom(joinRoomInput: JoinRoomInput!): Room!
   leaveRoom(leaveRoomInput: LeaveRoomInput!): Room!
   login(data: LoginInput!): Auth!
+  nextSong: Room!
+  prevSong: Room!
+  reviveRoom: Room!
   unpinAll: Boolean!
+  updateCurrentSong(updateCurrentSongInput: UpdateCurrentSongInput!): Room!
   updateUser(data: UpdateUserInput!): User!
   uploadProfilePicture(file: Upload!): User!
 }
@@ -124,7 +128,7 @@ input NftsFilter {
 type PlaylistItem {
   currentPosition: Int
   nft: Nft
-  nftType: NftType!
+  nftType: NftType
 }
 
 input PlaylistItemInput {
@@ -201,6 +205,10 @@ input SellingVoucherInput {
 
 type Subscription {
   roomUpdated(roomId: String!): Room!
+}
+
+input UpdateCurrentSongInput {
+  currentPosition: Float!
 }
 
 input UpdateUserInput {

@@ -78,7 +78,7 @@ type Nft {
 
 type PlaylistItem {
   nft: Nft
-  nftType: NftType!
+  nftType: NftType
   currentPosition: Int
 }
 
@@ -164,6 +164,10 @@ type Mutation {
   unpinAll: Boolean!
   createSelling(createSellingInput: CreateSellingInput!): Selling!
   createRoom(createRoomInput: CreateRoomInput!): Room!
+  reviveRoom: Room!
+  nextSong: Room!
+  prevSong: Room!
+  updateCurrentSong(updateCurrentSongInput: UpdateCurrentSongInput!): Room!
   joinRoom(joinRoomInput: JoinRoomInput!): Room!
   leaveRoom(leaveRoomInput: LeaveRoomInput!): Room!
 }
@@ -232,6 +236,10 @@ input CreateRoomInput {
 input PlaylistItemInput {
   nftId: String!
   nftType: String!
+}
+
+input UpdateCurrentSongInput {
+  currentPosition: Float!
 }
 
 input JoinRoomInput {

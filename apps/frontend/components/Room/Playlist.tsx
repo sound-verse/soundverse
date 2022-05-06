@@ -13,27 +13,39 @@ export const Playlist: FC<PlaylistProps> = ({
   currentTrack,
   className,
 }) => {
+  const reorderedPlaylistItems = playlistItems.filter(
+    (item) =>
+      item.nft.id !== currentTrack.nft.id ||
+      item.nftType !== currentTrack.nftType
+  )
+  reorderedPlaylistItems.push(currentTrack)
+
   return (
     <div className={className}>
       <div className="flex flex-col">
-        {currentTrack && (
+        {currentTrack.nft && (
           <>
-            <div className="text-white font-bold text-2xl">Now playing</div>
+            <div className="text-white font-bold text-2xl text-center">
+              Now playing
+            </div>
             <SoundCard
               nft={currentTrack.nft}
               nftType={currentTrack.nftType}
               className="mb-1 scale-75"
+              showAudioBar={false}
             />
           </>
         )}
         <div className="text-white font-bold text-2xl text-center mt-5 mb-5">
           Coming next
         </div>
-        {playlistItems.map((item) => (
+        {reorderedPlaylistItems.map((item, key) => (
           <SoundCard
+            key={key}
             nft={item.nft}
             nftType={item.nftType}
             className="-mb-10 scale-75"
+            showAudioBar={false}
           />
         ))}
       </div>

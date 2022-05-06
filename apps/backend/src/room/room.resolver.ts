@@ -20,6 +20,7 @@ import { LeaveRoomInput } from './dto/input/leave-room.input';
 import { PUB_SUB } from '../core/pubSub.module';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { valueFromAST } from 'graphql';
+import { UpdateCurrentSongInput } from './dto/input/update-current-song.input';
 
 export const ROOM_UPDATED_EVENT = 'roomUpdated';
 
@@ -56,17 +57,52 @@ export class RoomResolver {
 
   @UseGuards(GqlAuthGuard)
   @Mutation(() => Room)
+  async reviveRoom(@CurrentUser() user: UserSchema) {
+    const room = await this.roomService.getRoomByCreator(user);
+    if (!room) {
+      return;
+    }
+    const revivedRoom = await this.roomService.reviveRoom(room);
+    return revivedRoom;
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Mutation(() => Room)
+  async nextSong(@CurrentUser() user: UserSchema) {
+    const room = await this.roomService.playNextSong(user);
+    return room;
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Mutation(() => Room)
+  async prevSong(@CurrentUser() user: UserSchema) {
+    const room = await this.roomService.playPreviousSong(user);
+    return room;
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Mutation(() => Room)
+  async updateCurrentSong(
+    @CurrentUser() user: UserSchema,
+    @Args('updateCurrentSongInput') updateCurrentSongInput: UpdateCurrentSongInput,
+  ) {
+    const room = await this.roomService.updateCurrentSong(user, updateCurrentSongInput);
+    return room;
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Mutation(() => Room)
   async joinRoom(@CurrentUser() user: UserSchema, @Args('joinRoomInput') joinRoomInput: JoinRoomInput) {
     const room = await this.roomService.addUserToRoom(user, joinRoomInput);
-    this.pubSub.publish(ROOM_UPDATED_EVENT, { roomUpdated: room });
+    await this.pubSub.publish(ROOM_UPDATED_EVENT, { roomUpdated: room });
     return room;
   }
 
   @UseGuards(GqlAuthGuard)
   @Mutation(() => Room)
   async leaveRoom(@CurrentUser() user: UserSchema, @Args('leaveRoomInput') leaveRoomInput: LeaveRoomInput) {
-    const room = await this.roomService.addUserToRoom(user, leaveRoomInput);
-    this.pubSub.publish(ROOM_UPDATED_EVENT, { roomUpdated: room });
+    const room = await this.roomService.removeUserFromRoom(user, leaveRoomInput);
+    await this.pubSub.publish(ROOM_UPDATED_EVENT, { roomUpdated: room });
     return room;
   }
 
@@ -91,6 +127,17 @@ export class RoomResolver {
   @ResolveField(() => User)
   async activeUsers(@Parent() room: Room) {
     return await this.userService.findUserByIds(room.activeUsers.map((user) => user._id));
+  }
+
+  @ResolveField(() => PlaylistItem)
+  async currentTrack(@Parent() room: RoomSchema) {
+    if (!room.currentTrack?.nft) {
+      return {};
+    }
+    return {
+      ...room.currentTrack,
+      nft: await this.nftService.findNft({ id: room.currentTrack.nft._id.toString() }),
+    };
   }
 
   @ResolveField(() => [PlaylistItem])

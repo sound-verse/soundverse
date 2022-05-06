@@ -18,7 +18,9 @@ export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
   const handleEnterSoundverse = async () => {
     await joinRoom({ roomId: room.id })
 
-    router.push(`/soundverses/${room.id}`)
+    router.push({
+      pathname: `/soundverses/${room.id}`,
+    })
   }
   return (
     <div className="rounded-3xl bg-grey-dark my-5 mx-auto h-[270px] w-full">
@@ -38,7 +40,7 @@ export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
               <div className="font-bold text-sm text-white">
                 Soundverse #{room.id.substring(room.id.length - 4)}
               </div>
-              <div className="flex text-sm text-grey-light ml-2">
+              <div className="flex text-sm text-grey-light ml-2 mb-5">
                 <div className="mr-2">hosted by</div>
                 <ProfileName
                   ethAddress={room.creator.ethAddress}

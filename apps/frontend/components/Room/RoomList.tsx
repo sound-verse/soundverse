@@ -9,7 +9,7 @@ type RoomListProps = {
 
 export const RoomList: FC<RoomListProps> = ({ rooms }) => {
   return (
-    <div className="flex flex-col ">
+    <div className="flex flex-col max-w-7xl">
       <div className="text-white font-bold text-2xl">Soundverses</div>
       {rooms.map((room) => (
         <RoomListElement room={room} key={room.id} />
