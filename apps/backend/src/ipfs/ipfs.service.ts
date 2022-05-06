@@ -103,8 +103,6 @@ export class IPFSService {
     let response: AxiosResponse<any>;
     try {
       response = await axios(config);
-
-      console.log(response.data);
     } catch (e) {
       throw new BadRequestException();
     }

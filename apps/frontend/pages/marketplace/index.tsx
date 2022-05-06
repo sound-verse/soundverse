@@ -19,8 +19,6 @@ var moreButtonClicked = false
 export default function Marketplace({ initialNfts }: ProfileProps) {
   //TODO: load nfts with hasSellings filter!
 
-  console.log(initialNfts)
-
   const [getNFTs, { loading, data }] = useLazyQuery<GetNftsQuery>(GET_NFTS, {
     variables: { limit: _limit, skip: _limit },
     fetchPolicy: 'cache-first',
