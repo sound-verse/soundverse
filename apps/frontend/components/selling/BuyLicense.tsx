@@ -1,12 +1,11 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
-import { LoggedInUser, useLogin } from '../../hooks/useLogin'
-import { Selling } from '../../common/graphql/schema.d'
+import { AuthUser, Selling } from '../../common/graphql/schema.d'
 import { ProfileName } from '../profile'
 import Link from 'next/link'
 import Web3 from 'web3'
 
 export type BuyLicenseProps = {
-  user: LoggedInUser
+  user: AuthUser
   sellings: Selling[]
   showSingleNftPage: Dispatch<SetStateAction<boolean>>
   setSelectedSelling: Dispatch<SetStateAction<Selling>>

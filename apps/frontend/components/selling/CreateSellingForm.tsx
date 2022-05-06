@@ -6,13 +6,12 @@ import Modal from 'react-modal'
 import { Bars } from 'react-loader-spinner'
 import styles from './CreateSellingForm.module.css'
 import { useProfile } from '../../hooks/useProfile'
-import { LoggedInUser, useLogin } from '../../hooks/useLogin'
 import { useRouter } from 'next/router'
 import { useCreateSelling } from '../../hooks/contracts/useCreateSelling'
-import { Nft, NftType } from '../../common/graphql/schema.d'
+import { AuthUser, Nft, NftType } from '../../common/graphql/schema.d'
 
 export type CreateSellingFormProps = {
-  user: LoggedInUser
+  user: AuthUser
   nftType: NftType
   nft: Nft
   showSingleNftPage: Dispatch<SetStateAction<boolean>>
