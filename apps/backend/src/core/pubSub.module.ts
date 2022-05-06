@@ -31,7 +31,7 @@ export const PUB_SUB = 'PUB_SUB';
             username: configService.get('REDIS_USERNAME'),
             password: configService.get('REDIS_PASSWORD'),
             tls: {
-              cert: caPath,
+              cert: configService.get<string>('REDIS_CA').replace("'", '').replace(/\\n/gm, '\n'),
             },
           },
         });
