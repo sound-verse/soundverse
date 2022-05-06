@@ -1,7 +1,7 @@
 import React from 'react'
 import Head from 'next/head'
 import Layout from '../../components/layout'
-import { GET_ROOMS } from '../../common/graphql/queries/get-rooms'
+import { GET_ROOMS } from '../../common/graphql/queries/get-rooms.query'
 import { useQuery } from '@apollo/client'
 import {
   GetRoomsQuery,
@@ -22,7 +22,13 @@ export default function Soudnverses() {
       </Head>
 
       <Layout>
-        <RoomList rooms={rooms} />
+        {rooms.length ? (
+          <RoomList rooms={rooms} />
+        ) : (
+          <div className="text-white text-2xl font-bold flex h-screen justify-center self-center items-center -mt-36">
+            No rooms active yet, stay tuned!
+          </div>
+        )}
       </Layout>
     </div>
   )

@@ -1,5 +1,8 @@
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { FC } from 'react'
 import { Room } from '../../common/graphql/schema'
+import { useJoinRoom } from '../../hooks/rooms/useJoinRoom'
 import Button from '../common/Button'
 import SoundCard from '../marketplace/SoundCard'
 import { ProfileImage, ProfileName } from '../profile'
@@ -9,6 +12,16 @@ type RoomListElementProps = {
 }
 
 export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
+  const { joinRoom } = useJoinRoom()
+  const router = useRouter()
+
+  const handleEnterSoundverse = async () => {
+    await joinRoom({ roomId: room.id })
+
+    router.push({
+      pathname: `/soundverses/${room.id}`,
+    })
+  }
   return (
     <div className="rounded-3xl bg-grey-dark my-5 mx-auto h-[270px] w-full">
       <div className="grid grid-cols-12 h-full w-full">
@@ -27,7 +40,7 @@ export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
               <div className="font-bold text-sm text-white">
                 Soundverse #{room.id.substring(room.id.length - 4)}
               </div>
-              <div className="flex text-sm text-grey-light ml-2">
+              <div className="flex text-sm text-grey-light ml-2 mb-5">
                 <div className="mr-2">hosted by</div>
                 <ProfileName
                   ethAddress={room.creator.ethAddress}
@@ -55,6 +68,7 @@ export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
               text="Enter the Soundverse"
               type="purple"
               className="mt-auto mb-5 mr-5"
+              onClick={handleEnterSoundverse}
             />
           </div>
         </div>

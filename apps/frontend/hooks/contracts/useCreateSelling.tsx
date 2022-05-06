@@ -64,7 +64,6 @@ export const useCreateSelling = () => {
   useEffect(() => {
     if (state.transaction) {
       const sellCount = BigNumber.from(state.transaction).toNumber()
-      console.log(sellCount)
       setSellCount(sellCount)
     }
   }, [state])

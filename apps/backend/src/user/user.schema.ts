@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 import { Expose } from 'class-transformer';
 import { BaseDBObject } from '../BaseDBObject';
+import { Room } from '../room/dto/output/room.output';
 
 export type UserDocument = User & Document<Types.ObjectId>;
 
@@ -12,54 +13,45 @@ export class User extends BaseDBObject {
     Object.assign(this, partial);
   }
 
-  @Expose()
   @Prop()
   email?: string;
 
   @Prop({ required: true })
   nonce?: number;
 
-  @Expose()
   @Prop({ required: true, unique: true, lowercase: true })
   ethAddress: string;
 
-  @Expose()
   @Prop()
   description?: string;
 
-  @Expose()
   @Prop()
   name?: string;
 
-  @Expose()
   @Prop()
   twitter?: string;
 
-  @Expose()
   @Prop()
   instagram?: string;
 
-  @Expose()
   @Prop()
   soundcloud?: string;
 
-  @Expose()
   @Prop()
   discord?: string;
 
-  @Expose()
   @Prop()
   spotify?: string;
 
-  @Expose()
   @Prop()
   website?: string;
 
-  @Expose()
   @Prop()
   profileImage?: string;
 
-  @Expose()
+  @Prop({ type: Types.ObjectId, ref: Room.name })
+  joinedRommId?: Types.ObjectId;
+
   @Prop({ required: true, default: false })
   verified?: boolean;
 

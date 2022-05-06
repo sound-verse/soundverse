@@ -16,6 +16,7 @@ export type SoundCardProp = {
   onMusicClick?(): void
   className?: string
   contractAddress?: string
+  showAudioBar?: boolean
 }
 
 function SoundCard({
@@ -24,6 +25,7 @@ function SoundCard({
   className,
   nftType,
   contractAddress,
+  showAudioBar = true,
   onMusicClick = () => {},
 }: SoundCardProp) {
   const [playCard, setPlayCard] = useState<boolean>(false)
@@ -47,6 +49,9 @@ function SoundCard({
       play: true,
       nftType,
       restart: true,
+      onTrackFinish: () => {},
+      onTrackProgress: () => {},
+      isRoomPlayer: false,
     })
   }
 
@@ -94,13 +99,11 @@ function SoundCard({
         </div>
         <Image src={nft.filePictureUrl} layout="fill" objectFit="contain" />
       </div>
-      <div className={styles.soundCardAudio} onClick={handleMusicClick}>
-      <Image
-        src="/img/soundwave.svg"
-        objectFit="contain"
-        layout="fill"
-      />
-      </div>
+      {showAudioBar && (
+        <div className={styles.soundCardAudio} onClick={handleMusicClick}>
+          <Image src="/img/soundwave.svg" objectFit="contain" layout="fill" />
+        </div>
+      )}
       <div className={styles.soundCardFooter}>
         {nftType === NftType.Master ? (
           nft.sellings.masterSelling ? (

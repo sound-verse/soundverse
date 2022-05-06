@@ -28,9 +28,16 @@ export default function MyLibrary() {
   const [selectedNfts, setSelectedNfts] = useState<
     { nft: Nft; nftType: NftType }[]
   >([])
-  const { createRoom } = useCreateRoom()
+  const { createRoom, newRoom } = useCreateRoom()
   const [modalLoading, setModalLoading] = useState<boolean>(false)
   const router = useRouter()
+
+  useEffect(() => {
+    if (!newRoom) {
+      return
+    }
+    router.push(`soundverses/${newRoom.id}`)
+  }, [newRoom])
 
   const deduplicateNfts = (nfts: Nft[]) => {
     const nftIds = []
@@ -75,7 +82,6 @@ export default function MyLibrary() {
       await createRoom({ playlistItems: playlistItems })
       setModalLoading(false)
       setSelectedNfts([])
-      router.push('/rooms')
     } catch {
       toast.error('Could not create room')
       setModalLoading(false)

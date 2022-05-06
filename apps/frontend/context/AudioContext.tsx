@@ -6,7 +6,7 @@ import React, {
   useContext,
   createContext,
 } from 'react'
-import { NftType } from '../common/graphql/schema.d'
+import { NftType, UpdateCurrentSongInput } from '../common/graphql/schema.d'
 
 export enum PLAYER_STATUS {
   PLAYING = 'playing',
@@ -31,6 +31,9 @@ export type Track = {
   isPlaying?: boolean
   nftType?: NftType
   restart?: boolean
+  onTrackFinish?: () => void
+  onTrackProgress?: (updateCurrentSongInput: UpdateCurrentSongInput) => void
+  isRoomPlayer?: boolean
 }
 
 export type State = {
@@ -66,6 +69,9 @@ const initialState: State = {
     isPlaying: false,
     restart: false,
     nftType: NftType.Master,
+    onTrackFinish: () => {},
+    isRoomPlayer: false,
+    onTrackProgress: () => {},
   } as Track,
 }
 

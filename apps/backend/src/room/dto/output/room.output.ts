@@ -9,8 +9,8 @@ export class PlaylistItem {
   @Field(() => Nft, { nullable: true })
   nft?: Nft;
 
-  @Field(() => NftType)
-  nftType: NftType;
+  @Field(() => NftType, { nullable: true })
+  nftType?: NftType;
 
   @Field(() => Int, { nullable: true })
   currentPosition?: number;

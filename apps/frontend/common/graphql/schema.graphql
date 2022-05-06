@@ -13,6 +13,7 @@ type AuthUser {
   ethAddress: String
   id: String!
   instagram: String
+  joinedRoomId: String
   name: String
   profileImage: String
   soundcloud: String
@@ -31,6 +32,14 @@ input CreateSellingInput {
   sellingVoucher: SellingVoucherInput!
 }
 
+input JoinRoomInput {
+  roomId: String!
+}
+
+input LeaveRoomInput {
+  roomId: String!
+}
+
 input LoginInput {
   ethAddress: String!
   signature: String!
@@ -41,8 +50,14 @@ type Mutation {
   createRoom(createRoomInput: CreateRoomInput!): Room!
   createSelling(createSellingInput: CreateSellingInput!): Selling!
   generateVerificationToken(data: VerificationTokenInput!): Int!
+  joinRoom(joinRoomInput: JoinRoomInput!): Room!
+  leaveRoom(leaveRoomInput: LeaveRoomInput!): Room!
   login(data: LoginInput!): Auth!
+  nextSong: Room!
+  prevSong: Room!
+  reviveRoom: Room!
   unpinAll: Boolean!
+  updateCurrentSong(updateCurrentSongInput: UpdateCurrentSongInput!): Room!
   updateUser(data: UpdateUserInput!): User!
   uploadProfilePicture(file: Upload!): User!
 }
@@ -113,7 +128,7 @@ input NftsFilter {
 type PlaylistItem {
   currentPosition: Int
   nft: Nft
-  nftType: NftType!
+  nftType: NftType
 }
 
 input PlaylistItemInput {
@@ -186,6 +201,14 @@ input SellingVoucherInput {
   supply: Int!
   tokenId: Int!
   tokenUri: String!
+}
+
+type Subscription {
+  roomUpdated(roomId: String!): Room!
+}
+
+input UpdateCurrentSongInput {
+  currentPosition: Float!
 }
 
 input UpdateUserInput {

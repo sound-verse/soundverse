@@ -17,28 +17,6 @@ type User {
   verified: Boolean
 }
 
-type AuthUser {
-  id: String!
-  name: String
-  description: String
-  ethAddress: String
-  twitter: String
-  instagram: String
-  soundcloud: String
-  discord: String
-  spotify: String
-  website: String
-  profileImage: String
-  verified: Boolean
-  email: String
-}
-
-type Auth {
-  """JWT Bearer token"""
-  token: String!
-  user: AuthUser
-}
-
 type SellingVoucher {
   nftContractAddress: String!
   price: String!
@@ -98,16 +76,9 @@ type Nft {
   sellings: NftSelling
 }
 
-type UserNfts {
-  createdMasterNfts: [Nft!]
-  createdLicenseNfts: [Nft!]
-  ownedMasterNfts: [Nft!]
-  ownedLicenseNfts: [Nft!]
-}
-
 type PlaylistItem {
   nft: Nft
-  nftType: NftType!
+  nftType: NftType
   currentPosition: Int
 }
 
@@ -123,6 +94,36 @@ type Room {
   activeUsers: [User!]
   active: Boolean!
   creator: User!
+}
+
+type AuthUser {
+  id: String!
+  name: String
+  description: String
+  ethAddress: String
+  twitter: String
+  instagram: String
+  soundcloud: String
+  discord: String
+  spotify: String
+  website: String
+  profileImage: String
+  verified: Boolean
+  email: String
+  joinedRoomId: String
+}
+
+type Auth {
+  """JWT Bearer token"""
+  token: String!
+  user: AuthUser
+}
+
+type UserNfts {
+  createdMasterNfts: [Nft!]
+  createdLicenseNfts: [Nft!]
+  ownedMasterNfts: [Nft!]
+  ownedLicenseNfts: [Nft!]
 }
 
 type Rooms {
@@ -163,6 +164,12 @@ type Mutation {
   unpinAll: Boolean!
   createSelling(createSellingInput: CreateSellingInput!): Selling!
   createRoom(createRoomInput: CreateRoomInput!): Room!
+  reviveRoom: Room!
+  nextSong: Room!
+  prevSong: Room!
+  updateCurrentSong(updateCurrentSongInput: UpdateCurrentSongInput!): Room!
+  joinRoom(joinRoomInput: JoinRoomInput!): Room!
+  leaveRoom(leaveRoomInput: LeaveRoomInput!): Room!
 }
 
 input UpdateUserInput {
@@ -229,4 +236,20 @@ input CreateRoomInput {
 input PlaylistItemInput {
   nftId: String!
   nftType: String!
+}
+
+input UpdateCurrentSongInput {
+  currentPosition: Float!
+}
+
+input JoinRoomInput {
+  roomId: String!
+}
+
+input LeaveRoomInput {
+  roomId: String!
+}
+
+type Subscription {
+  roomUpdated(roomId: String!): Room!
 }

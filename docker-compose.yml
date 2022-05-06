@@ -10,14 +10,18 @@ services:
       - 27017:27017
     volumes:
       - db:/data/db
+
   localstack:
     image: localstack/localstack
     environment:
       - SERVICES=s3
+      - DEBUG=1
+      - DATA_DIR=/tmp/localstack/data
     ports:
       - "4566:4566"
     volumes:
       - ./aws:/docker-entrypoint-initaws.d
+      - ./aws/tmp/:/tmp/localstack
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -31,6 +35,20 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=root
       - RABBITMQ_DEFAULT_PASS=root
+
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
 
 volumes:
   db:
