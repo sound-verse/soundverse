@@ -118,8 +118,8 @@ export default function MyLibrary() {
       </Head>
       <Layout>
         {!authUser && !loading ? (
-          <div className="text-white text-2xl font-bold flex h-screen justify-center self-center items-center -mt-36">
-            Please login with your wallet to see this page.
+          <div className="flex items-center justify-center h-screen -mt-24 text-white text-1xl">
+            Login with your wallet to see this page.
           </div>
         ) : (
           <main className="mx-auto">

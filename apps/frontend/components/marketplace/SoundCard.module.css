@@ -1,36 +1,61 @@
 .soundCardWrapper {
-  @apply flex flex-col rounded-xl text-white;
-  width: 240px;
-  height: 350px;
+  @apply flex flex-col  text-white;
+  border-radius: 1rem;
+
+  font-weight: 300;
+  width: 220px;
+  height: 330px;
+  box-shadow:  1px 1px 4px #0f0f0f,
+  -0.5px -0.5px 1px #656262;
+}
+
+.soundCardWrapper:hover {
+  box-shadow:  1px 1px 2px #4846b8,
+  -0.5px -0.5px 1px #b84646;
+}
+
+.headerAlign {
+  margin-top: -11px;
+  font-weight: 300;
 }
 
 .soundCardHeaderTop {
-  @apply bg-purple border-2 border-purple rounded-t-2xl rounded-tr-2xl p-3 pl-4 h-4 pb-4 relative;
-  clip-path: polygon(0 0, 45% 0, 55% 100%, 0% 100%);
+  @apply bg-purple border-purple rounded-t-2xl rounded-tr-2xl p-3 pl-4 h-4 pb-4 relative;
+  background: #b84646;
+  clip-path: polygon(0 0, 45% 0, 55% 89%, 0% 89%);
+
+
 }
 
 .license .soundCardHeaderTop {
   @apply bg-grey-dark border-grey-medium border-b-0;
   clip-path: none;
+  background: #265db5;
+
 }
 
 .soundCardHeaderBottom {
-  @apply bg-purple rounded-tr-2xl border-purple border-2 p-2 -mt-1 px-4 pt-5 h-20 overflow-hidden;
+  @apply rounded-tr-2xl border-purple p-2 -mt-1 px-4 pt-5 h-20 overflow-hidden;
+  background: linear-gradient(0.2turn, #555cba, #559dba, #ba5555);
+
 }
 
 .license .soundCardHeaderBottom {
   @apply bg-grey-dark border-grey-medium rounded-none border-t-0;
+  background: #272727;
 }
 
 .mplaceImage {
-  @apply border-l border-r border-grey-medium;
+  @apply  border-grey-medium;
   z-index: 50;
   position: relative;
   align-self: center;
-  width: 240px;
+  width: 220px;
   height: 180px;
   margin: 0 auto;
   overflow: hidden;
+  box-shadow:  1px 1px 4px #0f0f0f,
+  -0.5px -0.5px 1px #656262;
 }
 
 .blur {
@@ -45,7 +70,8 @@
 }
 
 .soundCardFooter {
-  @apply border-b-2 border-l-2 border-r-2 rounded-bl-2xl rounded-br-2xl border-grey-medium h-24 bg-grey-dark;
+  @apply rounded-bl-2xl rounded-br-2xl border-grey-medium h-24 bg-grey-dark;
+
 }
 
 .audioWaves {
@@ -60,10 +86,14 @@
   height: 38px;
   margin: 0 auto;
   cursor: pointer;
+
 }
 
 .textOverflow {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  font-weight: 500;
+
+
 }

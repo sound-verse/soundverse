@@ -25,8 +25,8 @@ export default function Soudnverses() {
         {rooms.length ? (
           <RoomList rooms={rooms} />
         ) : (
-          <div className="text-white text-2xl font-bold flex h-screen justify-center self-center items-center -mt-36">
-            No rooms active yet, stay tuned!
+          <div className="flex items-center justify-center h-screen -mt-24 text-white text-1xl">
+            No rooms active yet, stay tuned !
           </div>
         )}
       </Layout>

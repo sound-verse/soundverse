@@ -74,7 +74,9 @@ function SoundCard({
       >
         <a>
           <div className={styles.soundCardHeaderTop}>
+            <div className={styles.headerAlign}>
             {nftType === NftType.Master ? 'Master' : 'License'}
+            </div>
           </div>
           <div className={styles.soundCardHeaderBottom}>
             <div className={cn(styles.textOverflow, 'font-semibold text-md')}>
@@ -86,7 +88,7 @@ function SoundCard({
               <ProfileName
                 ethAddress={nft.creator.ethAddress}
                 name={nft.creator.name}
-                short={true}
+                short={false}
                 className="text-sm"
               />
             </div>

@@ -174,13 +174,14 @@ export default function Soundverse() {
         </div>
       </Modal>
       <Modal
+
         isOpen={showWelcomeModal}
         contentLabel="onRequestClose Example"
-        className="flex justify-center items-center h-full"
+        className="flex justify-center items-center h-full backdrop-blur-sm"
       >
         <div className="w-1/2 h-1/2 rounded-3xl p-10 bg-grey-dark flex flex-col justify-between items-center">
           <div className="h-full w-full justify-center items-center flex flex-col">
-            <div className="text-white text-xl font-bold mb-10">
+            <div className="text-white text-xl font-semibold mb-10">
               {!isHost
                 ? `Welcome to the room #${room?.id?.substring(
                     room?.id?.length - 4

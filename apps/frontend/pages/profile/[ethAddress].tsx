@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
 import Layout from '../../components/layout'
+import styles from './Profile.module.css'
 import {
   EditProfileForm,
   ProfileImage,
@@ -56,12 +57,12 @@ export default function Profile({
         <main className="mx-auto">
           <div className="grid grid-cols-1 xl:grid-cols-4 xl:h-screen text-white">
             <div className="col-span-1 xl:border-r lg:border-grey-medium">
-              <div className="flex flex-col m-10 overflow-hidden">
+              <div className="flex flex-col m-10 overflow-hidden items-center">
                 <ProfileImage
                   ethAddress={activeUser.ethAddress}
                   imageUrl={activeUser.profileImage}
-                  height={60}
-                  width={60}
+                  height={40}
+                  width={40}
                 />
                 <ProfileName
                   ethAddress={activeUser.ethAddress}
@@ -95,6 +96,7 @@ export default function Profile({
                     {isMe && (
                       <div className="flex flex-col items-center justify-center col-span-1">
                         <Button
+                            className={styles.editButton}
                           text="Edit Profile"
                           onClick={() => setShowEditProfile(!showEditProfile)}
                         />

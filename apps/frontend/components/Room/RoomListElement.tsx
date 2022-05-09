@@ -6,6 +6,7 @@ import { useJoinRoom } from '../../hooks/rooms/useJoinRoom'
 import Button from '../common/Button'
 import SoundCard from '../marketplace/SoundCard'
 import { ProfileImage, ProfileName } from '../profile'
+import styles from './RoomListElement.module.css'
 
 type RoomListElementProps = {
   room: Room
@@ -23,9 +24,9 @@ export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
     })
   }
   return (
-    <div className="rounded-3xl bg-grey-dark my-5 mx-auto h-[270px] w-full">
+    <div className={styles.roomWrapper}>
       <div className="grid grid-cols-12 h-full w-full">
-        <div className="col-span-2">
+        <div className="col-span-2 ml-2 mt-2">
           <SoundCard
             nft={room.currentTrack?.nft ?? room.playlistItems[0].nft}
             nftType={
@@ -67,7 +68,7 @@ export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
             <Button
               text="Enter the Soundverse"
               type="purple"
-              className="mt-auto mb-5 mr-5"
+              className={styles.enterButton}
               onClick={handleEnterSoundverse}
             />
           </div>

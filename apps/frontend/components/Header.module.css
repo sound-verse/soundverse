@@ -1,15 +1,25 @@
 .headerWrapper {
   display: block;
 }
+
+.logo{
+  width: 177px;
+  height: 71px;
+  padding-left: 20px;
+  padding-top: 3px;
+
+}
 .headerWrapperToo {
   display: flex;
   flex-direction: row;
-  width: 100%;
+  width: 95%;
   margin: 0 auto;
+  margin-top: 15px;
   align-items: center;
   background: #272727;
-  border-radius: 0px 0px 15px 15px;
-  height: 80px;
+  height: 70px;
+  box-shadow:  1px 1px 4px #0f0f0f,
+  -0.5px -0.5px 1px #656262;
 }
 
 .nineByNineIcon {
@@ -24,7 +34,7 @@
   position: relative;
   justify-self: center;
   cursor: pointer;
-  font-size: 24px;
+  font-size: 20px;
   line-height: 38.4px;
   margin-left: 50px;
 }
@@ -50,33 +60,62 @@
   flex-grow: 1;
   min-width: 10px;
 }
+
+.hoverStyle {
+  background: transparent;
+  width: 400px;
+  height: 400px;
+  margin: 0 auto;
+}
+
+.hoverStyle:hover {
+  background: black;
+}
 .marketplaceLink {
+  padding-left: 1rem;
+  padding-right: 1rem;
   position: relative;
   justify-self: center;
   cursor: pointer;
   font-family: Poppins;
   color: white;
-  font-weight: 700;
+  font-weight: 200;
   font-size: 16px;
   line-height: 30px;
 }
+
+.marketplaceLink:hover {
+  background: #3d3c3c;
+
+}
+
+
 .connectButton {
   margin-right: 50px;
   height: 40px;
   width: 170px;
-  border-radius: 69px;
   padding: 0;
   background: #272727;
-  border: 2px solid #7c4dff;
   font-family: Poppins;
   font-size: 16px;
   font-style: normal;
-  font-weight: 900;
+  font-weight: 300;
   line-height: 30px;
   letter-spacing: 0em;
   text-align: center;
   color: white;
+  border-radius: 50px;
+  background: linear-gradient(145deg, #272727, #4f4d4d);
+  box-shadow:  1px 1px 4px #0f0f0f,
+  -0.5px -0.5px 1px #656262;
 }
+
+.connectButton:hover {
+  box-shadow:  1px 1px 4px #4b4848,
+  -0.5px -0.5px 1px #656262;
+}
+
+
 
 .connectButtonLabel {
   display: flex;
@@ -84,7 +123,14 @@
   align-items: center;
   padding-left: 5px;
   padding-right: 12px;
+
+
 }
+
+.profileButtonUserImage {
+  padding-left: 4px;
+}
+
 .blockie {
   border-radius: 100px;
 }
@@ -97,29 +143,34 @@
 }
 .dropdownWrapper {
   position: absolute;
-  top: 88px;
+  top: 100px;
   right: 50px;
 
   background-color: 'red';
   z-index: 9999999;
 }
 .dropdownRect {
-  background-color: #605f5f;
+
   width: 240px;
   height: 70px;
   border-radius: 10px;
   padding: 10px;
+  background: linear-gradient(145deg, #272727, #4f4d4d);
+  box-shadow:  1px 1px 4px #0f0f0f,
+  -0.5px -0.5px 1px #656262;
 }
 .dropdownText {
   @apply mb-2;
   font-size: 12px;
   font-style: normal;
-  font-weight: 400;
+  font-weight: 300;
   letter-spacing: 0em;
   color: white;
 }
 .ddhr {
-  @apply border-b mb-2;
+
+  border-bottom-width: 0.5px;
+  margin-bottom: 0.5rem;
 }
 @media screen and (max-width: 768px) {
   .headerWrapper {

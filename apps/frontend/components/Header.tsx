@@ -26,9 +26,11 @@ const Header = () => {
     <div className={styles.headerWrapper}>
       <Toaster position="top-right" />
       <div className={styles.headerWrapperToo}>
+        <div className={styles.logo}>
         <Link href="/marketplace" passHref>
-          <p className={styles.soundverseText}>Soundverse</p>
+          <img src='/logo.svg' alt='next'   />
         </Link>
+        </div>
         <div className={styles.headerSpacer} />
         {/* <input
           type="text"
@@ -42,22 +44,48 @@ const Header = () => {
         <div className={styles.headerSpacer} />
         <div className={styles.headerSpacer} />
         <div className={styles.headerSpacer} />
+        <div className={styles.headerSpacer} />
+        <div className={styles.headerSpacer} />
+        <div className={styles.headerSpacer} />
+        <div className={styles.headerSpacer} />
+        <div className={styles.headerSpacer} />
+        <div className={styles.headerSpacer} />
+        <div className={styles.headerSpacer} />
+        <div className={styles.headerSpacer} />
+        <div className={styles.headerSpacer} />
+        <div className={styles.headerSpacer} />
+        <div className={styles.headerSpacer} />
+        <div className={styles.headerSpacer} />
+        <div className={styles.headerSpacer} />
+
         <Link href="/soundverses" passHref>
           <p className={styles.marketplaceLink}>Soundverses</p>
         </Link>
+
         <div className={styles.headerSpacer} />
+
         <Link href="/marketplace" passHref>
           <p className={styles.marketplaceLink}>Marketplace</p>
         </Link>
+
         <div className={styles.headerSpacer} />
+
         <Link href="/create" passHref>
           <p className={styles.marketplaceLink}>Create</p>
         </Link>
+
         <div className={styles.headerSpacer} />
-        <Link href="/my-library" passHref>
-          <p className={styles.marketplaceLink}>My Library</p>
-        </Link>
+
+
+            <Link href="/my-library" passHref>
+
+              <p className={styles.marketplaceLink}>Library</p>
+
+            </Link>
+
+
         <div className={styles.headerSpacer} />
+
         <div>
           <button
             className={styles.connectButton}
@@ -76,7 +104,7 @@ const Header = () => {
             <div className={authUser ? styles.connectButtonLabel : 'block'}>
               {/*blockies and account details go here*/}
               {authUser && (
-                <div>
+                <div className={styles.profileButtonUserImage}>
                   <ProfileImage
                     ethAddress={authUser?.ethAddress}
                     width={8}
