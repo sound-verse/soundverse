@@ -66,7 +66,6 @@ export default function Soundverse() {
         id: nft.id,
         contractAddress,
         play: true,
-        mute: false,
         visible: true,
         nftType,
         onTrackFinish: isHost ? playNextSong : () => {},
@@ -114,6 +113,7 @@ export default function Soundverse() {
     if (!roomUpdatedData) {
       return
     }
+
     if (!roomUpdatedData.roomUpdated.active) {
       router.push('/soundverses')
     }

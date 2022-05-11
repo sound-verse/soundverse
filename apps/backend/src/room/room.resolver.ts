@@ -70,6 +70,7 @@ export class RoomResolver {
   @Mutation(() => Room)
   async nextSong(@CurrentUser() user: UserSchema) {
     const room = await this.roomService.playNextSong(user);
+    await this.pubSub.publish(ROOM_UPDATED_EVENT, { roomUpdated: room });
     return room;
   }
 
@@ -77,6 +78,7 @@ export class RoomResolver {
   @Mutation(() => Room)
   async prevSong(@CurrentUser() user: UserSchema) {
     const room = await this.roomService.playPreviousSong(user);
+    await this.pubSub.publish(ROOM_UPDATED_EVENT, { roomUpdated: room });
     return room;
   }
 
@@ -107,13 +109,13 @@ export class RoomResolver {
   }
 
   @Subscription(() => Room, {
-    filter: (payload, variables) => {
-      return payload?.roomUpdated?._id && payload.roomUpdated._id === variables?.roomId;
-    },
-    resolve: async function (this: RoomResolver, value) {
-      const room = await this.roomService.getPopulatedRoom(value.roomUpdated);
-      return room;
-    },
+    // filter: (payload, variables) => {
+    //   return payload?.roomUpdated?._id.toString() === variables?.roomId.toString();
+    // },
+    // resolve: async function (this: RoomResolver, value) {
+    //   const room = await this.roomService.getPopulatedRoom(value.roomUpdated);
+    //   return room;
+    // },
   })
   roomUpdated(@Args('roomId') roomId: string) {
     return this.pubSub.asyncIterator(ROOM_UPDATED_EVENT);

@@ -80,8 +80,6 @@ export class RoomService {
       { new: true },
     );
 
-    await this.pubSub.publish(ROOM_UPDATED_EVENT, { roomUpdated: updatedRoom });
-
     return updatedRoom;
   }
 
@@ -108,8 +106,6 @@ export class RoomService {
       { $set: { currentTrack } },
       { new: true },
     );
-
-    await this.pubSub.publish(ROOM_UPDATED_EVENT, { roomUpdated: updatedRoom });
 
     return updatedRoom;
   }
@@ -147,8 +143,7 @@ export class RoomService {
       ...(roomFilter.id && { _id: new Types.ObjectId(roomFilter.id) }),
       ...(roomFilter.creatorId && { creator: roomFilter.creatorId }),
     };
-
-    return await this.roomModel.findOne({ searchObject, active: true });
+    return await this.roomModel.findOne({ ...searchObject, active: true });
   }
 
   async getRoomByCreator(user: User) {
