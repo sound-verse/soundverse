@@ -189,7 +189,9 @@ export class RoomService {
     const currentTrackNft =
       room.currentTrack && (await this.nftService.findNft({ id: room.currentTrack.nft.toString() }));
     const nfts = await this.nftService.getByIds(
-      room.playlistItems.map((nft) => new Types.ObjectId(nft.nft.toString())),
+      room.playlistItems.map((nft) => {
+        return nft.nft.toString();
+      }),
     );
 
     const playlistItems = room.playlistItems.map((item) => ({

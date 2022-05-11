@@ -108,14 +108,14 @@ export class RoomResolver {
     return room;
   }
 
-  @Subscription(() => Room, {
-    // filter: (payload, variables) => {
-    //   return payload?.roomUpdated?._id.toString() === variables?.roomId.toString();
-    // },
-    // resolve: async function (this: RoomResolver, value) {
-    //   const room = await this.roomService.getPopulatedRoom(value.roomUpdated);
-    //   return room;
-    // },
+  @Subscription((returns) => Room, {
+    filter: (payload, variables) => {
+      return payload?.roomUpdated?._id === variables?.roomId;
+    },
+    resolve: async function (this: RoomResolver, value) {
+      const room = await this.roomService.getPopulatedRoom(value.roomUpdated);
+      return room;
+    },
   })
   roomUpdated(@Args('roomId') roomId: string) {
     return this.pubSub.asyncIterator(ROOM_UPDATED_EVENT);
@@ -138,7 +138,7 @@ export class RoomResolver {
     }
     return {
       ...room.currentTrack,
-      nft: await this.nftService.findNft({ id: room.currentTrack.nft._id.toString() }),
+      nft: await this.nftService.findNft({ id: room.currentTrack.nft.toString() }),
     };
   }
 

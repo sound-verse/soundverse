@@ -66,7 +66,6 @@ export interface GqlConnectionContext {
             headers: req?.headers,
           };
         },
-        installSubscriptionHandlers: true,
         cors: {
           origin: [/^(.*)/],
           methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
@@ -77,33 +76,7 @@ export interface GqlConnectionContext {
         // fieldResolverEnhancers: ['guards'],
         uploads: false,
         subscriptions: {
-          'subscriptions-transport-ws': {
-            keepAlive: 1000,
-            onConnect: (connectionParams) => {
-              const connectionParamsLowerKeys = Object.keys(
-                connectionParams,
-              ).reduce<SubscriptionConnectionParams>(
-                (obj, key) => ({
-                  ...obj,
-                  [key.toLowerCase()]: connectionParams[key as keyof typeof connectionParams],
-                }),
-                {},
-              );
-
-              let parsedToken: unknown;
-
-              if (connectionParamsLowerKeys?.authorization) {
-                const { 1: token } = connectionParamsLowerKeys.authorization.split('Bearer ');
-
-                parsedToken = jwtService.decode(token);
-              }
-
-              return {
-                headers: connectionParamsLowerKeys,
-                token: parsedToken,
-              };
-            },
-          },
+          'graphql-ws': true,
         },
       }),
     }),
