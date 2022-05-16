@@ -1,7 +1,9 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { FC } from 'react'
+import toast from 'react-hot-toast'
 import { Room } from '../../common/graphql/schema'
+import { useAuthContext } from '../../context/AuthContext'
 import { useJoinRoom } from '../../hooks/rooms/useJoinRoom'
 import Button from '../common/Button'
 import SoundCard from '../marketplace/SoundCard'
@@ -14,9 +16,14 @@ type RoomListElementProps = {
 export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
   const { joinRoom } = useJoinRoom()
   const router = useRouter()
+  const { authUser } = useAuthContext()
 
   const handleEnterSoundverse = async () => {
-    await joinRoom({ roomId: room.id })
+    try {
+      await joinRoom({ roomId: room.id })
+    } catch {
+      toast.error('The room seems to be offline, try another one!')
+    }
 
     router.push({
       pathname: `/soundverses/${room.id}`,
@@ -65,8 +72,12 @@ export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
         <div className="col-span-4">
           <div className="flex flex-col h-full">
             <Button
-              text="Enter the Soundverse"
-              type="purple"
+              text={`${
+                authUser?.id
+                  ? 'Enter the Soundverse'
+                  : 'Login to enter the Soundverse'
+              }`}
+              type={`${authUser?.id ? 'purple' : 'disabled'}`}
               className="mt-auto mb-5 mr-5"
               onClick={handleEnterSoundverse}
             />

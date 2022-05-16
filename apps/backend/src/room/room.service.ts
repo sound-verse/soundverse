@@ -126,7 +126,7 @@ export class RoomService {
   }
 
   async closeRoom(user?: User, ids?: (string | Types.ObjectId)[]) {
-    const findFilter = user ? { creator: user._id } : { _id: { $in: ids } };
+    const findFilter = user ? { 'creator._id': user._id } : { _id: { $in: ids } };
     await this.roomModel.updateMany(findFilter, {
       $set: { active: false, activeUsers: [] },
     });
@@ -167,7 +167,7 @@ export class RoomService {
   async addUserToRoom(user: User, joinRoomInput: JoinRoomInput) {
     await this.removeUserFromRoom(user, { roomId: joinRoomInput.roomId });
     const room = await this.roomModel.findOneAndUpdate(
-      { _id: joinRoomInput.roomId, 'creator._id': { $ne: user._id } },
+      { _id: joinRoomInput.roomId, 'creator._id': { $ne: user._id }, active: true },
       { $addToSet: { activeUsers: user } },
       { new: true },
     );
