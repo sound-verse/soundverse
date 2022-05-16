@@ -25,6 +25,9 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
   }, [chat])
 
   const handleCreateChatMessage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (loading) {
+      return
+    }
     setChatMessage(e.target.value)
   }
 
@@ -46,11 +49,11 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
       setChatMessage('')
       scrollToBottom()
 
-      // await new Promise((resolve) =>
-      //   setTimeout(() => {
-      //     resolve(true)
-      //   }, 2000)
-      // )
+      await new Promise((resolve) =>
+        setTimeout(() => {
+          resolve(true)
+        }, 1000)
+      )
       setLoading(false)
     }
   }
@@ -88,7 +91,7 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
               placeholder={`${loading ? 'Hold on...' : 'Send a message'}`}
               onKeyDown={sendChatMessage}
               value={chatMessage}
-              className="text-center bg-grey-medium text-grey-light rounded-2xl w-full mx-10 h-12"
+              className="p-2 bg-grey-medium text-grey-light rounded-2xl w-full mx-10 h-12"
             />
           </div>
         </div>
