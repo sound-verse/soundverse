@@ -13,24 +13,24 @@
 }
 
 .soundCardHeaderTop {
-  @apply bg-purple border-purple rounded-t-2xl rounded-tr-2xl p-3 pl-4 h-4 pb-4 relative;
+  @apply bg-purple border-purple rounded-t-2xl p-3 pl-4 h-4 pb-4 relative;
   background: #b84646;
   clip-path: polygon(0 0, 45% 0, 55% 89%, 0% 89%);
 }
 
 .license .soundCardHeaderTop {
-  @apply bg-grey-dark border-grey-medium rounded-t-2xl rounded-tr-2xl p-3 pl-4 h-4 pb-4 relative;
+  @apply bg-grey-dark border-grey-medium rounded-t-2xl p-3 pl-4 h-4 pb-4 relative;
   background: #b84646;
   clip-path: polygon(0 0, 45% 0, 55% 89%, 0% 89%);
 }
 
 .soundCardHeaderBottom {
-  @apply rounded-tr-2xl border-purple p-2 -mt-1 px-4 h-20 overflow-hidden;
+  @apply rounded-t-2xl border-purple p-2  px-4 h-[5.5rem] overflow-hidden;
   background: linear-gradient(0.2turn, #555cba, #559dba, #ba5555);
 }
 
 .license .soundCardHeaderBottom {
-  @apply bg-grey-dark border-grey-medium p-2 -mt-1 px-4 h-20 overflow-hidden;
+  @apply bg-grey-dark border-grey-medium p-2  px-4 h-[5.5rem] overflow-hidden;
   background: #272727;
 }
 
