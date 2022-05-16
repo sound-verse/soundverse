@@ -32,7 +32,11 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
   }
 
   const scrollToBottom = () => {
-    messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
+    messagesEndRef.current.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
+      inline: 'start',
+    })
   }
 
   const sendChatMessage = async (
@@ -52,7 +56,7 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
       await new Promise((resolve) =>
         setTimeout(() => {
           resolve(true)
-        }, 1000)
+        }, 500)
       )
       setLoading(false)
     }
