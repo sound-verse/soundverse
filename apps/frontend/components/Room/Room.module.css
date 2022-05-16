@@ -4,16 +4,13 @@
 }
 
 .closeButton {
+  @apply px-2 py-3;
   margin-right: 50px;
-  height: 40px;
-  width: 30%;
-  padding: 0;
   background: #272727;
   font-family: Poppins;
   font-size: 16px;
   font-style: normal;
   font-weight: 300;
-  line-height: 30px;
   letter-spacing: 0em;
   text-align: center;
   color: white;
