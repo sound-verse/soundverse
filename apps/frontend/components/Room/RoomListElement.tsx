@@ -23,6 +23,7 @@ export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
       await joinRoom({ roomId: room.id })
     } catch {
       toast.error('The room seems to be offline, try another one!')
+      return
     }
 
     router.push({

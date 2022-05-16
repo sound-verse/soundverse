@@ -167,11 +167,13 @@ export class RoomService {
     return await this.roomModel.findOne({ 'creator._id': user._id, active: true });
   }
 
-  async getRoomBySubscriber(user: User) {
-    return await this.roomModel.findOne({
+  async userIsSubscribedToRoom(user: User) {
+    const room = await this.roomModel.findOne({
       $or: [{ 'activeUsers._id': user._id }, { 'creator._id': user._id }],
       active: true,
     });
+
+    return room ? true : false;
   }
 
   async reviveRoom(room: Room) {
@@ -183,7 +185,7 @@ export class RoomService {
   }
 
   async addUserToRoom(user: User, joinRoomInput: JoinRoomInput) {
-    await this.removeUserFromRoom(user, { roomId: joinRoomInput.roomId });
+    await this.removeUserFromRooms(user);
     const room = await this.roomModel.findOneAndUpdate(
       { _id: joinRoomInput.roomId, 'creator._id': { $ne: user._id }, active: true },
       { $addToSet: { activeUsers: user } },
@@ -192,13 +194,12 @@ export class RoomService {
     return room ?? (await this.getRoom({ id: joinRoomInput.roomId }));
   }
 
-  async removeUserFromRoom(user: User, leaveRoomInput: LeaveRoomInput) {
-    const room = this.roomModel.findOneAndUpdate(
-      { _id: leaveRoomInput.roomId },
+  async removeUserFromRooms(user: User) {
+    await this.roomModel.updateMany(
+      { 'activeUsers._id': user._id, active: true },
       { $pull: { activeUsers: { _id: user._id } } },
       { new: true },
     );
-    return room;
   }
 
   async createChatMessage(user: User, createChatMessageInput: CreateChatMessageInput) {
@@ -207,12 +208,13 @@ export class RoomService {
     if (createChatMessageInput.roomId === '') {
       room = await this.getMasterRoom();
     } else {
-      room = await this.getRoomBySubscriber(user);
+      const userIsSubscribed = await this.userIsSubscribedToRoom(user);
+      if (!userIsSubscribed) {
+        throw new BadRequestException('User has not joined channel');
+      }
+      room = await this.getRoom({ id: createChatMessageInput.roomId });
       if (!room) {
         return;
-      }
-      if (room._id.toString() !== createChatMessageInput.roomId) {
-        throw new BadRequestException('User has not joined channel');
       }
     }
 

@@ -45,7 +45,7 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
     ) {
       setLoading(true)
       setUserChat([...userChat, { message: chatMessage, sender: authUser }])
-      await createChatMessage({ message: chatMessage, roomId })
+      createChatMessage({ message: chatMessage, roomId })
       setChatMessage('')
       scrollToBottom()
 

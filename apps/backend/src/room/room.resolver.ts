@@ -101,7 +101,8 @@ export class RoomResolver {
   @UseGuards(GqlAuthGuard)
   @Mutation(() => Room)
   async leaveRoom(@CurrentUser() user: UserSchema, @Args('leaveRoomInput') leaveRoomInput: LeaveRoomInput) {
-    const room = await this.roomService.removeUserFromRoom(user, leaveRoomInput);
+    await this.roomService.removeUserFromRooms(user);
+    const room = await this.roomService.getRoom({ id: leaveRoomInput.roomId });
     await this.pubSub.publish(ROOM_UPDATED_EVENT, { roomUpdated: room });
     return room;
   }
