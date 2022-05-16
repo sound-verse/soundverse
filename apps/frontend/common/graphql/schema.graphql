@@ -23,6 +23,16 @@ type AuthUser {
   website: String
 }
 
+type ChatMessage {
+  message: String!
+  sender: User!
+}
+
+input CreateChatMessageInput {
+  message: String!
+  roomId: String!
+}
+
 input CreateRoomInput {
   playlistItems: [PlaylistItemInput!]!
 }
@@ -46,6 +56,7 @@ input LoginInput {
 }
 
 type Mutation {
+  createChatMessage(createChatMessageInput: CreateChatMessageInput!): Room!
   createNft(NFTFile: Upload!, data: NftInput!, pictureFile: Upload!): Nft!
   createRoom(createRoomInput: CreateRoomInput!): Room!
   createSelling(createSellingInput: CreateSellingInput!): Selling!
@@ -149,6 +160,7 @@ type Query {
 type Room {
   active: Boolean!
   activeUsers: [User!]
+  chat: [ChatMessage!]
   creator: User!
   currentTrack: PlaylistItem
   id: String!

@@ -17,6 +17,15 @@ export class PlaylistItem {
 }
 
 @ObjectType()
+export class ChatMessage {
+  @Field(() => User)
+  sender: User;
+
+  @Field()
+  message: string;
+}
+
+@ObjectType()
 export class Room extends BaseModel {
   @Field(() => PlaylistItem, { nullable: true })
   currentTrack?: PlaylistItem;
@@ -32,4 +41,7 @@ export class Room extends BaseModel {
 
   @Field(() => User)
   creator: User;
+
+  @Field(() => [ChatMessage], { nullable: true })
+  chat?: ChatMessage[];
 }

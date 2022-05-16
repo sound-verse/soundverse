@@ -5,6 +5,7 @@ import { useAuthContext } from '../../context/AuthContext'
 import { useLeaveRoom } from '../../hooks/rooms/useLeaveRoom'
 import Button from '../common/Button'
 import { ProfileName } from '../profile'
+import { Chat } from './Chat'
 import { HostControls } from './HostControls'
 import { Playlist } from './Playlist'
 import { RoomListElement } from './RoomListElement'
@@ -71,6 +72,7 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
           </div>
         </div>
       </div>
+      <Chat roomId={room.id} chat={room.chat} />
     </div>
   )
 }

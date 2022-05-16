@@ -87,6 +87,11 @@ enum NftType {
   LICENSE
 }
 
+type ChatMessage {
+  sender: User!
+  message: String!
+}
+
 type Room {
   id: String!
   currentTrack: PlaylistItem
@@ -94,6 +99,7 @@ type Room {
   activeUsers: [User!]
   active: Boolean!
   creator: User!
+  chat: [ChatMessage!]
 }
 
 type AuthUser {
@@ -170,6 +176,7 @@ type Mutation {
   updateCurrentSong(updateCurrentSongInput: UpdateCurrentSongInput!): Room!
   joinRoom(joinRoomInput: JoinRoomInput!): Room!
   leaveRoom(leaveRoomInput: LeaveRoomInput!): Room!
+  createChatMessage(createChatMessageInput: CreateChatMessageInput!): Room!
 }
 
 input UpdateUserInput {
@@ -247,6 +254,11 @@ input JoinRoomInput {
 }
 
 input LeaveRoomInput {
+  roomId: String!
+}
+
+input CreateChatMessageInput {
+  message: String!
   roomId: String!
 }
 

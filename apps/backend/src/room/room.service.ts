@@ -15,6 +15,7 @@ import { PUB_SUB } from '../core/pubSub.module';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { ROOM_UPDATED_EVENT } from './room.resolver';
 import { UpdateCurrentSongInput } from './dto/input/update-current-song.input';
+import { CreateChatMessageInput } from './dto/input/create-chat-message.input';
 
 @Injectable()
 export class RoomService {
@@ -148,6 +149,13 @@ export class RoomService {
     return await this.roomModel.findOne({ 'creator._id': user._id, active: true });
   }
 
+  async getRoomBySubscriber(user: User) {
+    return await this.roomModel.findOne({
+      $or: [{ 'activeUsers._id': user._id }, { 'creator._id': user._id }],
+      active: true,
+    });
+  }
+
   async reviveRoom(room: Room) {
     return await this.roomModel.findOneAndUpdate(
       { _id: room._id },
@@ -173,6 +181,25 @@ export class RoomService {
       { new: true },
     );
     return room;
+  }
+
+  async createChatMessage(user: User, createChatMessageInput: CreateChatMessageInput) {
+    const room = await this.getRoomBySubscriber(user);
+
+    if (!room) {
+      return;
+    }
+    if (room._id.toString() !== createChatMessageInput.roomId) {
+      throw new BadRequestException('User has not joined channel');
+    }
+
+    if (room.chat.length >= 100) {
+      await this.roomModel.updateOne({ _id: room._id }, { $pop: { chat: -1 } });
+    }
+    return await this.roomModel.findOneAndUpdate(
+      { _id: room._id },
+      { $addToSet: { chat: { sender: user, message: createChatMessageInput.message } } },
+    );
   }
 
   @Interval(5 * 60 * 1000)

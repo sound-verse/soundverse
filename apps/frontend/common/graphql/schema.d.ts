@@ -45,6 +45,17 @@ export type AuthUser = {
   website?: Maybe<Scalars['String']>
 }
 
+export type ChatMessage = {
+  __typename?: 'ChatMessage'
+  message: Scalars['String']
+  sender: User
+}
+
+export type CreateChatMessageInput = {
+  message: Scalars['String']
+  roomId: Scalars['String']
+}
+
 export type CreateRoomInput = {
   playlistItems: Array<PlaylistItemInput>
 }
@@ -69,6 +80,7 @@ export type LoginInput = {
 
 export type Mutation = {
   __typename?: 'Mutation'
+  createChatMessage: Room
   createNft: Nft
   createRoom: Room
   createSelling: Selling
@@ -83,6 +95,10 @@ export type Mutation = {
   updateCurrentSong: Room
   updateUser: User
   uploadProfilePicture: User
+}
+
+export type MutationCreateChatMessageArgs = {
+  createChatMessageInput: CreateChatMessageInput
 }
 
 export type MutationCreateNftArgs = {
@@ -243,6 +259,7 @@ export type Room = {
   __typename?: 'Room'
   active: Scalars['Boolean']
   activeUsers?: Maybe<Array<User>>
+  chat?: Maybe<Array<ChatMessage>>
   creator: User
   currentTrack?: Maybe<PlaylistItem>
   id: Scalars['String']
@@ -975,6 +992,25 @@ export type RoomFragmentFragment = {
     profileImage?: string | null
     verified?: boolean | null
   }> | null
+  chat?: Array<{
+    __typename?: 'ChatMessage'
+    message: string
+    sender: {
+      __typename?: 'User'
+      id: string
+      name?: string | null
+      description?: string | null
+      ethAddress?: string | null
+      twitter?: string | null
+      instagram?: string | null
+      soundcloud?: string | null
+      discord?: string | null
+      spotify?: string | null
+      website?: string | null
+      profileImage?: string | null
+      verified?: boolean | null
+    }
+  }> | null
 }
 
 export type SellingFragmentFragment = {
@@ -1048,6 +1084,452 @@ export type UserFragmentFragment = {
   website?: string | null
   profileImage?: string | null
   verified?: boolean | null
+}
+
+export type CreateChatMessageMutationVariables = Exact<{
+  createChatMessageInput: CreateChatMessageInput
+}>
+
+export type CreateChatMessageMutation = {
+  __typename?: 'Mutation'
+  createChatMessage: {
+    __typename?: 'Room'
+    id: string
+    active: boolean
+    creator: {
+      __typename?: 'User'
+      id: string
+      name?: string | null
+      description?: string | null
+      ethAddress?: string | null
+      twitter?: string | null
+      instagram?: string | null
+      soundcloud?: string | null
+      discord?: string | null
+      spotify?: string | null
+      website?: string | null
+      profileImage?: string | null
+      verified?: boolean | null
+    }
+    playlistItems: Array<{
+      __typename?: 'PlaylistItem'
+      currentPosition?: number | null
+      nftType?: NftType | null
+      nft?: {
+        __typename?: 'Nft'
+        id: string
+        tokenId?: number | null
+        masterContractAddress: string
+        licenseContractAddress: string
+        fileUrl: string
+        filePictureUrl: string
+        ipfsUrl: string
+        transactionHash?: string | null
+        supply: number
+        chainId: number
+        royaltyFeeInBips: number
+        masterOwner: {
+          __typename?: 'NftOwner'
+          supply: number
+          user: {
+            __typename?: 'User'
+            id: string
+            name?: string | null
+            description?: string | null
+            ethAddress?: string | null
+            twitter?: string | null
+            instagram?: string | null
+            soundcloud?: string | null
+            discord?: string | null
+            spotify?: string | null
+            website?: string | null
+            profileImage?: string | null
+            verified?: boolean | null
+          }
+        }
+        metadata: {
+          __typename?: 'NftMetadata'
+          name: string
+          description: string
+        }
+        creator?: {
+          __typename?: 'User'
+          id: string
+          name?: string | null
+          description?: string | null
+          ethAddress?: string | null
+          twitter?: string | null
+          instagram?: string | null
+          soundcloud?: string | null
+          discord?: string | null
+          spotify?: string | null
+          website?: string | null
+          profileImage?: string | null
+          verified?: boolean | null
+        } | null
+        licenseOwners?: Array<{
+          __typename?: 'NftOwner'
+          supply: number
+          user: {
+            __typename?: 'User'
+            id: string
+            name?: string | null
+            description?: string | null
+            ethAddress?: string | null
+            twitter?: string | null
+            instagram?: string | null
+            soundcloud?: string | null
+            discord?: string | null
+            spotify?: string | null
+            website?: string | null
+            profileImage?: string | null
+            verified?: boolean | null
+          }
+        }> | null
+        sellings?: {
+          __typename?: 'NftSelling'
+          masterSelling?: {
+            __typename?: 'Selling'
+            id: string
+            nftType: string
+            marketplaceContractAddress: string
+            sellingStatus: string
+            transactionHash?: string | null
+            seller: {
+              __typename?: 'User'
+              id: string
+              name?: string | null
+              description?: string | null
+              ethAddress?: string | null
+              twitter?: string | null
+              instagram?: string | null
+              soundcloud?: string | null
+              discord?: string | null
+              spotify?: string | null
+              website?: string | null
+              profileImage?: string | null
+              verified?: boolean | null
+            }
+            buyers: Array<{
+              __typename?: 'NftOwner'
+              supply: number
+              user: {
+                __typename?: 'User'
+                id: string
+                name?: string | null
+                description?: string | null
+                ethAddress?: string | null
+                twitter?: string | null
+                instagram?: string | null
+                soundcloud?: string | null
+                discord?: string | null
+                spotify?: string | null
+                website?: string | null
+                profileImage?: string | null
+                verified?: boolean | null
+              }
+            }>
+            sellingVoucher: {
+              __typename?: 'SellingVoucher'
+              nftContractAddress: string
+              price: string
+              tokenId: number
+              tokenUri: string
+              isMaster: boolean
+              signature: string
+              sellCount: number
+              supply: number
+              maxSupply: number
+              currency: string
+              royaltyFeeInBips: number
+            }
+          } | null
+          licenseSellings?: Array<{
+            __typename?: 'Selling'
+            id: string
+            nftType: string
+            marketplaceContractAddress: string
+            sellingStatus: string
+            transactionHash?: string | null
+            seller: {
+              __typename?: 'User'
+              id: string
+              name?: string | null
+              description?: string | null
+              ethAddress?: string | null
+              twitter?: string | null
+              instagram?: string | null
+              soundcloud?: string | null
+              discord?: string | null
+              spotify?: string | null
+              website?: string | null
+              profileImage?: string | null
+              verified?: boolean | null
+            }
+            buyers: Array<{
+              __typename?: 'NftOwner'
+              supply: number
+              user: {
+                __typename?: 'User'
+                id: string
+                name?: string | null
+                description?: string | null
+                ethAddress?: string | null
+                twitter?: string | null
+                instagram?: string | null
+                soundcloud?: string | null
+                discord?: string | null
+                spotify?: string | null
+                website?: string | null
+                profileImage?: string | null
+                verified?: boolean | null
+              }
+            }>
+            sellingVoucher: {
+              __typename?: 'SellingVoucher'
+              nftContractAddress: string
+              price: string
+              tokenId: number
+              tokenUri: string
+              isMaster: boolean
+              signature: string
+              sellCount: number
+              supply: number
+              maxSupply: number
+              currency: string
+              royaltyFeeInBips: number
+            }
+          }> | null
+        } | null
+      } | null
+    }>
+    currentTrack?: {
+      __typename?: 'PlaylistItem'
+      currentPosition?: number | null
+      nftType?: NftType | null
+      nft?: {
+        __typename?: 'Nft'
+        id: string
+        tokenId?: number | null
+        masterContractAddress: string
+        licenseContractAddress: string
+        fileUrl: string
+        filePictureUrl: string
+        ipfsUrl: string
+        transactionHash?: string | null
+        supply: number
+        chainId: number
+        royaltyFeeInBips: number
+        masterOwner: {
+          __typename?: 'NftOwner'
+          supply: number
+          user: {
+            __typename?: 'User'
+            id: string
+            name?: string | null
+            description?: string | null
+            ethAddress?: string | null
+            twitter?: string | null
+            instagram?: string | null
+            soundcloud?: string | null
+            discord?: string | null
+            spotify?: string | null
+            website?: string | null
+            profileImage?: string | null
+            verified?: boolean | null
+          }
+        }
+        metadata: {
+          __typename?: 'NftMetadata'
+          name: string
+          description: string
+        }
+        creator?: {
+          __typename?: 'User'
+          id: string
+          name?: string | null
+          description?: string | null
+          ethAddress?: string | null
+          twitter?: string | null
+          instagram?: string | null
+          soundcloud?: string | null
+          discord?: string | null
+          spotify?: string | null
+          website?: string | null
+          profileImage?: string | null
+          verified?: boolean | null
+        } | null
+        licenseOwners?: Array<{
+          __typename?: 'NftOwner'
+          supply: number
+          user: {
+            __typename?: 'User'
+            id: string
+            name?: string | null
+            description?: string | null
+            ethAddress?: string | null
+            twitter?: string | null
+            instagram?: string | null
+            soundcloud?: string | null
+            discord?: string | null
+            spotify?: string | null
+            website?: string | null
+            profileImage?: string | null
+            verified?: boolean | null
+          }
+        }> | null
+        sellings?: {
+          __typename?: 'NftSelling'
+          masterSelling?: {
+            __typename?: 'Selling'
+            id: string
+            nftType: string
+            marketplaceContractAddress: string
+            sellingStatus: string
+            transactionHash?: string | null
+            seller: {
+              __typename?: 'User'
+              id: string
+              name?: string | null
+              description?: string | null
+              ethAddress?: string | null
+              twitter?: string | null
+              instagram?: string | null
+              soundcloud?: string | null
+              discord?: string | null
+              spotify?: string | null
+              website?: string | null
+              profileImage?: string | null
+              verified?: boolean | null
+            }
+            buyers: Array<{
+              __typename?: 'NftOwner'
+              supply: number
+              user: {
+                __typename?: 'User'
+                id: string
+                name?: string | null
+                description?: string | null
+                ethAddress?: string | null
+                twitter?: string | null
+                instagram?: string | null
+                soundcloud?: string | null
+                discord?: string | null
+                spotify?: string | null
+                website?: string | null
+                profileImage?: string | null
+                verified?: boolean | null
+              }
+            }>
+            sellingVoucher: {
+              __typename?: 'SellingVoucher'
+              nftContractAddress: string
+              price: string
+              tokenId: number
+              tokenUri: string
+              isMaster: boolean
+              signature: string
+              sellCount: number
+              supply: number
+              maxSupply: number
+              currency: string
+              royaltyFeeInBips: number
+            }
+          } | null
+          licenseSellings?: Array<{
+            __typename?: 'Selling'
+            id: string
+            nftType: string
+            marketplaceContractAddress: string
+            sellingStatus: string
+            transactionHash?: string | null
+            seller: {
+              __typename?: 'User'
+              id: string
+              name?: string | null
+              description?: string | null
+              ethAddress?: string | null
+              twitter?: string | null
+              instagram?: string | null
+              soundcloud?: string | null
+              discord?: string | null
+              spotify?: string | null
+              website?: string | null
+              profileImage?: string | null
+              verified?: boolean | null
+            }
+            buyers: Array<{
+              __typename?: 'NftOwner'
+              supply: number
+              user: {
+                __typename?: 'User'
+                id: string
+                name?: string | null
+                description?: string | null
+                ethAddress?: string | null
+                twitter?: string | null
+                instagram?: string | null
+                soundcloud?: string | null
+                discord?: string | null
+                spotify?: string | null
+                website?: string | null
+                profileImage?: string | null
+                verified?: boolean | null
+              }
+            }>
+            sellingVoucher: {
+              __typename?: 'SellingVoucher'
+              nftContractAddress: string
+              price: string
+              tokenId: number
+              tokenUri: string
+              isMaster: boolean
+              signature: string
+              sellCount: number
+              supply: number
+              maxSupply: number
+              currency: string
+              royaltyFeeInBips: number
+            }
+          }> | null
+        } | null
+      } | null
+    } | null
+    activeUsers?: Array<{
+      __typename?: 'User'
+      id: string
+      name?: string | null
+      description?: string | null
+      ethAddress?: string | null
+      twitter?: string | null
+      instagram?: string | null
+      soundcloud?: string | null
+      discord?: string | null
+      spotify?: string | null
+      website?: string | null
+      profileImage?: string | null
+      verified?: boolean | null
+    }> | null
+    chat?: Array<{
+      __typename?: 'ChatMessage'
+      message: string
+      sender: {
+        __typename?: 'User'
+        id: string
+        name?: string | null
+        description?: string | null
+        ethAddress?: string | null
+        twitter?: string | null
+        instagram?: string | null
+        soundcloud?: string | null
+        discord?: string | null
+        spotify?: string | null
+        website?: string | null
+        profileImage?: string | null
+        verified?: boolean | null
+      }
+    }> | null
+  }
 }
 
 export type CreateRoomMutationVariables = Exact<{
@@ -1473,6 +1955,25 @@ export type CreateRoomMutation = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
+    }> | null
+    chat?: Array<{
+      __typename?: 'ChatMessage'
+      message: string
+      sender: {
+        __typename?: 'User'
+        id: string
+        name?: string | null
+        description?: string | null
+        ethAddress?: string | null
+        twitter?: string | null
+        instagram?: string | null
+        soundcloud?: string | null
+        discord?: string | null
+        spotify?: string | null
+        website?: string | null
+        profileImage?: string | null
+        verified?: boolean | null
+      }
     }> | null
   }
 }
@@ -1974,6 +2475,25 @@ export type JoinRoomMutation = {
       profileImage?: string | null
       verified?: boolean | null
     }> | null
+    chat?: Array<{
+      __typename?: 'ChatMessage'
+      message: string
+      sender: {
+        __typename?: 'User'
+        id: string
+        name?: string | null
+        description?: string | null
+        ethAddress?: string | null
+        twitter?: string | null
+        instagram?: string | null
+        soundcloud?: string | null
+        discord?: string | null
+        spotify?: string | null
+        website?: string | null
+        profileImage?: string | null
+        verified?: boolean | null
+      }
+    }> | null
   }
 }
 
@@ -2400,6 +2920,25 @@ export type LeaveRoomMutation = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
+    }> | null
+    chat?: Array<{
+      __typename?: 'ChatMessage'
+      message: string
+      sender: {
+        __typename?: 'User'
+        id: string
+        name?: string | null
+        description?: string | null
+        ethAddress?: string | null
+        twitter?: string | null
+        instagram?: string | null
+        soundcloud?: string | null
+        discord?: string | null
+        spotify?: string | null
+        website?: string | null
+        profileImage?: string | null
+        verified?: boolean | null
+      }
     }> | null
   }
 }
@@ -2835,6 +3374,25 @@ export type NextSongMutation = {
       profileImage?: string | null
       verified?: boolean | null
     }> | null
+    chat?: Array<{
+      __typename?: 'ChatMessage'
+      message: string
+      sender: {
+        __typename?: 'User'
+        id: string
+        name?: string | null
+        description?: string | null
+        ethAddress?: string | null
+        twitter?: string | null
+        instagram?: string | null
+        soundcloud?: string | null
+        discord?: string | null
+        spotify?: string | null
+        website?: string | null
+        profileImage?: string | null
+        verified?: boolean | null
+      }
+    }> | null
   }
 }
 
@@ -3260,6 +3818,25 @@ export type PrevSongMutation = {
       profileImage?: string | null
       verified?: boolean | null
     }> | null
+    chat?: Array<{
+      __typename?: 'ChatMessage'
+      message: string
+      sender: {
+        __typename?: 'User'
+        id: string
+        name?: string | null
+        description?: string | null
+        ethAddress?: string | null
+        twitter?: string | null
+        instagram?: string | null
+        soundcloud?: string | null
+        discord?: string | null
+        spotify?: string | null
+        website?: string | null
+        profileImage?: string | null
+        verified?: boolean | null
+      }
+    }> | null
   }
 }
 
@@ -3684,6 +4261,25 @@ export type ReviveRoomMutation = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
+    }> | null
+    chat?: Array<{
+      __typename?: 'ChatMessage'
+      message: string
+      sender: {
+        __typename?: 'User'
+        id: string
+        name?: string | null
+        description?: string | null
+        ethAddress?: string | null
+        twitter?: string | null
+        instagram?: string | null
+        soundcloud?: string | null
+        discord?: string | null
+        spotify?: string | null
+        website?: string | null
+        profileImage?: string | null
+        verified?: boolean | null
+      }
     }> | null
   }
 }
@@ -4111,6 +4707,25 @@ export type UpdateCurrentSongMutation = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
+    }> | null
+    chat?: Array<{
+      __typename?: 'ChatMessage'
+      message: string
+      sender: {
+        __typename?: 'User'
+        id: string
+        name?: string | null
+        description?: string | null
+        ethAddress?: string | null
+        twitter?: string | null
+        instagram?: string | null
+        soundcloud?: string | null
+        discord?: string | null
+        spotify?: string | null
+        website?: string | null
+        profileImage?: string | null
+        verified?: boolean | null
+      }
     }> | null
   }
 }
@@ -4923,6 +5538,25 @@ export type GetRoomQuery = {
       profileImage?: string | null
       verified?: boolean | null
     }> | null
+    chat?: Array<{
+      __typename?: 'ChatMessage'
+      message: string
+      sender: {
+        __typename?: 'User'
+        id: string
+        name?: string | null
+        description?: string | null
+        ethAddress?: string | null
+        twitter?: string | null
+        instagram?: string | null
+        soundcloud?: string | null
+        discord?: string | null
+        spotify?: string | null
+        website?: string | null
+        profileImage?: string | null
+        verified?: boolean | null
+      }
+    }> | null
   }
 }
 
@@ -5349,6 +5983,25 @@ export type GetRoomsQuery = {
         website?: string | null
         profileImage?: string | null
         verified?: boolean | null
+      }> | null
+      chat?: Array<{
+        __typename?: 'ChatMessage'
+        message: string
+        sender: {
+          __typename?: 'User'
+          id: string
+          name?: string | null
+          description?: string | null
+          ethAddress?: string | null
+          twitter?: string | null
+          instagram?: string | null
+          soundcloud?: string | null
+          discord?: string | null
+          spotify?: string | null
+          website?: string | null
+          profileImage?: string | null
+          verified?: boolean | null
+        }
       }> | null
     }> | null
   }
@@ -6557,6 +7210,25 @@ export type RoomUpdatedSubscription = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
+    }> | null
+    chat?: Array<{
+      __typename?: 'ChatMessage'
+      message: string
+      sender: {
+        __typename?: 'User'
+        id: string
+        name?: string | null
+        description?: string | null
+        ethAddress?: string | null
+        twitter?: string | null
+        instagram?: string | null
+        soundcloud?: string | null
+        discord?: string | null
+        spotify?: string | null
+        website?: string | null
+        profileImage?: string | null
+        verified?: boolean | null
+      }
     }> | null
   }
 }

@@ -28,5 +28,11 @@ export const ROOM_FRAGMENT = gql`
       ...UserFragment
     }
     active
+    chat {
+      sender {
+        ...UserFragment
+      }
+      message
+    }
   }
 `

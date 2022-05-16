@@ -11,9 +11,6 @@ import { RoomFilter } from './dto/input/room-filter.input';
 import { Room } from './dto/output/room.output';
 import { Rooms } from './dto/output/rooms.output';
 import { RoomService } from './room.service';
-import { Types } from 'mongoose';
-import { PlaylistItem } from './room.schema';
-import { Room as RoomSchema } from './room.schema';
 import { JoinRoomInput } from './dto/input/join-room.input';
 import { User as UserSchema } from '../user/user.schema';
 import { LeaveRoomInput } from './dto/input/leave-room.input';
@@ -21,6 +18,7 @@ import { PUB_SUB } from '../core/pubSub.module';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { valueFromAST } from 'graphql';
 import { UpdateCurrentSongInput } from './dto/input/update-current-song.input';
+import { CreateChatMessageInput } from './dto/input/create-chat-message.input';
 
 export const ROOM_UPDATED_EVENT = 'roomUpdated';
 
@@ -106,6 +104,15 @@ export class RoomResolver {
     const room = await this.roomService.removeUserFromRoom(user, leaveRoomInput);
     await this.pubSub.publish(ROOM_UPDATED_EVENT, { roomUpdated: room });
     return room;
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Mutation(() => Room)
+  async createChatMessage(
+    @CurrentUser() user: UserSchema,
+    @Args('createChatMessageInput') createChatMessageInput: CreateChatMessageInput,
+  ) {
+    return await this.roomService.createChatMessage(user, createChatMessageInput);
   }
 
   @Subscription((returns) => Room, {

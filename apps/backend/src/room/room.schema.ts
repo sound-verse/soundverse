@@ -19,6 +19,17 @@ export class PlaylistItem {
   currentPosition?: number;
 }
 
+export class ChatMessage {
+  @Prop()
+  sender: User;
+
+  @Prop()
+  message: string;
+
+  @Prop({ default: () => Date.now() })
+  createdAt: Date;
+}
+
 @Schema()
 export class Room extends BaseDBObject {
   constructor(partial: Partial<Room> = {}) {
@@ -46,6 +57,9 @@ export class Room extends BaseDBObject {
 
   @Prop({ default: () => Date.now() })
   updatedAt: Date;
+
+  @Prop()
+  chat: ChatMessage[];
 }
 
 export const RoomSchema = SchemaFactory.createForClass(Room);
