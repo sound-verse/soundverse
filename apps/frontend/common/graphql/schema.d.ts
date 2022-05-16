@@ -260,15 +260,16 @@ export type Room = {
   active: Scalars['Boolean']
   activeUsers?: Maybe<Array<User>>
   chat?: Maybe<Array<ChatMessage>>
-  creator: User
+  creator?: Maybe<User>
   currentTrack?: Maybe<PlaylistItem>
   id: Scalars['String']
-  playlistItems: Array<PlaylistItem>
+  playlistItems?: Maybe<Array<PlaylistItem>>
 }
 
 export type RoomFilter = {
   creatorId?: InputMaybe<Scalars['String']>
   id?: InputMaybe<Scalars['String']>
+  isMasterRoom?: InputMaybe<Scalars['Boolean']>
 }
 
 export type Rooms = {
@@ -578,7 +579,7 @@ export type RoomFragmentFragment = {
   __typename?: 'Room'
   id: string
   active: boolean
-  creator: {
+  creator?: {
     __typename?: 'User'
     id: string
     name?: string | null
@@ -592,8 +593,8 @@ export type RoomFragmentFragment = {
     website?: string | null
     profileImage?: string | null
     verified?: boolean | null
-  }
-  playlistItems: Array<{
+  } | null
+  playlistItems?: Array<{
     __typename?: 'PlaylistItem'
     currentPosition?: number | null
     nftType?: NftType | null
@@ -784,7 +785,7 @@ export type RoomFragmentFragment = {
         }> | null
       } | null
     } | null
-  }>
+  }> | null
   currentTrack?: {
     __typename?: 'PlaylistItem'
     currentPosition?: number | null
@@ -1096,7 +1097,7 @@ export type CreateChatMessageMutation = {
     __typename?: 'Room'
     id: string
     active: boolean
-    creator: {
+    creator?: {
       __typename?: 'User'
       id: string
       name?: string | null
@@ -1110,8 +1111,8 @@ export type CreateChatMessageMutation = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
-    }
-    playlistItems: Array<{
+    } | null
+    playlistItems?: Array<{
       __typename?: 'PlaylistItem'
       currentPosition?: number | null
       nftType?: NftType | null
@@ -1302,7 +1303,7 @@ export type CreateChatMessageMutation = {
           }> | null
         } | null
       } | null
-    }>
+    }> | null
     currentTrack?: {
       __typename?: 'PlaylistItem'
       currentPosition?: number | null
@@ -1542,7 +1543,7 @@ export type CreateRoomMutation = {
     __typename?: 'Room'
     id: string
     active: boolean
-    creator: {
+    creator?: {
       __typename?: 'User'
       id: string
       name?: string | null
@@ -1556,8 +1557,8 @@ export type CreateRoomMutation = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
-    }
-    playlistItems: Array<{
+    } | null
+    playlistItems?: Array<{
       __typename?: 'PlaylistItem'
       currentPosition?: number | null
       nftType?: NftType | null
@@ -1748,7 +1749,7 @@ export type CreateRoomMutation = {
           }> | null
         } | null
       } | null
-    }>
+    }> | null
     currentTrack?: {
       __typename?: 'PlaylistItem'
       currentPosition?: number | null
@@ -2061,7 +2062,7 @@ export type JoinRoomMutation = {
     __typename?: 'Room'
     id: string
     active: boolean
-    creator: {
+    creator?: {
       __typename?: 'User'
       id: string
       name?: string | null
@@ -2075,8 +2076,8 @@ export type JoinRoomMutation = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
-    }
-    playlistItems: Array<{
+    } | null
+    playlistItems?: Array<{
       __typename?: 'PlaylistItem'
       currentPosition?: number | null
       nftType?: NftType | null
@@ -2267,7 +2268,7 @@ export type JoinRoomMutation = {
           }> | null
         } | null
       } | null
-    }>
+    }> | null
     currentTrack?: {
       __typename?: 'PlaylistItem'
       currentPosition?: number | null
@@ -2507,7 +2508,7 @@ export type LeaveRoomMutation = {
     __typename?: 'Room'
     id: string
     active: boolean
-    creator: {
+    creator?: {
       __typename?: 'User'
       id: string
       name?: string | null
@@ -2521,8 +2522,8 @@ export type LeaveRoomMutation = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
-    }
-    playlistItems: Array<{
+    } | null
+    playlistItems?: Array<{
       __typename?: 'PlaylistItem'
       currentPosition?: number | null
       nftType?: NftType | null
@@ -2713,7 +2714,7 @@ export type LeaveRoomMutation = {
           }> | null
         } | null
       } | null
-    }>
+    }> | null
     currentTrack?: {
       __typename?: 'PlaylistItem'
       currentPosition?: number | null
@@ -2960,7 +2961,7 @@ export type NextSongMutation = {
     __typename?: 'Room'
     id: string
     active: boolean
-    creator: {
+    creator?: {
       __typename?: 'User'
       id: string
       name?: string | null
@@ -2974,8 +2975,8 @@ export type NextSongMutation = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
-    }
-    playlistItems: Array<{
+    } | null
+    playlistItems?: Array<{
       __typename?: 'PlaylistItem'
       currentPosition?: number | null
       nftType?: NftType | null
@@ -3166,7 +3167,7 @@ export type NextSongMutation = {
           }> | null
         } | null
       } | null
-    }>
+    }> | null
     currentTrack?: {
       __typename?: 'PlaylistItem'
       currentPosition?: number | null
@@ -3404,7 +3405,7 @@ export type PrevSongMutation = {
     __typename?: 'Room'
     id: string
     active: boolean
-    creator: {
+    creator?: {
       __typename?: 'User'
       id: string
       name?: string | null
@@ -3418,8 +3419,8 @@ export type PrevSongMutation = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
-    }
-    playlistItems: Array<{
+    } | null
+    playlistItems?: Array<{
       __typename?: 'PlaylistItem'
       currentPosition?: number | null
       nftType?: NftType | null
@@ -3610,7 +3611,7 @@ export type PrevSongMutation = {
           }> | null
         } | null
       } | null
-    }>
+    }> | null
     currentTrack?: {
       __typename?: 'PlaylistItem'
       currentPosition?: number | null
@@ -3848,7 +3849,7 @@ export type ReviveRoomMutation = {
     __typename?: 'Room'
     id: string
     active: boolean
-    creator: {
+    creator?: {
       __typename?: 'User'
       id: string
       name?: string | null
@@ -3862,8 +3863,8 @@ export type ReviveRoomMutation = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
-    }
-    playlistItems: Array<{
+    } | null
+    playlistItems?: Array<{
       __typename?: 'PlaylistItem'
       currentPosition?: number | null
       nftType?: NftType | null
@@ -4054,7 +4055,7 @@ export type ReviveRoomMutation = {
           }> | null
         } | null
       } | null
-    }>
+    }> | null
     currentTrack?: {
       __typename?: 'PlaylistItem'
       currentPosition?: number | null
@@ -4294,7 +4295,7 @@ export type UpdateCurrentSongMutation = {
     __typename?: 'Room'
     id: string
     active: boolean
-    creator: {
+    creator?: {
       __typename?: 'User'
       id: string
       name?: string | null
@@ -4308,8 +4309,8 @@ export type UpdateCurrentSongMutation = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
-    }
-    playlistItems: Array<{
+    } | null
+    playlistItems?: Array<{
       __typename?: 'PlaylistItem'
       currentPosition?: number | null
       nftType?: NftType | null
@@ -4500,7 +4501,7 @@ export type UpdateCurrentSongMutation = {
           }> | null
         } | null
       } | null
-    }>
+    }> | null
     currentTrack?: {
       __typename?: 'PlaylistItem'
       currentPosition?: number | null
@@ -5124,7 +5125,7 @@ export type GetRoomQuery = {
     __typename?: 'Room'
     id: string
     active: boolean
-    creator: {
+    creator?: {
       __typename?: 'User'
       id: string
       name?: string | null
@@ -5138,8 +5139,8 @@ export type GetRoomQuery = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
-    }
-    playlistItems: Array<{
+    } | null
+    playlistItems?: Array<{
       __typename?: 'PlaylistItem'
       currentPosition?: number | null
       nftType?: NftType | null
@@ -5330,7 +5331,7 @@ export type GetRoomQuery = {
           }> | null
         } | null
       } | null
-    }>
+    }> | null
     currentTrack?: {
       __typename?: 'PlaylistItem'
       currentPosition?: number | null
@@ -5570,7 +5571,7 @@ export type GetRoomsQuery = {
       __typename?: 'Room'
       id: string
       active: boolean
-      creator: {
+      creator?: {
         __typename?: 'User'
         id: string
         name?: string | null
@@ -5584,8 +5585,8 @@ export type GetRoomsQuery = {
         website?: string | null
         profileImage?: string | null
         verified?: boolean | null
-      }
-      playlistItems: Array<{
+      } | null
+      playlistItems?: Array<{
         __typename?: 'PlaylistItem'
         currentPosition?: number | null
         nftType?: NftType | null
@@ -5776,7 +5777,7 @@ export type GetRoomsQuery = {
             }> | null
           } | null
         } | null
-      }>
+      }> | null
       currentTrack?: {
         __typename?: 'PlaylistItem'
         currentPosition?: number | null
@@ -6797,7 +6798,7 @@ export type RoomUpdatedSubscription = {
     __typename?: 'Room'
     id: string
     active: boolean
-    creator: {
+    creator?: {
       __typename?: 'User'
       id: string
       name?: string | null
@@ -6811,8 +6812,8 @@ export type RoomUpdatedSubscription = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
-    }
-    playlistItems: Array<{
+    } | null
+    playlistItems?: Array<{
       __typename?: 'PlaylistItem'
       currentPosition?: number | null
       nftType?: NftType | null
@@ -7003,7 +7004,7 @@ export type RoomUpdatedSubscription = {
           }> | null
         } | null
       } | null
-    }>
+    }> | null
     currentTrack?: {
       __typename?: 'PlaylistItem'
       currentPosition?: number | null

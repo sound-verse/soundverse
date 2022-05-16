@@ -125,6 +125,21 @@ export class RoomService {
     return updatedRoom;
   }
 
+  async createMasterRoom() {
+    return await this.roomModel.findOneAndUpdate(
+      {
+        isMasterRoom: true,
+      },
+      { $set: { isMasterRoom: true } },
+      { upsert: true, new: true },
+    );
+  }
+
+  async getMasterRoom() {
+    const room = await this.roomModel.findOne({ isMasterRoom: true });
+    return room ? room : await this.createMasterRoom();
+  }
+
   async closeRoom(user?: User, ids?: (string | Types.ObjectId)[]) {
     const findFilter = user ? { 'creator._id': user._id } : { _id: { $in: ids } };
     await this.roomModel.updateMany(findFilter, {
@@ -133,7 +148,7 @@ export class RoomService {
   }
 
   async getActiveRooms() {
-    const rooms = await this.roomModel.find({ active: true });
+    const rooms = await this.roomModel.find({ active: true, isMasterRoom: false });
     return rooms;
   }
 
@@ -142,6 +157,9 @@ export class RoomService {
       ...(roomFilter.id && { _id: new Types.ObjectId(roomFilter.id) }),
       ...(roomFilter.creatorId && { creator: roomFilter.creatorId }),
     };
+    if (roomFilter.isMasterRoom) {
+      return await this.getMasterRoom();
+    }
     return await this.roomModel.findOne({ ...searchObject, active: true });
   }
 
@@ -184,13 +202,18 @@ export class RoomService {
   }
 
   async createChatMessage(user: User, createChatMessageInput: CreateChatMessageInput) {
-    const room = await this.getRoomBySubscriber(user);
+    let room;
 
-    if (!room) {
-      return;
-    }
-    if (room._id.toString() !== createChatMessageInput.roomId) {
-      throw new BadRequestException('User has not joined channel');
+    if (createChatMessageInput.roomId === '') {
+      room = await this.getMasterRoom();
+    } else {
+      room = await this.getRoomBySubscriber(user);
+      if (!room) {
+        return;
+      }
+      if (room._id.toString() !== createChatMessageInput.roomId) {
+        throw new BadRequestException('User has not joined channel');
+      }
     }
 
     if (room.chat.length >= 100) {
@@ -206,6 +229,7 @@ export class RoomService {
   async removeDeadRooms() {
     const expirationTime = 5 * 60 * 1000; // 5 Minutes
     const expiredRooms = await this.roomModel.find({
+      isMasterRoom: false,
       updatedAt: { $lt: new Date(Date.now() - expirationTime) },
     });
 

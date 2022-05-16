@@ -38,10 +38,10 @@ export class Room extends BaseDBObject {
   }
 
   @Prop()
-  creator: User;
+  creator?: User;
 
   @Prop(() => [PlaylistItem])
-  playlistItems: PlaylistItem[];
+  playlistItems?: PlaylistItem[];
 
   @Prop(() => PlaylistItem)
   currentTrack?: PlaylistItem;
@@ -59,7 +59,10 @@ export class Room extends BaseDBObject {
   updatedAt: Date;
 
   @Prop()
-  chat: ChatMessage[];
+  chat?: ChatMessage[];
+
+  @Prop({ default: false })
+  isMasterRoom: boolean;
 }
 
 export const RoomSchema = SchemaFactory.createForClass(Room);

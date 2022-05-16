@@ -161,15 +161,16 @@ type Room {
   active: Boolean!
   activeUsers: [User!]
   chat: [ChatMessage!]
-  creator: User!
+  creator: User
   currentTrack: PlaylistItem
   id: String!
-  playlistItems: [PlaylistItem!]!
+  playlistItems: [PlaylistItem!]
 }
 
 input RoomFilter {
   creatorId: String
   id: String
+  isMasterRoom: Boolean
 }
 
 type Rooms {

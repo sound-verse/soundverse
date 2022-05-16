@@ -30,7 +30,7 @@ export class Room extends BaseModel {
   @Field(() => PlaylistItem, { nullable: true })
   currentTrack?: PlaylistItem;
 
-  @Field(() => [PlaylistItem])
+  @Field(() => [PlaylistItem], { nullable: true })
   playlistItems?: PlaylistItem[];
 
   @Field(() => [User], { nullable: true })
@@ -39,8 +39,8 @@ export class Room extends BaseModel {
   @Field()
   active: boolean;
 
-  @Field(() => User)
-  creator: User;
+  @Field(() => User, { nullable: true })
+  creator?: User;
 
   @Field(() => [ChatMessage], { nullable: true })
   chat?: ChatMessage[];

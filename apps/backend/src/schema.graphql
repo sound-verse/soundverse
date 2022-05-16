@@ -95,10 +95,10 @@ type ChatMessage {
 type Room {
   id: String!
   currentTrack: PlaylistItem
-  playlistItems: [PlaylistItem!]!
+  playlistItems: [PlaylistItem!]
   activeUsers: [User!]
   active: Boolean!
-  creator: User!
+  creator: User
   chat: [ChatMessage!]
 }
 
@@ -159,6 +159,7 @@ input NftFilter {
 input RoomFilter {
   id: String
   creatorId: String
+  isMasterRoom: Boolean
 }
 
 type Mutation {
