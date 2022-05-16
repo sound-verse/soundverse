@@ -79,6 +79,16 @@ export default function Soundverse() {
   }
 
   useEffect(() => {
+    return () => {
+      setCurrentTrack({
+        visible: false,
+        mute: true,
+        play: false,
+      })
+    }
+  }, [])
+
+  useEffect(() => {
     if (!isHost) {
       return
     }
@@ -96,13 +106,6 @@ export default function Soundverse() {
     }
     if (!showWelcomeModal) {
       playCurrentTrack()
-    }
-    return () => {
-      setCurrentTrack({
-        visible: false,
-        mute: true,
-        play: false,
-      })
     }
   }, [room])
 
