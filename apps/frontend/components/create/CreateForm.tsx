@@ -116,7 +116,7 @@ export const CreateForm = () => {
 
   return (
     <>
-      <div className="rounded-3xl bg-grey-dark max-w-2xl p-20 mx-auto mt-12 mb-36">
+      <div className={styles.wrapperStyle}>
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -127,10 +127,7 @@ export const CreateForm = () => {
             <div className="flex flex-col">
               <div className="text-white font-bold text-base">Track</div>
               <div>
-                <label
-                  htmlFor="nftFile"
-                  className="text-white border-2 border-white text-sm rounded-full p-2 mt-5 inline-block cursor-pointer px-28 whitespace-nowrap"
-                >
+                <label htmlFor="nftFile" className={styles.buttonStyle}>
                   Choose Music File
                 </label>
                 <Field
@@ -156,11 +153,8 @@ export const CreateForm = () => {
                 <div className={styles.error}>{nftFileError}</div>
               </div>
               <div>
-                <label
-                  htmlFor="pictureFile"
-                  className="text-white border-2 text-sm border-white rounded-full p-2 mt-5 inline-block cursor-pointer px-36 whitespace-nowrap"
-                >
-                  Choose Nft Cover Picture
+                <label htmlFor="pictureFile" className={styles.buttonStyle}>
+                  Choose Cover Picture
                 </label>
                 <input
                   type="file"
@@ -202,6 +196,7 @@ export const CreateForm = () => {
                   <ErrorMessage name="name" />
                 </div>
               </div>
+
               <div className="text-white font-bold text-sm mt-10">Licenses</div>
               <div className="mt-3 w-full">
                 <Field
@@ -231,9 +226,9 @@ export const CreateForm = () => {
                 <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
                 <div className="text-grey-light mt-2 text-xs">
                   Enter a number between 0 and 100
-                </div>
-                <div className={styles.error}>
-                  <ErrorMessage name="royaltyFeeInBips" />
+                  <div className={styles.error}>
+                    <ErrorMessage name="royaltyFeeInBips" />
+                  </div>
                 </div>
               </div>
               <div className="text-white font-bold text-sm mt-10">
@@ -244,7 +239,7 @@ export const CreateForm = () => {
                   type="input"
                   as="textarea"
                   name="description"
-                  className="w-full text-white bg-transparent border-2 rounded-3xl p-5 text-sm"
+                  className={styles.descriptionField}
                   id="trac-desc"
                   placeholder="I am ..."
                   rows={8}
@@ -254,11 +249,8 @@ export const CreateForm = () => {
                   <ErrorMessage name="description" />
                 </div>
               </div>
-              <button
-                className="text-white cursor-pointer rounded-full bg-purple px-24 py-4 ml-auto mt-10 font-bold text-sm"
-                type="submit"
-              >
-                Mint
+              <button className={styles.mintButton} type="submit">
+                Mint NFT
               </button>
             </div>
           </Form>

@@ -18,8 +18,8 @@ export default function Create() {
           {authUser ? (
             <CreateForm />
           ) : (
-            <div className="flex items-center justify-center h-screen -mt-24 text-white text-2xl">
-              Please connect your wallet to create NFTs
+            <div className="flex items-center justify-center h-screen -mt-24 text-white text-1xl">
+              Connect your wallet to create NFTs.
             </div>
           )}
         </main>

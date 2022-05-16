@@ -10,6 +10,7 @@ import { HostControls } from './HostControls'
 import { Playlist } from './Playlist'
 import { RoomListElement } from './RoomListElement'
 import { RoomUser } from './RoomUser'
+import styles from './Room.module.css'
 
 type RoomProps = {
   room: Room
@@ -35,7 +36,8 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
       <div className="flex flex-col mr-10 w-full">
         <div className="mb-10">
           <Button
-            text={`${isHost ? 'Close' : 'Leave'} this soundverse`}
+            className={styles.closeButton}
+            text={`${isHost ? '✌️ Close' : 'Leave'} this Soundverse ✌️`}
             type="ghost"
             onClick={handleLeaveSoundverse}
           />

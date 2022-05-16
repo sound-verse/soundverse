@@ -152,7 +152,7 @@ export default function Soundverse() {
       <Modal
         isOpen={loading}
         contentLabel="onRequestClose Example"
-        className="flex justify-center items-center h-full"
+        className="flex justify-center items-center h-full backdrop-blur-sm"
       >
         <div className="w-1/2 h-1/2 rounded-3xl p-10 bg-grey-dark flex flex-col justify-between items-center">
           <div className="h-full w-full justify-center items-center flex flex-col">

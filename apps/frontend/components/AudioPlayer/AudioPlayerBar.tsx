@@ -239,15 +239,15 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
             {!currentTrack.mute ? (
               <Image
                 src="/img/volume.svg"
-                width={40}
-                height={40}
+                width={30}
+                height={30}
                 layout="fixed"
               />
             ) : (
               <Image
                 src="/img/volume.svg"
-                width={40}
-                height={40}
+                width={30}
+                height={30}
                 layout="fixed"
               />
             )}
@@ -297,7 +297,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
             styles.playbar
           )}
         >
-          <Bars color="#7A64FF" height={40} width={40} />
+          <Bars color="#7A64FF" height={30} width={30} />
         </div>
       )}
     </div>

@@ -73,10 +73,8 @@ function SoundCard({
         href={`/${nftType === NftType.Master ? 'master' : 'license'}/${nft.id}`}
       >
         <a>
-          <div className={styles.soundCardHeaderTop}>
-            {nftType === NftType.Master ? 'Master' : 'License'}
-          </div>
           <div className={styles.soundCardHeaderBottom}>
+            {nftType === NftType.Master ? 'Master' : 'License'}
             <div className={cn(styles.textOverflow, 'font-semibold text-md')}>
               {nft.metadata.name.length > 45
                 ? `${nft.metadata.name.substring(0, 45)}...`

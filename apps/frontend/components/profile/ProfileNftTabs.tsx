@@ -32,7 +32,7 @@ export const ProfileNftTabs = ({
     <div className={className}>
       <div className="flex">
         <div
-          className="uppercase text-white font-extrabold text-2xl cursor-pointer mr-10"
+          className="uppercase text-white font-semibold text-2xl cursor-pointer mr-10"
           onClick={() => setActiveTab(PROFILE_TAB.CREATED)}
         >
           <span
@@ -42,7 +42,7 @@ export const ProfileNftTabs = ({
           </span>
         </div>
         <div
-          className="uppercase text-white font-extrabold text-2xl cursor-pointer mr-10"
+          className="uppercase text-white font-semibold text-2xl cursor-pointer mr-10"
           onClick={() => setActiveTab(PROFILE_TAB.COLECTED)}
         >
           <span

@@ -36,7 +36,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <ApolloClientProvider initialApolloState={pageProps.initialApolloState}>
         <DAppProvider config={config}>
           <AudioProvider>
-            <NextNProgress color="#7A64FF" height={5} />
+            <NextNProgress color="#7A64FF" height={0} />
             <Component {...pageProps} />
             <AudioPlayerBar />
           </AudioProvider>
