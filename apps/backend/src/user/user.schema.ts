@@ -19,7 +19,7 @@ export class User extends BaseDBObject {
   @Prop({ required: true })
   nonce?: number;
 
-  @Prop({ required: true, unique: true, lowercase: true })
+  @Prop({ required: true, lowercase: true })
   ethAddress: string;
 
   @Prop()

@@ -38,20 +38,19 @@ export class RoomService {
     }
 
     const playlistItems = createRoomInput.playlistItems.map((item) => ({
-      nft: new Types.ObjectId(item.nftId),
+      nft: nfts.find((nft) => nft._id.toString() === item.nftId),
       nftType: item.nftType,
     }));
 
     await this.closeRoom(user);
 
-    await this.roomModel.create({
-      creator: user._id,
+    const room = await this.roomModel.create({
+      creator: user,
       playlistItems,
       active: true,
     });
 
     const newRoom = await this.playNextSong(user);
-
     return newRoom;
   }
 
@@ -79,7 +78,6 @@ export class RoomService {
       { $set: { currentTrack } },
       { new: true },
     );
-
     return updatedRoom;
   }
 
@@ -147,7 +145,7 @@ export class RoomService {
   }
 
   async getRoomByCreator(user: User) {
-    return await this.roomModel.findOne({ creator: user._id, active: true });
+    return await this.roomModel.findOne({ 'creator._id': user._id, active: true });
   }
 
   async reviveRoom(room: Room) {
@@ -161,8 +159,8 @@ export class RoomService {
   async addUserToRoom(user: User, joinRoomInput: JoinRoomInput) {
     await this.removeUserFromRoom(user, { roomId: joinRoomInput.roomId });
     const room = await this.roomModel.findOneAndUpdate(
-      { _id: joinRoomInput.roomId, creator: { $ne: user._id } },
-      { $addToSet: { activeUsers: user._id } },
+      { _id: joinRoomInput.roomId, 'creator._id': { $ne: user._id } },
+      { $addToSet: { activeUsers: user } },
       { new: true },
     );
     return room ?? (await this.getRoom({ id: joinRoomInput.roomId }));
@@ -171,49 +169,10 @@ export class RoomService {
   async removeUserFromRoom(user: User, leaveRoomInput: LeaveRoomInput) {
     const room = this.roomModel.findOneAndUpdate(
       { _id: leaveRoomInput.roomId },
-      { $pull: { activeUsers: user._id } },
+      { $pull: { activeUsers: { _id: user._id } } },
       { new: true },
     );
     return room;
-  }
-
-  async getPopulatedRoom(room: Room): Promise<RoomOutput> {
-    //TODO: This needs to be way more performant for the PubSub soution! Aggregation? Write everything upfront in Rooms Schema?
-
-    if (!room?._id) {
-      return;
-    }
-
-    const creator = await this.userService.findUserById(room.creator.toString());
-    const activeUsers = await this.userService.findUserByIds(room.activeUsers.map((user) => user.toString()));
-    const currentTrackNft =
-      room.currentTrack && (await this.nftService.findNft({ id: room.currentTrack.nft.toString() }));
-    const nfts = await this.nftService.getByIds(
-      room.playlistItems.map((nft) => {
-        return nft.nft.toString();
-      }),
-    );
-
-    const playlistItems = room.playlistItems.map((item) => ({
-      ...item,
-      nft: nfts.find((nft) => nft._id.toString() === item.nft.toString()),
-    }));
-
-    const populatedRoom = {
-      ...room,
-      id: room._id.toString(),
-      creator,
-      activeUsers,
-      ...(currentTrackNft && {
-        currentTrack: {
-          ...room.currentTrack,
-          nft: { ...currentTrackNft, id: currentTrackNft?._id?.toString() ?? '' },
-        },
-      }),
-      playlistItems,
-    };
-
-    return populatedRoom as any;
   }
 
   @Interval(5 * 60 * 1000)
@@ -231,7 +190,5 @@ export class RoomService {
         await this.pubSub.publish(ROOM_UPDATED_EVENT, { roomUpdated: room });
       }),
     );
-
-    // console.log(updatedRooms);
   }
 }

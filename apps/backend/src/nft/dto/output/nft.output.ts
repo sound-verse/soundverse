@@ -1,4 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { BaseModel } from '../../../graphql/types/base-model.types';
 import { Selling } from '../../../selling/dto/output/selling.output';
 import { User } from '../../../user/dto/output/user.output';
 
@@ -30,10 +31,7 @@ export class NftMetadata {
 }
 
 @ObjectType()
-export class Nft {
-  @Field()
-  id: string;
-
+export class Nft extends BaseModel {
   @Field({ nullable: true })
   tokenId?: number;
 

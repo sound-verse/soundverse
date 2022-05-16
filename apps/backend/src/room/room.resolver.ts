@@ -113,46 +113,38 @@ export class RoomResolver {
       return payload?.roomUpdated?._id === variables?.roomId;
     },
     resolve: async function (this: RoomResolver, value) {
-      const room = await this.roomService.getPopulatedRoom(value.roomUpdated);
-      return room;
+      if (!value.roomUpdated?.currentTrack) {
+        return;
+      }
+      const room = value.roomUpdated;
+      const licenseOwnersUser = await this.userService.findUserByIds(
+        room.currentTrack.nft.licenseOwners.map((licenseOwner) => licenseOwner.user),
+      );
+
+      const licenseOwners = licenseOwnersUser.map((licenseOwnerUser) => {
+        const owner = room.currentTrack.nft.licenseOwners.find(
+          (licenseOwner) => licenseOwner.user.toString() === licenseOwnerUser._id.toString(),
+        );
+
+        return {
+          user: licenseOwnerUser,
+          supply: owner.supply,
+        };
+      });
+
+      return {
+        ...room,
+        currentTrack: {
+          ...room.currentTrack,
+          nft: {
+            ...room.currentTrack.nft,
+            licenseOwners,
+          },
+        },
+      };
     },
   })
   roomUpdated(@Args('roomId') roomId: string) {
     return this.pubSub.asyncIterator(ROOM_UPDATED_EVENT);
-  }
-
-  @ResolveField(() => User)
-  async creator(@Parent() room: Room) {
-    return await this.userService.findUserById(room.creator._id);
-  }
-
-  @ResolveField(() => User)
-  async activeUsers(@Parent() room: Room) {
-    return await this.userService.findUserByIds(room.activeUsers.map((user) => user._id));
-  }
-
-  @ResolveField(() => PlaylistItem)
-  async currentTrack(@Parent() room: RoomSchema) {
-    if (!room.currentTrack?.nft) {
-      return {};
-    }
-    return {
-      ...room.currentTrack,
-      nft: await this.nftService.findNft({ id: room.currentTrack.nft.toString() }),
-    };
-  }
-
-  @ResolveField(() => [PlaylistItem])
-  async playlistItems(@Parent() room: RoomSchema) {
-    const nfts = await this.nftService.getByIds(
-      room.playlistItems.map((nft) => new Types.ObjectId(nft.nft._id)),
-    );
-
-    const playlistItems = room.playlistItems.map((item) => ({
-      ...item,
-      nft: nfts.find((nft) => nft._id.toString() === item.nft._id.toString()),
-    }));
-
-    return playlistItems;
   }
 }

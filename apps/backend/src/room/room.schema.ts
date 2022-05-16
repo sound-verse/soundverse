@@ -9,8 +9,7 @@ import { User } from '../user/user.schema';
 export type RoomDocument = Room & Document<Types.ObjectId>;
 
 export class PlaylistItem {
-  @Prop({ type: [{ type: Types.ObjectId, ref: Nft.name }] })
-  @Type(() => Nft)
+  @Prop()
   nft: Nft;
 
   @Prop()
@@ -27,8 +26,7 @@ export class Room extends BaseDBObject {
     Object.assign(this, partial);
   }
 
-  @Prop({ type: Types.ObjectId, ref: User.name })
-  @Type(() => User)
+  @Prop()
   creator: User;
 
   @Prop(() => [PlaylistItem])
@@ -37,8 +35,7 @@ export class Room extends BaseDBObject {
   @Prop(() => PlaylistItem)
   currentTrack?: PlaylistItem;
 
-  @Prop({ type: [{ type: Types.ObjectId, ref: User.name }] })
-  @Type(() => User)
+  @Prop()
   activeUsers?: User[];
 
   @Prop({ default: true })

@@ -17,10 +17,7 @@ export class PlaylistItem {
 }
 
 @ObjectType()
-export class Room {
-  @Field()
-  id: string;
-
+export class Room extends BaseModel {
   @Field(() => PlaylistItem, { nullable: true })
   currentTrack?: PlaylistItem;
 

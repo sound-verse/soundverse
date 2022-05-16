@@ -60,7 +60,7 @@ const initialState: State = {
     currentPosition: 0,
     creatorEthAddress: '',
     creatorName: '',
-    mute: true,
+    mute: false,
     volume: 0.5,
     play: false,
     playTime: 0,
@@ -82,6 +82,7 @@ AudioContext.displayName = 'AudioContext'
 const audioReducer = (state: State, action: Action): State => {
   switch (action.type) {
     case 'SET_CURRENT_TRACK':
+      console.log(action.track)
       return {
         currentTrack: {
           ...state.currentTrack,
