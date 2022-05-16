@@ -28,7 +28,9 @@ const Header = () => {
       <div className={styles.headerWrapperToo}>
         <div className={styles.logo}>
           <Link href="/marketplace" passHref>
-            <img src="/logo.svg" alt="next" />
+            <a>
+              <img src="/logo.svg" alt="next" />
+            </a>
           </Link>
         </div>
         <div className={styles.headerSpacer} />
