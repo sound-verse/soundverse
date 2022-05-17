@@ -96,7 +96,6 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
       WavesurferLibrary.current = await (await import('wavesurfer.js')).default
     }
     const options = formWaveSurferOptions(waveformRef.current)
-    console.log(currentTrack.isRoomPlayer)
     wavesurfer.current = await WavesurferLibrary.current.create({
       ...options,
       ...(currentTrack.isRoomPlayer && { interact: false }),
