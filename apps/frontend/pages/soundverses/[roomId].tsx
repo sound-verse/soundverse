@@ -31,7 +31,12 @@ export default function Soundverse() {
   const { reviveRoom } = useReviveRoom()
   const [
     getRoomQuery,
-    { data: roomData, loading: roomDataLoading, called: roomQueryCalled },
+    {
+      data: roomData,
+      loading: roomDataLoading,
+      called: roomQueryCalled,
+      error: roomError,
+    },
   ] = useLazyQuery<GetRoomQuery, GetRoomQueryVariables>(GET_ROOM, {
     pollInterval: 1000,
   })
@@ -125,6 +130,12 @@ export default function Soundverse() {
     setLoading(false)
   }, [roomData])
 
+  useEffect(() => {
+    if (loading === false && roomError) {
+      router.push('/soundverses/room-closed')
+    }
+  }, [loading, roomError])
+
   Modal.setAppElement('#__next')
 
   if (!room && !roomDataLoading && roomId && roomQueryCalled) {
@@ -150,7 +161,6 @@ export default function Soundverse() {
       <Layout>{room && <SoundverseRoom room={room} />}</Layout>
       <Modal
         isOpen={loading}
-        contentLabel="onRequestClose Example"
         className="flex justify-center items-center h-full backdrop-blur-sm"
       >
         <div className="w-1/2 h-1/2 rounded-3xl p-10 bg-grey-dark flex flex-col justify-between items-center">
@@ -164,7 +174,6 @@ export default function Soundverse() {
       </Modal>
       <Modal
         isOpen={showWelcomeModal}
-        contentLabel="onRequestClose Example"
         className="flex justify-center items-center h-full"
       >
         <div className="w-1/2 h-1/2 rounded-3xl p-10 bg-grey-dark flex flex-col justify-between items-center">

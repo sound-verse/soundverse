@@ -22,13 +22,7 @@ export default function Soudnverses() {
       </Head>
 
       <Layout>
-        {rooms.length ? (
-          <RoomList rooms={rooms} />
-        ) : (
-          <div className="flex items-center justify-center h-screen -mt-24 text-white text-1xl">
-            No rooms active yet, stay tuned!
-          </div>
-        )}
+        <RoomList rooms={rooms} />
       </Layout>
     </div>
   )
