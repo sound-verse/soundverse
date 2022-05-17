@@ -66,7 +66,7 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
     <div className={className}>
       <div className="flex flex-col w-[400px] bg-grey-dark rounded-2xl h-[750px]">
         <div className="text-white font-bold text-md text-center py-3 border-b-1 border-b border-grey-light">
-          Community Chat
+          {roomId === '' ? 'Community' : 'Room'} Chat
         </div>
         <div className="text-white p-5 overflow-y-auto">
           {userChat.map((chatMessage, key) => {
