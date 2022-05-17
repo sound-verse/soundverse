@@ -10,8 +10,9 @@ import Image from 'next/image'
 import { ProfileImage } from './profile'
 import { ProfileName } from './profile/ProfileName'
 import { useAuthContext } from '../context/AuthContext'
+import cn from 'classnames'
 
-const Header = () => {
+const Header = ({ className = '' }) => {
   const { loginUser, logout } = useLogin()
   const { authUser } = useAuthContext()
   const [showDropdown, setShowDropdown] = useState<boolean>(false)
@@ -23,7 +24,7 @@ const Header = () => {
   }, [authUser])
 
   return (
-    <div className={styles.headerWrapper}>
+    <div className={cn(className, styles.headerWrapper)}>
       <Toaster position="top-right" />
       <div className={styles.headerWrapperToo}>
         <div className={styles.logo}>

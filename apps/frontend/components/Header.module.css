@@ -157,13 +157,3 @@
   border-bottom-width: 0.5px;
   margin-bottom: 0.5rem;
 }
-@media screen and (max-width: 768px) {
-  .headerWrapper {
-    display: none;
-  }
-}
-@media screen and (max-width: 1000px) {
-  .soundverseText {
-    display: none;
-  }
-}
