@@ -30,7 +30,6 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
   const wavesurfer = useRef(null)
   const WavesurferLibrary = useRef(null)
   const { setCurrentTrack, currentTrack } = useAudioContext()
-  const [revalidate, setRevalidate] = useState<boolean>(false)
 
   const gotoTrackPosition = (trackPosition: number) => {
     if (!wavesurfer.current || trackPosition === 0) {
@@ -51,15 +50,10 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
 
   useEffect(() => {
     if (!wavesurfer.current) {
-      setCurrentTrack({ restart: false })
       return
     }
     gotoTrackPosition(currentTrack.currentPosition)
-    if (currentTrack.play) {
-      wavesurfer.current.play()
-    }
-    setCurrentTrack({ restart: false })
-  }, [currentTrack.restart])
+  }, [currentTrack.currentPosition])
 
   useEffect(() => {
     if (!wavesurfer.current) {
@@ -79,29 +73,13 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
     if (!wavesurfer.current) {
       return
     }
-    if (currentTrack.play) {
+    if (currentTrack.isPlaying) {
       wavesurfer.current.play()
-      setCurrentTrack({ isPlaying: true, visible: true, mute: false })
+      setCurrentTrack({ visible: true })
     } else {
       wavesurfer.current.pause()
-      setCurrentTrack({ isPlaying: false })
     }
-  }, [currentTrack.play])
-
-  useEffect(() => {
-    if (!wavesurfer.current) {
-      return
-    }
-    if (revalidate) {
-      gotoTrackPosition(currentTrack.currentPosition)
-      wavesurfer.current.setMute(currentTrack.mute)
-      wavesurfer.current.setVolume(currentTrack.volume)
-      if (currentTrack.play) {
-        wavesurfer.current.play()
-      }
-      setRevalidate(false)
-    }
-  }, [revalidate])
+  }, [currentTrack.isPlaying])
 
   useEffect(() => {
     if (!currentTrack.url) {
@@ -127,17 +105,21 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
     wavesurfer.current.load(url)
 
     wavesurfer.current.on('ready', () => {
-      setCurrentTrack({
-        visible: true,
-        isLoading: false,
-        play: true,
-        isPlaying: true,
-        mute: false,
-      })
-      setRevalidate(true)
+      if (currentTrack.play) {
+        setCurrentTrack({
+          isPlaying: true,
+        })
+      }
     })
+
+    wavesurfer.current.on('waveform-ready', () => {
+      setCurrentTrack({
+        isLoading: false,
+      })
+    })
+
     wavesurfer.current.on('finish', () => {
-      setCurrentTrack({ isPlaying: false, play: false })
+      setCurrentTrack({ isPlaying: false })
       currentTrack.onTrackFinish()
     })
 
@@ -205,7 +187,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
               className="col-span-1 cursor-pointer text-right mr-3"
               onClick={() => {
                 setCurrentTrack({
-                  play: !wavesurfer.current?.isPlaying(),
+                  isPlaying: !wavesurfer.current?.isPlaying(),
                 })
               }}
             >
@@ -274,10 +256,9 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
               className="cursor-pointer ml-5 flex items-center"
               onClick={() => {
                 setCurrentTrack({
+                  url: '',
+                  isPlaying: false,
                   visible: false,
-                  mute: true,
-                  play: false,
-                  restart: true,
                 })
               }}
             >

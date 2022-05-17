@@ -63,7 +63,6 @@ export default function Soundverse() {
         id: nft.id,
         contractAddress,
         play: true,
-        visible: true,
         nftType,
         onTrackFinish: isHost ? playNextSong : () => {},
         onTrackProgress: isHost ? updateCurrentSong : ({}) => {},
@@ -81,9 +80,9 @@ export default function Soundverse() {
   useEffect(() => {
     return () => {
       setCurrentTrack({
+        url: '',
         visible: false,
-        mute: true,
-        play: false,
+        isPlaying: false,
       })
     }
   }, [])

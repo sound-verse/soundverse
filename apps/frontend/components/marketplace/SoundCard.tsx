@@ -36,11 +36,10 @@ function SoundCard({
   }, [playingCardId])
 
   const handleMusicClick = () => {
-    // Checking "currentTrack == true" slows the track loading for some reason
     setCurrentTrack({
       url: nft.fileUrl,
       trackName: nft.metadata.name,
-      currentPosition: 0, // FIXME track is not restarting at position 0, probably because the track is saved globally at current position
+      currentPosition: 0,
       creatorName: nft.creator.name,
       trackPictureUrl: nft.filePictureUrl,
       creatorEthAddress: nft.creator.ethAddress,
