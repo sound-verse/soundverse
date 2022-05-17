@@ -33,8 +33,8 @@ export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
   }
   return (
     <div className={styles.roomWrapper}>
-      <div className="grid grid-cols-12 h-full w-full">
-        <div className="col-span-2 ml-2 mt-2">
+      <div className="flex h-full w-full">
+        <div className="ml-2 mt-2">
           <SoundCard
             nft={room.currentTrack?.nft ?? room.playlistItems[0].nft}
             nftType={
@@ -43,13 +43,13 @@ export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
             className="scale-[70%] -mt-10 -ml-6 -mb-20"
           ></SoundCard>
         </div>
-        <div className="col-span-6">
-          <div className="flex flex-col mt-10">
+        <div className="flex flex-col w-full h-full">
+          <div className="flex flex-col mt-5">
             <div className="flex">
               <div className="font-bold text-sm text-white">
                 Soundverse #{room.id.substring(room.id.length - 4)}
               </div>
-              <div className="flex text-sm text-grey-light ml-2 mb-5">
+              <div className="flex text-sm text-grey-light ml-2 mb-5 ">
                 <div className="mr-2">hosted by</div>
                 <ProfileName
                   ethAddress={room.creator.ethAddress}
@@ -58,31 +58,32 @@ export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
                 />
               </div>
             </div>
-            <div className="flex">
+            <div className="flex flex-wrap">
               {room.activeUsers.map((user) => (
                 <ProfileImage
                   ethAddress={user.ethAddress}
                   imageUrl={user.profileImage}
-                  height={20}
-                  width={20}
+                  height={10}
+                  width={10}
                   key={user.id}
+                  className="mr-1"
                 />
               ))}
             </div>
           </div>
-        </div>
-        <div className="col-span-4">
-          <div className="flex flex-col h-full">
-            <Button
-              text={`${
-                authUser?.id
-                  ? 'Enter the Soundverse'
-                  : 'Login to enter the Soundverse'
-              }`}
-              type={`${authUser?.id ? 'purple' : 'disabled'}`}
-              className={styles.enterButton}
-              onClick={handleEnterSoundverse}
-            />
+          <div className="mt-auto ml-auto">
+            <div className="flex flex-col h-full">
+              <Button
+                text={`${
+                  authUser?.id
+                    ? 'Enter the Soundverse'
+                    : 'Login to enter the Soundverse'
+                }`}
+                type={`${authUser?.id ? 'purple' : 'disabled'}`}
+                className={styles.enterButton}
+                onClick={handleEnterSoundverse}
+              />
+            </div>
           </div>
         </div>
       </div>

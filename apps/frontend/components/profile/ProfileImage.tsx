@@ -1,8 +1,10 @@
 import React from 'react'
 import Image from 'next/image'
 import Blockies from 'react-blockies'
+import cn from 'classnames'
 
 export type ProfileImageProps = {
+  className?: string
   ethAddress: string
   imageUrl: string
   width: number
@@ -14,9 +16,10 @@ export const ProfileImage = ({
   width,
   height,
   ethAddress,
+  className,
 }: ProfileImageProps) => {
   return (
-    <div className="flex">
+    <div className={cn('flex', className)}>
       {imageUrl ? (
         <Image
           src={imageUrl}
