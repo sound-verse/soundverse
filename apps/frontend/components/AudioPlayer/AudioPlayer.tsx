@@ -332,7 +332,7 @@ export const AudioPlayer = ({
     <div className={cn(className)}>
       <div className={isLoading ? 'hidden' : 'block'} ref={waveformRef} />
       {isLoading && (
-        <div className={cn('flex self-center items-center justify-center p-3')}>
+        <div className={cn('flex self-center items-center justify-center p-6')}>
           <Bars color="#7A64FF" height={25} width={25} />
         </div>
       )}

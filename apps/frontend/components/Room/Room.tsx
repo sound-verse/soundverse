@@ -28,12 +28,12 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
     router.push('/soundverses')
   }
   return (
-    <div className="flex w-full">
+    <div className="flex justify-center">
       <Playlist
         playlistItems={room.playlistItems}
         currentTrack={room.currentTrack}
       />
-      <div className="flex flex-col mr-10 w-full">
+      <div className="flex flex-col mr-10 ml-10 w-full  max-w-[2000px]">
         <div className="mb-10">
           <Button
             className={styles.closeButton}
@@ -45,36 +45,38 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
         <div className="text-white font-bold text-xl">
           Soundverse #{room.id.substring(room.id.length - 4)}
         </div>
-        <div className="rounded-3xl bg-grey-dark p-5 mt-10 flex flex-col">
-          <div className="flex justify-between">
-            <div className="text-grey-light flex">
-              Hosted by
-              {isHost ? (
-                ' you'
-              ) : (
-                <ProfileName
-                  ethAddress={room.creator.ethAddress}
-                  name={room.creator.name}
-                  short={true}
-                  className="ml-2"
-                />
-              )}
+        <div className="flex justify-center items-start">
+          <div className="rounded-3xl bg-grey-dark p-5 mt-10 flex flex-col w-full">
+            <div className="flex justify-between">
+              <div className="text-grey-light flex">
+                Hosted by
+                {isHost ? (
+                  ' you'
+                ) : (
+                  <ProfileName
+                    ethAddress={room.creator.ethAddress}
+                    name={room.creator.name}
+                    short={true}
+                    className="ml-2"
+                  />
+                )}
+              </div>
+              <div className="text-white">{room.activeUsers.length}</div>
             </div>
-            <div className="text-white">{room.activeUsers.length}</div>
+            {isHost && <HostControls room={room} className="mt-2" />}
+            <div className="flex items-start mt-16 border-b pb-5 border-grey-medium">
+              <RoomUser user={room.creator} />
+            </div>
+            <div className="flex flex-wrap justify-start mt-10">
+              {room.activeUsers &&
+                room.activeUsers.map((user) => (
+                  <RoomUser key={user.id} user={user} className="mr-2" />
+                ))}
+            </div>
           </div>
-          {isHost && <HostControls room={room} className="mt-2" />}
-          <div className="flex items-start mt-16 border-b pb-5 border-grey-medium">
-            <RoomUser user={room.creator} />
-          </div>
-          <div className="flex flex-wrap justify-start mt-10">
-            {room.activeUsers &&
-              room.activeUsers.map((user) => (
-                <RoomUser key={user.id} user={user} className="mr-2" />
-              ))}
-          </div>
+          <Chat roomId={room.id} chat={room.chat} className="ml-10 mt-10 " />
         </div>
       </div>
-      <Chat roomId={room.id} chat={room.chat} />
     </div>
   )
 }

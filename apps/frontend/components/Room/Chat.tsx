@@ -64,8 +64,8 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
 
   return (
     <div className={className}>
-      <div className="flex flex-col w-[400px] bg-grey-dark h-full rounded-2xl max-h-[900px]">
-        <div className="text-white font-bold text-xl text-center py-5 border-b-1 border-b border-grey-light">
+      <div className="flex flex-col w-[400px] bg-grey-dark rounded-2xl h-[750px]">
+        <div className="text-white font-bold text-md text-center py-3 border-b-1 border-b border-grey-light">
           Community Chat
         </div>
         <div className="text-white p-5 overflow-y-auto">
@@ -84,18 +84,24 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
           })}
           <div ref={messagesEndRef} />
         </div>
-        <div className="py-5 border-t border-t-1 border-grey-light w-full mt-auto mb-3">
+        <div className="py-4 border-t border-t-1 border-grey-light w-full mt-auto">
           <div className="flex justify-center items-center content-center">
             <input
               type="text"
-              // disabled={loading}
+              disabled={authUser ? false : true}
               maxLength={250}
               minLength={1}
               onChange={handleCreateChatMessage}
-              placeholder={`${loading ? 'Hold on...' : 'Send a message'}`}
+              placeholder={`${
+                loading
+                  ? 'Hold on...'
+                  : !authUser
+                  ? 'Login to chat'
+                  : 'Send a message'
+              }`}
               onKeyDown={sendChatMessage}
               value={chatMessage}
-              className="p-2 bg-grey-medium text-grey-light rounded-2xl w-full mx-10 h-12"
+              className="p-3 bg-grey-medium text-grey-light rounded-2xl w-full text-base mx-10 h-10"
             />
           </div>
         </div>

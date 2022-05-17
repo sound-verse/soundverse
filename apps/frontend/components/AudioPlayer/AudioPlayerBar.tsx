@@ -22,6 +22,7 @@ const formWaveSurferOptions = (ref) => ({
   normalize: true,
   barWidth: 1,
   barGap: 1,
+  backend: 'MediaElement',
 })
 
 export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
@@ -293,11 +294,12 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
       {currentTrack.isLoading && (
         <div
           className={cn(
-            'flex self-center items-center justify-center p-5 m-4 border-none',
-            styles.playbar
+            styles.playbar,
+            'flex self-center items-center justify-center !bg-transparent text-white'
           )}
         >
-          <Bars color="#7A64FF" height={30} width={30} />
+          <Bars color="#7A64FF" height={30} width={30} />{' '}
+          <span className="ml-2">Loading wave form</span>
         </div>
       )}
     </div>
