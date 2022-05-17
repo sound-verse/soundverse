@@ -15,10 +15,9 @@ const formWaveSurferOptions = (ref) => ({
   waveColor: 'white',
   progressColor: '#8E65FF',
   cursorColor: '#8E65FF',
-  responsive: true,
+  // responsive: true,
   height: 50,
   pixelRatio: 1,
-  partialRender: false,
   normalize: true,
   barWidth: 1,
   barGap: 1,
@@ -85,12 +84,11 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
     if (!currentTrack.url) {
       return
     }
-    setCurrentTrack({ isLoading: true })
-    if (!wavesurfer.current) {
-      create(currentTrack.url)
-    } else {
-      wavesurfer.current.load(currentTrack.url)
+    if (wavesurfer.current) {
+      wavesurfer.current.destroy()
     }
+    setCurrentTrack({ isLoading: true })
+    create(currentTrack.url)
   }, [currentTrack.url])
 
   const create = async (url: string) => {
@@ -98,6 +96,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
       WavesurferLibrary.current = await (await import('wavesurfer.js')).default
     }
     const options = formWaveSurferOptions(waveformRef.current)
+    console.log(currentTrack.isRoomPlayer)
     wavesurfer.current = await WavesurferLibrary.current.create({
       ...options,
       ...(currentTrack.isRoomPlayer && { interact: false }),
@@ -109,6 +108,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
         setCurrentTrack({
           isPlaying: true,
         })
+        wavesurfer.current.play()
       }
     })
 
