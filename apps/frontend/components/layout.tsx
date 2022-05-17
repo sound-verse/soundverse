@@ -12,8 +12,9 @@ export default function Layout({ children }) {
 
   if (showMobile) {
     return (
-      <div className="text-white flex items-center justify-center h-screen">
-        This page supports desktop only currently.
+      <div className="text-white flex items-center justify-center h-screen p-10">
+        At the moment we are supporting desktop experience only. Mobile
+        experience is currently under development.
       </div>
     )
   }
