@@ -4,6 +4,8 @@ import { useAuthContext } from '../../context/AuthContext'
 import { useChat } from '../../hooks/rooms/useChat'
 import SoundCard from '../marketplace/SoundCard'
 import { ProfileName } from '../profile'
+import cn from 'classnames'
+import s from './Chat.module.css'
 
 type ChatProps = {
   className?: string
@@ -63,12 +65,22 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
   }
 
   return (
-    <div className={className}>
-      <div className="flex flex-col w-[400px] bg-grey-dark rounded-2xl h-[750px]">
-        <div className="text-white font-bold text-md text-center py-3 border-b-1 border-b border-grey-light">
+    <div className={cn(s.root, '', className)}>
+      <div className="flex flex-col h-screen w-[400px] ">
+        <div
+          className={cn(
+            s.bgDark,
+            'text-white font-bold text-md text-center py-4 border-b-1 border-b border-grey-light bg-grey-dark pt-7'
+          )}
+        >
           {roomId === '' ? 'Community' : 'Room'} Chat
         </div>
-        <div className="text-white p-5 overflow-y-auto">
+        <div
+          className={cn(
+            s.bgDark,
+            'text-white p-5 overflow-y-auto bg-grey-dark h-full'
+          )}
+        >
           {userChat.map((chatMessage, key) => {
             return (
               <div key={key}>
@@ -84,8 +96,17 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
           })}
           <div ref={messagesEndRef} />
         </div>
-        <div className="py-4 border-t border-t-1 border-grey-light w-full mt-auto">
-          <div className="flex justify-center items-center content-center">
+        <div
+          className={cn(
+            s.bgDark,
+            'py-4 border-t border-t-1 border-grey-light w-full mt-auto mb-52 bg-grey-dark '
+          )}
+        >
+          <div
+            className={cn(
+              'flex justify-center items-center content-center bg-grey-dark pt-5 pb-5'
+            )}
+          >
             <input
               type="text"
               disabled={authUser ? false : true}

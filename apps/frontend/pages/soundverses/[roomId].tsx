@@ -158,7 +158,9 @@ export default function Soundverse() {
         <title>Soundverse </title>
       </Head>
 
-      <Layout>{room && <SoundverseRoom room={room} />}</Layout>
+      <div className="p-10 w-full h-full">
+        {room && <SoundverseRoom room={room} />}
+      </div>
       <Modal
         isOpen={loading}
         className="flex justify-center items-center h-full backdrop-blur-sm"

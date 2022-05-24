@@ -74,7 +74,11 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
                 ))}
             </div>
           </div>
-          <Chat roomId={room.id} chat={room.chat} className="ml-10 mt-10 " />
+          <Chat
+            roomId={room.id}
+            chat={room.chat}
+            className="-mr-20 ml-10 -mt-40 "
+          />
         </div>
       </div>
     </div>

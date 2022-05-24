@@ -19,9 +19,9 @@ export default function Layout({ children }) {
     )
   }
   return (
-    <div>
+    <div className="mx-auto sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl 2xl:max-w-screen-2xl">
       <Header />
-      <div className="w-full p-10 mx-auto">{children}</div>
+      <div className="p-10">{children}</div>
     </div>
   )
 }

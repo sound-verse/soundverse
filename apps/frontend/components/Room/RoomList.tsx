@@ -25,13 +25,13 @@ export const RoomList: FC<RoomListProps> = ({ rooms }) => {
   )
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-between">
       {!rooms.length ? (
-        <div className="flex mt-40 mr-40 justify-center text-white text-1xl">
+        <div className="flex mt-40 justify-center text-white text-1xl mx-auto">
           No rooms active yet, stay tuned!
         </div>
       ) : (
-        <div className="flex flex-col">
+        <div className="flex flex-col ">
           <div className="text-white font-bold text-2xl">Soundverses</div>
           {rooms.map((room) => (
             <RoomListElement room={room} key={room.id} />
@@ -39,7 +39,11 @@ export const RoomList: FC<RoomListProps> = ({ rooms }) => {
         </div>
       )}
       {masterRoom?.room && (
-        <Chat roomId={''} chat={masterRoom.room.chat} className="mt-12 ml-10" />
+        <Chat
+          roomId={''}
+          chat={masterRoom.room.chat}
+          className="-mt-12 -mr-10"
+        />
       )}
     </div>
   )
