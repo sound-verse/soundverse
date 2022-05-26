@@ -25,6 +25,8 @@
   },
   "dependencies": {
     "@metamask/eth-sig-util": "^4.0.0",
+    "@metamask/onboarding": "^1.0.1",
+    "@pangolindex/web3-react-injected-connector": "^1.0.1",
     "@types/amqplib": "^0.8.2",
     "amqplib": "^0.8.0"
   }
