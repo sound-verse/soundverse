@@ -40,4 +40,4 @@ Now you're ready to go. Happy coding.
 
 The frontend is accessable via http://localhost:3000
 
-Access the Grahql playground with http://localhost:8001/graphql
+Access the Grahql playground with http://localhost:8001/graphql 
