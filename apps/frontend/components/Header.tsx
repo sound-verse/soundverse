@@ -15,9 +15,6 @@ import MetaMaskOnboarding from '@metamask/onboarding'
 import { InjectedConnector } from '@pangolindex/web3-react-injected-connector'
 import { POLYGON_TESTNET_PARAMS } from './constants'
 
-const ONBOARD_TEXT = 'Click here to install MetaMask!'
-const CONNECT_WALLET = 'Connect Wallet'
-
 declare var window: any
 
 const abstractConnectorArgs = {
