@@ -31,12 +31,11 @@ export const RoomList: FC<RoomListProps> = ({ rooms }) => {
           No rooms active yet, stay tuned!
         </div>
       ) : (
-        <div className="flex flex-col">
+        <div className="flex flex-col w-full mr-96">
           <div className="text-white font-bold text-2xl">Soundverses</div>
           {rooms.map((room) => (
             <RoomListElement room={room} key={room.id} />
           ))}
-          <div className="h-[800px]"></div>
         </div>
       )}
       {masterRoom?.room?.chat && (

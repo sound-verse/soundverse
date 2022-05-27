@@ -2,10 +2,8 @@
   border-radius: 1.5rem;
   margin-top: 1.25rem;
   margin-bottom: 1.25rem;
-  margin-left: auto;
-  margin-right: auto;
-  height: 270px;
-  width: 650px;
+  height: 285px;
+  width: 100%;
   background: #272727;
   box-shadow: 1px 1px 4px #0f0f0f, -0.5px -0.5px 1px #656262;
 }

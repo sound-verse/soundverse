@@ -18,7 +18,7 @@ import { POLYGON_TESTNET_PARAMS } from './constants'
 declare var window: any
 
 const abstractConnectorArgs = {
-  supportedChainIds: [137, 80001]
+  supportedChainIds: [137, 80001],
 }
 
 const injected: InjectedConnector = new InjectedConnector(abstractConnectorArgs)
@@ -49,17 +49,24 @@ const Header = ({ className = '' }) => {
     try {
       const provider = await injected.getProvider()
       // rpc request to switch chain to an ethereum compatible chain
-      await provider.request({ method: 'wallet_addEthereumChain', params: [POLYGON_TESTNET_PARAMS] })
+      await provider.request({
+        method: 'wallet_addEthereumChain',
+        params: [POLYGON_TESTNET_PARAMS],
+      })
     } catch (e) {
-      setFlashMsg('Failed to switch to Polygon chain, Please check your internet connect reconnect again')
+      setFlashMsg(
+        'Failed to switch to Polygon chain, Please check your internet connect reconnect again'
+      )
       console.log(e)
     }
   }
-  
+
   const onboard = async () => {
     if (MetaMaskOnboarding.isMetaMaskInstalled()) {
       try {
-        let accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
+        let accounts = await window.ethereum.request({
+          method: 'eth_requestAccounts',
+        })
         addPolygonNetwork()
       } catch (e) {
         console.log(e)
@@ -77,7 +84,7 @@ const Header = ({ className = '' }) => {
   }, [authUser])
 
   return (
-    <div className={cn(className, styles.headerWrapper)}>
+    <div className={cn(styles.headerWrapper, className)}>
       <Toaster position="top-right" />
       <div className={styles.headerWrapperToo}>
         <div className={styles.logo}>
@@ -126,20 +133,19 @@ const Header = ({ className = '' }) => {
 
         <div className={styles.headerSpacer} />
 
-        <Link href="/create" passHref>
-          <p className={styles.marketplaceLink}>Create</p>
+        <Link href="/mint" passHref>
+          <p className={styles.marketplaceLink}>Mint</p>
         </Link>
 
         <div className={styles.headerSpacer} />
 
-        <Link href="/my-library" passHref>
-          <p className={styles.marketplaceLink}>Library</p>
+        <Link href="/launch" passHref>
+          <p className={styles.marketplaceLink}>Launch</p>
         </Link>
 
         <div className={styles.headerSpacer} />
 
         <div>
-
           <button
             className={styles.connectButton}
             onClick={() => {

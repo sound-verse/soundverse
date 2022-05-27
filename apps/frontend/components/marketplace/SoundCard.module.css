@@ -5,7 +5,7 @@
 }
 
 .soundCardHeaderTop {
-  @apply border-2 rounded-t-2xl rounded-tr-2xl p-3 pl-4 h-4 pb-4 relative text-black;
+  @apply border-2 rounded-t-2xl rounded-tr-2xl p-1 pl-4 h-4 pb-4 relative text-black;
   clip-path: polygon(0 0, 45% 0, 55% 100%, 0% 100%);
   background-color: #ffef64;
   border-color: #ffef64;
@@ -27,7 +27,7 @@
 }
 
 .mplaceImage {
-  @apply border-l border-r border-grey-medium;
+  @apply border-l border-r border-grey-medium cursor-pointer;
   z-index: 50;
   position: relative;
   align-self: center;

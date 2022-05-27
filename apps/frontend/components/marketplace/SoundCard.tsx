@@ -92,12 +92,16 @@ function SoundCard({
           </div>
         </a>
       </Link>
-      <div className={styles.mplaceImage}>
-        <div className={styles.blur}>
-          <Image src={nft.filePictureUrl} layout="fill" objectFit="cover" />
+      <Link
+        href={`/${nftType === NftType.Master ? 'master' : 'license'}/${nft.id}`}
+      >
+        <div className={styles.mplaceImage}>
+          <div className={styles.blur}>
+            <Image src={nft.filePictureUrl} layout="fill" objectFit="cover" />
+          </div>
+          <Image src={nft.filePictureUrl} layout="fill" objectFit="contain" />
         </div>
-        <Image src={nft.filePictureUrl} layout="fill" objectFit="contain" />
-      </div>
+      </Link>
       {showAudioBar && (
         <div className={styles.soundCardAudio} onClick={handleMusicClick}>
           <Image src="/img/soundwave.svg" objectFit="contain" layout="fill" />

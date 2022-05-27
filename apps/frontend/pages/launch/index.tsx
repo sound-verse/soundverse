@@ -20,7 +20,7 @@ import Modal from 'react-modal'
 import { Bars } from 'react-loader-spinner'
 import { useRouter } from 'next/router'
 
-export default function MyLibrary() {
+export default function Launch() {
   const { authUser } = useAuthContext()
   const [showLibrary, setShowLibrary] = useState<boolean>(false)
   const [userLicenseNfts, setLicenseNfts] = useState<Nft[]>([])

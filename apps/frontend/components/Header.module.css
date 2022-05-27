@@ -1,7 +1,7 @@
 .headerWrapper {
-  @apply flex items-center justify-center;
+  @apply sticky flex items-center justify-center;
   z-index: 2;
-  position: relative;
+  top: 0;
   width: 100%;
 }
 .headerWrapperToo {
