@@ -2,6 +2,7 @@
   @apply flex flex-col rounded-xl text-white;
   width: 240px;
   height: 350px;
+  z-index: 1;
 }
 
 .soundCardHeaderTop {
