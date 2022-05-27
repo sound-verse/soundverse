@@ -1,5 +1,5 @@
 .root {
-  @apply relative w-[400px];
+  @apply w-[400px];
 }
 
 .bgDark {

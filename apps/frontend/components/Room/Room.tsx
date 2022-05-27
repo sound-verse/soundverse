@@ -28,12 +28,13 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
     router.push('/soundverses')
   }
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center relative">
       <Playlist
         playlistItems={room.playlistItems}
         currentTrack={room.currentTrack}
+        className="mt-20"
       />
-      <div className="flex flex-col mr-10 ml-10 w-full  max-w-[2000px]">
+      <div className="flex flex-col mr-10 ml-10 w-full">
         <div className="mb-10">
           <Button
             className={styles.closeButton}
@@ -45,7 +46,7 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
         <div className="text-white font-bold text-xl">
           Soundverse #{room.id.substring(room.id.length - 4)}
         </div>
-        <div className="flex justify-center items-start">
+        <div className="flex justify-center items-start max-w-[560px]">
           <div className="rounded-3xl bg-grey-dark p-5 mt-10 flex flex-col w-full">
             <div className="flex justify-between">
               <div className="text-grey-light flex">
@@ -74,12 +75,10 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
                 ))}
             </div>
           </div>
-          <Chat
-            roomId={room.id}
-            chat={room.chat}
-            className="-mr-20 ml-10 -mt-40 "
-          />
         </div>
+      </div>
+      <div className="absolute right-[360px]">
+        <Chat roomId={room.id} chat={room.chat} className="fixed -mt-9" />
       </div>
     </div>
   )

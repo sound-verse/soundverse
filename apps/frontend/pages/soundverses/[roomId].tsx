@@ -158,44 +158,46 @@ export default function Soundverse() {
         <title>Soundverse </title>
       </Head>
 
-      <div className="p-10 w-full h-full">
-        {room && <SoundverseRoom room={room} />}
-      </div>
-      <Modal
-        isOpen={loading}
-        className="flex justify-center items-center h-full backdrop-blur-sm"
-      >
-        <div className="w-1/2 h-1/2 rounded-3xl p-10 bg-grey-dark flex flex-col justify-between items-center">
-          <div className="h-full w-full justify-center items-center flex flex-col">
-            <div className="text-white text-3xl font-bold mb-10">
-              Loading soundverse...
-            </div>
-            <Bars color="#7A64FF" height={80} width={80} />
-          </div>
+      <Layout>
+        <div className="w-full h-full">
+          {room && <SoundverseRoom room={room} />}
         </div>
-      </Modal>
-      <Modal
-        isOpen={showWelcomeModal}
-        className="flex justify-center items-center h-full"
-      >
-        <div className="w-1/2 h-1/2 rounded-3xl p-10 bg-grey-dark flex flex-col justify-between items-center">
-          <div className="h-full w-full justify-center items-center flex flex-col">
-            <div className="text-white text-xl font-bold mb-10">
-              {!isHost
-                ? `Welcome to the room #${room?.id?.substring(
-                    room?.id?.length - 4
-                  )}`
-                : "Welcome back host. Don't forget that the channel will close, if your not active on it."}
+        <Modal
+          isOpen={loading}
+          className="flex justify-center items-center h-full backdrop-blur-sm"
+        >
+          <div className="w-1/2 h-1/2 rounded-3xl p-10 bg-grey-dark flex flex-col justify-between items-center">
+            <div className="h-full w-full justify-center items-center flex flex-col">
+              <div className="text-white text-3xl font-bold mb-10">
+                Loading soundverse...
+              </div>
+              <Bars color="#7A64FF" height={80} width={80} />
             </div>
-            <Button
-              text={`${isHost ? 'Understood' : 'Click here to join'}`}
-              type="purple"
-              onClick={handleJoinRoom}
-              className="!text-base !px-10 py-5"
-            />
           </div>
-        </div>
-      </Modal>
+        </Modal>
+        <Modal
+          isOpen={showWelcomeModal}
+          className="flex justify-center items-center h-full"
+        >
+          <div className="w-1/2 h-1/2 rounded-3xl p-10 bg-grey-dark flex flex-col justify-between items-center">
+            <div className="h-full w-full justify-center items-center flex flex-col">
+              <div className="text-white text-xl font-bold mb-10">
+                {!isHost
+                  ? `Welcome to the room #${room?.id?.substring(
+                      room?.id?.length - 4
+                    )}`
+                  : "Welcome back host. Don't forget that the channel will close, if your not active on it."}
+              </div>
+              <Button
+                text={`${isHost ? 'Understood' : 'Click here to join'}`}
+                type="purple"
+                onClick={handleJoinRoom}
+                className="!text-base !px-10 py-5"
+              />
+            </div>
+          </div>
+        </Modal>
+      </Layout>
     </div>
   )
 }

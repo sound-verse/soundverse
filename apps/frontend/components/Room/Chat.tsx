@@ -66,11 +66,11 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
 
   return (
     <div className={cn(s.root, '', className)}>
-      <div className="flex flex-col h-screen w-[400px] ">
+      <div className="flex flex-col w-[400px] h-screen">
         <div
           className={cn(
             s.bgDark,
-            'text-white font-bold text-md text-center py-4 border-b-1 border-b border-grey-light bg-grey-dark pt-7'
+            'text-white font-bold text-md text-center py-4 border-b-1 border-b border-grey-light bg-grey-dark pt-4'
           )}
         >
           {roomId === '' ? 'Community' : 'Room'} Chat
@@ -99,7 +99,7 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
         <div
           className={cn(
             s.bgDark,
-            'py-4 border-t border-t-1 border-grey-light w-full mt-auto mb-52 bg-grey-dark '
+            'py-4 border-t border-t-1 border-grey-light w-full mt-auto mb-[172px] bg-grey-dark '
           )}
         >
           <div
