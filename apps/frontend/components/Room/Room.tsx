@@ -34,7 +34,7 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
         currentTrack={room.currentTrack}
         className="mt-20"
       />
-      <div className="flex flex-col mr-10 ml-10 w-full mr-96">
+      <div className="flex flex-col ml-10 w-full mr-96">
         <div className="mb-10">
           <Button
             className={styles.closeButton}
