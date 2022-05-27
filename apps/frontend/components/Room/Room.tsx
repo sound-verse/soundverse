@@ -34,7 +34,7 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
         currentTrack={room.currentTrack}
         className="mt-20"
       />
-      <div className="flex flex-col mr-10 ml-10 w-full">
+      <div className="flex flex-col mr-10 ml-10 w-full mr-96">
         <div className="mb-10">
           <Button
             className={styles.closeButton}
@@ -46,7 +46,7 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
         <div className="text-white font-bold text-xl">
           Soundverse #{room.id.substring(room.id.length - 4)}
         </div>
-        <div className="flex justify-center items-start max-w-[540px]">
+        <div className="flex justify-center items-start w-full">
           <div className="rounded-3xl bg-grey-dark p-5 mt-10 flex flex-col w-full">
             <div className="flex justify-between">
               <div className="text-grey-light flex">
