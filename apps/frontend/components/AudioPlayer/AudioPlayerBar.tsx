@@ -74,6 +74,8 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
     }
     if (currentTrack.isPlaying) {
       wavesurfer.current.play()
+      wavesurfer.current.setMute(currentTrack.mute)
+      wavesurfer.current.setVolume(currentTrack.volume)
       setCurrentTrack({ visible: true })
     } else {
       wavesurfer.current.pause()
