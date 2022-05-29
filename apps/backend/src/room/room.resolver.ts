@@ -21,6 +21,8 @@ import { UpdateCurrentSongInput } from './dto/input/update-current-song.input';
 import { CreateChatMessageInput } from './dto/input/create-chat-message.input';
 
 export const ROOM_UPDATED_EVENT = 'roomUpdated';
+export const ROOMS_UPDATED_EVENT = 'roomsUpdated';
+export const TEST_EVENT = 'testEvent';
 
 @Resolver(() => Room)
 export class RoomResolver {
@@ -38,6 +40,8 @@ export class RoomResolver {
     @Args('createRoomInput') createRoomInput: CreateRoomInput,
   ) {
     const newRoom = await this.roomService.createRoom(createRoomInput, user);
+    const rooms = await this.roomService.getActiveRooms();
+    await this.pubSub.publish(ROOMS_UPDATED_EVENT, { roomsUpdated: rooms });
     return newRoom;
   }
 
@@ -116,40 +120,14 @@ export class RoomResolver {
     return await this.roomService.createChatMessage(user, createChatMessageInput);
   }
 
-  @Subscription((returns) => Room, {
+  @Subscription(() => [Room])
+  roomsUpdated() {
+    return this.pubSub.asyncIterator(ROOMS_UPDATED_EVENT);
+  }
+
+  @Subscription(() => Room, {
     filter: (payload, variables) => {
-      return payload?.roomUpdated?._id === variables?.roomId;
-    },
-    resolve: async function (this: RoomResolver, value) {
-      if (!value.roomUpdated?.currentTrack) {
-        return;
-      }
-      const room = value.roomUpdated;
-      const licenseOwnersUser = await this.userService.findUserByIds(
-        room.currentTrack.nft.licenseOwners.map((licenseOwner) => licenseOwner.user),
-      );
-
-      const licenseOwners = licenseOwnersUser.map((licenseOwnerUser) => {
-        const owner = room.currentTrack.nft.licenseOwners.find(
-          (licenseOwner) => licenseOwner.user.toString() === licenseOwnerUser._id.toString(),
-        );
-
-        return {
-          user: licenseOwnerUser,
-          supply: owner.supply,
-        };
-      });
-
-      return {
-        ...room,
-        currentTrack: {
-          ...room.currentTrack,
-          nft: {
-            ...room.currentTrack.nft,
-            licenseOwners,
-          },
-        },
-      };
+      return payload?.roomUpdated?._id.toString() === variables?.roomId;
     },
   })
   roomUpdated(@Args('roomId') roomId: string) {

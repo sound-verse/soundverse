@@ -42,7 +42,7 @@ export class SellingResolver {
 
     return buyersUser.map((buyerUser) => ({
       user: buyerUser,
-      supply: selling.buyers.find((buyer) => buyer.user.toString() === buyerUser._id.toString()).supply,
+      supply: selling.buyers.find((buyer) => buyer?.user?.toString() === buyerUser?._id?.toString()).supply,
     }));
   }
 }

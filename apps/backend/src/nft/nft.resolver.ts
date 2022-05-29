@@ -144,12 +144,12 @@ export class NftResolver {
 
     return licenseOwnersUser.map((licenseOwnerUser) => {
       const owner = nft.licenseOwners.find(
-        (licenseOwner) => licenseOwner.user._id.toString() === licenseOwnerUser._id.toString(),
+        (licenseOwner) => licenseOwner?.user?._id?.toString() === licenseOwnerUser?._id?.toString(),
       );
 
       return {
         user: licenseOwnerUser,
-        supply: owner.supply,
+        supply: owner?.supply ?? 0,
       };
     });
   }

@@ -1,4 +1,4 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
 import { NftType } from '../../../common/enums/nftType.enum';
 import { BaseModel } from '../../../graphql/types/base-model.types';
 import { Nft } from '../../../nft/dto/output/nft.output';
@@ -12,7 +12,7 @@ export class PlaylistItem {
   @Field(() => NftType, { nullable: true })
   nftType?: NftType;
 
-  @Field(() => Int, { nullable: true })
+  @Field(() => Float, { nullable: true })
   currentPosition?: number;
 }
 

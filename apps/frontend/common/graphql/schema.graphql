@@ -137,7 +137,7 @@ input NftsFilter {
 }
 
 type PlaylistItem {
-  currentPosition: Int
+  currentPosition: Float
   nft: Nft
   nftType: NftType
 }
@@ -218,6 +218,7 @@ input SellingVoucherInput {
 
 type Subscription {
   roomUpdated(roomId: String!): Room!
+  roomsUpdated: [Room!]!
 }
 
 input UpdateCurrentSongInput {

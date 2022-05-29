@@ -13,7 +13,7 @@ import { UserService } from '../user/user.service';
 import { Interval } from '@nestjs/schedule';
 import { PUB_SUB } from '../core/pubSub.module';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
-import { ROOM_UPDATED_EVENT } from './room.resolver';
+import { ROOMS_UPDATED_EVENT, ROOM_UPDATED_EVENT } from './room.resolver';
 import { UpdateCurrentSongInput } from './dto/input/update-current-song.input';
 import { CreateChatMessageInput } from './dto/input/create-chat-message.input';
 
@@ -221,14 +221,47 @@ export class RoomService {
     if (room.chat.length >= 100) {
       await this.roomModel.updateOne({ _id: room._id }, { $pop: { chat: -1 } });
     }
-    return await this.roomModel.findOneAndUpdate(
+    const updatedRoom = await this.roomModel.findOneAndUpdate(
       { _id: room._id },
       { $addToSet: { chat: { sender: user, message: createChatMessageInput.message } } },
+      { new: true },
     );
+
+    await this.pubSub.publish(ROOM_UPDATED_EVENT, { roomUpdated: updatedRoom });
+
+    return updatedRoom;
+  }
+
+  async populateRoom(room: Room): Promise<RoomOutput> {
+    const licenseOwnersUser = await this.userService.findUserByIds(
+      room.currentTrack.nft.licenseOwners.map((licenseOwner) => licenseOwner.user),
+    );
+
+    const licenseOwners = licenseOwnersUser.map((licenseOwnerUser) => {
+      const owner = room.currentTrack.nft.licenseOwners.find(
+        (licenseOwner) => licenseOwner.user.toString() === licenseOwnerUser._id.toString(),
+      );
+
+      return {
+        user: licenseOwnerUser,
+        supply: owner.supply,
+      };
+    });
+
+    return {
+      ...room,
+      currentTrack: {
+        ...room.currentTrack,
+        nft: {
+          ...room.currentTrack.nft,
+          licenseOwners,
+        },
+      },
+    } as any;
   }
 
   @Interval(5 * 60 * 1000)
-  async removeDeadRooms() {
+  async removeDeadRooms(): Promise<void> {
     const expirationTime = 5 * 60 * 1000; // 5 Minutes
     const expiredRooms = await this.roomModel.find({
       isMasterRoom: false,
@@ -243,5 +276,8 @@ export class RoomService {
         await this.pubSub.publish(ROOM_UPDATED_EVENT, { roomUpdated: room });
       }),
     );
+
+    const rooms = await this.getActiveRooms();
+    await this.pubSub.publish(ROOMS_UPDATED_EVENT, { roomsUpdated: rooms });
   }
 }

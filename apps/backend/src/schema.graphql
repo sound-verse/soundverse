@@ -79,7 +79,7 @@ type Nft {
 type PlaylistItem {
   nft: Nft
   nftType: NftType
-  currentPosition: Int
+  currentPosition: Float
 }
 
 enum NftType {
@@ -264,5 +264,6 @@ input CreateChatMessageInput {
 }
 
 type Subscription {
+  roomsUpdated: [Room!]!
   roomUpdated(roomId: String!): Room!
 }

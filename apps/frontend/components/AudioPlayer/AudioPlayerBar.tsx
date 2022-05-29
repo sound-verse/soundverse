@@ -29,6 +29,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
   const wavesurfer = useRef(null)
   const WavesurferLibrary = useRef(null)
   const { setCurrentTrack, currentTrack } = useAudioContext()
+  const [playerIsReady, setPlayerIsReady] = useState(false)
 
   const gotoTrackPosition = (trackPosition: number) => {
     if (!wavesurfer.current || trackPosition === 0) {
@@ -47,12 +48,12 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
     }
   }, [])
 
-  useEffect(() => {
-    if (!wavesurfer.current) {
-      return
-    }
-    gotoTrackPosition(currentTrack.currentPosition)
-  }, [currentTrack.currentPosition])
+  // useEffect(() => {
+  //   if (!wavesurfer.current) {
+  //     return
+  //   }
+  //   gotoTrackPosition(currentTrack.currentPosition)
+  // }, [currentTrack.currentPosition])
 
   useEffect(() => {
     if (!wavesurfer.current) {
@@ -76,11 +77,15 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
       wavesurfer.current.play()
       wavesurfer.current.setMute(currentTrack.mute)
       wavesurfer.current.setVolume(currentTrack.volume)
+      gotoTrackPosition(currentTrack.currentPosition)
       setCurrentTrack({ visible: true })
     } else {
       wavesurfer.current.pause()
     }
-  }, [currentTrack.isPlaying])
+    if (playerIsReady) {
+      setPlayerIsReady(false)
+    }
+  }, [playerIsReady])
 
   useEffect(() => {
     if (!currentTrack.url) {
@@ -109,6 +114,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
         setCurrentTrack({
           isPlaying: true,
         })
+        setPlayerIsReady(true)
         wavesurfer.current.play()
       }
     })
@@ -125,8 +131,11 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
     })
 
     wavesurfer.current.on('audioprocess', (progress) => {
-      if (progress % 10 == 0) {
-        currentTrack.onTrackProgress({ currentPosition: progress })
+      const position = progress.toFixed(2)
+      if (position % 1 == 0 && position > 0) {
+        currentTrack.onTrackProgress({
+          currentPosition: parseFloat(position),
+        })
       }
     })
   }

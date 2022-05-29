@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client'
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import { GET_ROOM } from '../../common/graphql/queries/get-room.query'
 import {
   GetRoomQuery,
@@ -7,6 +7,7 @@ import {
   Nft,
   Room,
 } from '../../common/graphql/schema.d'
+import { ROOM_UPDATED } from '../../common/graphql/subscriptions/room-updated.subscription'
 import { ModuleBg } from '../common/ModuleBg'
 import { Chat } from './Chat'
 import { RoomListElement } from './RoomListElement'
@@ -16,13 +17,26 @@ type RoomListProps = {
 }
 
 export const RoomList: FC<RoomListProps> = ({ rooms }) => {
-  const { data: masterRoom } = useQuery<GetRoomQuery, GetRoomQueryVariables>(
-    GET_ROOM,
-    {
-      pollInterval: 1000,
-      variables: { roomFilter: { isMasterRoom: true } },
+  const { data: masterRoom, subscribeToMore } = useQuery<
+    GetRoomQuery,
+    GetRoomQueryVariables
+  >(GET_ROOM, { variables: { roomFilter: { isMasterRoom: true } } })
+
+  useEffect(() => {
+    if (!masterRoom?.room) {
+      return
     }
-  )
+    subscribeToMore({
+      document: ROOM_UPDATED,
+      variables: { roomId: masterRoom.room.id },
+      updateQuery: (prev, { subscriptionData }: { subscriptionData: any }) => {
+        if (subscriptionData.data.roomUpdated) {
+          return { room: subscriptionData.data.roomUpdated }
+        }
+        return prev
+      },
+    })
+  }, [masterRoom])
 
   return (
     <div className="flex justify-between relative">

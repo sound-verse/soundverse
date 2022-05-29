@@ -1,4 +1,4 @@
-import { useLazyQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
@@ -29,18 +29,16 @@ export default function Soundverse() {
   const { authUser } = useAuthContext()
   const [roomDataSub, setRoomDataSub] = useState<Room>(null)
   const { reviveRoom } = useReviveRoom()
-  const [
-    getRoomQuery,
-    {
-      data: roomData,
-      loading: roomDataLoading,
-      called: roomQueryCalled,
-      error: roomError,
-    },
-  ] = useLazyQuery<GetRoomQuery, GetRoomQueryVariables>(GET_ROOM, {
-    pollInterval: 1000,
-  })
   const { roomId } = router.query
+  const {
+    data: roomData,
+    loading: roomDataLoading,
+    called: roomQueryCalled,
+    error: roomError,
+    subscribeToMore,
+  } = useQuery<GetRoomQuery, GetRoomQueryVariables>(GET_ROOM, {
+    variables: { roomFilter: { id: roomId?.toString() ?? '' } },
+  })
 
   const { setCurrentTrack } = useAudioContext()
   const { playNextSong, updateCurrentSong } = useHostControls()
@@ -119,7 +117,16 @@ export default function Soundverse() {
     }
     setShowWelcomeModal(true)
     setLoading(true)
-    getRoomQuery({ variables: { roomFilter: { id: roomId.toString() } } })
+    subscribeToMore({
+      document: ROOM_UPDATED,
+      variables: { roomId: roomId.toString() },
+      updateQuery: (prev, { subscriptionData }: { subscriptionData: any }) => {
+        if (subscriptionData.data.roomUpdated) {
+          return { room: subscriptionData.data.roomUpdated }
+        }
+        return prev
+      },
+    })
   }, [roomId])
 
   useEffect(() => {

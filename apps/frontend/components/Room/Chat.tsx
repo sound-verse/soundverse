@@ -50,7 +50,7 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
       chatMessage.length <= 250
     ) {
       setLoading(true)
-      setUserChat([...userChat, { message: chatMessage, sender: authUser }])
+      // setUserChat([...userChat, { message: chatMessage, sender: authUser }])
       createChatMessage({ message: chatMessage, roomId })
       setChatMessage('')
       scrollToBottom()
