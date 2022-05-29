@@ -85,7 +85,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
     if (playerIsReady) {
       setPlayerIsReady(false)
     }
-  }, [playerIsReady])
+  }, [playerIsReady, currentTrack.isPlaying])
 
   useEffect(() => {
     if (!currentTrack.url) {
