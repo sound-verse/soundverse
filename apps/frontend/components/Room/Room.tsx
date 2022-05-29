@@ -24,7 +24,9 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
   const isHost = room.creator.id === authUser?.id
 
   const handleLeaveSoundverse = async () => {
-    await leaveRoom({ roomId: room.id })
+    if (authUser?.id) {
+      await leaveRoom({ roomId: room.id })
+    }
     router.push('/soundverses')
   }
   return (
