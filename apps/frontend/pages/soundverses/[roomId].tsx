@@ -45,7 +45,7 @@ export default function Soundverse() {
   const [showWelcomeModal, setShowWelcomeModal] = useState<boolean>(false)
   const { joinRoom } = useJoinRoom()
 
-  const isHost = roomData?.room?.creator?.id === authUser?.id
+  const isHost = roomData?.room?.creator?.id === (authUser?.id ?? '')
 
   const playCurrentTrack = () => {
     if (room.currentTrack) {
@@ -75,7 +75,9 @@ export default function Soundverse() {
   }
 
   const handleJoinRoom = () => {
-    joinRoom({ roomId: room.id })
+    if (authUser?.id) {
+      joinRoom({ roomId: room.id })
+    }
     playCurrentTrack()
     setShowWelcomeModal(false)
   }
@@ -147,16 +149,6 @@ export default function Soundverse() {
 
   if (!room && !roomDataLoading && roomId && roomQueryCalled) {
     return <Custom404 />
-  }
-
-  if (!authUser && !roomDataLoading && roomId && roomQueryCalled) {
-    return (
-      <Layout>
-        <div className="text-white text-2xl font-bold flex h-screen justify-center self-center items-center -mt-36">
-          Please login with your wallet to see this page.
-        </div>
-      </Layout>
-    )
   }
 
   return (

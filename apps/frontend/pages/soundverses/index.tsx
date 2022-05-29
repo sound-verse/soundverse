@@ -18,8 +18,6 @@ export default function Soudnverses() {
     GetRoomsQueryVariables
   >(GET_ROOMS, { fetchPolicy: 'network-only' })
 
-  console.log(roomsData)
-
   useEffect(() => {
     subscribeToMore({
       document: ROOMS_UPDATED,

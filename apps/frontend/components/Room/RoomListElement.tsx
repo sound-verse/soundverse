@@ -17,16 +17,8 @@ type RoomListElementProps = {
 export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
   const { joinRoom } = useJoinRoom()
   const router = useRouter()
-  const { authUser } = useAuthContext()
 
   const handleEnterSoundverse = async () => {
-    try {
-      await joinRoom({ roomId: room.id })
-    } catch {
-      toast.error('The room seems to be offline, try another one!')
-      return
-    }
-
     router.push({
       pathname: `/soundverses/${room.id}`,
     })
@@ -74,12 +66,8 @@ export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
           <div className="mt-auto ml-auto">
             <div className="flex flex-col h-full">
               <Button
-                text={`${
-                  authUser?.id
-                    ? 'Enter the Soundverse'
-                    : 'Login to enter the Soundverse'
-                }`}
-                type={`${authUser?.id ? 'purple' : 'disabled'}`}
+                text={'Enter the Soundverse'}
+                type={'purple'}
                 className={styles.enterButton}
                 onClick={handleEnterSoundverse}
               />
