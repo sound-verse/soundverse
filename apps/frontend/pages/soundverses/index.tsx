@@ -16,7 +16,9 @@ export default function Soudnverses() {
   const { data: roomsData, subscribeToMore } = useQuery<
     GetRoomsQuery,
     GetRoomsQueryVariables
-  >(GET_ROOMS)
+  >(GET_ROOMS, { fetchPolicy: 'network-only' })
+
+  console.log(roomsData)
 
   useEffect(() => {
     subscribeToMore({
