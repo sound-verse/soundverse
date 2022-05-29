@@ -99,7 +99,7 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
         <div
           className={cn(
             s.bgDark,
-            'py-4 border-t border-t-1 border-grey-light w-full mt-auto mb-[172px] bg-grey-dark '
+            'py-4 border-t border-t-1 border-grey-light w-full mt-auto mb-[157px] bg-grey-dark '
           )}
         >
           <div
