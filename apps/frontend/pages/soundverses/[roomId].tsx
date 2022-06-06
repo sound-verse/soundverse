@@ -133,6 +133,7 @@ export default function Soundverse() {
 
   useEffect(() => {
     if (!roomData?.room) {
+      router.push('/soundverses/room-closed')
       return
     }
     setRoom(roomData.room)
