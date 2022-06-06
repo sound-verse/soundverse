@@ -88,13 +88,15 @@ export default function Launch() {
     }
   }
 
-  const [getUserNfts, { data, loading, error }] = useLazyQuery<
+  const [getUserNfts, { data, loading: libraryLoading, error }] = useLazyQuery<
     GetUserNftsQuery,
     GetUserNftsQueryVariables
   >(GET_USER_NFTS)
 
   useEffect(() => {
     if (!authUser) {
+      setLicenseNfts(null)
+      setMasterNfts(null)
       return
     }
     getUserNfts()
@@ -124,7 +126,7 @@ export default function Launch() {
         <title>Launch your Soundverse</title>
       </Head>
       <Layout>
-        {!authUser && !loading ? (
+        {!authUser && !libraryLoading ? (
           <div className="flex items-center justify-center h-screen -mt-24 text-white text-1xl">
             Login with your wallet to see this page.
           </div>
@@ -226,6 +228,20 @@ export default function Launch() {
           <div className="h-full w-full justify-center items-center flex flex-col">
             <div className="text-white text-3xl font-bold mb-10">
               Creating your room...
+            </div>
+            <Bars color="#7A64FF" height={80} width={80} />
+          </div>
+        </div>
+      </Modal>
+      <Modal
+        isOpen={libraryLoading}
+        contentLabel="onRequestClose Example"
+        className="flex justify-center items-center h-full"
+      >
+        <div className="w-1/2 h-1/2 rounded-3xl p-10 bg-grey-dark flex flex-col justify-between items-center">
+          <div className="h-full w-full justify-center items-center flex flex-col">
+            <div className="text-white text-3xl font-bold mb-10">
+              Loading your library
             </div>
             <Bars color="#7A64FF" height={80} width={80} />
           </div>
