@@ -8,7 +8,7 @@ import {
   Nft,
   NftType,
 } from '../../common/graphql/schema.d'
-import { useQuery } from '@apollo/client'
+import { useLazyQuery, useQuery } from '@apollo/client'
 import { GET_USER_NFTS } from '../../common/graphql/queries/get-user-nfts.query'
 import { Heading } from '../../components/common/Heading'
 import { ModuleBg } from '../../components/common/ModuleBg'
@@ -88,10 +88,17 @@ export default function Launch() {
     }
   }
 
-  const { data, loading, error } = useQuery<
+  const [getUserNfts, { data, loading, error }] = useLazyQuery<
     GetUserNftsQuery,
     GetUserNftsQueryVariables
   >(GET_USER_NFTS)
+
+  useEffect(() => {
+    if (!authUser) {
+      return
+    }
+    getUserNfts()
+  }, [authUser, getUserNfts])
 
   useEffect(() => {
     if (!data) {
@@ -114,7 +121,7 @@ export default function Launch() {
   return (
     <div>
       <Head>
-        <title>My Library</title>
+        <title>Launch your Soundverse</title>
       </Head>
       <Layout>
         {!authUser && !loading ? (
