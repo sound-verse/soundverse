@@ -40,7 +40,7 @@ export class SellingService {
     private configService: ConfigService,
   ) {}
 
-  async getNftSellingByNftId(nftId: string | Types.ObjectId): Promise<NftSelling> {
+  async getNftSellingByNftId(nftId: Types.ObjectId): Promise<NftSelling> {
     const sellingFilter = {
       nft: nftId,
       sellingStatus: SellingStatus.OPEN,

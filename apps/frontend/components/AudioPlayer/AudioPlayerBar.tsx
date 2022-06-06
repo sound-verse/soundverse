@@ -132,7 +132,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
 
     wavesurfer.current.on('audioprocess', (progress) => {
       const position = progress.toFixed(2)
-      if (position % 1 == 0 && position > 0) {
+      if (position % 3 == 0 && position > 0) {
         currentTrack.onTrackProgress({
           currentPosition: parseFloat(position),
         })

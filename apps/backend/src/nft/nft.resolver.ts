@@ -19,6 +19,7 @@ import { NftOwner } from './dto/output/nft.output';
 import { NftSelling, SellingService } from '../selling/selling.service';
 import { UserNfts } from './dto/output/user-nfts.output';
 import { GqlAuthGuardContinue } from '../auth/gql-auth-continue.guard';
+import { Types } from 'mongoose';
 
 @Resolver(() => Nft)
 export class NftResolver {
@@ -139,7 +140,7 @@ export class NftResolver {
       return;
     }
     const licenseOwnersUser = await this.userService.findUserByIds(
-      nft.licenseOwners.map((licenseOwner) => licenseOwner.user),
+      nft.licenseOwners.map((licenseOwner) => new Types.ObjectId(licenseOwner.user)),
     );
 
     return licenseOwnersUser.map((licenseOwnerUser) => {
@@ -156,7 +157,7 @@ export class NftResolver {
 
   @ResolveField()
   async sellings(@Parent() nft: NftSchema): Promise<NftSelling> {
-    const nftSellings = await this.sellingService.getNftSellingByNftId(nft._id);
+    const nftSellings = await this.sellingService.getNftSellingByNftId(new Types.ObjectId(nft._id));
     return nftSellings;
   }
 }

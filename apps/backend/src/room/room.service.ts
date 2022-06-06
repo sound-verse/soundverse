@@ -16,6 +16,7 @@ import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { ROOMS_UPDATED_EVENT, ROOM_UPDATED_EVENT } from './room.resolver';
 import { UpdateCurrentSongInput } from './dto/input/update-current-song.input';
 import { CreateChatMessageInput } from './dto/input/create-chat-message.input';
+import { SellingService } from '../selling/selling.service';
 
 @Injectable()
 export class RoomService {
@@ -23,6 +24,7 @@ export class RoomService {
     @InjectModel(Room.name) private roomModel: Model<RoomDocument>,
     private nftService: NftService,
     private userService: UserService,
+    private sellingService: SellingService,
     @Inject(PUB_SUB) private pubSub: RedisPubSub,
   ) {}
 
@@ -233,28 +235,32 @@ export class RoomService {
   }
 
   async populateRoom(room: Room): Promise<RoomOutput> {
-    const licenseOwnersUser = await this.userService.findUserByIds(
-      room.currentTrack.nft.licenseOwners.map((licenseOwner) => licenseOwner.user),
+    const playlistItemsWithSellings = await Promise.all(
+      room.playlistItems.map((playlistItem) => {
+        const sellings = this.sellingService.getNftSellingByNftId(new Types.ObjectId(playlistItem.nft._id));
+
+        return {
+          ...playlistItem,
+          nft: {
+            ...playlistItem.nft,
+            sellings: sellings,
+          },
+        };
+      }),
     );
 
-    const licenseOwners = licenseOwnersUser.map((licenseOwnerUser) => {
-      const owner = room.currentTrack.nft.licenseOwners.find(
-        (licenseOwner) => licenseOwner.user.toString() === licenseOwnerUser._id.toString(),
-      );
-
-      return {
-        user: licenseOwnerUser,
-        supply: owner.supply,
-      };
-    });
+    const currentTrackSelling = await this.sellingService.getNftSellingByNftId(
+      new Types.ObjectId(room.currentTrack.nft._id),
+    );
 
     return {
       ...room,
+      playlistItems: playlistItemsWithSellings,
       currentTrack: {
         ...room.currentTrack,
         nft: {
           ...room.currentTrack.nft,
-          licenseOwners,
+          sellings: currentTrackSelling,
         },
       },
     } as any;
