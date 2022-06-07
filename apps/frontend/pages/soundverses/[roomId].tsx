@@ -133,18 +133,21 @@ export default function Soundverse() {
 
   useEffect(() => {
     if (!roomData?.room) {
+      return
+    }
+    if (!roomData.room.active) {
       router.push('/soundverses/room-closed')
       return
     }
     setRoom(roomData.room)
     setLoading(false)
-  }, [roomData])
+  }, [roomData, router])
 
   useEffect(() => {
     if (loading === false && roomError) {
       router.push('/soundverses/room-closed')
     }
-  }, [loading, roomError])
+  }, [loading, roomError, router])
 
   Modal.setAppElement('#__next')
 
