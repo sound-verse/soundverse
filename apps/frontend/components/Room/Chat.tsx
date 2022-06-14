@@ -21,6 +21,10 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
   const [loading, setLoading] = useState<boolean>(false)
   const messagesEndRef = useRef(null)
 
+  function generateUserColor(ethAddress) {
+    return "#" + ethAddress.substring(36,42)
+  }
+
   useEffect(() => {
     setUserChat(chat)
     scrollToBottom()
@@ -89,6 +93,7 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
                   name={chatMessage.sender.name}
                   short={true}
                   className="inline-block font-bold"
+                  color={generateUserColor(chatMessage.sender.ethAddress)}
                 />
                 : <span className="break-words">{chatMessage.message}</span>
               </div>
