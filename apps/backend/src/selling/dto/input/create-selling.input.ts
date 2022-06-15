@@ -1,27 +1,15 @@
-import { Field, InputType, Int, Float } from '@nestjs/graphql';
+import { Field, InputType, Int, Float, GraphQLTimestamp } from '@nestjs/graphql';
 
 @InputType()
-class SellingVoucherInput {
+export class SaleVoucherInput {
   @Field()
   nftContractAddress: string;
 
   @Field()
   price: string;
 
-  @Field((type) => Int)
-  sellCount: number;
-
-  @Field()
-  tokenUri: string;
-
-  @Field((type) => Int)
-  tokenId: number;
-
-  @Field((type) => Int)
+  @Field(() => Int)
   supply: number;
-
-  @Field((type) => Int)
-  maxSupply: number;
 
   @Field()
   isMaster: boolean;
@@ -32,8 +20,8 @@ class SellingVoucherInput {
   @Field()
   currency: string;
 
-  @Field((type) => Int)
-  royaltyFeeInBips: number;
+  @Field(() => GraphQLTimestamp)
+  validUntil: Date;
 }
 
 @InputType()
@@ -42,5 +30,5 @@ export class CreateSellingInput {
   nftId: string;
 
   @Field()
-  sellingVoucher: SellingVoucherInput;
+  saleVoucherInput?: SaleVoucherInput;
 }

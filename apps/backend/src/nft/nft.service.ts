@@ -30,7 +30,9 @@ export interface CreateNftInput {
   tags: string[];
   transactionHash: string;
   chainId: number;
-  royaltyFeeInBips;
+  royaltyFeeMaster: number;
+  royaltyFeeLicense: number;
+  creatorOwnerSplit: number;
 }
 
 @Injectable()
@@ -71,7 +73,9 @@ export class NftService {
         transactionHash: createNftInput.transactionHash ? createNftInput.transactionHash : '',
         chainId: createNftInput.chainId ? createNftInput.chainId : 0,
         supply: createNftInput.supply,
-        royaltyFeeInBips: createNftInput.royaltyFeeInBips,
+        royaltyFeeMaster: createNftInput.royaltyFeeMaster,
+        royaltyFeeLicense: createNftInput.royaltyFeeLicense,
+        creatorOwnerSplit: createNftInput.creatorOwnerSplit,
         masterOwner: {
           user: createNftInput.user._id,
           supply: 1,
@@ -139,10 +143,11 @@ export class NftService {
     buyerEthAddress: string,
     amount: number,
     contractAddress: string,
-    tokenId: number,
+    tokenUri: string,
     isMaster: boolean,
     chainId: number,
     transactionHash: string,
+    voucherType: 'mint_voucher' | 'sale_voucher',
   ) {
     //TODO: Bad implementation! We need to find a way, to wait for the MasterMintEvent, before tansfer event is fireing!
     await new Promise((resolve) =>
@@ -156,7 +161,7 @@ export class NftService {
         { masterContratAddress: contractAddress.toLowerCase() },
         { licenseContratAddress: contractAddress.toLowerCase() },
       ],
-      tokenId,
+      ipfsUrl: tokenUri,
       chainId,
     });
 
@@ -182,6 +187,8 @@ export class NftService {
       return supply;
     }, 0);
 
+    //TODO: What if there are more then one vouchers created for the same NFT and same seller? We need to differentiate.
+    //For now we simply allow only one open selling per nft per user per contract
     const selling = await this.sellingModel.findOne({
       nftType: isMaster ? NftType.MASTER : NftType.LICENSE,
       sellingStatus: SellingStatus.OPEN,
@@ -206,7 +213,12 @@ export class NftService {
       return supply + buyer.supply;
     }, 0);
 
-    if (selling.sellingVoucher.supply - alreadyBoughtSupply - amount < 0) {
+    if (
+      (voucherType === 'mint_voucher' ? selling.mintVoucher.supply : selling.saleVoucher.supply) -
+        alreadyBoughtSupply -
+        amount <
+      0
+    ) {
       console.log(
         `Error transferring ownership - Selling has not enough supply! FROM: ${sellerEthAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
       );
@@ -251,7 +263,12 @@ export class NftService {
     selling.buyers.push({ user: buyer._id, supply: amount, transactionHash });
     await this.sellingModel.updateOne({ _id: selling._id }, { $set: { buyers: selling.buyers } });
 
-    if (selling.sellingVoucher.supply - alreadyBoughtSupply - amount === 0) {
+    if (
+      (voucherType === 'mint_voucher' ? selling.mintVoucher.supply : selling.saleVoucher.supply) -
+        alreadyBoughtSupply -
+        amount ===
+      0
+    ) {
       await this.sellingModel.updateOne(
         { _id: selling._id },
         { $set: { sellingStatus: SellingStatus.CLOSED } },

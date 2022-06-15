@@ -17,25 +17,37 @@ type User {
   verified: Boolean
 }
 
-type SellingVoucher {
+type SaleVoucher {
   nftContractAddress: String!
   price: String!
-  sellCount: Int!
   tokenUri: String!
-  tokenId: Int!
+  supply: Int!
+  isMaster: Boolean!
+  signature: String!
+  currency: String!
+  validUntil: Float!
+}
+
+type MintVoucher {
+  price: String!
+  tokenUri: String!
   supply: Int!
   maxSupply: Int!
   isMaster: Boolean!
   signature: String!
   currency: String!
-  royaltyFeeInBips: Float!
+  royaltyFeeMaster: Int!
+  royaltyFeeLicense: Int!
+  creatorOwnerSplit: Int!
+  validUntil: Float!
 }
 
 type Selling {
   id: String!
   seller: User!
   buyers: [NftOwner!]!
-  sellingVoucher: SellingVoucher!
+  saleVoucher: SaleVoucher
+  mintVoucher: MintVoucher
   nftType: String!
   marketplaceContractAddress: String!
   sellingStatus: String!
@@ -69,7 +81,9 @@ type Nft {
   filePictureUrl: String!
   transactionHash: String
   metadata: NftMetadata!
-  royaltyFeeInBips: Float!
+  royaltyFeeMaster: Float!
+  royaltyFeeLicense: Float!
+  creatorOwnerSplit: Float!
   creator: User
   licenseOwners: [NftOwner!]
   masterOwner: NftOwner!
@@ -169,6 +183,7 @@ type Mutation {
   login(data: LoginInput!): Auth!
   createNft(NFTFile: Upload!, pictureFile: Upload!, data: NftInput!): Nft!
   unpinAll: Boolean!
+  createMintSelling(createMintSellingInput: CreateMintSellingInput!): Selling!
   createSelling(createSellingInput: CreateSellingInput!): Selling!
   createRoom(createRoomInput: CreateRoomInput!): Room!
   reviveRoom: Room!
@@ -208,7 +223,9 @@ input NftInput {
   metadata: NftMetadataInput!
   supply: Float!
   tags: [String!]!
-  royaltyFeeInBips: Int!
+  royaltyFeeMaster: Int!
+  royaltyFeeLicense: Int!
+  creatorOwnerSplit: Int!
   transactionHash: String
   chainId: Float
 }
@@ -218,23 +235,38 @@ input NftMetadataInput {
   description: String!
 }
 
-input CreateSellingInput {
+input CreateMintSellingInput {
   nftId: String!
-  sellingVoucher: SellingVoucherInput!
+  mintVoucherInput: MintVoucherInput!
 }
 
-input SellingVoucherInput {
-  nftContractAddress: String!
+input MintVoucherInput {
   price: String!
-  sellCount: Int!
-  tokenUri: String!
-  tokenId: Int!
   supply: Int!
-  maxSupply: Int!
   isMaster: Boolean!
   signature: String!
   currency: String!
-  royaltyFeeInBips: Int!
+  validUntil: Timestamp!
+}
+
+"""
+`Date` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+"""
+scalar Timestamp
+
+input CreateSellingInput {
+  nftId: String!
+  saleVoucherInput: SaleVoucherInput!
+}
+
+input SaleVoucherInput {
+  nftContractAddress: String!
+  price: String!
+  supply: Int!
+  isMaster: Boolean!
+  signature: String!
+  currency: String!
+  validUntil: Timestamp!
 }
 
 input CreateRoomInput {

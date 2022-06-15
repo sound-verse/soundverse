@@ -14,10 +14,10 @@ export class NftOwner {
 
 @ObjectType()
 export class NftSelling {
-  @Field((type) => Selling, { nullable: true })
+  @Field(() => Selling, { nullable: true })
   masterSelling?: Selling;
 
-  @Field((type) => [Selling], { nullable: true })
+  @Field(() => [Selling], { nullable: true })
   licenseSellings?: Selling[];
 }
 
@@ -63,7 +63,13 @@ export class Nft extends BaseModel {
   metadata: NftMetadata;
 
   @Field()
-  royaltyFeeInBips: number;
+  royaltyFeeMaster: number;
+
+  @Field()
+  royaltyFeeLicense: number;
+
+  @Field()
+  creatorOwnerSplit: number;
 
   @Field({ nullable: true })
   creator?: User;
