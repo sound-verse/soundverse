@@ -88,7 +88,9 @@ export class SellingService {
     if (voucher.isMaster) {
       owner = mintedNft.masterOwner;
     } else {
-      owner = mintedNft.licenseOwners.find((licenseOwner) => licenseOwner.user._id === seller._id);
+      owner = mintedNft.licenseOwners.find(
+        (licenseOwner) => licenseOwner.user._id.toString() === seller._id.toString(),
+      );
     }
     sellerSupply = owner?.supply ?? 0;
 
@@ -156,7 +158,7 @@ export class SellingService {
         supply: voucher.supply,
         isMaster: voucher.isMaster,
         currency: voucher.currency,
-        validUntil: voucher.validUntil,
+        validUntil: voucher.validUntil.getTime(),
       };
     }
 
@@ -183,27 +185,20 @@ export class SellingService {
     return { ...voucherProps, signature: voucher.signature };
   }
 
-  async unlistSelling(sellerEthAddress: string, uri: string, contractAddress: string) {
-    const seller = await this.userModel.findOne({ ethAddress: sellerEthAddress.toLowerCase() });
+  async unlistSelling(voucherSignature: string) {
     const selling = await this.sellingModel.findOne({
-      sellingStatus: SellingStatus.OPEN,
-      seller: seller._id,
       $or: [
         {
-          'saleVoucher.nftContractAddress': contractAddress.toLowerCase(),
-          'saleVoucher.tokenUri': uri,
+          'saleVoucher.signature': voucherSignature,
         },
         {
-          'mintVoucher.nftContractAddress': contractAddress.toLowerCase(),
-          'mintVoucher.tokenUri': uri,
+          'mintVoucher.signature': voucherSignature,
         },
       ],
     });
 
     if (!selling) {
-      console.log(
-        `Selling not found or already unlisted SELLER: ${sellerEthAddress} uri: ${uri} contractAddress: ${contractAddress}`,
-      );
+      console.log(`Selling not found or already unlisted voucher signature ${voucherSignature}`);
       return;
     }
 

@@ -103,8 +103,6 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
   const { buyNft, buyNftState } = useBuy()
   const { unlistNft, unlistNftState } = useUnlistSelling()
 
-  console.log(buyNftState)
-
   useEffect(() => {
     if (buyNftState.status === 'Success') {
       setShowBoughtSuccess(true)
@@ -138,8 +136,9 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
 
   const handleUnlistNft = async () => {
     await unlistNft({
-      nftType,
-      nft,
+      ...(nftType === NftType.License
+        ? { selling: authLicenseSellings[0] }
+        : { selling: authMasterSelling }),
     })
   }
 
