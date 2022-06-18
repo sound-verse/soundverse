@@ -30,14 +30,14 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
     router.push('/soundverses')
   }
   return (
-    <div className="flex justify-center relative">
+    <div className="flex justify-center relative overflow-hidden">
       <Playlist
         playlistItems={room.playlistItems}
         currentTrack={room.currentTrack}
-        className="mt-20"
+        className="mt-16"
       />
-      <div className="flex flex-col ml-10 w-full mr-96">
-        <div className="mb-10">
+      <div className="flex flex-col ml-10 w-full mr-60 text-sm">
+        <div className="mb-5">
           <Button
             className={styles.closeButton}
             text={`${isHost ? '✌️ Close' : 'Leave'} this Soundverse ✌️`}
@@ -45,13 +45,13 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
             onClick={handleLeaveSoundverse}
           />
         </div>
-        <div className="text-white font-bold text-xl">
+        <div className="text-white font-bold text-lg">
           Soundverse #{room.id.substring(room.id.length - 4)}
         </div>
         <div className="flex justify-center items-start w-full">
-          <div className="rounded-3xl bg-grey-dark p-5 mt-10 flex flex-col w-full">
+          <div className="rounded-3xl bg-grey-dark p-5 mt-5 flex flex-col w-full">
             <div className="flex justify-between">
-              <div className="text-grey-light flex">
+              <div className="text-grey-light flex text-sm">
                 Hosted by
                 {isHost ? (
                   ' you'
@@ -79,7 +79,7 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
           </div>
         </div>
       </div>
-      <div className="absolute right-[360px]">
+      <div className="absolute right-[210px]">
         <Chat roomId={room.id} chat={room.chat} className="fixed -mt-9" />
       </div>
     </div>

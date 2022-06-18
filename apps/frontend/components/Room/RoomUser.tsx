@@ -15,15 +15,15 @@ export const RoomUser: FC<RoomUserProps> = ({ user, className }) => {
         <ProfileImage
           ethAddress={user.ethAddress}
           imageUrl={user.profileImage}
-          height={18}
-          width={18}
+          height={10}
+          width={10}
         />
         <div className="text-grey-light mt-1">
           <ProfileName
             ethAddress={user.ethAddress}
             name={user.name}
             short={true}
-            className="text-sm"
+            className="text-xs"
           />
         </div>
       </div>

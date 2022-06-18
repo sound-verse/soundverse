@@ -28,6 +28,15 @@ export const ProfileNftTabs = ({
 }: ProfileNftTabsProps) => {
   const [activeTab, setActiveTab] = useState<PROFILE_TAB>(PROFILE_TAB.CREATED)
 
+  const collectedMasterNfts = ownedMasterNfts.filter(
+    (ownedMasterNft) =>
+      !createdNfts.find((cratedNft) => cratedNft.id === ownedMasterNft.id)
+  )
+  const collectedLicenseNfts = ownedLicenseNfts.filter(
+    (ownedLicenseNft) =>
+      !createdNfts.find((cratedNft) => cratedNft.id === ownedLicenseNft.id)
+  )
+
   return (
     <div className={className}>
       <div className="flex">
@@ -97,8 +106,8 @@ export const ProfileNftTabs = ({
       )}
       {activeTab === PROFILE_TAB.COLECTED && (
         <div className="grid xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 mt-16 gap-10">
-          {ownedMasterNfts &&
-            ownedMasterNfts.map((nft, key) => {
+          {collectedMasterNfts &&
+            collectedMasterNfts.map((nft, key) => {
               if (!nft.filePictureUrl) {
                 return
               }
@@ -112,8 +121,8 @@ export const ProfileNftTabs = ({
               )
             })}
 
-          {ownedLicenseNfts &&
-            ownedLicenseNfts.map((nft, key) => {
+          {collectedLicenseNfts &&
+            collectedLicenseNfts.map((nft, key) => {
               if (!nft.filePictureUrl) {
                 return
               }

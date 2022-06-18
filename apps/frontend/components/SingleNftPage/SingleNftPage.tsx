@@ -154,11 +154,11 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
         <main className="mx-auto">
           <div className="grid grid-cols-1 xl:grid-cols-4 xl:h-screen text-white">
             <div className="col-span-1">
-              <div className="flex flex-col mt-10 mb-5">
+              <div className="flex flex-col mt-5 mb-5">
                 <SoundCard className="h-full" nft={nft} nftType={nftType} />
                 {selectedSelling && nft.sellings.licenseSellings.length > 0 && (
-                  <div className="flex flex-col mt-10">
-                    <div className="font-bold w-64 text-right mb-5 text-2xl">
+                  <div className="flex flex-col mt-5">
+                    <div className="font-bold w-64 text-right mb-5 text-xl">
                       {parseFloat(
                         Web3.utils.fromWei(
                           selectedSelling.saleVoucher?.price ??
@@ -257,7 +257,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                         setSelectedSelling(undefined)
                         setShowBuyLicense(false)
                       }}
-                      className="hover:text-purple cursor-pointer text-xl mb-10"
+                      className="hover:text-purple cursor-pointer text-lg mb-10"
                     >
                       {'<- Back'}
                     </div>
@@ -272,9 +272,9 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                   </div>
                 </div>
               ) : (
-                <div className="flex flex-col m-16">
-                  <div className="flex flex-col p-10">
-                    <div className="text-white font-extrabold text-xl  font-AOCR ">
+                <div className="flex flex-col">
+                  <div className="flex flex-col mt-5">
+                    <div className="text-white font-extrabold text-lg  font-AOCR ">
                       <Link href={`/profile/${nft.creator.ethAddress}`}>
                         <a>
                           <ProfileName
@@ -288,7 +288,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                       {' - '}
                       {nft.metadata.name}
                     </div>
-                    <div className="flex justify-between items-baseline text-white border-b border-grey-medium pb-5">
+                    <div className="flex justify-between items-baseline text-white border-b border-grey-medium pb-5 text-sm">
                       <div className="mt-12">
                         Owned by: <br />
                         <br />
@@ -332,7 +332,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                       </div>
                       <div>
                         Type:{' '}
-                        <span className="font-bold">
+                        <span className="font-bold text-sm">
                           {nftType === NftType.Master ? 'Master' : 'License'}
                         </span>
                       </div>
@@ -342,7 +342,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                         ? nft.sellings.masterSelling && (
                             <div className="flex flex-col mb-10">
                               <div className="flex mb-2">
-                                <div className="text-3xl text-bolder mr-2">
+                                <div className="text-xl text-bolder mr-2">
                                   {parseFloat(
                                     Web3.utils.fromWei(
                                       nft.sellings.masterSelling.saleVoucher
@@ -352,7 +352,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                                     )
                                   ).toFixed(2)}
                                 </div>
-                                <div className="text-grey-medium text-sm">
+                                <div className="text-grey-medium text-xs">
                                   {(
                                     nft.sellings.masterSelling.saleVoucher
                                       ?.currency ??
@@ -388,7 +388,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                                   ).toUpperCase()}
                                 </div>
                               </div>
-                              <div className="text-md text-grey-light">
+                              <div className="text-sm text-grey-light">
                                 Lowest Ask
                               </div>
                             </div>
@@ -435,10 +435,10 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                     </div>
                     <div className="mt-24">
                       <div className="flex flex-col">
-                        <div className="font-extrabold text-xl uppercase font-AOCR border-b border-grey-medium pb-5">
+                        <div className="font-extrabold text-lg uppercase font-AOCR border-b border-grey-medium pb-5">
                           Details
                         </div>
-                        <div className="text-white mt-5">
+                        <div className="text-white mt-5 text-sm">
                           {nft.metadata.description}
                         </div>
                       </div>
@@ -457,14 +457,14 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
       >
         <div className="w-1/2 h-1/2 rounded-3xl p-10 bg-grey-dark flex flex-col justify-between items-center">
           <div className="h-full w-full justify-center items-center flex flex-col">
-            <div className="text-white text-3xl font-bold mb-10 text-center">
+            <div className="text-white text-2xl font-bold mb-10 text-center">
               {showBoughtSuccess && 'You successfully bought your NFT!'}
               {showUnlistedSuccess && 'You successfully unlisted your NFT!'}
             </div>
             <Button
               type="purple"
               text="Got it!"
-              className="!px-16 !py-4 text-xl"
+              className="!px-16 !py-4 text-lg"
               onClick={() => {
                 setShowBoughtSuccess(false)
                 setShowUnlistedSuccess(false)
@@ -485,7 +485,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
       >
         <div className="w-1/2 h-1/2 rounded-3xl p-10 bg-grey-dark flex flex-col justify-between items-center">
           <div className="h-full w-full justify-center items-center flex flex-col">
-            <div className="text-white text-3xl font-bold mb-10">
+            <div className="text-white text-2xl font-bold mb-10">
               Buying NFT
             </div>
             <Bars color="#7A64FF" height={80} width={80} />
