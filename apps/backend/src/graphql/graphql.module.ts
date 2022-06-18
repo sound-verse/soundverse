@@ -48,6 +48,9 @@ export interface GqlConnectionContext {
         playground: configService.get('PLAYGROUND_ENABLE') === 'true',
         autoSchemaFile: './src/schema.graphql',
         introspection: true,
+        buildSchemaOptions: {
+          dateScalarMode: 'timestamp',
+        } as any,
         context: ({ req, res, connection }: GqlContext) => {
           if (connection) return connection.context;
 

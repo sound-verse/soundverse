@@ -59,50 +59,6 @@ export class EventService implements OnApplicationBootstrap {
             );
             break;
           }
-          case EventType.TRANSFER: {
-            const args = event.args;
-            const from: string = args[0];
-            const to: string = args[1];
-            const tokenId: number = BigNumber.from(args[2]).toNumber();
-            if (from === nullAddress) {
-              return;
-            }
-            await this.nftService.changeOwner(
-              from,
-              to,
-              1,
-              event.address,
-              tokenId,
-              true,
-              event.chainId,
-              event.transactionHash,
-            );
-          }
-        }
-        break;
-      }
-      case ContractType.LICENSE: {
-        switch (eventType) {
-          case EventType.TRANSFER_SINGLE: {
-            const args = event.args;
-            const from: string = args[1];
-            const to: string = args[2];
-            const tokenId: number = BigNumber.from(args[3]).toNumber();
-            const supply: number = BigNumber.from(args[4]).toNumber();
-            if (from === nullAddress) {
-              return;
-            }
-            await this.nftService.changeOwner(
-              from,
-              to,
-              supply,
-              event.address,
-              tokenId,
-              false,
-              event.chainId,
-              event.transactionHash,
-            );
-          }
         }
         break;
       }
@@ -110,12 +66,42 @@ export class EventService implements OnApplicationBootstrap {
         switch (eventType) {
           case EventType.UNLISTED_NFT: {
             const args = event.args;
-            const tokenUri: string = args[0];
-            const contractAddress: string = args[1];
-            const caller: string = args[2];
-            await this.sellingService.unlistSelling(caller, tokenUri, contractAddress);
+            const voucherSignature: string = args[0];
+            await this.sellingService.unlistSelling(voucherSignature);
+            break;
+          }
+          case EventType.REDEEMED_MINT_VOUCHER: {
+            const args = event.args;
+            const voucherSignature: string = args[0];
+            const buyer: string = args[1];
+            const soldAmount: number = BigNumber.from(args[2]).toNumber();
+            await this.nftService.changeOwner(
+              voucherSignature,
+              buyer,
+              soldAmount,
+              event.chainId,
+              event.transactionHash,
+              'mint_voucher',
+            );
+            break;
+          }
+          case EventType.REDEEMED_SALE_VOUCHER: {
+            const args = event.args;
+            const voucherSignature: string = args[0];
+            const buyer: string = args[1];
+            const soldAmount: number = BigNumber.from(args[2]).toNumber();
+            await this.nftService.changeOwner(
+              voucherSignature,
+              buyer,
+              soldAmount,
+              event.chainId,
+              event.transactionHash,
+              'sale_voucher',
+            );
+            break;
           }
         }
+        break;
       }
     }
   }

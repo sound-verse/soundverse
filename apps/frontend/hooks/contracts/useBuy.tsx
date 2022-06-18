@@ -27,7 +27,15 @@ export const useBuy = () => {
 
   const abi = new utils.Interface(MarketContractAbi.abi)
   const contract = new Contract(marketContractAddress, abi)
-  const { state, send } = useContractFunction(contract as any, 'redeemItem')
+
+  const { state: redeemItemState, send: sendRedeemItem } = useContractFunction(
+    contract as any,
+    'redeemMintVoucher'
+  )
+  const {
+    state: redeemItemSecondarySaleState,
+    send: sendRedeemItemSecondarySale,
+  } = useContractFunction(contract as any, 'redeemSaleVoucher')
 
   useEffect(() => {
     if (buyProps) {
@@ -35,21 +43,31 @@ export const useBuy = () => {
     }
   }, [buyProps])
 
+  const isMintVoucher = buyProps?.selling?.saleVoucher ? false : true
+
   const executeBuy = async () => {
     if (!authUser || !chainId) {
       return
     }
 
     try {
-      await send(
-        authUser.ethAddress,
-        buyProps.selling.seller.ethAddress,
-        buyProps.amountToBuy,
-        buyProps.selling.sellingVoucher,
-        {
-          value: calculateServiceFees(buyProps.selling.sellingVoucher.price),
-        }
-      )
+      if (isMintVoucher) {
+        await sendRedeemItem(
+          buyProps.amountToBuy,
+          buyProps.selling.mintVoucher,
+          {
+            value: calculateServiceFees(buyProps.selling.mintVoucher.price),
+          }
+        )
+      } else {
+        await sendRedeemItemSecondarySale(
+          buyProps.amountToBuy,
+          buyProps.selling.saleVoucher,
+          {
+            value: calculateServiceFees(buyProps.selling.saleVoucher.price),
+          }
+        )
+      }
     } catch (error) {
       toast.error('Error buying your NFT!')
     }
@@ -63,5 +81,8 @@ export const useBuy = () => {
     setBuyProps(buyProps)
   }
 
-  return { buyNft, buyNftState: state }
+  return {
+    buyNft,
+    buyNftState: isMintVoucher ? redeemItemState : redeemItemSecondarySaleState,
+  }
 }

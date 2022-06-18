@@ -56,13 +56,18 @@ export type CreateChatMessageInput = {
   roomId: Scalars['String']
 }
 
+export type CreateMintSellingInput = {
+  mintVoucherInput: MintVoucherInput
+  nftId: Scalars['String']
+}
+
 export type CreateRoomInput = {
   playlistItems: Array<PlaylistItemInput>
 }
 
 export type CreateSellingInput = {
   nftId: Scalars['String']
-  sellingVoucher: SellingVoucherInput
+  saleVoucherInput: SaleVoucherInput
 }
 
 export type JoinRoomInput = {
@@ -78,9 +83,34 @@ export type LoginInput = {
   signature: Scalars['String']
 }
 
+export type MintVoucher = {
+  __typename?: 'MintVoucher'
+  creatorOwnerSplit: Scalars['Int']
+  currency: Scalars['String']
+  isMaster: Scalars['Boolean']
+  maxSupply: Scalars['Int']
+  price: Scalars['String']
+  royaltyFeeLicense: Scalars['Int']
+  royaltyFeeMaster: Scalars['Int']
+  signature: Scalars['String']
+  supply: Scalars['Int']
+  tokenUri: Scalars['String']
+  validUntil: Scalars['String']
+}
+
+export type MintVoucherInput = {
+  currency: Scalars['String']
+  isMaster: Scalars['Boolean']
+  price: Scalars['String']
+  signature: Scalars['String']
+  supply: Scalars['Int']
+  validUntil: Scalars['String']
+}
+
 export type Mutation = {
   __typename?: 'Mutation'
   createChatMessage: Room
+  createMintSelling: Selling
   createNft: Nft
   createRoom: Room
   createSelling: Selling
@@ -99,6 +129,10 @@ export type Mutation = {
 
 export type MutationCreateChatMessageArgs = {
   createChatMessageInput: CreateChatMessageInput
+}
+
+export type MutationCreateMintSellingArgs = {
+  createMintSellingInput: CreateMintSellingInput
 }
 
 export type MutationCreateNftArgs = {
@@ -147,6 +181,7 @@ export type Nft = {
   __typename?: 'Nft'
   chainId: Scalars['Int']
   creator?: Maybe<User>
+  creatorOwnerSplit: Scalars['Float']
   filePictureUrl: Scalars['String']
   fileUrl: Scalars['String']
   id: Scalars['String']
@@ -156,7 +191,8 @@ export type Nft = {
   masterContractAddress: Scalars['String']
   masterOwner: NftOwner
   metadata: NftMetadata
-  royaltyFeeInBips: Scalars['Float']
+  royaltyFeeLicense: Scalars['Float']
+  royaltyFeeMaster: Scalars['Float']
   sellings?: Maybe<NftSelling>
   supply: Scalars['Float']
   tokenId?: Maybe<Scalars['Float']>
@@ -171,8 +207,10 @@ export type NftFilter = {
 
 export type NftInput = {
   chainId?: InputMaybe<Scalars['Float']>
+  creatorOwnerSplit: Scalars['Int']
   metadata: NftMetadataInput
-  royaltyFeeInBips: Scalars['Int']
+  royaltyFeeLicense: Scalars['Int']
+  royaltyFeeMaster: Scalars['Int']
   supply: Scalars['Float']
   tags: Array<Scalars['String']>
   transactionHash?: InputMaybe<Scalars['String']>
@@ -277,45 +315,39 @@ export type Rooms = {
   rooms?: Maybe<Array<Room>>
 }
 
+export type SaleVoucher = {
+  __typename?: 'SaleVoucher'
+  currency: Scalars['String']
+  isMaster: Scalars['Boolean']
+  nftContractAddress: Scalars['String']
+  price: Scalars['String']
+  signature: Scalars['String']
+  supply: Scalars['Int']
+  tokenUri: Scalars['String']
+  validUntil: Scalars['String']
+}
+
+export type SaleVoucherInput = {
+  currency: Scalars['String']
+  isMaster: Scalars['Boolean']
+  nftContractAddress: Scalars['String']
+  price: Scalars['String']
+  signature: Scalars['String']
+  supply: Scalars['Int']
+  validUntil: Scalars['String']
+}
+
 export type Selling = {
   __typename?: 'Selling'
   buyers: Array<NftOwner>
   id: Scalars['String']
   marketplaceContractAddress: Scalars['String']
+  mintVoucher?: Maybe<MintVoucher>
   nftType: Scalars['String']
+  saleVoucher?: Maybe<SaleVoucher>
   seller: User
   sellingStatus: Scalars['String']
-  sellingVoucher: SellingVoucher
   transactionHash?: Maybe<Scalars['String']>
-}
-
-export type SellingVoucher = {
-  __typename?: 'SellingVoucher'
-  currency: Scalars['String']
-  isMaster: Scalars['Boolean']
-  maxSupply: Scalars['Int']
-  nftContractAddress: Scalars['String']
-  price: Scalars['String']
-  royaltyFeeInBips: Scalars['Float']
-  sellCount: Scalars['Int']
-  signature: Scalars['String']
-  supply: Scalars['Int']
-  tokenId: Scalars['Int']
-  tokenUri: Scalars['String']
-}
-
-export type SellingVoucherInput = {
-  currency: Scalars['String']
-  isMaster: Scalars['Boolean']
-  maxSupply: Scalars['Int']
-  nftContractAddress: Scalars['String']
-  price: Scalars['String']
-  royaltyFeeInBips: Scalars['Int']
-  sellCount: Scalars['Int']
-  signature: Scalars['String']
-  supply: Scalars['Int']
-  tokenId: Scalars['Int']
-  tokenUri: Scalars['String']
 }
 
 export type Subscription = {
@@ -404,7 +436,9 @@ export type NftFragmentFragment = {
   transactionHash?: string | null
   supply: number
   chainId: number
-  royaltyFeeInBips: number
+  royaltyFeeMaster: number
+  royaltyFeeLicense: number
+  creatorOwnerSplit: number
   masterOwner: {
     __typename?: 'NftOwner'
     supply: number
@@ -502,20 +536,31 @@ export type NftFragmentFragment = {
           verified?: boolean | null
         }
       }>
-      sellingVoucher: {
-        __typename?: 'SellingVoucher'
+      saleVoucher?: {
+        __typename?: 'SaleVoucher'
         nftContractAddress: string
         price: string
-        tokenId: number
         tokenUri: string
         isMaster: boolean
         signature: string
-        sellCount: number
+        supply: number
+        currency: string
+        validUntil: string
+      } | null
+      mintVoucher?: {
+        __typename?: 'MintVoucher'
+        price: string
+        tokenUri: string
+        isMaster: boolean
+        signature: string
         supply: number
         maxSupply: number
         currency: string
-        royaltyFeeInBips: number
-      }
+        royaltyFeeMaster: number
+        royaltyFeeLicense: number
+        creatorOwnerSplit: number
+        validUntil: string
+      } | null
     } | null
     licenseSellings?: Array<{
       __typename?: 'Selling'
@@ -558,20 +603,31 @@ export type NftFragmentFragment = {
           verified?: boolean | null
         }
       }>
-      sellingVoucher: {
-        __typename?: 'SellingVoucher'
+      saleVoucher?: {
+        __typename?: 'SaleVoucher'
         nftContractAddress: string
         price: string
-        tokenId: number
         tokenUri: string
         isMaster: boolean
         signature: string
-        sellCount: number
+        supply: number
+        currency: string
+        validUntil: string
+      } | null
+      mintVoucher?: {
+        __typename?: 'MintVoucher'
+        price: string
+        tokenUri: string
+        isMaster: boolean
+        signature: string
         supply: number
         maxSupply: number
         currency: string
-        royaltyFeeInBips: number
-      }
+        royaltyFeeMaster: number
+        royaltyFeeLicense: number
+        creatorOwnerSplit: number
+        validUntil: string
+      } | null
     }> | null
   } | null
 }
@@ -611,7 +667,9 @@ export type RoomFragmentFragment = {
       transactionHash?: string | null
       supply: number
       chainId: number
-      royaltyFeeInBips: number
+      royaltyFeeMaster: number
+      royaltyFeeLicense: number
+      creatorOwnerSplit: number
       masterOwner: {
         __typename?: 'NftOwner'
         supply: number
@@ -713,20 +771,31 @@ export type RoomFragmentFragment = {
               verified?: boolean | null
             }
           }>
-          sellingVoucher: {
-            __typename?: 'SellingVoucher'
+          saleVoucher?: {
+            __typename?: 'SaleVoucher'
             nftContractAddress: string
             price: string
-            tokenId: number
             tokenUri: string
             isMaster: boolean
             signature: string
-            sellCount: number
+            supply: number
+            currency: string
+            validUntil: string
+          } | null
+          mintVoucher?: {
+            __typename?: 'MintVoucher'
+            price: string
+            tokenUri: string
+            isMaster: boolean
+            signature: string
             supply: number
             maxSupply: number
             currency: string
-            royaltyFeeInBips: number
-          }
+            royaltyFeeMaster: number
+            royaltyFeeLicense: number
+            creatorOwnerSplit: number
+            validUntil: string
+          } | null
         } | null
         licenseSellings?: Array<{
           __typename?: 'Selling'
@@ -769,20 +838,31 @@ export type RoomFragmentFragment = {
               verified?: boolean | null
             }
           }>
-          sellingVoucher: {
-            __typename?: 'SellingVoucher'
+          saleVoucher?: {
+            __typename?: 'SaleVoucher'
             nftContractAddress: string
             price: string
-            tokenId: number
             tokenUri: string
             isMaster: boolean
             signature: string
-            sellCount: number
+            supply: number
+            currency: string
+            validUntil: string
+          } | null
+          mintVoucher?: {
+            __typename?: 'MintVoucher'
+            price: string
+            tokenUri: string
+            isMaster: boolean
+            signature: string
             supply: number
             maxSupply: number
             currency: string
-            royaltyFeeInBips: number
-          }
+            royaltyFeeMaster: number
+            royaltyFeeLicense: number
+            creatorOwnerSplit: number
+            validUntil: string
+          } | null
         }> | null
       } | null
     } | null
@@ -803,7 +883,9 @@ export type RoomFragmentFragment = {
       transactionHash?: string | null
       supply: number
       chainId: number
-      royaltyFeeInBips: number
+      royaltyFeeMaster: number
+      royaltyFeeLicense: number
+      creatorOwnerSplit: number
       masterOwner: {
         __typename?: 'NftOwner'
         supply: number
@@ -905,20 +987,31 @@ export type RoomFragmentFragment = {
               verified?: boolean | null
             }
           }>
-          sellingVoucher: {
-            __typename?: 'SellingVoucher'
+          saleVoucher?: {
+            __typename?: 'SaleVoucher'
             nftContractAddress: string
             price: string
-            tokenId: number
             tokenUri: string
             isMaster: boolean
             signature: string
-            sellCount: number
+            supply: number
+            currency: string
+            validUntil: string
+          } | null
+          mintVoucher?: {
+            __typename?: 'MintVoucher'
+            price: string
+            tokenUri: string
+            isMaster: boolean
+            signature: string
             supply: number
             maxSupply: number
             currency: string
-            royaltyFeeInBips: number
-          }
+            royaltyFeeMaster: number
+            royaltyFeeLicense: number
+            creatorOwnerSplit: number
+            validUntil: string
+          } | null
         } | null
         licenseSellings?: Array<{
           __typename?: 'Selling'
@@ -961,20 +1054,31 @@ export type RoomFragmentFragment = {
               verified?: boolean | null
             }
           }>
-          sellingVoucher: {
-            __typename?: 'SellingVoucher'
+          saleVoucher?: {
+            __typename?: 'SaleVoucher'
             nftContractAddress: string
             price: string
-            tokenId: number
             tokenUri: string
             isMaster: boolean
             signature: string
-            sellCount: number
+            supply: number
+            currency: string
+            validUntil: string
+          } | null
+          mintVoucher?: {
+            __typename?: 'MintVoucher'
+            price: string
+            tokenUri: string
+            isMaster: boolean
+            signature: string
             supply: number
             maxSupply: number
             currency: string
-            royaltyFeeInBips: number
-          }
+            royaltyFeeMaster: number
+            royaltyFeeLicense: number
+            creatorOwnerSplit: number
+            validUntil: string
+          } | null
         }> | null
       } | null
     } | null
@@ -1056,20 +1160,31 @@ export type SellingFragmentFragment = {
       verified?: boolean | null
     }
   }>
-  sellingVoucher: {
-    __typename?: 'SellingVoucher'
+  saleVoucher?: {
+    __typename?: 'SaleVoucher'
     nftContractAddress: string
     price: string
-    tokenId: number
     tokenUri: string
     isMaster: boolean
     signature: string
-    sellCount: number
+    supply: number
+    currency: string
+    validUntil: string
+  } | null
+  mintVoucher?: {
+    __typename?: 'MintVoucher'
+    price: string
+    tokenUri: string
+    isMaster: boolean
+    signature: string
     supply: number
     maxSupply: number
     currency: string
-    royaltyFeeInBips: number
-  }
+    royaltyFeeMaster: number
+    royaltyFeeLicense: number
+    creatorOwnerSplit: number
+    validUntil: string
+  } | null
 }
 
 export type UserFragmentFragment = {
@@ -1129,7 +1244,9 @@ export type CreateChatMessageMutation = {
         transactionHash?: string | null
         supply: number
         chainId: number
-        royaltyFeeInBips: number
+        royaltyFeeMaster: number
+        royaltyFeeLicense: number
+        creatorOwnerSplit: number
         masterOwner: {
           __typename?: 'NftOwner'
           supply: number
@@ -1231,20 +1348,31 @@ export type CreateChatMessageMutation = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           } | null
           licenseSellings?: Array<{
             __typename?: 'Selling'
@@ -1287,20 +1415,31 @@ export type CreateChatMessageMutation = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           }> | null
         } | null
       } | null
@@ -1321,7 +1460,9 @@ export type CreateChatMessageMutation = {
         transactionHash?: string | null
         supply: number
         chainId: number
-        royaltyFeeInBips: number
+        royaltyFeeMaster: number
+        royaltyFeeLicense: number
+        creatorOwnerSplit: number
         masterOwner: {
           __typename?: 'NftOwner'
           supply: number
@@ -1423,20 +1564,31 @@ export type CreateChatMessageMutation = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           } | null
           licenseSellings?: Array<{
             __typename?: 'Selling'
@@ -1479,20 +1631,31 @@ export type CreateChatMessageMutation = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           }> | null
         } | null
       } | null
@@ -1531,6 +1694,81 @@ export type CreateChatMessageMutation = {
         verified?: boolean | null
       }
     }> | null
+  }
+}
+
+export type CreateMintSellingMutationVariables = Exact<{
+  createMintSellingInput: CreateMintSellingInput
+}>
+
+export type CreateMintSellingMutation = {
+  __typename?: 'Mutation'
+  createMintSelling: {
+    __typename?: 'Selling'
+    id: string
+    nftType: string
+    marketplaceContractAddress: string
+    sellingStatus: string
+    transactionHash?: string | null
+    seller: {
+      __typename?: 'User'
+      id: string
+      name?: string | null
+      description?: string | null
+      ethAddress?: string | null
+      twitter?: string | null
+      instagram?: string | null
+      soundcloud?: string | null
+      discord?: string | null
+      spotify?: string | null
+      website?: string | null
+      profileImage?: string | null
+      verified?: boolean | null
+    }
+    buyers: Array<{
+      __typename?: 'NftOwner'
+      supply: number
+      user: {
+        __typename?: 'User'
+        id: string
+        name?: string | null
+        description?: string | null
+        ethAddress?: string | null
+        twitter?: string | null
+        instagram?: string | null
+        soundcloud?: string | null
+        discord?: string | null
+        spotify?: string | null
+        website?: string | null
+        profileImage?: string | null
+        verified?: boolean | null
+      }
+    }>
+    saleVoucher?: {
+      __typename?: 'SaleVoucher'
+      nftContractAddress: string
+      price: string
+      tokenUri: string
+      isMaster: boolean
+      signature: string
+      supply: number
+      currency: string
+      validUntil: string
+    } | null
+    mintVoucher?: {
+      __typename?: 'MintVoucher'
+      price: string
+      tokenUri: string
+      isMaster: boolean
+      signature: string
+      supply: number
+      maxSupply: number
+      currency: string
+      royaltyFeeMaster: number
+      royaltyFeeLicense: number
+      creatorOwnerSplit: number
+      validUntil: string
+    } | null
   }
 }
 
@@ -1575,7 +1813,9 @@ export type CreateRoomMutation = {
         transactionHash?: string | null
         supply: number
         chainId: number
-        royaltyFeeInBips: number
+        royaltyFeeMaster: number
+        royaltyFeeLicense: number
+        creatorOwnerSplit: number
         masterOwner: {
           __typename?: 'NftOwner'
           supply: number
@@ -1677,20 +1917,31 @@ export type CreateRoomMutation = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           } | null
           licenseSellings?: Array<{
             __typename?: 'Selling'
@@ -1733,20 +1984,31 @@ export type CreateRoomMutation = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           }> | null
         } | null
       } | null
@@ -1767,7 +2029,9 @@ export type CreateRoomMutation = {
         transactionHash?: string | null
         supply: number
         chainId: number
-        royaltyFeeInBips: number
+        royaltyFeeMaster: number
+        royaltyFeeLicense: number
+        creatorOwnerSplit: number
         masterOwner: {
           __typename?: 'NftOwner'
           supply: number
@@ -1869,20 +2133,31 @@ export type CreateRoomMutation = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           } | null
           licenseSellings?: Array<{
             __typename?: 'Selling'
@@ -1925,20 +2200,31 @@ export type CreateRoomMutation = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           }> | null
         } | null
       } | null
@@ -2027,20 +2313,31 @@ export type CreateSellingMutation = {
         verified?: boolean | null
       }
     }>
-    sellingVoucher: {
-      __typename?: 'SellingVoucher'
+    saleVoucher?: {
+      __typename?: 'SaleVoucher'
       nftContractAddress: string
       price: string
-      tokenId: number
       tokenUri: string
       isMaster: boolean
       signature: string
-      sellCount: number
+      supply: number
+      currency: string
+      validUntil: string
+    } | null
+    mintVoucher?: {
+      __typename?: 'MintVoucher'
+      price: string
+      tokenUri: string
+      isMaster: boolean
+      signature: string
       supply: number
       maxSupply: number
       currency: string
-      royaltyFeeInBips: number
-    }
+      royaltyFeeMaster: number
+      royaltyFeeLicense: number
+      creatorOwnerSplit: number
+      validUntil: string
+    } | null
   }
 }
 
@@ -2094,7 +2391,9 @@ export type JoinRoomMutation = {
         transactionHash?: string | null
         supply: number
         chainId: number
-        royaltyFeeInBips: number
+        royaltyFeeMaster: number
+        royaltyFeeLicense: number
+        creatorOwnerSplit: number
         masterOwner: {
           __typename?: 'NftOwner'
           supply: number
@@ -2196,20 +2495,31 @@ export type JoinRoomMutation = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           } | null
           licenseSellings?: Array<{
             __typename?: 'Selling'
@@ -2252,20 +2562,31 @@ export type JoinRoomMutation = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           }> | null
         } | null
       } | null
@@ -2286,7 +2607,9 @@ export type JoinRoomMutation = {
         transactionHash?: string | null
         supply: number
         chainId: number
-        royaltyFeeInBips: number
+        royaltyFeeMaster: number
+        royaltyFeeLicense: number
+        creatorOwnerSplit: number
         masterOwner: {
           __typename?: 'NftOwner'
           supply: number
@@ -2388,20 +2711,31 @@ export type JoinRoomMutation = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           } | null
           licenseSellings?: Array<{
             __typename?: 'Selling'
@@ -2444,20 +2778,31 @@ export type JoinRoomMutation = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           }> | null
         } | null
       } | null
@@ -2540,7 +2885,9 @@ export type LeaveRoomMutation = {
         transactionHash?: string | null
         supply: number
         chainId: number
-        royaltyFeeInBips: number
+        royaltyFeeMaster: number
+        royaltyFeeLicense: number
+        creatorOwnerSplit: number
         masterOwner: {
           __typename?: 'NftOwner'
           supply: number
@@ -2642,20 +2989,31 @@ export type LeaveRoomMutation = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           } | null
           licenseSellings?: Array<{
             __typename?: 'Selling'
@@ -2698,20 +3056,31 @@ export type LeaveRoomMutation = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           }> | null
         } | null
       } | null
@@ -2732,7 +3101,9 @@ export type LeaveRoomMutation = {
         transactionHash?: string | null
         supply: number
         chainId: number
-        royaltyFeeInBips: number
+        royaltyFeeMaster: number
+        royaltyFeeLicense: number
+        creatorOwnerSplit: number
         masterOwner: {
           __typename?: 'NftOwner'
           supply: number
@@ -2834,20 +3205,31 @@ export type LeaveRoomMutation = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           } | null
           licenseSellings?: Array<{
             __typename?: 'Selling'
@@ -2890,20 +3272,31 @@ export type LeaveRoomMutation = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           }> | null
         } | null
       } | null
@@ -2993,7 +3386,9 @@ export type NextSongMutation = {
         transactionHash?: string | null
         supply: number
         chainId: number
-        royaltyFeeInBips: number
+        royaltyFeeMaster: number
+        royaltyFeeLicense: number
+        creatorOwnerSplit: number
         masterOwner: {
           __typename?: 'NftOwner'
           supply: number
@@ -3095,20 +3490,31 @@ export type NextSongMutation = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           } | null
           licenseSellings?: Array<{
             __typename?: 'Selling'
@@ -3151,20 +3557,31 @@ export type NextSongMutation = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           }> | null
         } | null
       } | null
@@ -3185,7 +3602,9 @@ export type NextSongMutation = {
         transactionHash?: string | null
         supply: number
         chainId: number
-        royaltyFeeInBips: number
+        royaltyFeeMaster: number
+        royaltyFeeLicense: number
+        creatorOwnerSplit: number
         masterOwner: {
           __typename?: 'NftOwner'
           supply: number
@@ -3287,20 +3706,31 @@ export type NextSongMutation = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           } | null
           licenseSellings?: Array<{
             __typename?: 'Selling'
@@ -3343,20 +3773,31 @@ export type NextSongMutation = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           }> | null
         } | null
       } | null
@@ -3437,7 +3878,9 @@ export type PrevSongMutation = {
         transactionHash?: string | null
         supply: number
         chainId: number
-        royaltyFeeInBips: number
+        royaltyFeeMaster: number
+        royaltyFeeLicense: number
+        creatorOwnerSplit: number
         masterOwner: {
           __typename?: 'NftOwner'
           supply: number
@@ -3539,20 +3982,31 @@ export type PrevSongMutation = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           } | null
           licenseSellings?: Array<{
             __typename?: 'Selling'
@@ -3595,20 +4049,31 @@ export type PrevSongMutation = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           }> | null
         } | null
       } | null
@@ -3629,7 +4094,9 @@ export type PrevSongMutation = {
         transactionHash?: string | null
         supply: number
         chainId: number
-        royaltyFeeInBips: number
+        royaltyFeeMaster: number
+        royaltyFeeLicense: number
+        creatorOwnerSplit: number
         masterOwner: {
           __typename?: 'NftOwner'
           supply: number
@@ -3731,20 +4198,31 @@ export type PrevSongMutation = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           } | null
           licenseSellings?: Array<{
             __typename?: 'Selling'
@@ -3787,20 +4265,31 @@ export type PrevSongMutation = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           }> | null
         } | null
       } | null
@@ -3881,7 +4370,9 @@ export type ReviveRoomMutation = {
         transactionHash?: string | null
         supply: number
         chainId: number
-        royaltyFeeInBips: number
+        royaltyFeeMaster: number
+        royaltyFeeLicense: number
+        creatorOwnerSplit: number
         masterOwner: {
           __typename?: 'NftOwner'
           supply: number
@@ -3983,20 +4474,31 @@ export type ReviveRoomMutation = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           } | null
           licenseSellings?: Array<{
             __typename?: 'Selling'
@@ -4039,20 +4541,31 @@ export type ReviveRoomMutation = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           }> | null
         } | null
       } | null
@@ -4073,7 +4586,9 @@ export type ReviveRoomMutation = {
         transactionHash?: string | null
         supply: number
         chainId: number
-        royaltyFeeInBips: number
+        royaltyFeeMaster: number
+        royaltyFeeLicense: number
+        creatorOwnerSplit: number
         masterOwner: {
           __typename?: 'NftOwner'
           supply: number
@@ -4175,20 +4690,31 @@ export type ReviveRoomMutation = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           } | null
           licenseSellings?: Array<{
             __typename?: 'Selling'
@@ -4231,20 +4757,31 @@ export type ReviveRoomMutation = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           }> | null
         } | null
       } | null
@@ -4327,7 +4864,9 @@ export type UpdateCurrentSongMutation = {
         transactionHash?: string | null
         supply: number
         chainId: number
-        royaltyFeeInBips: number
+        royaltyFeeMaster: number
+        royaltyFeeLicense: number
+        creatorOwnerSplit: number
         masterOwner: {
           __typename?: 'NftOwner'
           supply: number
@@ -4429,20 +4968,31 @@ export type UpdateCurrentSongMutation = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           } | null
           licenseSellings?: Array<{
             __typename?: 'Selling'
@@ -4485,20 +5035,31 @@ export type UpdateCurrentSongMutation = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           }> | null
         } | null
       } | null
@@ -4519,7 +5080,9 @@ export type UpdateCurrentSongMutation = {
         transactionHash?: string | null
         supply: number
         chainId: number
-        royaltyFeeInBips: number
+        royaltyFeeMaster: number
+        royaltyFeeLicense: number
+        creatorOwnerSplit: number
         masterOwner: {
           __typename?: 'NftOwner'
           supply: number
@@ -4621,20 +5184,31 @@ export type UpdateCurrentSongMutation = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           } | null
           licenseSellings?: Array<{
             __typename?: 'Selling'
@@ -4677,20 +5251,31 @@ export type UpdateCurrentSongMutation = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           }> | null
         } | null
       } | null
@@ -4750,7 +5335,9 @@ export type GetNftQuery = {
     transactionHash?: string | null
     supply: number
     chainId: number
-    royaltyFeeInBips: number
+    royaltyFeeMaster: number
+    royaltyFeeLicense: number
+    creatorOwnerSplit: number
     masterOwner: {
       __typename?: 'NftOwner'
       supply: number
@@ -4848,20 +5435,31 @@ export type GetNftQuery = {
             verified?: boolean | null
           }
         }>
-        sellingVoucher: {
-          __typename?: 'SellingVoucher'
+        saleVoucher?: {
+          __typename?: 'SaleVoucher'
           nftContractAddress: string
           price: string
-          tokenId: number
           tokenUri: string
           isMaster: boolean
           signature: string
-          sellCount: number
+          supply: number
+          currency: string
+          validUntil: string
+        } | null
+        mintVoucher?: {
+          __typename?: 'MintVoucher'
+          price: string
+          tokenUri: string
+          isMaster: boolean
+          signature: string
           supply: number
           maxSupply: number
           currency: string
-          royaltyFeeInBips: number
-        }
+          royaltyFeeMaster: number
+          royaltyFeeLicense: number
+          creatorOwnerSplit: number
+          validUntil: string
+        } | null
       } | null
       licenseSellings?: Array<{
         __typename?: 'Selling'
@@ -4904,20 +5502,31 @@ export type GetNftQuery = {
             verified?: boolean | null
           }
         }>
-        sellingVoucher: {
-          __typename?: 'SellingVoucher'
+        saleVoucher?: {
+          __typename?: 'SaleVoucher'
           nftContractAddress: string
           price: string
-          tokenId: number
           tokenUri: string
           isMaster: boolean
           signature: string
-          sellCount: number
+          supply: number
+          currency: string
+          validUntil: string
+        } | null
+        mintVoucher?: {
+          __typename?: 'MintVoucher'
+          price: string
+          tokenUri: string
+          isMaster: boolean
+          signature: string
           supply: number
           maxSupply: number
           currency: string
-          royaltyFeeInBips: number
-        }
+          royaltyFeeMaster: number
+          royaltyFeeLicense: number
+          creatorOwnerSplit: number
+          validUntil: string
+        } | null
       }> | null
     } | null
   } | null
@@ -4943,7 +5552,9 @@ export type GetNftsQuery = {
     transactionHash?: string | null
     supply: number
     chainId: number
-    royaltyFeeInBips: number
+    royaltyFeeMaster: number
+    royaltyFeeLicense: number
+    creatorOwnerSplit: number
     masterOwner: {
       __typename?: 'NftOwner'
       supply: number
@@ -5041,20 +5652,31 @@ export type GetNftsQuery = {
             verified?: boolean | null
           }
         }>
-        sellingVoucher: {
-          __typename?: 'SellingVoucher'
+        saleVoucher?: {
+          __typename?: 'SaleVoucher'
           nftContractAddress: string
           price: string
-          tokenId: number
           tokenUri: string
           isMaster: boolean
           signature: string
-          sellCount: number
+          supply: number
+          currency: string
+          validUntil: string
+        } | null
+        mintVoucher?: {
+          __typename?: 'MintVoucher'
+          price: string
+          tokenUri: string
+          isMaster: boolean
+          signature: string
           supply: number
           maxSupply: number
           currency: string
-          royaltyFeeInBips: number
-        }
+          royaltyFeeMaster: number
+          royaltyFeeLicense: number
+          creatorOwnerSplit: number
+          validUntil: string
+        } | null
       } | null
       licenseSellings?: Array<{
         __typename?: 'Selling'
@@ -5097,20 +5719,31 @@ export type GetNftsQuery = {
             verified?: boolean | null
           }
         }>
-        sellingVoucher: {
-          __typename?: 'SellingVoucher'
+        saleVoucher?: {
+          __typename?: 'SaleVoucher'
           nftContractAddress: string
           price: string
-          tokenId: number
           tokenUri: string
           isMaster: boolean
           signature: string
-          sellCount: number
+          supply: number
+          currency: string
+          validUntil: string
+        } | null
+        mintVoucher?: {
+          __typename?: 'MintVoucher'
+          price: string
+          tokenUri: string
+          isMaster: boolean
+          signature: string
           supply: number
           maxSupply: number
           currency: string
-          royaltyFeeInBips: number
-        }
+          royaltyFeeMaster: number
+          royaltyFeeLicense: number
+          creatorOwnerSplit: number
+          validUntil: string
+        } | null
       }> | null
     } | null
   }> | null
@@ -5157,7 +5790,9 @@ export type GetRoomQuery = {
         transactionHash?: string | null
         supply: number
         chainId: number
-        royaltyFeeInBips: number
+        royaltyFeeMaster: number
+        royaltyFeeLicense: number
+        creatorOwnerSplit: number
         masterOwner: {
           __typename?: 'NftOwner'
           supply: number
@@ -5259,20 +5894,31 @@ export type GetRoomQuery = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           } | null
           licenseSellings?: Array<{
             __typename?: 'Selling'
@@ -5315,20 +5961,31 @@ export type GetRoomQuery = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           }> | null
         } | null
       } | null
@@ -5349,7 +6006,9 @@ export type GetRoomQuery = {
         transactionHash?: string | null
         supply: number
         chainId: number
-        royaltyFeeInBips: number
+        royaltyFeeMaster: number
+        royaltyFeeLicense: number
+        creatorOwnerSplit: number
         masterOwner: {
           __typename?: 'NftOwner'
           supply: number
@@ -5451,20 +6110,31 @@ export type GetRoomQuery = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           } | null
           licenseSellings?: Array<{
             __typename?: 'Selling'
@@ -5507,20 +6177,31 @@ export type GetRoomQuery = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           }> | null
         } | null
       } | null
@@ -5603,7 +6284,9 @@ export type GetRoomsQuery = {
           transactionHash?: string | null
           supply: number
           chainId: number
-          royaltyFeeInBips: number
+          royaltyFeeMaster: number
+          royaltyFeeLicense: number
+          creatorOwnerSplit: number
           masterOwner: {
             __typename?: 'NftOwner'
             supply: number
@@ -5705,20 +6388,31 @@ export type GetRoomsQuery = {
                   verified?: boolean | null
                 }
               }>
-              sellingVoucher: {
-                __typename?: 'SellingVoucher'
+              saleVoucher?: {
+                __typename?: 'SaleVoucher'
                 nftContractAddress: string
                 price: string
-                tokenId: number
                 tokenUri: string
                 isMaster: boolean
                 signature: string
-                sellCount: number
+                supply: number
+                currency: string
+                validUntil: string
+              } | null
+              mintVoucher?: {
+                __typename?: 'MintVoucher'
+                price: string
+                tokenUri: string
+                isMaster: boolean
+                signature: string
                 supply: number
                 maxSupply: number
                 currency: string
-                royaltyFeeInBips: number
-              }
+                royaltyFeeMaster: number
+                royaltyFeeLicense: number
+                creatorOwnerSplit: number
+                validUntil: string
+              } | null
             } | null
             licenseSellings?: Array<{
               __typename?: 'Selling'
@@ -5761,20 +6455,31 @@ export type GetRoomsQuery = {
                   verified?: boolean | null
                 }
               }>
-              sellingVoucher: {
-                __typename?: 'SellingVoucher'
+              saleVoucher?: {
+                __typename?: 'SaleVoucher'
                 nftContractAddress: string
                 price: string
-                tokenId: number
                 tokenUri: string
                 isMaster: boolean
                 signature: string
-                sellCount: number
+                supply: number
+                currency: string
+                validUntil: string
+              } | null
+              mintVoucher?: {
+                __typename?: 'MintVoucher'
+                price: string
+                tokenUri: string
+                isMaster: boolean
+                signature: string
                 supply: number
                 maxSupply: number
                 currency: string
-                royaltyFeeInBips: number
-              }
+                royaltyFeeMaster: number
+                royaltyFeeLicense: number
+                creatorOwnerSplit: number
+                validUntil: string
+              } | null
             }> | null
           } | null
         } | null
@@ -5795,7 +6500,9 @@ export type GetRoomsQuery = {
           transactionHash?: string | null
           supply: number
           chainId: number
-          royaltyFeeInBips: number
+          royaltyFeeMaster: number
+          royaltyFeeLicense: number
+          creatorOwnerSplit: number
           masterOwner: {
             __typename?: 'NftOwner'
             supply: number
@@ -5897,20 +6604,31 @@ export type GetRoomsQuery = {
                   verified?: boolean | null
                 }
               }>
-              sellingVoucher: {
-                __typename?: 'SellingVoucher'
+              saleVoucher?: {
+                __typename?: 'SaleVoucher'
                 nftContractAddress: string
                 price: string
-                tokenId: number
                 tokenUri: string
                 isMaster: boolean
                 signature: string
-                sellCount: number
+                supply: number
+                currency: string
+                validUntil: string
+              } | null
+              mintVoucher?: {
+                __typename?: 'MintVoucher'
+                price: string
+                tokenUri: string
+                isMaster: boolean
+                signature: string
                 supply: number
                 maxSupply: number
                 currency: string
-                royaltyFeeInBips: number
-              }
+                royaltyFeeMaster: number
+                royaltyFeeLicense: number
+                creatorOwnerSplit: number
+                validUntil: string
+              } | null
             } | null
             licenseSellings?: Array<{
               __typename?: 'Selling'
@@ -5953,20 +6671,31 @@ export type GetRoomsQuery = {
                   verified?: boolean | null
                 }
               }>
-              sellingVoucher: {
-                __typename?: 'SellingVoucher'
+              saleVoucher?: {
+                __typename?: 'SaleVoucher'
                 nftContractAddress: string
                 price: string
-                tokenId: number
                 tokenUri: string
                 isMaster: boolean
                 signature: string
-                sellCount: number
+                supply: number
+                currency: string
+                validUntil: string
+              } | null
+              mintVoucher?: {
+                __typename?: 'MintVoucher'
+                price: string
+                tokenUri: string
+                isMaster: boolean
+                signature: string
                 supply: number
                 maxSupply: number
                 currency: string
-                royaltyFeeInBips: number
-              }
+                royaltyFeeMaster: number
+                royaltyFeeLicense: number
+                creatorOwnerSplit: number
+                validUntil: string
+              } | null
             }> | null
           } | null
         } | null
@@ -6029,7 +6758,9 @@ export type GetUserNftsQuery = {
       transactionHash?: string | null
       supply: number
       chainId: number
-      royaltyFeeInBips: number
+      royaltyFeeMaster: number
+      royaltyFeeLicense: number
+      creatorOwnerSplit: number
       masterOwner: {
         __typename?: 'NftOwner'
         supply: number
@@ -6131,20 +6862,31 @@ export type GetUserNftsQuery = {
               verified?: boolean | null
             }
           }>
-          sellingVoucher: {
-            __typename?: 'SellingVoucher'
+          saleVoucher?: {
+            __typename?: 'SaleVoucher'
             nftContractAddress: string
             price: string
-            tokenId: number
             tokenUri: string
             isMaster: boolean
             signature: string
-            sellCount: number
+            supply: number
+            currency: string
+            validUntil: string
+          } | null
+          mintVoucher?: {
+            __typename?: 'MintVoucher'
+            price: string
+            tokenUri: string
+            isMaster: boolean
+            signature: string
             supply: number
             maxSupply: number
             currency: string
-            royaltyFeeInBips: number
-          }
+            royaltyFeeMaster: number
+            royaltyFeeLicense: number
+            creatorOwnerSplit: number
+            validUntil: string
+          } | null
         } | null
         licenseSellings?: Array<{
           __typename?: 'Selling'
@@ -6187,20 +6929,31 @@ export type GetUserNftsQuery = {
               verified?: boolean | null
             }
           }>
-          sellingVoucher: {
-            __typename?: 'SellingVoucher'
+          saleVoucher?: {
+            __typename?: 'SaleVoucher'
             nftContractAddress: string
             price: string
-            tokenId: number
             tokenUri: string
             isMaster: boolean
             signature: string
-            sellCount: number
+            supply: number
+            currency: string
+            validUntil: string
+          } | null
+          mintVoucher?: {
+            __typename?: 'MintVoucher'
+            price: string
+            tokenUri: string
+            isMaster: boolean
+            signature: string
             supply: number
             maxSupply: number
             currency: string
-            royaltyFeeInBips: number
-          }
+            royaltyFeeMaster: number
+            royaltyFeeLicense: number
+            creatorOwnerSplit: number
+            validUntil: string
+          } | null
         }> | null
       } | null
     }> | null
@@ -6216,7 +6969,9 @@ export type GetUserNftsQuery = {
       transactionHash?: string | null
       supply: number
       chainId: number
-      royaltyFeeInBips: number
+      royaltyFeeMaster: number
+      royaltyFeeLicense: number
+      creatorOwnerSplit: number
       masterOwner: {
         __typename?: 'NftOwner'
         supply: number
@@ -6318,20 +7073,31 @@ export type GetUserNftsQuery = {
               verified?: boolean | null
             }
           }>
-          sellingVoucher: {
-            __typename?: 'SellingVoucher'
+          saleVoucher?: {
+            __typename?: 'SaleVoucher'
             nftContractAddress: string
             price: string
-            tokenId: number
             tokenUri: string
             isMaster: boolean
             signature: string
-            sellCount: number
+            supply: number
+            currency: string
+            validUntil: string
+          } | null
+          mintVoucher?: {
+            __typename?: 'MintVoucher'
+            price: string
+            tokenUri: string
+            isMaster: boolean
+            signature: string
             supply: number
             maxSupply: number
             currency: string
-            royaltyFeeInBips: number
-          }
+            royaltyFeeMaster: number
+            royaltyFeeLicense: number
+            creatorOwnerSplit: number
+            validUntil: string
+          } | null
         } | null
         licenseSellings?: Array<{
           __typename?: 'Selling'
@@ -6374,20 +7140,31 @@ export type GetUserNftsQuery = {
               verified?: boolean | null
             }
           }>
-          sellingVoucher: {
-            __typename?: 'SellingVoucher'
+          saleVoucher?: {
+            __typename?: 'SaleVoucher'
             nftContractAddress: string
             price: string
-            tokenId: number
             tokenUri: string
             isMaster: boolean
             signature: string
-            sellCount: number
+            supply: number
+            currency: string
+            validUntil: string
+          } | null
+          mintVoucher?: {
+            __typename?: 'MintVoucher'
+            price: string
+            tokenUri: string
+            isMaster: boolean
+            signature: string
             supply: number
             maxSupply: number
             currency: string
-            royaltyFeeInBips: number
-          }
+            royaltyFeeMaster: number
+            royaltyFeeLicense: number
+            creatorOwnerSplit: number
+            validUntil: string
+          } | null
         }> | null
       } | null
     }> | null
@@ -6403,7 +7180,9 @@ export type GetUserNftsQuery = {
       transactionHash?: string | null
       supply: number
       chainId: number
-      royaltyFeeInBips: number
+      royaltyFeeMaster: number
+      royaltyFeeLicense: number
+      creatorOwnerSplit: number
       masterOwner: {
         __typename?: 'NftOwner'
         supply: number
@@ -6505,20 +7284,31 @@ export type GetUserNftsQuery = {
               verified?: boolean | null
             }
           }>
-          sellingVoucher: {
-            __typename?: 'SellingVoucher'
+          saleVoucher?: {
+            __typename?: 'SaleVoucher'
             nftContractAddress: string
             price: string
-            tokenId: number
             tokenUri: string
             isMaster: boolean
             signature: string
-            sellCount: number
+            supply: number
+            currency: string
+            validUntil: string
+          } | null
+          mintVoucher?: {
+            __typename?: 'MintVoucher'
+            price: string
+            tokenUri: string
+            isMaster: boolean
+            signature: string
             supply: number
             maxSupply: number
             currency: string
-            royaltyFeeInBips: number
-          }
+            royaltyFeeMaster: number
+            royaltyFeeLicense: number
+            creatorOwnerSplit: number
+            validUntil: string
+          } | null
         } | null
         licenseSellings?: Array<{
           __typename?: 'Selling'
@@ -6561,20 +7351,31 @@ export type GetUserNftsQuery = {
               verified?: boolean | null
             }
           }>
-          sellingVoucher: {
-            __typename?: 'SellingVoucher'
+          saleVoucher?: {
+            __typename?: 'SaleVoucher'
             nftContractAddress: string
             price: string
-            tokenId: number
             tokenUri: string
             isMaster: boolean
             signature: string
-            sellCount: number
+            supply: number
+            currency: string
+            validUntil: string
+          } | null
+          mintVoucher?: {
+            __typename?: 'MintVoucher'
+            price: string
+            tokenUri: string
+            isMaster: boolean
+            signature: string
             supply: number
             maxSupply: number
             currency: string
-            royaltyFeeInBips: number
-          }
+            royaltyFeeMaster: number
+            royaltyFeeLicense: number
+            creatorOwnerSplit: number
+            validUntil: string
+          } | null
         }> | null
       } | null
     }> | null
@@ -6590,7 +7391,9 @@ export type GetUserNftsQuery = {
       transactionHash?: string | null
       supply: number
       chainId: number
-      royaltyFeeInBips: number
+      royaltyFeeMaster: number
+      royaltyFeeLicense: number
+      creatorOwnerSplit: number
       masterOwner: {
         __typename?: 'NftOwner'
         supply: number
@@ -6692,20 +7495,31 @@ export type GetUserNftsQuery = {
               verified?: boolean | null
             }
           }>
-          sellingVoucher: {
-            __typename?: 'SellingVoucher'
+          saleVoucher?: {
+            __typename?: 'SaleVoucher'
             nftContractAddress: string
             price: string
-            tokenId: number
             tokenUri: string
             isMaster: boolean
             signature: string
-            sellCount: number
+            supply: number
+            currency: string
+            validUntil: string
+          } | null
+          mintVoucher?: {
+            __typename?: 'MintVoucher'
+            price: string
+            tokenUri: string
+            isMaster: boolean
+            signature: string
             supply: number
             maxSupply: number
             currency: string
-            royaltyFeeInBips: number
-          }
+            royaltyFeeMaster: number
+            royaltyFeeLicense: number
+            creatorOwnerSplit: number
+            validUntil: string
+          } | null
         } | null
         licenseSellings?: Array<{
           __typename?: 'Selling'
@@ -6748,20 +7562,31 @@ export type GetUserNftsQuery = {
               verified?: boolean | null
             }
           }>
-          sellingVoucher: {
-            __typename?: 'SellingVoucher'
+          saleVoucher?: {
+            __typename?: 'SaleVoucher'
             nftContractAddress: string
             price: string
-            tokenId: number
             tokenUri: string
             isMaster: boolean
             signature: string
-            sellCount: number
+            supply: number
+            currency: string
+            validUntil: string
+          } | null
+          mintVoucher?: {
+            __typename?: 'MintVoucher'
+            price: string
+            tokenUri: string
+            isMaster: boolean
+            signature: string
             supply: number
             maxSupply: number
             currency: string
-            royaltyFeeInBips: number
-          }
+            royaltyFeeMaster: number
+            royaltyFeeLicense: number
+            creatorOwnerSplit: number
+            validUntil: string
+          } | null
         }> | null
       } | null
     }> | null
@@ -6830,7 +7655,9 @@ export type RoomUpdatedSubscription = {
         transactionHash?: string | null
         supply: number
         chainId: number
-        royaltyFeeInBips: number
+        royaltyFeeMaster: number
+        royaltyFeeLicense: number
+        creatorOwnerSplit: number
         masterOwner: {
           __typename?: 'NftOwner'
           supply: number
@@ -6932,20 +7759,31 @@ export type RoomUpdatedSubscription = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           } | null
           licenseSellings?: Array<{
             __typename?: 'Selling'
@@ -6988,20 +7826,31 @@ export type RoomUpdatedSubscription = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           }> | null
         } | null
       } | null
@@ -7022,7 +7871,9 @@ export type RoomUpdatedSubscription = {
         transactionHash?: string | null
         supply: number
         chainId: number
-        royaltyFeeInBips: number
+        royaltyFeeMaster: number
+        royaltyFeeLicense: number
+        creatorOwnerSplit: number
         masterOwner: {
           __typename?: 'NftOwner'
           supply: number
@@ -7124,20 +7975,31 @@ export type RoomUpdatedSubscription = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           } | null
           licenseSellings?: Array<{
             __typename?: 'Selling'
@@ -7180,20 +8042,31 @@ export type RoomUpdatedSubscription = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           }> | null
         } | null
       } | null
@@ -7274,7 +8147,9 @@ export type RoomsUpdatedSubscription = {
         transactionHash?: string | null
         supply: number
         chainId: number
-        royaltyFeeInBips: number
+        royaltyFeeMaster: number
+        royaltyFeeLicense: number
+        creatorOwnerSplit: number
         masterOwner: {
           __typename?: 'NftOwner'
           supply: number
@@ -7376,20 +8251,31 @@ export type RoomsUpdatedSubscription = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           } | null
           licenseSellings?: Array<{
             __typename?: 'Selling'
@@ -7432,20 +8318,31 @@ export type RoomsUpdatedSubscription = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           }> | null
         } | null
       } | null
@@ -7466,7 +8363,9 @@ export type RoomsUpdatedSubscription = {
         transactionHash?: string | null
         supply: number
         chainId: number
-        royaltyFeeInBips: number
+        royaltyFeeMaster: number
+        royaltyFeeLicense: number
+        creatorOwnerSplit: number
         masterOwner: {
           __typename?: 'NftOwner'
           supply: number
@@ -7568,20 +8467,31 @@ export type RoomsUpdatedSubscription = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           } | null
           licenseSellings?: Array<{
             __typename?: 'Selling'
@@ -7624,20 +8534,31 @@ export type RoomsUpdatedSubscription = {
                 verified?: boolean | null
               }
             }>
-            sellingVoucher: {
-              __typename?: 'SellingVoucher'
+            saleVoucher?: {
+              __typename?: 'SaleVoucher'
               nftContractAddress: string
               price: string
-              tokenId: number
               tokenUri: string
               isMaster: boolean
               signature: string
-              sellCount: number
+              supply: number
+              currency: string
+              validUntil: string
+            } | null
+            mintVoucher?: {
+              __typename?: 'MintVoucher'
+              price: string
+              tokenUri: string
+              isMaster: boolean
+              signature: string
               supply: number
               maxSupply: number
               currency: string
-              royaltyFeeInBips: number
-            }
+              royaltyFeeMaster: number
+              royaltyFeeLicense: number
+              creatorOwnerSplit: number
+              validUntil: string
+            } | null
           }> | null
         } | null
       } | null

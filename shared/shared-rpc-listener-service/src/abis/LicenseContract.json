@@ -288,6 +288,44 @@
         "type": "uint256"
       }
     ],
+    "name": "_creators",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "_getCreator",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "name": "_uris",
     "outputs": [
       {
@@ -566,11 +604,6 @@
         "internalType": "bytes",
         "name": "_erc721Reference",
         "type": "bytes"
-      },
-      {
-        "internalType": "uint96",
-        "name": "_royaltyFeeInBips",
-        "type": "uint96"
       }
     ],
     "name": "mintLicenses",
@@ -657,35 +690,6 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_salePrice",
-        "type": "uint256"
-      }
-    ],
-    "name": "royaltyInfo",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "address",
         "name": "from",
         "type": "address"
@@ -763,29 +767,6 @@
       }
     ],
     "name": "setApprovalForAll",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "_receiver",
-        "type": "address"
-      },
-      {
-        "internalType": "uint96",
-        "name": "_royaltyFeeInBips",
-        "type": "uint96"
-      }
-    ],
-    "name": "setRoyaltyFees",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

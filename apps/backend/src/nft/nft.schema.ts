@@ -79,7 +79,13 @@ export class Nft extends BaseDBObject {
   filePictureUrl: string;
 
   @Prop()
-  royaltyFeeInBips: number;
+  royaltyFeeMaster: number;
+
+  @Prop()
+  royaltyFeeLicense: number;
+
+  @Prop()
+  creatorOwnerSplit: number;
 
   @Prop({ type: [Types.ObjectId], ref: 'Tag' })
   tags: [Types.ObjectId];

@@ -30,7 +30,9 @@ export interface CreateNftInput {
   tags: string[];
   transactionHash: string;
   chainId: number;
-  royaltyFeeInBips;
+  royaltyFeeMaster: number;
+  royaltyFeeLicense: number;
+  creatorOwnerSplit: number;
 }
 
 @Injectable()
@@ -71,7 +73,9 @@ export class NftService {
         transactionHash: createNftInput.transactionHash ? createNftInput.transactionHash : '',
         chainId: createNftInput.chainId ? createNftInput.chainId : 0,
         supply: createNftInput.supply,
-        royaltyFeeInBips: createNftInput.royaltyFeeInBips,
+        royaltyFeeMaster: createNftInput.royaltyFeeMaster,
+        royaltyFeeLicense: createNftInput.royaltyFeeLicense,
+        creatorOwnerSplit: createNftInput.creatorOwnerSplit,
         masterOwner: {
           user: createNftInput.user._id,
           supply: 1,
@@ -135,14 +139,12 @@ export class NftService {
   }
 
   async changeOwner(
-    sellerEthAddress: string,
+    saleSignature: string,
     buyerEthAddress: string,
     amount: number,
-    contractAddress: string,
-    tokenId: number,
-    isMaster: boolean,
     chainId: number,
     transactionHash: string,
+    voucherType: 'mint_voucher' | 'sale_voucher',
   ) {
     //TODO: Bad implementation! We need to find a way, to wait for the MasterMintEvent, before tansfer event is fireing!
     await new Promise((resolve) =>
@@ -151,24 +153,30 @@ export class NftService {
       }, 1000),
     );
 
-    const nft = await this.nftModel.findOne({
-      $or: [
-        { masterContratAddress: contractAddress.toLowerCase() },
-        { licenseContratAddress: contractAddress.toLowerCase() },
-      ],
-      tokenId,
-      chainId,
+    const selling = await this.sellingModel.findOne({
+      ...(voucherType === 'mint_voucher'
+        ? { 'mintVoucher.signature': saleSignature }
+        : { 'saleVoucher.signature': saleSignature }),
     });
+
+    if (!selling) {
+      return;
+    }
+
+    const nft = await this.nftModel.findOne({
+      _id: selling.nft._id,
+    });
+
+    const buyer = await this.userModel.findOne({ ethAddress: buyerEthAddress.toLowerCase() });
+    const seller = await this.userModel.findOne({ _id: selling.seller });
 
     if (!nft) {
       console.log(
-        `Error transferring ownership - no NFT found! FROM: ${sellerEthAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
+        `Error transferring ownership - no NFT found! FROM: ${seller.ethAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
       );
       return;
     }
     let currentSellerSupply;
-    const buyer = await this.userModel.findOne({ ethAddress: buyerEthAddress.toLowerCase() });
-    const seller = await this.userModel.findOne({ ethAddress: sellerEthAddress.toLowerCase() });
 
     const masterOwner = await this.userModel.findOne({ _id: nft.masterOwner.user._id });
     const licenseOwner = nft.licenseOwners.find(
@@ -182,22 +190,11 @@ export class NftService {
       return supply;
     }, 0);
 
-    const selling = await this.sellingModel.findOne({
-      nftType: isMaster ? NftType.MASTER : NftType.LICENSE,
-      sellingStatus: SellingStatus.OPEN,
-      nft: nft._id,
-      seller: seller._id,
-    });
-
-    if (!selling) {
-      return;
-    }
-
     const existingTxHash = selling.buyers.find((buyer) => buyer.transactionHash === transactionHash);
 
     if (existingTxHash) {
       console.log(
-        `Error transferring ownership - transactionHash already processed! FROM: ${sellerEthAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
+        `Error transferring ownership - transactionHash already processed! FROM: ${seller.ethAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
       );
       return;
     }
@@ -206,17 +203,22 @@ export class NftService {
       return supply + buyer.supply;
     }, 0);
 
-    if (selling.sellingVoucher.supply - alreadyBoughtSupply - amount < 0) {
+    if (
+      (voucherType === 'mint_voucher' ? selling.mintVoucher.supply : selling.saleVoucher.supply) -
+        alreadyBoughtSupply -
+        amount <
+      0
+    ) {
       console.log(
-        `Error transferring ownership - Selling has not enough supply! FROM: ${sellerEthAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
+        `Error transferring ownership - Selling has not enough supply! FROM: ${seller.ethAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
       );
       return;
     }
 
-    if (isMaster) {
+    if (selling.nftType === NftType.MASTER) {
       if (masterOwner._id.toString() !== seller._id.toString()) {
         console.log(
-          `Error transferring ownership - Seller is not owner! FROM: ${sellerEthAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
+          `Error transferring ownership - Seller is not owner! FROM: ${seller.ethAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
         );
         return;
       }
@@ -224,7 +226,7 @@ export class NftService {
     } else {
       if (!licenseOwner && licenseOwner.user._id.toString() !== seller._id.toString()) {
         console.log(
-          `Error transferring ownership - Seller is not owner! FROM: ${sellerEthAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
+          `Error transferring ownership - Seller is not owner! FROM: ${seller.ethAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
         );
         return;
       }
@@ -234,12 +236,12 @@ export class NftService {
 
     if (currentSellerSupply - amount < 0) {
       console.log(
-        `Error transferring ownership - Seller has not enough supply! FROM: ${sellerEthAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
+        `Error transferring ownership - Seller has not enough supply! FROM: ${seller.ethAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
       );
       return;
     }
 
-    if (isMaster) {
+    if (selling.nftType === NftType.MASTER) {
       await this.setMasterOwner(nft, buyer);
       await this.setLicenseOwner(nft, buyer, masterOwnerLicenseSupply);
       await this.setLicenseOwner(nft, seller, -masterOwnerLicenseSupply);
@@ -251,7 +253,12 @@ export class NftService {
     selling.buyers.push({ user: buyer._id, supply: amount, transactionHash });
     await this.sellingModel.updateOne({ _id: selling._id }, { $set: { buyers: selling.buyers } });
 
-    if (selling.sellingVoucher.supply - alreadyBoughtSupply - amount === 0) {
+    if (
+      (voucherType === 'mint_voucher' ? selling.mintVoucher.supply : selling.saleVoucher.supply) -
+        alreadyBoughtSupply -
+        amount ===
+      0
+    ) {
       await this.sellingModel.updateOne(
         { _id: selling._id },
         { $set: { sellingStatus: SellingStatus.CLOSED } },

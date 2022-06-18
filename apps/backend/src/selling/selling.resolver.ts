@@ -11,10 +11,20 @@ import { UserService } from '../user/user.service';
 import { Selling as SellingSchema } from './selling.schema';
 import { NftService } from '../nft/nft.service';
 import { NftOwner } from '../nft/dto/output/nft.output';
+import { CreateMintSellingInput } from './dto/input/create-mint-selling.input';
 
 @Resolver(() => Selling)
 export class SellingResolver {
   constructor(private sellingService: SellingService, private userService: UserService) {}
+
+  @UseGuards(GqlAuthGuard)
+  @Mutation(() => Selling)
+  async createMintSelling(
+    @Args('createMintSellingInput') createMintSellingInput: CreateMintSellingInput,
+    @CurrentUser() user: LoggedinUser,
+  ) {
+    return this.sellingService.createMintSelling(createMintSellingInput, user);
+  }
 
   @UseGuards(GqlAuthGuard)
   @Mutation(() => Selling)

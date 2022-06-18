@@ -33,6 +33,56 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": false,
+        "internalType": "bytes",
+        "name": "signature",
+        "type": "bytes"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "buyer",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "soldAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "RedeemedMintVoucher",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bytes",
+        "name": "signature",
+        "type": "bytes"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "buyer",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "soldAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "RedeemedSaleVoucher",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": true,
         "internalType": "bytes32",
         "name": "role",
@@ -109,21 +159,9 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "string",
-        "name": "tokenUri",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "contractAddress",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "caller",
-        "type": "address"
+        "internalType": "bytes",
+        "name": "signature",
+        "type": "bytes"
       }
     ],
     "name": "UnlistedNFT",
@@ -162,6 +200,69 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_salePrice",
+        "type": "uint256"
+      }
+    ],
+    "name": "_royaltySplitLicense",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_salePrice",
+        "type": "uint256"
+      }
+    ],
+    "name": "_royaltySplitMaster",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "_serviceFees",
     "outputs": [
@@ -182,19 +283,6 @@
         "internalType": "contract ICommonUtils",
         "name": "",
         "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getChainID",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -263,24 +351,8 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_ownerAddress",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_nftContractAddress",
-        "type": "address"
-      },
-      {
-        "internalType": "string",
-        "name": "_tokenUri",
-        "type": "string"
-      }
-    ],
-    "name": "getSellCount",
+    "inputs": [],
+    "name": "getServiceFees",
     "outputs": [
       {
         "internalType": "uint256",
@@ -334,6 +406,25 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "name": "isVoucherInvalid",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "licensesContract",
     "outputs": [
@@ -375,16 +466,6 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_buyer",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_seller",
-        "type": "address"
-      },
-      {
         "internalType": "uint256",
         "name": "_amountToPurchase",
         "type": "uint256"
@@ -392,29 +473,14 @@
       {
         "components": [
           {
-            "internalType": "address",
-            "name": "nftContractAddress",
-            "type": "address"
-          },
-          {
             "internalType": "uint256",
             "name": "price",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "sellCount",
             "type": "uint256"
           },
           {
             "internalType": "string",
             "name": "tokenUri",
             "type": "string"
-          },
-          {
-            "internalType": "uint256",
-            "name": "tokenId",
-            "type": "uint256"
           },
           {
             "internalType": "uint256",
@@ -443,16 +509,91 @@
           },
           {
             "internalType": "uint96",
-            "name": "royaltyFeeInBips",
+            "name": "royaltyFeeMaster",
             "type": "uint96"
+          },
+          {
+            "internalType": "uint96",
+            "name": "royaltyFeeLicense",
+            "type": "uint96"
+          },
+          {
+            "internalType": "uint96",
+            "name": "creatorOwnerSplit",
+            "type": "uint96"
+          },
+          {
+            "internalType": "uint256",
+            "name": "validUntil",
+            "type": "uint256"
           }
         ],
-        "internalType": "struct MarketContract.NFTVoucher",
+        "internalType": "struct MarketContract.MintVoucher",
         "name": "_mintVoucher",
         "type": "tuple"
       }
     ],
-    "name": "redeemItem",
+    "name": "redeemMintVoucher",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_amountToPurchase",
+        "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "nftContractAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "price",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "tokenUri",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "supply",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "isMaster",
+            "type": "bool"
+          },
+          {
+            "internalType": "bytes",
+            "name": "signature",
+            "type": "bytes"
+          },
+          {
+            "internalType": "string",
+            "name": "currency",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "validUntil",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct MarketContract.SaleVoucher",
+        "name": "_saleVoucher",
+        "type": "tuple"
+      }
+    ],
+    "name": "redeemSaleVoucher",
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"
@@ -501,9 +642,30 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "sellCount",
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_salePrice",
+        "type": "uint256"
+      }
+    ],
+    "name": "royaltySplitLicense",
     "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
       {
         "internalType": "uint256",
         "name": "",
@@ -516,36 +678,23 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
+        "internalType": "uint256",
+        "name": "_tokenId",
+        "type": "uint256"
       },
       {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      },
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
+        "internalType": "uint256",
+        "name": "_salePrice",
+        "type": "uint256"
       }
     ],
-    "name": "sellCounts",
+    "name": "royaltySplitMaster",
     "outputs": [
       {
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "serviceFees",
-    "outputs": [
+      },
       {
         "internalType": "uint256",
         "name": "",
@@ -590,19 +739,33 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_nftContractAddress",
-        "type": "address"
-      },
-      {
-        "internalType": "string",
-        "name": "_tokenUri",
-        "type": "string"
+        "internalType": "bytes",
+        "name": "signature",
+        "type": "bytes"
       }
     ],
     "name": "unlistItem",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "name": "voucherAmountSold",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
