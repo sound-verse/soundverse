@@ -22,7 +22,7 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
   const messagesEndRef = useRef(null)
 
   function generateUserColor(ethAddress) {
-    return '#' + ethAddress.substring(36, 42)
+    return "#" + ethAddress.substring(36,42)
   }
 
   useEffect(() => {
@@ -70,22 +70,24 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
 
   return (
     <div className={cn(s.root, '', className)}>
-      <div className="flex flex-col w-[250px] h-screen">
+      <div className="flex flex-col w-[400px] h-screen">
         <div
           className={cn(
-            'text-white font-bold text-sm text-center py-2 border-b-1 border-b border-grey-light bg-grey-dark pt-2'
+            s.bgDark,
+            'text-white font-bold text-md text-center py-4 border-b-1 border-b border-grey-light bg-grey-dark pt-4'
           )}
         >
           {roomId === '' ? 'Community' : 'Room'} Chat
         </div>
         <div
           className={cn(
-            'text-white p-2 overflow-y-auto bg-grey-dark h-full text-xs'
+            s.bgDark,
+            'text-white p-5 overflow-y-auto bg-grey-dark h-full'
           )}
         >
           {userChat.map((chatMessage, key) => {
             return (
-              <div key={key} className="">
+              <div key={key}>
                 <ProfileName
                   ethAddress={chatMessage.sender.ethAddress}
                   name={chatMessage.sender.name}
@@ -101,12 +103,13 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
         </div>
         <div
           className={cn(
-            'py-4 border-t border-t-1 border-grey-light w-full mt-auto mb-[140px] bg-grey-dark '
+            s.bgDark,
+            'py-4 border-t border-t-1 border-grey-light w-full mt-auto mb-[157px] bg-grey-dark '
           )}
         >
           <div
             className={cn(
-              'flex justify-center items-center content-center bg-grey-dark'
+              'flex justify-center items-center content-center bg-grey-dark pt-5 pb-5'
             )}
           >
             <input
@@ -124,7 +127,7 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
               }`}
               onKeyDown={sendChatMessage}
               value={chatMessage}
-              className="p-2 bg-grey-medium text-grey-light rounded-2xl w-full text-xs mx-2 h-8"
+              className="p-3 bg-grey-medium text-grey-light rounded-2xl w-full text-base mx-10 h-10"
             />
           </div>
         </div>

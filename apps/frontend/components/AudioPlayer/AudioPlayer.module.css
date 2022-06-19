@@ -1,5 +1,5 @@
 .playbar {
-  @apply fixed bottom-0 left-0 w-screen bg-grey-dark z-50 py-2 border-t border-grey-medium overflow-hidden h-16;
+  @apply fixed bottom-0 left-0 w-screen bg-grey-dark z-50 py-2 border-t border-grey-medium overflow-hidden h-20;
 }
 
 .volume {

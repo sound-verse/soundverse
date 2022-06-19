@@ -32,7 +32,7 @@ export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
             nftType={
               room.currentTrack?.nftType ?? room.playlistItems[0].nftType
             }
-            className="scale-[50%] -mt-16 -ml-10 -mb-5"
+            className="scale-[70%] -mt-10 -ml-6 -mb-20"
           ></SoundCard>
         </div>
         <div className="flex flex-col w-full h-full">

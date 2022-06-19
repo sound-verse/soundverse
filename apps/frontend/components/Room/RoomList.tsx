@@ -45,14 +45,15 @@ export const RoomList: FC<RoomListProps> = ({ rooms }) => {
           No rooms active yet, stay tuned!
         </div>
       ) : (
-        <div className="flex flex-col w-full mr-72">
+        <div className="flex flex-col w-full mr-96">
+          <div className="text-white font-bold text-2xl">Soundverses</div>
           {rooms.map((room) => (
             <RoomListElement room={room} key={room.id} />
           ))}
         </div>
       )}
       {masterRoom?.room?.chat && (
-        <div className="absolute right-[210px]">
+        <div className="absolute right-[360px]">
           <Chat
             roomId={''}
             chat={masterRoom.room.chat}

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import styles from './SoundCard.module.css'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ProfileImage, ProfileName } from '../profile'
+import { ProfileName } from '../profile'
 import { AudioPlayer } from '../AudioPlayer/AudioPlayer'
 import cn from 'classnames'
 import { Nft, NftType, Selling } from '../../common/graphql/schema.d'
@@ -75,98 +75,85 @@ function SoundCard({
           <div className={styles.soundCardHeaderTop}>
             {nftType === NftType.Master ? 'Master' : 'License'}
           </div>
-          <div className={styles.mplaceImage}>
-            <Image src={nft.filePictureUrl} layout="fill" objectFit="cover" />
-          </div>
-        </a>
-      </Link>
-      <div className={styles.soundCardBody}>
-        <div className={styles.imageOverlay}></div>
-        <div className={styles.blur}>
-          <Image src={nft.filePictureUrl} layout="fill" objectFit="cover" />
-        </div>
-
-        <div className={styles.soundCardInnerBody}>
-          {showAudioBar && (
-            <div className={styles.soundCardAudio} onClick={handleMusicClick}>
-              <Image
-                src="/img/soundwave.svg"
-                objectFit="contain"
-                layout="fill"
-              />
-            </div>
-          )}
-
-          <div className={styles.soundCardText}>
-            <div className={cn(styles.textOverflow, 'font-semibold text-sm')}>
+          <div className={styles.soundCardHeaderBottom}>
+            <div className={cn(styles.textOverflow, 'font-semibold text-md')}>
               {nft.metadata.name.length > 45
                 ? `${nft.metadata.name.substring(0, 45)}...`
                 : nft.metadata.name}
             </div>
             <div className={styles.creatorName}>
-              <ProfileImage
-                height={5}
-                width={5}
-                ethAddress={nft.creator.ethAddress}
-                imageUrl={nft.creator.profileImage}
-                className="mr-1"
-              />
               <ProfileName
                 ethAddress={nft.creator.ethAddress}
                 name={nft.creator.name}
                 short={true}
-                className="text-xs"
+                className="text-sm"
               />
             </div>
           </div>
-          <div className={styles.soundCardBodyFooter}>
-            {nftType === NftType.Master ? (
-              nft.sellings.masterSelling ? (
-                <div className="flex justify-between items-baseline text-xs">
-                  <div className="text-grey-light">
-                    <span className="font-bold text-white">
-                      {parseFloat(
-                        Web3.utils.fromWei(
-                          nft.sellings.masterSelling.saleVoucher?.price ??
-                            nft.sellings.masterSelling.mintVoucher?.price
-                        )
-                      ).toFixed(2)}{' '}
-                      {nft.sellings.masterSelling.saleVoucher?.currency ??
-                        nft.sellings.masterSelling.mintVoucher.currency}
-                    </span>
-                  </div>
-                  <div className="font-bol rounded px-2 py-1 text-black bg-[#ffef64]">
-                    #1 of 1
-                  </div>
-                </div>
-              ) : (
-                <div className="flex flex-col w-full h-full justify-center">
-                  <div className="text-grey-light">Nft not listed</div>
-                </div>
-              )
-            ) : nft.sellings.licenseSellings[0] ? (
-              <div className="flex justify-between items-baseline text-xs">
-                <span className="font-bold text-white">
+        </a>
+      </Link>
+      <Link
+        href={`/${nftType === NftType.Master ? 'master' : 'license'}/${nft.id}`}
+      >
+        <div className={styles.mplaceImage}>
+          <div className={styles.blur}>
+            <Image src={nft.filePictureUrl} layout="fill" objectFit="cover" />
+          </div>
+          <Image src={nft.filePictureUrl} layout="fill" objectFit="contain" />
+        </div>
+      </Link>
+      {showAudioBar && (
+        <div className={styles.soundCardAudio} onClick={handleMusicClick}>
+          <Image src="/img/soundwave.svg" objectFit="contain" layout="fill" />
+        </div>
+      )}
+      <div className={styles.soundCardFooter}>
+        {nftType === NftType.Master ? (
+          nft.sellings.masterSelling ? (
+            <div className="flex flex-col w-full h-full ml-5 justify-center text-sm">
+              <div className="text-grey-light">
+                Price:
+                <span className="font-bold ml-2 text-white">
                   {parseFloat(
                     Web3.utils.fromWei(
-                      nft.sellings.licenseSellings[0]?.saleVoucher?.price ??
-                        nft.sellings.licenseSellings[0]?.mintVoucher.price
+                      nft.sellings.masterSelling.saleVoucher?.price ??
+                        nft.sellings.masterSelling.mintVoucher?.price
                     )
                   ).toFixed(2)}{' '}
-                  {nft.sellings.licenseSellings[0]?.saleVoucher?.currency ??
-                    nft.sellings.licenseSellings[0]?.mintVoucher.currency}
+                  {nft.sellings.masterSelling.saleVoucher?.currency ??
+                    nft.sellings.masterSelling.mintVoucher.currency}
                 </span>
-                <div className="font-bold bg-white rounded px-2 py-1 text-black">
-                  #{nft.sellings.licenseSellings.length} of {nft.supply}
-                </div>
               </div>
-            ) : (
-              <div className="flex flex-col w-full h-full justify-center text-xs">
-                <div className="text-grey-light">Nft not listed</div>
-              </div>
-            )}
+            </div>
+          ) : (
+            <div className="flex flex-col w-full h-full ml-5 justify-center">
+              <div className="text-grey-light">Nft not listed</div>
+            </div>
+          )
+        ) : nft.sellings.licenseSellings[0] ? (
+          <div className="flex flex-col w-full h-full ml-5 justify-center text-sm">
+            <div className="font-bold">
+              {nft.sellings.licenseSellings.length} listings
+            </div>
+            <div className=" text-white">
+              Lowest ask{' '}
+              <span className="font-bold ml-2 text-white">
+                {parseFloat(
+                  Web3.utils.fromWei(
+                    nft.sellings.licenseSellings[0]?.saleVoucher?.price ??
+                      nft.sellings.licenseSellings[0]?.mintVoucher.price
+                  )
+                ).toFixed(2)}{' '}
+                {nft.sellings.licenseSellings[0]?.saleVoucher?.currency ??
+                  nft.sellings.licenseSellings[0]?.mintVoucher.currency}
+              </span>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="flex flex-col w-full h-full ml-5 justify-center">
+            <div className="text-grey-light">Nft not listed</div>
+          </div>
+        )}
       </div>
     </div>
   )

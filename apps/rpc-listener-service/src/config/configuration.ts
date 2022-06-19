@@ -5,13 +5,13 @@ export default () => ({
     local: {
       contractEvents: [
         {
-          contractAddress: '0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9',
+          contractAddress: '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9',
           listensTo: [EventType.MASTER_MINT_EVENT],
           contractType: ContractType.MASTER,
           version: '0.1',
         },
         {
-          contractAddress: '0x5FC8d32690cc91D4c39d9d3abcBD16989F875707',
+          contractAddress: '0x0165878A594ca255338adfa4d48449f69242Eb8F',
           listensTo: [
             EventType.REDEEMED_MINT_VOUCHER,
             EventType.REDEEMED_SALE_VOUCHER,

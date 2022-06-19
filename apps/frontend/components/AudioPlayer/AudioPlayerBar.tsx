@@ -159,8 +159,8 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
                 <a>
                   <Image
                     src={currentTrack.trackPictureUrl}
-                    width={40}
-                    height={40}
+                    width={60}
+                    height={60}
                     layout="fixed"
                     className="rounded-2xl"
                   />
@@ -169,12 +169,12 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
             )}
           </div>
           <div className="flex-col text-left justify-start">
-            <div className="text-white font-bold text-sm">
+            <div className="text-white font-bold text-md">
               {currentTrack.trackName.length > 30
                 ? `${currentTrack.trackName.substring(0, 25)}...`
                 : currentTrack.trackName}
             </div>
-            <div className="text-grey-light text-sm">
+            <div className="text-grey-light">
               by{' '}
               <span className="text-purple inline-block">
                 <Link href={`/profile/${currentTrack.creatorEthAddress}`}>
@@ -204,15 +204,15 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
               {currentTrack.isPlaying ? (
                 <Image
                   src="/img/pauseButton.svg"
-                  width={30}
-                  height={30}
+                  width={40}
+                  height={40}
                   layout="fixed"
                 />
               ) : (
                 <Image
                   src="/img/playButton.svg"
-                  width={30}
-                  height={30}
+                  width={40}
+                  height={40}
                   layout="fixed"
                 />
               )}
@@ -274,8 +274,8 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
             >
               <Image
                 src="/img/close.svg"
-                width={30}
-                height={30}
+                width={40}
+                height={40}
                 layout="fixed"
               />
             </div>
