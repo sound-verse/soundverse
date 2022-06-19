@@ -37,7 +37,9 @@ export const useLogin = () => {
     library: ethLibraray,
     activateBrowserWallet,
     deactivate,
+    activate,
     chainId,
+    active,
   } = useEthers()
 
   const supportedNetworks = {
@@ -104,6 +106,12 @@ export const useLogin = () => {
       }
     }
   }, [jwtUser, data])
+
+  useEffect(() => {
+    if (!chainId && authenticated && ethLibraray) {
+      activate(ethLibraray)
+    }
+  }, [activate, authenticated, chainId, ethLibraray])
 
   useEffect(() => {
     if (account && chainId && !correctChainIds.includes(chainId)) {
