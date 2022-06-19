@@ -49,9 +49,13 @@ export const BuyLicense = ({
             </div>
             <div className="font-bold col-start-3">
               {parseFloat(
-                Web3.utils.fromWei(selling.sellingVoucher.price)
+                Web3.utils.fromWei(
+                  selling.saleVoucher?.price ?? selling.mintVoucher?.price
+                )
               ).toFixed(2)}
-              <span className="ml-2">{selling.sellingVoucher.currency}</span>
+              <span className="ml-2">
+                {selling.saleVoucher?.currency ?? selling.mintVoucher?.currency}
+              </span>
             </div>
             <div className="text-purple col-start-6">
               <Link href={`/profile/${selling.seller.ethAddress}`}>
