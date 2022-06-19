@@ -80,7 +80,6 @@ export class EventService implements OnApplicationBootstrap {
               event.transactionHash,
               'mint_voucher',
             );
-            break;
           }
           case EventType.REDEEMED_ITEM_SECONDARY_SALE: {
             const args = event.args;
@@ -129,7 +128,6 @@ export class EventService implements OnApplicationBootstrap {
               event.transactionHash,
               'mint_voucher',
             );
-            break;
           }
           case EventType.REDEEMED_ITEM_SECONDARY_SALE: {
             const args = event.args;
