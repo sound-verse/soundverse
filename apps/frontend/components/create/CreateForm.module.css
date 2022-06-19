@@ -1,18 +1,34 @@
 .error {
   @apply text-red-500 mt-2 text-xs;
 }
+
+.stepWrapper {
+  @apply flex justify-center items-start;
+}
+
+.informationStepWrapper {
+  @apply flex flex-col p-8 border border-grey-medium rounded-xl w-[35rem] min-h-[4rem] mt-[2rem] ml-20 text-white;
+}
+
+.informationStepHeader {
+  @apply font-bold text-sm mb-4;
+}
+
+.informationStepBody {
+  @apply text-grey-light text-xs leading-5;
+}
+
 .wrapperStyle {
   border-radius: 1.5rem;
   background: #272727;
-  max-width: 42rem;
-  padding: 5rem;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 3rem;
+  width: 35rem;
+  padding: 3rem;
+  margin-top: 2rem;
   margin-bottom: 9rem;
 }
 
 .buttonStyle {
+  @apply text-xs;
   text-align: center;
   width: 100%;
   white-space: nowrap;
