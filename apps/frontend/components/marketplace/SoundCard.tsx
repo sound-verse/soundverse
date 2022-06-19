@@ -76,7 +76,12 @@ function SoundCard({
             {nftType === NftType.Master ? 'Master' : 'License'}
           </div>
           <div className={styles.mplaceImage}>
-            <Image src={nft.filePictureUrl} layout="fill" objectFit="cover" />
+            <Image
+              src={nft.filePictureUrl}
+              layout="fill"
+              objectFit="cover"
+              className={'rounded-tl-2xl'}
+            />
           </div>
         </a>
       </Link>
@@ -98,7 +103,7 @@ function SoundCard({
           )}
 
           <div className={styles.soundCardText}>
-            <div className={cn(styles.textOverflow, 'font-semibold text-sm')}>
+            <div className={cn(styles.textOverflow, 'font-semibold text-xs')}>
               {nft.metadata.name.length > 45
                 ? `${nft.metadata.name.substring(0, 45)}...`
                 : nft.metadata.name}
@@ -115,7 +120,7 @@ function SoundCard({
                 ethAddress={nft.creator.ethAddress}
                 name={nft.creator.name}
                 short={true}
-                className="text-xs"
+                className="text-[0.65rem]"
               />
             </div>
           </div>
@@ -135,7 +140,7 @@ function SoundCard({
                         nft.sellings.masterSelling.mintVoucher.currency}
                     </span>
                   </div>
-                  <div className="font-bol rounded px-2 py-1 text-black bg-[#ffef64]">
+                  <div className="rounded px-2 py-[2px] text-black bg-[#FFEA2F]">
                     #1 of 1
                   </div>
                 </div>
@@ -156,8 +161,8 @@ function SoundCard({
                   {nft.sellings.licenseSellings[0]?.saleVoucher?.currency ??
                     nft.sellings.licenseSellings[0]?.mintVoucher.currency}
                 </span>
-                <div className="font-bold bg-white rounded px-2 py-1 text-black">
-                  #{nft.sellings.licenseSellings.length} of {nft.supply}
+                <div className="bg-white rounded px-2 py-[2px] text-black">
+                  # of {nft.supply}
                 </div>
               </div>
             ) : (

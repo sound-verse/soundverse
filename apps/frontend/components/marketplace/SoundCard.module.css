@@ -6,7 +6,7 @@
 }
 
 .soundCardHeaderTop {
-  @apply rounded-t-2xl rounded-tr-2xl p-1 pl-4 h-7 pb-4 pt-1 relative text-sm tracking-[0.4em];
+  @apply rounded-t-2xl rounded-tr-2xl p-1 pl-4 h-8 pb-4 pt-1 relative text-sm tracking-[0.4em];
   clip-path: polygon(0 0, 55% 0, 65% 100%, 0% 100%);
 }
 
@@ -15,12 +15,19 @@
 }
 
 .master .soundCardHeaderTop {
-  @apply text-black;
-  background-color: #ffef64;
+  @apply text-black bg-[#ffea2f];
 }
 
 .mplaceImage {
-  @apply cursor-pointer relative w-[200px] h-[140px] rounded-tr-2xl overflow-hidden;
+  @apply cursor-pointer relative w-[200px] h-[140px] rounded-tr-2xl overflow-hidden -mt-1;
+}
+
+.master .mplaceImage {
+  @apply bg-[#ffea2f];
+}
+
+.license .mplaceImage {
+  @apply bg-grey-dark;
 }
 
 .soundCardBody {
@@ -58,7 +65,7 @@
 }
 
 .creatorName {
-  @apply flex mt-1;
+  @apply flex mt-1 items-center;
 }
 
 .textOverflow {
