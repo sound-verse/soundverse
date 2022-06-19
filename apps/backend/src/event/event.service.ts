@@ -59,23 +59,49 @@ export class EventService implements OnApplicationBootstrap {
             );
             break;
           }
-          case EventType.TRANSFER: {
+          case EventType.REDEEMED_ITEM: {
             const args = event.args;
             const from: string = args[0];
             const to: string = args[1];
-            const tokenId: number = BigNumber.from(args[2]).toNumber();
+            const tokenUri: string = args[2];
+            const supply: number = BigNumber.from(args[3]).toNumber();
+            const price: number = BigNumber.from(args[4]).toNumber();
             if (from === nullAddress) {
               return;
             }
             await this.nftService.changeOwner(
               from,
               to,
-              1,
+              supply,
               event.address,
-              tokenId,
+              tokenUri,
               true,
               event.chainId,
               event.transactionHash,
+              'mint_voucher',
+            );
+            break;
+          }
+          case EventType.REDEEMED_ITEM_SECONDARY_SALE: {
+            const args = event.args;
+            const from: string = args[0];
+            const to: string = args[1];
+            const tokenUri: string = args[2];
+            const supply: number = BigNumber.from(args[3]).toNumber();
+            const price: number = BigNumber.from(args[4]).toNumber();
+            if (from === nullAddress) {
+              return;
+            }
+            await this.nftService.changeOwner(
+              from,
+              to,
+              supply,
+              event.address,
+              tokenUri,
+              true,
+              event.chainId,
+              event.transactionHash,
+              'sale_voucher',
             );
           }
         }
@@ -83,11 +109,11 @@ export class EventService implements OnApplicationBootstrap {
       }
       case ContractType.LICENSE: {
         switch (eventType) {
-          case EventType.TRANSFER_SINGLE: {
+          case EventType.REDEEMED_ITEM: {
             const args = event.args;
             const from: string = args[1];
             const to: string = args[2];
-            const tokenId: number = BigNumber.from(args[3]).toNumber();
+            const tokenUri: string = args[3];
             const supply: number = BigNumber.from(args[4]).toNumber();
             if (from === nullAddress) {
               return;
@@ -97,10 +123,33 @@ export class EventService implements OnApplicationBootstrap {
               to,
               supply,
               event.address,
-              tokenId,
+              tokenUri,
               false,
               event.chainId,
               event.transactionHash,
+              'mint_voucher',
+            );
+            break;
+          }
+          case EventType.REDEEMED_ITEM_SECONDARY_SALE: {
+            const args = event.args;
+            const from: string = args[1];
+            const to: string = args[2];
+            const tokenUri: string = args[3];
+            const supply: number = BigNumber.from(args[4]).toNumber();
+            if (from === nullAddress) {
+              return;
+            }
+            await this.nftService.changeOwner(
+              from,
+              to,
+              supply,
+              event.address,
+              tokenUri,
+              false,
+              event.chainId,
+              event.transactionHash,
+              'sale_voucher',
             );
           }
         }

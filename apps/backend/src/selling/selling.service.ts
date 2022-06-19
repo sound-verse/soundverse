@@ -4,27 +4,13 @@ import { Model, Types } from 'mongoose';
 import { SellingStatus } from '../common/enums/sellingStatus.enum';
 import { Nft, NftDocument } from '../nft/nft.schema';
 import { SellingsFilter } from './dto/input/sellings-filter.input';
-import { Selling, SellingDocument } from './selling.schema';
+import { MintVoucher, Selling, SellingDocument } from './selling.schema';
 import * as sigUtil from '@metamask/eth-sig-util';
 import { ConfigService } from '@nestjs/config';
-import { CreateSellingInput } from './dto/input/create-selling.input';
+import { CreateSellingInput, SaleVoucherInput } from './dto/input/create-selling.input';
 import { User, UserDocument } from '../user/user.schema';
 import { NftType } from '../common/enums/nftType.enum';
-import { BigNumber } from 'ethers';
-
-export type Voucher = {
-  nftContractAddress: string;
-  price: string;
-  sellCount: number;
-  tokenUri: string;
-  tokenId: number;
-  supply: number;
-  maxSupply: number;
-  isMaster: boolean;
-  signature: string;
-  currency: string;
-  royaltyFeeInBips: number;
-};
+import { CreateMintSellingInput, MintVoucherInput } from './dto/input/create-mint-selling.input';
 
 export type NftSelling = {
   masterSelling: Selling;
@@ -59,8 +45,12 @@ export class SellingService {
     const findFilter = {
       sellingStatus: SellingStatus.OPEN,
       ...(filter.nftType && { nftType: filter.nftType }),
-      ...(filter.nftContractAddress && { 'sellingVoucher.nftContractAddress': filter.nftContractAddress }),
-      ...(filter.tokenId && { 'sellingVocher.tokenId': filter.tokenId }),
+      ...(filter.nftContractAddress && {
+        $or: [{ 'saleVoucher.nftContractAddress': filter.nftContractAddress }],
+      }),
+      ...(filter.tokenId && {
+        $or: [{ 'saleVoucher.tokenId': filter.tokenId }, { 'mintVoucher.tokenId': filter.tokenId }],
+      }),
       ...(filter.nftId && { nft: new Types.ObjectId(filter.nftId) }),
     };
     const sellings = await this.sellingModel
@@ -74,31 +64,24 @@ export class SellingService {
     return sellings;
   }
 
-  async voucherIsValid(voucher: Voucher, nftId: string, seller: User): Promise<boolean> {
-    const sellingVoucherTypes = {
-      EIP712Domain: [
-        { name: 'name', type: 'string' },
-        { name: 'version', type: 'string' },
-        { name: 'chainId', type: 'uint256' },
-        { name: 'verifyingContract', type: 'address' },
-      ],
-      SVVoucher: [
-        { name: 'nftContractAddress', type: 'address' },
-        { name: 'price', type: 'uint256' },
-        { name: 'sellCount', type: 'uint256' },
-        { name: 'tokenUri', type: 'string' },
-        { name: 'tokenId', type: 'uint256' },
-        { name: 'supply', type: 'uint256' },
-        { name: 'maxSupply', type: 'uint256' },
-        { name: 'isMaster', type: 'bool' },
-        { name: 'currency', type: 'string' },
-        { name: 'royaltyFeeInBips', type: 'uint96' },
-      ],
-    };
-
+  async checkVoucherAndReturn(
+    voucher: MintVoucherInput | SaleVoucherInput,
+    nftId: string,
+    seller: User,
+  ): Promise<MintVoucher> {
     const mintedNft = await this.nftModel.findOne({
       _id: nftId,
     });
+
+    const isMintVoucher = mintedNft.tokenId > 0 ? false : true;
+
+    if (mintedNft.tokenId && isMintVoucher) {
+      throw new ForbiddenException('NFT already minted');
+    }
+
+    if (!mintedNft.tokenId && !isMintVoucher) {
+      throw new ForbiddenException('NFT not yet minted');
+    }
 
     let sellerSupply = 0;
     let owner = undefined;
@@ -109,13 +92,77 @@ export class SellingService {
     }
     sellerSupply = owner?.supply ?? 0;
 
-    if (sellerSupply < voucher.supply && sellerSupply > 0) {
-      return false;
+    if (sellerSupply < voucher.supply) {
+      throw new ForbiddenException('NftVoucher signature is not valid!');
+    }
+
+    let voucherTypes, voucherProps;
+    if (isMintVoucher) {
+      voucherTypes = {
+        EIP712Domain: [
+          { name: 'name', type: 'string' },
+          { name: 'version', type: 'string' },
+          { name: 'chainId', type: 'uint256' },
+          { name: 'verifyingContract', type: 'address' },
+        ],
+        SVVoucher: [
+          { name: 'price', type: 'uint256' },
+          { name: 'tokenUri', type: 'string' },
+          { name: 'supply', type: 'uint256' },
+          { name: 'maxSupply', type: 'uint256' },
+          { name: 'isMaster', type: 'bool' },
+          { name: 'currency', type: 'string' },
+          { name: 'royaltyFeeMaster', type: 'uint96' },
+          { name: 'royaltyFeeLicense', type: 'uint96' },
+          { name: 'creatorOwnerSplit', type: 'uint96' },
+          { name: 'validUntil', type: 'uint256' },
+        ],
+      };
+      voucherProps = {
+        price: voucher.price,
+        tokenUri: mintedNft.ipfsUrl,
+        supply: voucher.supply,
+        maxSupply: mintedNft.supply,
+        isMaster: voucher.isMaster,
+        currency: voucher.currency,
+        royaltyFeeMaster: mintedNft.royaltyFeeMaster,
+        royaltyFeeLicense: mintedNft.royaltyFeeLicense,
+        creatorOwnerSplit: mintedNft.creatorOwnerSplit,
+        validUntil: voucher.validUntil.getTime(),
+      };
+    } else {
+      voucherTypes = {
+        EIP712Domain: [
+          { name: 'name', type: 'string' },
+          { name: 'version', type: 'string' },
+          { name: 'chainId', type: 'uint256' },
+          { name: 'verifyingContract', type: 'address' },
+        ],
+        SVVoucher: [
+          { name: 'nftContractAddress', type: 'address' },
+          { name: 'price', type: 'uint256' },
+          { name: 'tokenUri', type: 'string' },
+          { name: 'supply', type: 'uint256' },
+          { name: 'isMaster', type: 'bool' },
+          { name: 'currency', type: 'string' },
+          { name: 'validUntil', type: 'uint256' },
+        ],
+      };
+
+      voucherProps = {
+        nftContractAddress: (voucher as SaleVoucherInput).nftContractAddress,
+        price: voucher.price,
+        tokenUri: mintedNft.ipfsUrl,
+        supply: voucher.supply,
+        isMaster: voucher.isMaster,
+        currency: voucher.currency,
+        validUntil: voucher.validUntil,
+      };
     }
 
     const address = sigUtil.recoverTypedSignature({
       data: {
-        types: sellingVoucherTypes,
+        types: voucherTypes,
         primaryType: 'SVVoucher',
         domain: {
           name: 'SVVoucher',
@@ -123,24 +170,17 @@ export class SellingService {
           chainId: mintedNft.chainId,
           verifyingContract: this.configService.get('MARKET_CONTRACT_ADDRESS').toLowerCase(),
         },
-        message: {
-          nftContractAddress: voucher.nftContractAddress,
-          tokenId: voucher.tokenId,
-          price: voucher.price,
-          sellCount: voucher.sellCount,
-          tokenUri: voucher.tokenUri,
-          supply: voucher.supply,
-          maxSupply: voucher.maxSupply,
-          isMaster: voucher.isMaster,
-          currency: voucher.currency,
-          royaltyFeeInBips: voucher.royaltyFeeInBips,
-        },
+        message: voucherProps,
       },
       signature: voucher.signature,
       version: sigUtil.SignTypedDataVersion.V4,
     });
 
-    return address.toLowerCase() !== seller.ethAddress.toLowerCase() ? false : true;
+    if (address.toLowerCase() !== seller.ethAddress.toLowerCase()) {
+      throw new ForbiddenException('NftVoucher signature is not valid!');
+    }
+
+    return { ...voucherProps, signature: voucher.signature };
   }
 
   async unlistSelling(sellerEthAddress: string, uri: string, contractAddress: string) {
@@ -148,8 +188,16 @@ export class SellingService {
     const selling = await this.sellingModel.findOne({
       sellingStatus: SellingStatus.OPEN,
       seller: seller._id,
-      'sellingVoucher.nftContractAddress': contractAddress.toLowerCase(),
-      'sellingVoucher.tokenUri': uri,
+      $or: [
+        {
+          'saleVoucher.nftContractAddress': contractAddress.toLowerCase(),
+          'saleVoucher.tokenUri': uri,
+        },
+        {
+          'mintVoucher.nftContractAddress': contractAddress.toLowerCase(),
+          'mintVoucher.tokenUri': uri,
+        },
+      ],
     });
 
     if (!selling) {
@@ -164,15 +212,42 @@ export class SellingService {
   }
 
   async createSelling(createSellingInput: CreateSellingInput, seller: User): Promise<Selling> {
-    if (!(await this.voucherIsValid(createSellingInput.sellingVoucher, createSellingInput.nftId, seller))) {
-      throw new ForbiddenException('NftVoucher signature is not valid!');
-    }
+    const voucher = await this.checkVoucherAndReturn(
+      createSellingInput.saleVoucherInput,
+      createSellingInput.nftId,
+      seller,
+    );
 
     const selling = new this.sellingModel({
       nft: new Types.ObjectId(createSellingInput.nftId),
       seller: seller._id,
-      sellingVoucher: createSellingInput.sellingVoucher,
-      nftType: createSellingInput.sellingVoucher.isMaster ? NftType.MASTER : NftType.LICENSE,
+      saleVoucher: voucher,
+      nftType: createSellingInput.saleVoucherInput.isMaster ? NftType.MASTER : NftType.LICENSE,
+      marketplaceContractAddress: this.configService.get('MARKET_CONTRACT_ADDRESS').toLowerCase(),
+      sellingStatus: SellingStatus.OPEN,
+    });
+
+    try {
+      await selling.save();
+      return selling;
+    } catch (error) {
+      console.log(error);
+      throw new BadRequestException('Error creating the selling.');
+    }
+  }
+
+  async createMintSelling(createMintSellingInput: CreateMintSellingInput, seller: User): Promise<Selling> {
+    const voucher = await this.checkVoucherAndReturn(
+      createMintSellingInput.mintVoucherInput,
+      createMintSellingInput.nftId,
+      seller,
+    );
+
+    const selling = new this.sellingModel({
+      nft: new Types.ObjectId(createMintSellingInput.nftId),
+      seller: seller._id,
+      mintVoucher: voucher,
+      nftType: createMintSellingInput.mintVoucherInput.isMaster ? NftType.MASTER : NftType.LICENSE,
       marketplaceContractAddress: this.configService.get('MARKET_CONTRACT_ADDRESS').toLowerCase(),
       sellingStatus: SellingStatus.OPEN,
     });

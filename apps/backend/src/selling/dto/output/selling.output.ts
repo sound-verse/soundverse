@@ -1,31 +1,22 @@
-import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
+import { Field, Float, GraphQLTimestamp, Int, ObjectType } from '@nestjs/graphql';
 import { User } from '../../../user/dto/output/user.output';
 import { NftType } from '../../../common/enums/nftType.enum';
 import { SellingStatus } from '../../../common/enums/sellingStatus.enum';
 import { NftOwner } from '../../../nft/dto/output/nft.output';
 
 @ObjectType()
-class SellingVoucher {
+class SaleVoucher {
   @Field()
   nftContractAddress: string;
 
   @Field()
   price: string;
 
-  @Field((type) => Int)
-  sellCount: number;
-
   @Field()
   tokenUri: string;
 
-  @Field((type) => Int)
-  tokenId: number;
-
-  @Field((type) => Int)
+  @Field(() => Int)
   supply: number;
-
-  @Field((type) => Int)
-  maxSupply: number;
 
   @Field()
   isMaster: boolean;
@@ -37,7 +28,43 @@ class SellingVoucher {
   currency: string;
 
   @Field()
-  royaltyFeeInBips: number;
+  validUntil: number;
+}
+
+@ObjectType()
+class MintVoucher {
+  @Field()
+  price: string;
+
+  @Field()
+  tokenUri: string;
+
+  @Field(() => Int)
+  supply: number;
+
+  @Field(() => Int)
+  maxSupply: number;
+
+  @Field()
+  isMaster: boolean;
+
+  @Field()
+  signature: string;
+
+  @Field()
+  currency: string;
+
+  @Field(() => Int)
+  royaltyFeeMaster: number;
+
+  @Field(() => Int)
+  royaltyFeeLicense: number;
+
+  @Field(() => Int)
+  creatorOwnerSplit: number;
+
+  @Field()
+  validUntil: number;
 }
 
 @ObjectType()
@@ -48,11 +75,14 @@ export class Selling {
   @Field()
   seller: User;
 
-  @Field((type) => [NftOwner])
+  @Field(() => [NftOwner])
   buyers?: [NftOwner];
 
-  @Field()
-  sellingVoucher: SellingVoucher;
+  @Field({ nullable: true })
+  saleVoucher?: SaleVoucher;
+
+  @Field({ nullable: true })
+  mintVoucher?: MintVoucher;
 
   @Field()
   nftType: NftType;
