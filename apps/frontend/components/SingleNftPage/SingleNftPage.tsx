@@ -111,7 +111,6 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
 
   useEffect(() => {
     if (unlistNftState.status === 'Success') {
-      console.log('unlisted')
       setShowUnlistedSuccess(true)
     }
   }, [unlistNftState])

@@ -50,7 +50,7 @@ export class Nft extends BaseModel {
   @Field()
   fileUrl: string;
 
-  @Field((type) => Int)
+  @Field(() => Int)
   chainId: number;
 
   @Field()
@@ -74,12 +74,12 @@ export class Nft extends BaseModel {
   @Field({ nullable: true })
   creator?: User;
 
-  @Field((type) => [NftOwner], { nullable: true })
+  @Field(() => [NftOwner], { nullable: true })
   licenseOwners?: NftOwner[];
 
-  @Field((type) => NftOwner)
+  @Field(() => NftOwner)
   masterOwner: NftOwner;
 
-  @Field((type) => NftSelling, { nullable: true })
+  @Field(() => NftSelling, { nullable: true })
   sellings?: NftSelling;
 }
