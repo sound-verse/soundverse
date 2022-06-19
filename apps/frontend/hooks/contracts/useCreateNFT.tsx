@@ -24,9 +24,7 @@ export type CreateNFT = {
   description: string
   tags?: string[]
   licenses: number
-  royaltyFeeMaster: number
-  royaltyFeeLicense: number
-  creatorOwnerSplit: number
+  royaltyFeeInBips: number
 }
 
 export const useCreateNFT = () => {
@@ -46,9 +44,7 @@ export const useCreateNFT = () => {
       description,
       tags = [],
       licenses,
-      royaltyFeeMaster,
-      royaltyFeeLicense,
-      creatorOwnerSplit,
+      royaltyFeeInBips,
     } = createNftProps
 
     const formData = new FormData()
@@ -64,9 +60,7 @@ export const useCreateNFT = () => {
             supply: parseInt(licenses.toString()),
             tags,
             chainId,
-            royaltyFeeMaster: royaltyFeeMaster * 100,
-            royaltyFeeLicense: royaltyFeeLicense * 100,
-            creatorOwnerSplit: creatorOwnerSplit * 100,
+            royaltyFeeInBips: royaltyFeeInBips * 100,
           },
         },
       })

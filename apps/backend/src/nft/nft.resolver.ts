@@ -75,9 +75,7 @@ export class NftResolver {
         tags: nftData.tags,
         transactionHash: nftData.transactionHash ? nftData.transactionHash : '',
         chainId: nftData.chainId ? nftData.chainId : 0,
-        royaltyFeeMaster: nftData.royaltyFeeMaster,
-        royaltyFeeLicense: nftData.royaltyFeeLicense,
-        creatorOwnerSplit: nftData.creatorOwnerSplit,
+        royaltyFeeInBips: nftData.royaltyFeeInBips,
       });
     }
   }

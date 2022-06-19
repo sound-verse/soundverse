@@ -17,37 +17,25 @@ type User {
   verified: Boolean
 }
 
-type SaleVoucher {
+type SellingVoucher {
   nftContractAddress: String!
   price: String!
+  sellCount: Int!
   tokenUri: String!
-  supply: Int!
-  isMaster: Boolean!
-  signature: String!
-  currency: String!
-  validUntil: Float!
-}
-
-type MintVoucher {
-  price: String!
-  tokenUri: String!
+  tokenId: Int!
   supply: Int!
   maxSupply: Int!
   isMaster: Boolean!
   signature: String!
   currency: String!
-  royaltyFeeMaster: Int!
-  royaltyFeeLicense: Int!
-  creatorOwnerSplit: Int!
-  validUntil: Float!
+  royaltyFeeInBips: Float!
 }
 
 type Selling {
   id: String!
   seller: User!
   buyers: [NftOwner!]!
-  saleVoucher: SaleVoucher
-  mintVoucher: MintVoucher
+  sellingVoucher: SellingVoucher!
   nftType: String!
   marketplaceContractAddress: String!
   sellingStatus: String!
@@ -81,9 +69,7 @@ type Nft {
   filePictureUrl: String!
   transactionHash: String
   metadata: NftMetadata!
-  royaltyFeeMaster: Float!
-  royaltyFeeLicense: Float!
-  creatorOwnerSplit: Float!
+  royaltyFeeInBips: Float!
   creator: User
   licenseOwners: [NftOwner!]
   masterOwner: NftOwner!
@@ -183,7 +169,6 @@ type Mutation {
   login(data: LoginInput!): Auth!
   createNft(NFTFile: Upload!, pictureFile: Upload!, data: NftInput!): Nft!
   unpinAll: Boolean!
-  createMintSelling(createMintSellingInput: CreateMintSellingInput!): Selling!
   createSelling(createSellingInput: CreateSellingInput!): Selling!
   createRoom(createRoomInput: CreateRoomInput!): Room!
   reviveRoom: Room!
@@ -223,9 +208,7 @@ input NftInput {
   metadata: NftMetadataInput!
   supply: Float!
   tags: [String!]!
-  royaltyFeeMaster: Int!
-  royaltyFeeLicense: Int!
-  creatorOwnerSplit: Int!
+  royaltyFeeInBips: Int!
   transactionHash: String
   chainId: Float
 }
@@ -235,38 +218,23 @@ input NftMetadataInput {
   description: String!
 }
 
-input CreateMintSellingInput {
-  nftId: String!
-  mintVoucherInput: MintVoucherInput!
-}
-
-input MintVoucherInput {
-  price: String!
-  supply: Int!
-  isMaster: Boolean!
-  signature: String!
-  currency: String!
-  validUntil: Timestamp!
-}
-
-"""
-`Date` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
-"""
-scalar Timestamp
-
 input CreateSellingInput {
   nftId: String!
-  saleVoucherInput: SaleVoucherInput!
+  sellingVoucher: SellingVoucherInput!
 }
 
-input SaleVoucherInput {
+input SellingVoucherInput {
   nftContractAddress: String!
   price: String!
+  sellCount: Int!
+  tokenUri: String!
+  tokenId: Int!
   supply: Int!
+  maxSupply: Int!
   isMaster: Boolean!
   signature: String!
   currency: String!
-  validUntil: Timestamp!
+  royaltyFeeInBips: Int!
 }
 
 input CreateRoomInput {

@@ -12,6 +12,6 @@ export class SellingsFilter {
   @Field({ nullable: true })
   nftContractAddress?: string;
 
-  @Field(() => Int, { nullable: true })
+  @Field((type) => Int, { nullable: true })
   tokenId?: number;
 }

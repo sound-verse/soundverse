@@ -34,9 +34,7 @@ export const CreateForm = () => {
     description: '',
     tags: [],
     licenses: 2,
-    royaltyFeeMaster: 0,
-    royaltyFeeLicense: 0,
-    creatorOwnerSplit: 0,
+    royaltyFeeInBips: 0,
   }
 
   const onFileChange = (
@@ -73,15 +71,7 @@ export const CreateForm = () => {
       .min(2, 'You have to set a minium of 2 licenses')
       .max(100000, 'You can only set a maximum of 100.000 licenses')
       .required('Please enter a number'),
-    royaltyFeeMaster: Yup.number()
-      .typeError('Please enter a number')
-      .max(100, 'You can enter a number up to 100')
-      .required('Please enter a number'),
-    royaltyFeeLicense: Yup.number()
-      .typeError('Please enter a number')
-      .max(100, 'You can enter a number up to 100')
-      .required('Please enter a number'),
-    creatorOwnerSplit: Yup.number()
+    royaltyFeeInBips: Yup.number()
       .typeError('Please enter a number')
       .max(100, 'You can enter a number up to 100')
       .required('Please enter a number'),
@@ -105,9 +95,7 @@ export const CreateForm = () => {
         name: values.name,
         description: values.description,
         licenses: values.licenses,
-        royaltyFeeMaster: values.royaltyFeeMaster,
-        royaltyFeeLicense: values.royaltyFeeLicense,
-        creatorOwnerSplit: values.creatorOwnerSplit,
+        royaltyFeeInBips: values.royaltyFeeInBips,
       })
       if (id) {
         router.push(`/master/${id}`)
@@ -226,12 +214,12 @@ export const CreateForm = () => {
                 </div>
               </div>
               <div className="text-white font-bold text-sm mt-10">
-                Master Royalty Fees
+                Royalty Fees
               </div>
               <div className="mt-3 w-full">
                 <Field
-                  id="royaltyFeeMaster"
-                  name="royaltyFeeMaster"
+                  id="royaltyFeeInBips"
+                  name="royaltyFeeInBips"
                   placeholder="2"
                   className="outline-none bg-grey-dark text-white w-full"
                 />
@@ -239,43 +227,7 @@ export const CreateForm = () => {
                 <div className="text-grey-light mt-2 text-xs">
                   Enter a number between 0 and 100
                   <div className={styles.error}>
-                    <ErrorMessage name="royaltyFeeMaster" />
-                  </div>
-                </div>
-              </div>
-              <div className="text-white font-bold text-sm mt-10">
-                License Royalty Fees
-              </div>
-              <div className="mt-3 w-full">
-                <Field
-                  id="royaltyFeeLicense"
-                  name="royaltyFeeLicense"
-                  placeholder="2"
-                  className="outline-none bg-grey-dark text-white w-full"
-                />
-                <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
-                <div className="text-grey-light mt-2 text-xs">
-                  Enter a number between 0 and 100
-                  <div className={styles.error}>
-                    <ErrorMessage name="royaltyFeeLicense" />
-                  </div>
-                </div>
-              </div>
-              <div className="text-white font-bold text-sm mt-10">
-                Creator Owner - Split
-              </div>
-              <div className="mt-3 w-full">
-                <Field
-                  id="creatorOwnerSplit"
-                  name="creatorOwnerSplit"
-                  placeholder="2"
-                  className="outline-none bg-grey-dark text-white w-full"
-                />
-                <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
-                <div className="text-grey-light mt-2 text-xs">
-                  Enter a number between 0 and 100
-                  <div className={styles.error}>
-                    <ErrorMessage name="creatorOwnerSplit" />
+                    <ErrorMessage name="royaltyFeeInBips" />
                   </div>
                 </div>
               </div>

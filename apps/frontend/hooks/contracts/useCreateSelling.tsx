@@ -1,50 +1,35 @@
-import { useEthers } from '@usedapp/core'
+import { useContractFunction, useEthers } from '@usedapp/core'
 import { useAuthContext } from '../../context/AuthContext'
 import toast from 'react-hot-toast'
-import { FetchResult, useMutation } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 import {
   Nft,
+  SellingVoucherInput,
+  MutationCreateSellingArgs,
   CreateSellingInput,
   Selling,
   CreateSellingMutation,
-  CreateMintSellingInput,
   NftType,
-  CreateMintSellingMutation,
-  CreateSellingMutationVariables,
-  CreateMintSellingMutationVariables,
-  MintVoucherInput,
-  SaleVoucherInput,
 } from '../../common/graphql/schema.d'
 import { CREATE_SELLING } from '../../common/graphql/mutations/create-selling.mutation'
+import { Contract } from '@ethersproject/contracts'
+import MarketContractAbi from '../../common/artifacts/MarketContract.json'
 import { useCallback, useEffect, useState } from 'react'
 import Web3 from 'web3'
-import { CREATE_MINT_SELLING } from '../../common/graphql/mutations/create-mint-selling.mutation'
-import { add } from 'date-fns'
+import { BigNumber, utils } from 'ethers'
 
-export const saleVoucherTypes = {
+export const sellingVoucherTypes = {
   SVVoucher: [
     { name: 'nftContractAddress', type: 'address' },
     { name: 'price', type: 'uint256' },
+    { name: 'sellCount', type: 'uint256' },
     { name: 'tokenUri', type: 'string' },
-    { name: 'supply', type: 'uint256' },
-    { name: 'isMaster', type: 'bool' },
-    { name: 'currency', type: 'string' },
-    { name: 'validUntil', type: 'uint256' },
-  ],
-}
-
-export const mintVoucherTypes = {
-  SVVoucher: [
-    { name: 'price', type: 'uint256' },
-    { name: 'tokenUri', type: 'string' },
+    { name: 'tokenId', type: 'uint256' },
     { name: 'supply', type: 'uint256' },
     { name: 'maxSupply', type: 'uint256' },
     { name: 'isMaster', type: 'bool' },
     { name: 'currency', type: 'string' },
-    { name: 'royaltyFeeMaster', type: 'uint96' },
-    { name: 'royaltyFeeLicense', type: 'uint96' },
-    { name: 'creatorOwnerSplit', type: 'uint96' },
-    { name: 'validUntil', type: 'uint256' },
+    { name: 'royaltyFeeInBips', type: 'uint96' },
   ],
 }
 
@@ -53,6 +38,7 @@ export type CreateSellingInputProps = {
   amount: number
   nftType: NftType
   nft: Nft
+  royaltyFeeInBips: number
 }
 
 const masterContractAddress = process.env.NEXT_PUBLIC_MASTER_CONTRACT_ADDRESS
@@ -62,25 +48,35 @@ const marketContractAddress = process.env.NEXT_PUBLIC_MARKET_CONTRACT_ADDRESS
 export const useCreateSelling = () => {
   const { authUser } = useAuthContext()
   const { chainId, library } = useEthers()
+  const [sellCount, setSellCount] = useState<number>(undefined)
   const [createSellingInputProps, setCreateSellingInputProps] =
     useState<CreateSellingInputProps>(undefined)
   const [contractAddress, setContractAddress] = useState<string>(undefined)
-
-  const [createSellingMutation] = useMutation<
-    CreateSellingMutation,
-    CreateSellingMutationVariables
-  >(CREATE_SELLING)
-
-  const [createMintSellingMutation] = useMutation<
-    CreateMintSellingMutation,
-    CreateMintSellingMutationVariables
-  >(CREATE_MINT_SELLING)
-
+  const [createSellingMutation] =
+    useMutation<CreateSellingMutation>(CREATE_SELLING)
   const [selling, setSelling] = useState<Partial<Selling>>(undefined)
+
+  const abi = new utils.Interface(MarketContractAbi.abi)
+  const contract = new Contract(marketContractAddress, abi)
+
+  const { state, send } = useContractFunction(contract as any, 'getSellCount')
+
+  useEffect(() => {
+    if (state.transaction) {
+      const sellCount = BigNumber.from(state.transaction).toNumber()
+      setSellCount(sellCount)
+    }
+  }, [state])
+
+  useEffect(() => {
+    if (sellCount >= 0) {
+      saveVoucher()
+    }
+  }, [sellCount])
 
   useEffect(() => {
     if (contractAddress) {
-      saveVoucher()
+      getSellCount()
     }
   }, [contractAddress])
 
@@ -94,38 +90,31 @@ export const useCreateSelling = () => {
     }
   }, [createSellingInputProps])
 
+  const getSellCount = async () => {
+    await send(
+      authUser.ethAddress,
+      contractAddress,
+      createSellingInputProps.nft.ipfsUrl
+    )
+  }
+
   const saveVoucher = useCallback(async () => {
-    const isMintVoucher = createSellingInputProps.nft.tokenId > 0 ? false : true
-
-    let voucher
-
-    if (isMintVoucher) {
-      voucher = {
-        price: Web3.utils.toWei(createSellingInputProps.price.toString()),
-        tokenUri: createSellingInputProps.nft.ipfsUrl,
-        supply: createSellingInputProps.amount,
-        maxSupply: createSellingInputProps.nft.supply,
-        isMaster:
-          createSellingInputProps.nftType === NftType.Master ? true : false,
-        currency: 'MATIC',
-        royaltyFeeMaster: createSellingInputProps.nft.royaltyFeeMaster,
-        royaltyFeeLicense: createSellingInputProps.nft.royaltyFeeLicense,
-        creatorOwnerSplit: createSellingInputProps.nft.creatorOwnerSplit,
-        validUntil: +add(new Date(), { years: 1 }),
-      }
-    } else {
-      voucher = {
-        nftContractAddress: await (
-          await library._getAddress(contractAddress)
-        ).toLowerCase(),
-        price: Web3.utils.toWei(createSellingInputProps.price.toString()),
-        tokenUri: createSellingInputProps.nft.ipfsUrl,
-        supply: createSellingInputProps.amount,
-        isMaster:
-          createSellingInputProps.nftType === NftType.Master ? true : false,
-        currency: 'MATIC',
-        validUntil: +add(new Date(), { years: 1 }),
-      }
+    const voucher = {
+      tokenId: createSellingInputProps.nft.tokenId
+        ? createSellingInputProps.nft.tokenId
+        : 0,
+      nftContractAddress: await (
+        await library._getAddress(contractAddress)
+      ).toLowerCase(),
+      price: Web3.utils.toWei(createSellingInputProps.price.toString()),
+      sellCount: sellCount,
+      tokenUri: createSellingInputProps.nft.ipfsUrl,
+      supply: createSellingInputProps.amount,
+      maxSupply: createSellingInputProps.nft.supply,
+      isMaster:
+        createSellingInputProps.nftType === NftType.Master ? true : false,
+      currency: 'MATIC',
+      royaltyFeeInBips: createSellingInputProps.royaltyFeeInBips,
     }
 
     const signingDomain = {
@@ -135,84 +124,32 @@ export const useCreateSelling = () => {
       chainId,
     }
 
-    const voucherTypes = isMintVoucher ? mintVoucherTypes : saleVoucherTypes
-
     const signature = await library
       .getSigner()
-      ._signTypedData(signingDomain, voucherTypes, {
-        ...voucher,
-      })
+      ._signTypedData(signingDomain, sellingVoucherTypes, voucher)
 
-    let voucherInput: MintVoucherInput | SaleVoucherInput
-
-    if (isMintVoucher) {
-      const { currency, isMaster, price, supply, validUntil } = voucher
-      voucherInput = {
-        currency,
-        isMaster,
-        price,
-        supply,
-        validUntil,
-        signature,
-      }
-    } else {
-      const {
-        currency,
-        isMaster,
-        price,
-        supply,
-        validUntil,
-        nftContractAddress,
-      } = voucher
-      voucherInput = {
-        currency,
-        isMaster,
-        price,
-        supply,
-        validUntil,
-        nftContractAddress,
-        signature,
-      }
+    const signedVoucher: SellingVoucherInput = {
+      ...voucher,
+      signature,
     }
 
-    let createSellingInput
-    if (isMintVoucher) {
-      createSellingInput = {
-        nftId: createSellingInputProps.nft.id,
-        mintVoucherInput: {
-          ...voucherInput,
-        },
-      }
-    } else {
-      createSellingInput = {
-        nftId: createSellingInputProps.nft.id,
-        saleVoucherInput: {
-          ...voucherInput,
-        },
-      }
+    const createSellingInput: CreateSellingInput = {
+      nftId: createSellingInputProps.nft.id,
+      sellingVoucher: {
+        ...signedVoucher,
+      },
     }
 
     try {
-      const newSelling = !isMintVoucher
-        ? await createSellingMutation({
-            variables: { createSellingInput },
-          })
-        : await createMintSellingMutation({
-            variables: { createMintSellingInput: createSellingInput },
-          })
-
-      setSelling(
-        isMintVoucher
-          ? (newSelling as FetchResult<CreateMintSellingMutation>).data
-              .createMintSelling
-          : (newSelling as FetchResult<CreateSellingMutation>).data
-              .createSelling
-      )
+      const newSelling = await createSellingMutation({
+        variables: { createSellingInput },
+      })
+      setSelling(newSelling.data.createSelling)
     } catch (error) {
       console.log(error)
       toast.error('Error listing your NFT!')
     }
-  }, [createSellingInputProps, contractAddress])
+  }, [createSellingInputProps, contractAddress, sellCount])
 
   const createSelling = async (
     createSellingInputProps: CreateSellingInputProps

@@ -116,12 +116,10 @@ function SoundCard({
                 <span className="font-bold ml-2 text-white">
                   {parseFloat(
                     Web3.utils.fromWei(
-                      nft.sellings.masterSelling.saleVoucher?.price ??
-                        nft.sellings.masterSelling.mintVoucher?.price
+                      nft.sellings.masterSelling.sellingVoucher.price
                     )
                   ).toFixed(2)}{' '}
-                  {nft.sellings.masterSelling.saleVoucher?.currency ??
-                    nft.sellings.masterSelling.mintVoucher.currency}
+                  {nft.sellings.masterSelling.sellingVoucher.currency}
                 </span>
               </div>
             </div>
@@ -140,12 +138,10 @@ function SoundCard({
               <span className="font-bold ml-2 text-white">
                 {parseFloat(
                   Web3.utils.fromWei(
-                    nft.sellings.licenseSellings[0]?.saleVoucher?.price ??
-                      nft.sellings.licenseSellings[0]?.mintVoucher.price
+                    nft.sellings.licenseSellings[0]?.sellingVoucher.price
                   )
                 ).toFixed(2)}{' '}
-                {nft.sellings.licenseSellings[0]?.saleVoucher?.currency ??
-                  nft.sellings.licenseSellings[0]?.mintVoucher.currency}
+                {nft.sellings.licenseSellings[0]?.sellingVoucher.currency}
               </span>
             </div>
           </div>

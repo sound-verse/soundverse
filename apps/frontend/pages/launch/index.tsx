@@ -22,6 +22,7 @@ import { useRouter } from 'next/router'
 
 export default function Launch() {
   const { authUser } = useAuthContext()
+  const [showLibrary, setShowLibrary] = useState<boolean>(false)
   const [userLicenseNfts, setLicenseNfts] = useState<Nft[]>([])
   const [userMasterNfts, setMasterNfts] = useState<Nft[]>([])
   const [selectedNfts, setSelectedNfts] = useState<
@@ -30,8 +31,6 @@ export default function Launch() {
   const { createRoom, newRoom } = useCreateRoom()
   const [modalLoading, setModalLoading] = useState<boolean>(false)
   const router = useRouter()
-
-  const hasNfts = userLicenseNfts?.length > 0 || userMasterNfts?.length > 0
 
   useEffect(() => {
     if (!newRoom) {
@@ -130,10 +129,6 @@ export default function Launch() {
         {!authUser && !libraryLoading ? (
           <div className="flex items-center justify-center h-screen -mt-24 text-white text-1xl">
             Login with your wallet to see this page.
-          </div>
-        ) : !hasNfts ? (
-          <div className="flex items-center justify-center h-screen -mt-24 text-white text-1xl">
-            You have not collected any music NFTs.
           </div>
         ) : (
           <main className="mx-auto">

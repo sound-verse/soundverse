@@ -53,8 +53,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
   )
 
   const authLicenseSellingsTotalAmount = authLicenseSellings.reduce(
-    (supply, selling) =>
-      supply + selling.saleVoucher?.supply ?? selling.mintVoucher.supply,
+    (supply, selling) => supply + selling.sellingVoucher.supply,
     0
   )
 
@@ -102,8 +101,6 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
 
   const { buyNft, buyNftState } = useBuy()
   const { unlistNft, unlistNftState } = useUnlistSelling()
-
-  console.log(buyNftState)
 
   useEffect(() => {
     if (buyNftState.status === 'Success') {
@@ -161,13 +158,9 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                   <div className="flex flex-col mt-10">
                     <div className="font-bold w-64 text-right mb-5 text-2xl">
                       {parseFloat(
-                        Web3.utils.fromWei(
-                          selectedSelling.saleVoucher?.price ??
-                            selectedSelling.mintVoucher.price
-                        )
+                        Web3.utils.fromWei(selectedSelling.sellingVoucher.price)
                       ).toFixed(2)}{' '}
-                      {selectedSelling.saleVoucher?.currency ??
-                        selectedSelling.mintVoucher.currency}
+                      {selectedSelling.sellingVoucher.currency}
                     </div>
                     <Button
                       text="BUY NOW"
@@ -346,20 +339,13 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                                 <div className="text-3xl text-bolder mr-2">
                                   {parseFloat(
                                     Web3.utils.fromWei(
-                                      nft.sellings.masterSelling.saleVoucher
-                                        ?.price ??
-                                        nft.sellings.masterSelling.mintVoucher
-                                          .price
+                                      nft.sellings.masterSelling.sellingVoucher
+                                        .price
                                     )
                                   ).toFixed(2)}
                                 </div>
                                 <div className="text-grey-medium text-sm">
-                                  {(
-                                    nft.sellings.masterSelling.saleVoucher
-                                      ?.currency ??
-                                    nft.sellings.masterSelling.mintVoucher
-                                      .currency
-                                  ).toUpperCase()}
+                                  {nft.sellings.masterSelling.sellingVoucher.currency.toUpperCase()}
                                 </div>
                               </div>
                               <div className="text-md text-grey-light">
@@ -374,19 +360,12 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                                   {parseFloat(
                                     Web3.utils.fromWei(
                                       nft.sellings.licenseSellings[0]
-                                        .saleVoucher?.price ??
-                                        nft.sellings.licenseSellings[0]
-                                          .mintVoucher.price
+                                        .sellingVoucher.price
                                     )
                                   ).toFixed(2)}
                                 </div>
                                 <div className="text-grey-medium text-sm">
-                                  {(
-                                    nft.sellings.licenseSellings[0].saleVoucher
-                                      ?.currency ??
-                                    nft.sellings.licenseSellings[0].mintVoucher
-                                      .currency
-                                  ).toUpperCase()}
+                                  {nft.sellings.licenseSellings[0].sellingVoucher.currency.toUpperCase()}
                                 </div>
                               </div>
                               <div className="text-md text-grey-light">

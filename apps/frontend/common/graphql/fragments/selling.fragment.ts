@@ -13,28 +13,18 @@ export const SELLING_FRAGMENT = gql`
     buyers {
       ...NftOwnerFragment
     }
-    saleVoucher {
+    sellingVoucher {
       nftContractAddress
       price
+      tokenId
       tokenUri
       isMaster
       signature
-      supply
-      currency
-      validUntil
-    }
-    mintVoucher {
-      price
-      tokenUri
-      isMaster
-      signature
+      sellCount
       supply
       maxSupply
       currency
-      royaltyFeeMaster
-      royaltyFeeLicense
-      creatorOwnerSplit
-      validUntil
+      royaltyFeeInBips
     }
     nftType
     marketplaceContractAddress

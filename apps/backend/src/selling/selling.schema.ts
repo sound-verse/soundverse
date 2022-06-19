@@ -17,12 +17,21 @@ class Buyer {
   transactionHash: string;
 }
 
-export class MintVoucher {
+class SellingVoucher {
+  @Prop()
+  nftContractAddress: string;
+
   @Prop()
   price: string;
 
   @Prop()
+  sellCount: number;
+
+  @Prop()
   tokenUri: string;
+
+  @Prop()
+  tokenId: number;
 
   @Prop()
   supply: number;
@@ -40,42 +49,7 @@ export class MintVoucher {
   currency: string;
 
   @Prop()
-  royaltyFeeMaster: number;
-
-  @Prop()
-  royaltyFeeLicense: number;
-
-  @Prop()
-  creatorOwnerSplit: number;
-
-  @Prop()
-  validUntil: number;
-}
-
-export class SaleVoucher {
-  @Prop()
-  nftContractAddress: string;
-
-  @Prop()
-  price: string;
-
-  @Prop()
-  tokenUri: string;
-
-  @Prop()
-  supply: number;
-
-  @Prop()
-  isMaster: boolean;
-
-  @Prop()
-  signature: string;
-
-  @Prop()
-  currency: string;
-
-  @Prop()
-  validUntil: number;
+  royaltyFeeInBips: number;
 }
 
 @Schema()
@@ -95,10 +69,7 @@ export class Selling extends BaseDBObject {
   nft: Types.ObjectId;
 
   @Prop()
-  saleVoucher?: SaleVoucher;
-
-  @Prop()
-  mintVoucher?: MintVoucher;
+  sellingVoucher: SellingVoucher;
 
   @Prop()
   nftType: NftType;
@@ -121,3 +92,10 @@ export const SellingSchema = SchemaFactory.createForClass(Selling);
 SellingSchema.index({ createdAt: 1 });
 SellingSchema.index({ nft: 1 });
 SellingSchema.index({ nft: 1, sellingStatus: 1, nftType: 1 });
+SellingSchema.index({
+  'sellingVoucher.nftContractAddress': 1,
+  'sellingVoucher.tokenId': 1,
+  'sellingVoucher.price': -1,
+  'sellingVoucher.isMaster': 1,
+  sellingStatus: 1,
+});

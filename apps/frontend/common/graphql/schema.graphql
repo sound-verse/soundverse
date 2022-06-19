@@ -33,18 +33,13 @@ input CreateChatMessageInput {
   roomId: String!
 }
 
-input CreateMintSellingInput {
-  mintVoucherInput: MintVoucherInput!
-  nftId: String!
-}
-
 input CreateRoomInput {
   playlistItems: [PlaylistItemInput!]!
 }
 
 input CreateSellingInput {
   nftId: String!
-  saleVoucherInput: SaleVoucherInput!
+  sellingVoucher: SellingVoucherInput!
 }
 
 input JoinRoomInput {
@@ -60,32 +55,8 @@ input LoginInput {
   signature: String!
 }
 
-type MintVoucher {
-  creatorOwnerSplit: Int!
-  currency: String!
-  isMaster: Boolean!
-  maxSupply: Int!
-  price: String!
-  royaltyFeeLicense: Int!
-  royaltyFeeMaster: Int!
-  signature: String!
-  supply: Int!
-  tokenUri: String!
-  validUntil: String!
-}
-
-input MintVoucherInput {
-  currency: String!
-  isMaster: Boolean!
-  price: String!
-  signature: String!
-  supply: Int!
-  validUntil: String!
-}
-
 type Mutation {
   createChatMessage(createChatMessageInput: CreateChatMessageInput!): Room!
-  createMintSelling(createMintSellingInput: CreateMintSellingInput!): Selling!
   createNft(NFTFile: Upload!, data: NftInput!, pictureFile: Upload!): Nft!
   createRoom(createRoomInput: CreateRoomInput!): Room!
   createSelling(createSellingInput: CreateSellingInput!): Selling!
@@ -105,7 +76,6 @@ type Mutation {
 type Nft {
   chainId: Int!
   creator: User
-  creatorOwnerSplit: Float!
   filePictureUrl: String!
   fileUrl: String!
   id: String!
@@ -115,8 +85,7 @@ type Nft {
   masterContractAddress: String!
   masterOwner: NftOwner!
   metadata: NftMetadata!
-  royaltyFeeLicense: Float!
-  royaltyFeeMaster: Float!
+  royaltyFeeInBips: Float!
   sellings: NftSelling
   supply: Float!
   tokenId: Float
@@ -131,10 +100,8 @@ input NftFilter {
 
 input NftInput {
   chainId: Float
-  creatorOwnerSplit: Int!
   metadata: NftMetadataInput!
-  royaltyFeeLicense: Int!
-  royaltyFeeMaster: Int!
+  royaltyFeeInBips: Int!
   supply: Float!
   tags: [String!]!
   transactionHash: String
@@ -210,37 +177,43 @@ type Rooms {
   rooms: [Room!]
 }
 
-type SaleVoucher {
-  currency: String!
-  isMaster: Boolean!
-  nftContractAddress: String!
-  price: String!
-  signature: String!
-  supply: Int!
-  tokenUri: String!
-  validUntil: String!
-}
-
-input SaleVoucherInput {
-  currency: String!
-  isMaster: Boolean!
-  nftContractAddress: String!
-  price: String!
-  signature: String!
-  supply: Int!
-  validUntil: String!
-}
-
 type Selling {
   buyers: [NftOwner!]!
   id: String!
   marketplaceContractAddress: String!
-  mintVoucher: MintVoucher
   nftType: String!
-  saleVoucher: SaleVoucher
   seller: User!
   sellingStatus: String!
+  sellingVoucher: SellingVoucher!
   transactionHash: String
+}
+
+type SellingVoucher {
+  currency: String!
+  isMaster: Boolean!
+  maxSupply: Int!
+  nftContractAddress: String!
+  price: String!
+  royaltyFeeInBips: Float!
+  sellCount: Int!
+  signature: String!
+  supply: Int!
+  tokenId: Int!
+  tokenUri: String!
+}
+
+input SellingVoucherInput {
+  currency: String!
+  isMaster: Boolean!
+  maxSupply: Int!
+  nftContractAddress: String!
+  price: String!
+  royaltyFeeInBips: Int!
+  sellCount: Int!
+  signature: String!
+  supply: Int!
+  tokenId: Int!
+  tokenUri: String!
 }
 
 type Subscription {
