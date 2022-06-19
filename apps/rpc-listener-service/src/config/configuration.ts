@@ -25,13 +25,13 @@ export default () => ({
     testflight: {
       contractEvents: [
         {
-          contractAddress: '0xCd9ED3779D6f5eb65cDf86aB49119698fEd718A0',
+          contractAddress: '0x8E1a10E4EeBc70a94BDaBF2750A8175A3C166022',
           listensTo: [EventType.MASTER_MINT_EVENT],
           contractType: ContractType.MASTER,
           version: '0.1',
         },
         {
-          contractAddress: '0xEFfD9087543cb093F34F165AA86830274CA8bC47',
+          contractAddress: '0xe7CA5A98DCBd2863510af18d41F23E6b849a6B08',
           listensTo: [
             EventType.REDEEMED_MINT_VOUCHER,
             EventType.REDEEMED_SALE_VOUCHER,
