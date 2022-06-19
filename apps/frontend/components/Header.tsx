@@ -62,6 +62,9 @@ const Header = ({ className = '' }) => {
   }
 
   const onboard = async () => {
+    if (process.env.NEXT_PUBLIC_ENVIRONMENT === 'local') {
+      return
+    }
     if (MetaMaskOnboarding.isMetaMaskInstalled()) {
       try {
         let accounts = await window.ethereum.request({
