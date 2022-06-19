@@ -34,7 +34,7 @@ export const useLogin = () => {
   const { data, loading, refetch } = useQuery<MeQuery, MeQueryVariables>(ME)
   const {
     account,
-    library: ethLibraray,
+    library: ethLibrary,
     activateBrowserWallet,
     deactivate,
     activate,
@@ -108,10 +108,10 @@ export const useLogin = () => {
   }, [jwtUser, data])
 
   useEffect(() => {
-    if (!chainId && authenticated && ethLibraray) {
-      activate(ethLibraray)
+    if (!chainId && authenticated && ethLibrary) {
+      activate(ethLibrary)
     }
-  }, [activate, authenticated, chainId, ethLibraray])
+  }, [activate, authenticated, chainId, ethLibrary])
 
   useEffect(() => {
     if (account && chainId && !correctChainIds.includes(chainId)) {
@@ -151,7 +151,7 @@ export const useLogin = () => {
         nonce.data.generateVerificationToken
       })`
 
-      const signature = await ethLibraray.getSigner().signMessage(msg)
+      const signature = await ethLibrary.getSigner().signMessage(msg)
 
       const jwtToken = await login({
         variables: { data: { ethAddress: account, signature } },
@@ -167,7 +167,7 @@ export const useLogin = () => {
   }, [
     generateVerificationToken,
     account,
-    ethLibraray,
+    ethLibrary,
     login,
     setAuthToken,
     getJwtUser,
