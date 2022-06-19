@@ -5,16 +5,16 @@ export default () => ({
     local: {
       contractEvents: [
         {
-          contractAddress: '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9',
+          contractAddress: '0x5FC8d32690cc91D4c39d9d3abcBD16989F875707',
           listensTo: [EventType.MASTER_MINT_EVENT],
           contractType: ContractType.MASTER,
           version: '0.1',
         },
         {
-          contractAddress: '0x0165878A594ca255338adfa4d48449f69242Eb8F',
+          contractAddress: '0xa513E6E4b8f2a923D98304ec87F64353C4D5C853',
           listensTo: [
-            EventType.REDEEMED_MINT_VOUCHER,
-            EventType.REDEEMED_SALE_VOUCHER,
+            EventType.REDEEMED_ITEM,
+            EventType.REDEEMED_ITEM_SECONDARY_SALE,
             EventType.UNLISTED_NFT,
           ],
           contractType: ContractType.MARKETPLACE,
@@ -33,8 +33,8 @@ export default () => ({
         {
           contractAddress: '0xEFfD9087543cb093F34F165AA86830274CA8bC47',
           listensTo: [
-            EventType.REDEEMED_MINT_VOUCHER,
-            EventType.REDEEMED_SALE_VOUCHER,
+            EventType.REDEEMED_ITEM,
+            EventType.REDEEMED_ITEM_SECONDARY_SALE,
             EventType.UNLISTED_NFT,
           ],
           contractType: ContractType.MARKETPLACE,

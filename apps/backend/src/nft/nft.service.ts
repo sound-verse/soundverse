@@ -139,9 +139,12 @@ export class NftService {
   }
 
   async changeOwner(
-    saleSignature: string,
+    sellerEthAddress: string,
     buyerEthAddress: string,
     amount: number,
+    contractAddress: string,
+    tokenUri: string,
+    isMaster: boolean,
     chainId: number,
     transactionHash: string,
     voucherType: 'mint_voucher' | 'sale_voucher',
@@ -153,30 +156,24 @@ export class NftService {
       }, 1000),
     );
 
-    const selling = await this.sellingModel.findOne({
-      ...(voucherType === 'mint_voucher'
-        ? { 'mintVoucher.signature': saleSignature }
-        : { 'saleVoucher.signature': saleSignature }),
-    });
-
-    if (!selling) {
-      return;
-    }
-
     const nft = await this.nftModel.findOne({
-      _id: selling.nft._id,
+      $or: [
+        { masterContratAddress: contractAddress.toLowerCase() },
+        { licenseContratAddress: contractAddress.toLowerCase() },
+      ],
+      ipfsUrl: tokenUri,
+      chainId,
     });
-
-    const buyer = await this.userModel.findOne({ ethAddress: buyerEthAddress.toLowerCase() });
-    const seller = await this.userModel.findOne({ _id: selling.seller });
 
     if (!nft) {
       console.log(
-        `Error transferring ownership - no NFT found! FROM: ${seller.ethAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
+        `Error transferring ownership - no NFT found! FROM: ${sellerEthAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
       );
       return;
     }
     let currentSellerSupply;
+    const buyer = await this.userModel.findOne({ ethAddress: buyerEthAddress.toLowerCase() });
+    const seller = await this.userModel.findOne({ ethAddress: sellerEthAddress.toLowerCase() });
 
     const masterOwner = await this.userModel.findOne({ _id: nft.masterOwner.user._id });
     const licenseOwner = nft.licenseOwners.find(
@@ -190,11 +187,24 @@ export class NftService {
       return supply;
     }, 0);
 
+    //TODO: What if there are more then one vouchers created for the same NFT and same seller? We need to differentiate.
+    //For now we simply allow only one open selling per nft per user per contract
+    const selling = await this.sellingModel.findOne({
+      nftType: isMaster ? NftType.MASTER : NftType.LICENSE,
+      sellingStatus: SellingStatus.OPEN,
+      nft: nft._id,
+      seller: seller._id,
+    });
+
+    if (!selling) {
+      return;
+    }
+
     const existingTxHash = selling.buyers.find((buyer) => buyer.transactionHash === transactionHash);
 
     if (existingTxHash) {
       console.log(
-        `Error transferring ownership - transactionHash already processed! FROM: ${seller.ethAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
+        `Error transferring ownership - transactionHash already processed! FROM: ${sellerEthAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
       );
       return;
     }
@@ -210,15 +220,15 @@ export class NftService {
       0
     ) {
       console.log(
-        `Error transferring ownership - Selling has not enough supply! FROM: ${seller.ethAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
+        `Error transferring ownership - Selling has not enough supply! FROM: ${sellerEthAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
       );
       return;
     }
 
-    if (selling.nftType === NftType.MASTER) {
+    if (isMaster) {
       if (masterOwner._id.toString() !== seller._id.toString()) {
         console.log(
-          `Error transferring ownership - Seller is not owner! FROM: ${seller.ethAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
+          `Error transferring ownership - Seller is not owner! FROM: ${sellerEthAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
         );
         return;
       }
@@ -226,7 +236,7 @@ export class NftService {
     } else {
       if (!licenseOwner && licenseOwner.user._id.toString() !== seller._id.toString()) {
         console.log(
-          `Error transferring ownership - Seller is not owner! FROM: ${seller.ethAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
+          `Error transferring ownership - Seller is not owner! FROM: ${sellerEthAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
         );
         return;
       }
@@ -236,12 +246,12 @@ export class NftService {
 
     if (currentSellerSupply - amount < 0) {
       console.log(
-        `Error transferring ownership - Seller has not enough supply! FROM: ${seller.ethAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
+        `Error transferring ownership - Seller has not enough supply! FROM: ${sellerEthAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
       );
       return;
     }
 
-    if (selling.nftType === NftType.MASTER) {
+    if (isMaster) {
       await this.setMasterOwner(nft, buyer);
       await this.setLicenseOwner(nft, buyer, masterOwnerLicenseSupply);
       await this.setLicenseOwner(nft, seller, -masterOwnerLicenseSupply);

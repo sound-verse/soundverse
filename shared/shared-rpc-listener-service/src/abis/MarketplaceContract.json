@@ -40,18 +40,12 @@
       },
       {
         "indexed": false,
-        "internalType": "address",
-        "name": "buyer",
-        "type": "address"
-      },
-      {
-        "indexed": false,
         "internalType": "uint256",
         "name": "soldAmount",
         "type": "uint256"
       }
     ],
-    "name": "RedeemedMintVoucher",
+    "name": "RedeemedItem",
     "type": "event"
   },
   {
@@ -65,18 +59,12 @@
       },
       {
         "indexed": false,
-        "internalType": "address",
-        "name": "buyer",
-        "type": "address"
-      },
-      {
-        "indexed": false,
         "internalType": "uint256",
         "name": "soldAmount",
         "type": "uint256"
       }
     ],
-    "name": "RedeemedSaleVoucher",
+    "name": "RedeemedItemSecondarySale",
     "type": "event"
   },
   {
@@ -289,6 +277,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "getChainID",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "bytes32",
@@ -340,19 +341,6 @@
       }
     ],
     "name": "getRoleMemberCount",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getServiceFees",
     "outputs": [
       {
         "internalType": "uint256",
@@ -466,6 +454,16 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "_buyer",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_seller",
+        "type": "address"
+      },
+      {
         "internalType": "uint256",
         "name": "_amountToPurchase",
         "type": "uint256"
@@ -533,13 +531,23 @@
         "type": "tuple"
       }
     ],
-    "name": "redeemMintVoucher",
+    "name": "redeemItem",
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"
   },
   {
     "inputs": [
+      {
+        "internalType": "address",
+        "name": "_buyer",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_seller",
+        "type": "address"
+      },
       {
         "internalType": "uint256",
         "name": "_amountToPurchase",
@@ -593,7 +601,7 @@
         "type": "tuple"
       }
     ],
-    "name": "redeemSaleVoucher",
+    "name": "redeemItemSecondarySale",
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"
@@ -695,6 +703,19 @@
         "name": "",
         "type": "uint256"
       },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "serviceFees",
+    "outputs": [
       {
         "internalType": "uint256",
         "name": "",

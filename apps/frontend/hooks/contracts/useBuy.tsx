@@ -30,12 +30,12 @@ export const useBuy = () => {
 
   const { state: redeemItemState, send: sendRedeemItem } = useContractFunction(
     contract as any,
-    'redeemMintVoucher'
+    'redeemItem'
   )
   const {
     state: redeemItemSecondarySaleState,
     send: sendRedeemItemSecondarySale,
-  } = useContractFunction(contract as any, 'redeemSaleVoucher')
+  } = useContractFunction(contract as any, 'redeemItemSecondarySale')
 
   useEffect(() => {
     if (buyProps) {
@@ -53,6 +53,8 @@ export const useBuy = () => {
     try {
       if (isMintVoucher) {
         await sendRedeemItem(
+          authUser.ethAddress,
+          buyProps.selling.seller.ethAddress,
           buyProps.amountToBuy,
           buyProps.selling.mintVoucher,
           {
@@ -61,6 +63,8 @@ export const useBuy = () => {
         )
       } else {
         await sendRedeemItemSecondarySale(
+          authUser.ethAddress,
+          buyProps.selling.seller.ethAddress,
           buyProps.amountToBuy,
           buyProps.selling.saleVoucher,
           {
