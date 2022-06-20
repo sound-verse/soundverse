@@ -138,7 +138,7 @@ export const CreateForm = () => {
         creatorOwnerSplit: values.creatorOwnerSplit,
       })
       if (id) {
-        router.push(`/master/${id}`)
+        router.push(`/license/${id}`)
       } else {
         toast.error('Error minting your NFT')
       }
@@ -320,9 +320,9 @@ export const CreateForm = () => {
             Secondary sales distribution
           </div>
           <div className="text-grey-light leading-6">
-            Everytime the license generate royalty, the royalty will be
-            distributed between Master creator and owner. You are Master owner
-            by default.
+            Your Master NFT owner will receive this % income from secondary
+            sales of your License NFTs. By default you are the Master owner and
+            you can either sell it or keep it for yourself.
           </div>
           <div className="mt-6 w-full">
             <Field
