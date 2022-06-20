@@ -26,7 +26,6 @@ type SingleNftPageProps = {
 
 export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
   const { authUser } = useAuthContext()
-  const { authenticated } = useLogin()
   const [showCreateListing, setShowCreateListing] = useState<boolean>(false)
   const [showBuyLicense, setShowBuyLicense] = useState<boolean>(false)
   const [selectedSelling, setSelectedSelling] = useState<Selling>(undefined)
@@ -126,7 +125,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
   }, [unlistNftState])
 
   const handleBuyNft = async () => {
-    if (!authenticated) {
+    if (!authUser) {
       toast.error('Please connect your wallet.')
       return
     }
@@ -139,7 +138,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
   }
 
   const handleBuyLicense = async () => {
-    if (!authenticated) {
+    if (!authUser) {
       toast.error('Please connect your wallet.')
       return
     }
@@ -152,7 +151,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
   }
 
   const handleUnlistNft = async () => {
-    if (!authenticated) {
+    if (!authUser) {
       toast.error('Please connect your wallet.')
       return
     }

@@ -39,10 +39,6 @@ export const useBuy = () => {
   const isMintVoucher = buyProps?.selling?.saleVoucher ? false : true
 
   const executeBuy = async () => {
-    if (!authUser || !chainId) {
-      return
-    }
-
     if (isMintVoucher) {
       await sendRedeemMintVoucher(
         buyProps.amountToBuy,

@@ -1,5 +1,5 @@
 import { useEthers } from '@usedapp/core'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { gql, useMutation, useQuery } from '@apollo/client'
 import { useAuthContext } from '../context/AuthContext'
 import jwt_decode from 'jwt-decode'
@@ -32,6 +32,8 @@ export const useLogin = () => {
   const [login] = useMutation<LoginMutation, LoginMutationVariables>(LOGIN)
   const { jwtToken, setAuthToken, setLoggedInUser, authUser } = useAuthContext()
   const { data, loading, refetch } = useQuery<MeQuery, MeQueryVariables>(ME)
+  const authenticationPending = useRef(false)
+
   const {
     account,
     library: ethLibrary,
@@ -106,13 +108,21 @@ export const useLogin = () => {
     }
   }, [jwtUser, data])
 
+  const loginUser = useCallback(() => {
+    activateBrowserWallet()
+  }, [activateBrowserWallet])
+
   useEffect(() => {
-    if (authUser) {
+    if (authUser && chainId && account && active) {
       setAuthenticated(true)
+    } else if (jwtUser && (!chainId || !account || !active)) {
+      setAuthenticated(false)
+      activateBrowserWallet()
     } else {
       setAuthenticated(false)
+      logout()
     }
-  }, [authUser])
+  }, [account, active, authUser, chainId, loginUser])
 
   useEffect(() => {
     if (account && chainId && !correctChainIds.includes(chainId)) {
@@ -123,18 +133,15 @@ export const useLogin = () => {
       account &&
       account.toLowerCase() !== jwtUser?.ethAddress.toLowerCase()
     ) {
-      setAuthUser(undefined)
-      setAuthenticated(false)
       authenticate()
     }
-    // if (!account && authenticated) {
-    //   activateBrowserWallet()
-    // }
-  }, [account, chainId])
-
-  const loginUser = useCallback(() => {
-    activateBrowserWallet()
-  }, [activateBrowserWallet])
+  }, [
+    account,
+    chainId,
+    correctChainIds,
+    correctNetworkName,
+    jwtUser?.ethAddress,
+  ])
 
   const logout = useCallback(async () => {
     setAuthToken('')
@@ -144,9 +151,14 @@ export const useLogin = () => {
   }, [deactivate, setAuthToken, setLoggedInUser])
 
   const authenticate = useCallback(async (): Promise<void> => {
+    if (authenticationPending.current) {
+      return
+    }
+    authenticationPending.current = true
     try {
       const nonce = await generateVerificationToken({
         variables: { data: { ethAddress: account } },
+        fetchPolicy: 'network-only',
       })
 
       const msg = `To authenticate, please sign this message: ${account.toLowerCase()} (${
@@ -157,6 +169,7 @@ export const useLogin = () => {
 
       const jwtToken = await login({
         variables: { data: { ethAddress: account, signature } },
+        fetchPolicy: 'network-only',
       })
 
       setAuthToken(jwtToken.data.login.token)
@@ -166,6 +179,7 @@ export const useLogin = () => {
       logout()
       console.log(`Authentication failed ${e}`)
     }
+    authenticationPending.current = false
   }, [
     generateVerificationToken,
     account,

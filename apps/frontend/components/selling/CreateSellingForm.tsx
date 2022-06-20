@@ -10,7 +10,6 @@ import { useRouter } from 'next/router'
 import { useCreateSelling } from '../../hooks/contracts/useCreateSelling'
 import { AuthUser, Nft, NftType } from '../../common/graphql/schema.d'
 import { useAuthContext } from '../../context/AuthContext'
-import { useLogin } from '../../hooks/useLogin'
 
 export type CreateSellingFormProps = {
   user: AuthUser
@@ -29,7 +28,6 @@ export const CreateSellingForm = ({
   const router = useRouter()
   const { createSelling, selling } = useCreateSelling()
   const { authUser } = useAuthContext()
-  const { authenticated } = useLogin()
 
   const initialValues = { price: 0, amount: 0 }
 
@@ -69,7 +67,7 @@ export const CreateSellingForm = ({
   }, [selling])
 
   const onSubmit = async (values, onSubmitProps) => {
-    if (!authenticated) {
+    if (!authUser) {
       toast.error('Please connect your wallet.')
       return
     }
