@@ -85,7 +85,7 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
         >
           {userChat.map((chatMessage, key) => {
             return (
-              <div key={key} className="">
+              <div key={key} className="mb-1">
                 <ProfileName
                   ethAddress={chatMessage.sender.ethAddress}
                   name={chatMessage.sender.name}
