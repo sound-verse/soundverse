@@ -11,6 +11,8 @@ import {
   LicenseContract,
 } from '@soundverse/shared-rpc-listener-service';
 import { ClientProxy } from '@nestjs/microservices';
+import { RPCHistoryService } from '../rpc-history/rpc-history.service';
+import { sub } from 'date-fns';
 
 @Injectable()
 export class RPCListenerService implements OnApplicationBootstrap {
@@ -18,6 +20,7 @@ export class RPCListenerService implements OnApplicationBootstrap {
   private chainId: number;
   constructor(
     private configService: ConfigService,
+    private rpcHistoryService: RPCHistoryService,
     @Inject('SC_BLOCKCHAIN_EVENTS_SERVICE') private scBlockchainEventsService: ClientProxy,
   ) {
     this.wsProvider = new ethers.providers.WebSocketProvider(configService.get('RPC_URL'));
@@ -42,11 +45,31 @@ export class RPCListenerService implements OnApplicationBootstrap {
       const abi = this.parseAbi(contractType);
       const contract = new ethers.Contract(contractEvent.contractAddress as string, abi, this.wsProvider);
       contractEvent.listensTo.forEach((eventType: EventType) => {
+        void this.verifyPastEvents(contract, eventType);
         this.subscribeToEvent(eventType, contract, contractType);
       });
     });
 
     console.log(`RPC Listener startet`);
+  }
+
+  async verifyPastEvents(contract: Contract, eventType: EventType) {
+    const eventFilter = contract.filters[eventType]();
+    const latestBlock = await this.wsProvider.getBlockNumber();
+    const fromBlock = latestBlock - 1000000;
+    const events = await contract.queryFilter(eventFilter, fromBlock);
+
+    const now = new Date();
+    const yesterday = sub(now, { days: 1 });
+
+    const pastEvents = await this.rpcHistoryService.getPastHistory({
+      contractAddress: contract.address,
+      eventType,
+      fromDate: yesterday,
+      toDate: now,
+    });
+
+    console.log(events);
   }
 
   subscribeToEvent(eventType: EventType, contract: Contract, contractType: ContractType): void {
@@ -55,6 +78,11 @@ export class RPCListenerService implements OnApplicationBootstrap {
       event['contractType'] = contractType;
       event['chainId'] = this.chainId;
       console.log(event);
+      void this.rpcHistoryService.add({
+        contractAddress: contract.address,
+        eventType,
+        txHash: event.transactionHash,
+      });
       this.handleEvent(event);
     });
     console.log(`RPC Listener listens to: ${contract.address} ${contractType} ${eventType}`);
