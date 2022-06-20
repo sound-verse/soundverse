@@ -27,15 +27,16 @@ export const BuyLicense = ({
           <div className="col-start-3"></div>
           <div className="col-start-6"></div>
         </div>
-        <div className="grid bg-grey-dark grid-cols-7 pb-5 w-full px-5">
+        <div className="grid bg-grey-dark grid-cols-10 pb-5 w-full px-5">
           <div className="col-span-1"></div>
           <div className="col-start-3">Price</div>
           <div className="col-start-6">Owner</div>
+          <div className="col-start-9">#Listed</div>
         </div>
         {sellings.map((selling, key) => (
           <div
             key={key}
-            className="grid bg-grey-medium grid-cols-7 py-3 border-b border-black px-5 items-baseline cursor-pointer"
+            className="grid bg-grey-medium grid-cols-10 py-3 border-b border-black px-5 items-baseline cursor-pointer"
             onClick={() => {
               setSelectedLicense(selling.id), setSelectedSelling(selling)
             }}
@@ -67,6 +68,9 @@ export const BuyLicense = ({
                   />
                 </a>
               </Link>
+            </div>
+            <div className="col-start-9 text-center">
+              {selling.mintVoucher?.supply ?? selling.saleVoucher.supply}
             </div>
           </div>
         ))}

@@ -722,12 +722,124 @@
   {
     "inputs": [
       {
-        "internalType": "bytes",
-        "name": "signature",
-        "type": "bytes"
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "price",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "tokenUri",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "supply",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "maxSupply",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "isMaster",
+            "type": "bool"
+          },
+          {
+            "internalType": "bytes",
+            "name": "signature",
+            "type": "bytes"
+          },
+          {
+            "internalType": "string",
+            "name": "currency",
+            "type": "string"
+          },
+          {
+            "internalType": "uint96",
+            "name": "royaltyFeeMaster",
+            "type": "uint96"
+          },
+          {
+            "internalType": "uint96",
+            "name": "royaltyFeeLicense",
+            "type": "uint96"
+          },
+          {
+            "internalType": "uint96",
+            "name": "creatorOwnerSplit",
+            "type": "uint96"
+          },
+          {
+            "internalType": "uint256",
+            "name": "validUntil",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct MarketContract.MintVoucher",
+        "name": "_mintVoucher",
+        "type": "tuple"
       }
     ],
-    "name": "unlistItem",
+    "name": "unlistMintVoucher",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "nftContractAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "price",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "tokenUri",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "supply",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "isMaster",
+            "type": "bool"
+          },
+          {
+            "internalType": "bytes",
+            "name": "signature",
+            "type": "bytes"
+          },
+          {
+            "internalType": "string",
+            "name": "currency",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "validUntil",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct MarketContract.SaleVoucher",
+        "name": "_saleVoucher",
+        "type": "tuple"
+      }
+    ],
+    "name": "unlistSaleVoucher",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

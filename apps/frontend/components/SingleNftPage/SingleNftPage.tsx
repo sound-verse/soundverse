@@ -18,6 +18,7 @@ import Modal from 'react-modal'
 import Web3 from 'web3'
 import { Bars } from 'react-loader-spinner'
 import { useLogin } from '../../hooks/useLogin'
+import { UnlistLicense } from '../selling/UnlistLicense'
 
 type SingleNftPageProps = {
   nft: Nft
@@ -28,6 +29,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
   const { authUser } = useAuthContext()
   const [showCreateListing, setShowCreateListing] = useState<boolean>(false)
   const [showBuyLicense, setShowBuyLicense] = useState<boolean>(false)
+  const [showUnlistLicense, setShowUnlistLicense] = useState<boolean>(false)
   const [selectedSelling, setSelectedSelling] = useState<Selling>(undefined)
   const router = useRouter()
   const [showBoughtSuccess, setShowBoughtSuccess] = useState<boolean>(false)
@@ -155,11 +157,15 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
       toast.error('Please connect your wallet.')
       return
     }
-    await unlistNft({
-      ...(nftType === NftType.License
-        ? { selling: authLicenseSellings[0] }
-        : { selling: authMasterSelling }),
-    })
+    await unlistNft({ selling: authMasterSelling })
+  }
+
+  const handleUnlistLicense = async () => {
+    if (!authUser) {
+      toast.error('Please connect your wallet.')
+      return
+    }
+    await unlistNft({ selling: selectedSelling })
   }
 
   Modal.setAppElement('#__next')
@@ -176,9 +182,9 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
             <div className="col-span-1">
               <div className="flex flex-col mt-5 mb-5">
                 <SoundCard className="h-full" nft={nft} nftType={nftType} />
-                {selectedSelling && nft.sellings.licenseSellings.length > 0 && (
+                {selectedSelling && showBuyLicense && (
                   <div className="flex flex-col mt-5">
-                    <div className="font-bold w-64 text-right mb-5 text-xl">
+                    {/* <div className="font-bold w-64 mb-5 text-xl">
                       {parseFloat(
                         Web3.utils.fromWei(
                           selectedSelling.saleVoucher?.price ??
@@ -187,12 +193,22 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                       ).toFixed(2)}{' '}
                       {selectedSelling.saleVoucher?.currency ??
                         selectedSelling.mintVoucher.currency}
-                    </div>
+                    </div> */}
                     <Button
                       text="BUY NOW"
                       type="purple"
-                      className="w-64"
+                      className="w-52"
                       onClick={handleBuyLicense}
+                    />
+                  </div>
+                )}
+                {selectedSelling && showUnlistLicense && (
+                  <div className="flex flex-col mt-5">
+                    <Button
+                      text="Unlist License"
+                      type="purple"
+                      className="w-52"
+                      onClick={handleUnlistLicense}
                     />
                   </div>
                 )}
@@ -286,6 +302,28 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                       user={authUser}
                       showSingleNftPage={(showBuyLicense) =>
                         setShowBuyLicense(showBuyLicense)
+                      }
+                      setSelectedSelling={setSelectedSelling}
+                    />
+                  </div>
+                </div>
+              ) : showUnlistLicense ? (
+                <div className="flex flex-col items-center justify-center mt-12">
+                  <div className="w-[50rem]">
+                    <div
+                      onClick={() => {
+                        setSelectedSelling(undefined)
+                        setShowUnlistLicense(false)
+                      }}
+                      className="hover:text-purple cursor-pointer text-lg mb-10"
+                    >
+                      {'<- Back'}
+                    </div>
+                    <UnlistLicense
+                      userSellings={authLicenseSellings}
+                      user={authUser}
+                      showSingleNftPage={(showUnlistLicense) =>
+                        setShowUnlistLicense(showUnlistLicense)
                       }
                       setSelectedSelling={setSelectedSelling}
                     />
@@ -427,14 +465,20 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                           onClick={() => setShowCreateListing(true)}
                         />
                       )}
-                      {isUnlistable && (
+                      {isUnlistable && nftType === NftType.Master && (
                         <Button
-                          text={`Unlist ${
-                            nftType === NftType.Master ? 'Master' : 'Licenses'
-                          }`}
+                          text={'Unlist Master'}
                           type="purple"
                           className="w-48 mx-2"
                           onClick={handleUnlistNft}
+                        />
+                      )}
+                      {isUnlistable && nftType === NftType.License && (
+                        <Button
+                          text={'Unlist Licenses'}
+                          type="purple"
+                          className="w-48 mx-2"
+                          onClick={() => setShowUnlistLicense(true)}
                         />
                       )}
                       {isBuyable && nftType === NftType.Master && (

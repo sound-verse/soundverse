@@ -31,7 +31,7 @@ export default () => ({
           version: '0.1',
         },
         {
-          contractAddress: '0xb9Df52c8E122fc9707b021DD87892C61933A3cE1',
+          contractAddress: '0x3F4e06072BF91A7c65c6e561a7c26AC48EE1A918',
           listensTo: [
             EventType.REDEEMED_MINT_VOUCHER,
             EventType.REDEEMED_SALE_VOUCHER,
