@@ -275,6 +275,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                                     name={nft.masterOwner.user.name}
                                     ethAddress={nft.masterOwner.user.ethAddress}
                                     short={true}
+                                    fullName={true}
                                   />
                                 </div>
                               </a>
