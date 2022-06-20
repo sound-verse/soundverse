@@ -6,6 +6,7 @@ import { utils } from 'ethers'
 import { Contract } from '@ethersproject/contracts'
 import MarketContractAbi from '../../common/artifacts/MarketContract.json'
 import { useEffect } from 'react'
+import { useLogin } from '../useLogin'
 
 export type UnlistSellingProps = {
   selling: Selling
@@ -16,6 +17,7 @@ const marketContractAddress = process.env.NEXT_PUBLIC_MARKET_CONTRACT_ADDRESS
 export const useUnlistSelling = () => {
   const { authUser } = useAuthContext()
   const { chainId } = useEthers()
+  const { logout } = useLogin()
 
   const abi = new utils.Interface(MarketContractAbi.abi)
   const contract = new Contract(marketContractAddress, abi)
@@ -24,6 +26,8 @@ export const useUnlistSelling = () => {
 
   const unlistNft = async (createSellingInputProps: UnlistSellingProps) => {
     if (!authUser || !chainId) {
+      toast.error('Please reconnect your wallet.')
+      logout()
       return
     }
 

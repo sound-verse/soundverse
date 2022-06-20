@@ -6,8 +6,8 @@ import { ethers, utils } from 'ethers'
 import { Contract } from '@ethersproject/contracts'
 import MarketContractAbi from '../../common/artifacts/MarketContract.json'
 import { useEffect, useState } from 'react'
-import * as sigUtil from '@metamask/eth-sig-util'
-import { useServiceFees } from './useServiceFees'
+import { useLogin } from '../useLogin'
+import Web3 from 'web3'
 
 export type BuyProps = {
   nft: Nft
@@ -21,7 +21,7 @@ export const useBuy = () => {
   const { authUser } = useAuthContext()
   const { chainId, library } = useEthers()
   const [buyProps, setBuyProps] = useState<BuyProps>(undefined)
-  const { calculateServiceFees } = useServiceFees()
+  const { logout } = useLogin()
 
   //TODO: currently just taking the recent marketplace contract address - we should provide fallback for older marketplace contract addresss used in the vouchers
 
@@ -51,7 +51,9 @@ export const useBuy = () => {
         buyProps.amountToBuy,
         buyProps.selling.mintVoucher,
         {
-          value: calculateServiceFees(buyProps.selling.mintVoucher.price),
+          value: Web3.utils.toWei(
+            buyProps.selling.mintVoucher.price.toString()
+          ),
         }
       )
     } else {
@@ -59,7 +61,9 @@ export const useBuy = () => {
         buyProps.amountToBuy,
         buyProps.selling.saleVoucher,
         {
-          value: calculateServiceFees(buyProps.selling.saleVoucher.price),
+          value: Web3.utils.toWei(
+            buyProps.selling.mintVoucher.price.toString()
+          ),
         }
       )
     }
@@ -67,6 +71,8 @@ export const useBuy = () => {
 
   const buyNft = async (buyProps: BuyProps) => {
     if (!authUser || !chainId) {
+      toast.error('Please reconnect your wallet.')
+      logout()
       return
     }
 

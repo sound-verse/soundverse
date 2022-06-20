@@ -3,6 +3,8 @@ import { gql } from '@apollo/client'
 import { print } from 'graphql'
 import axios from 'axios'
 import Cookies from 'js-cookie'
+import { useLogin } from '../useLogin'
+import toast from 'react-hot-toast'
 
 const CREATE_NFT = gql`
   mutation createNft(
@@ -31,14 +33,17 @@ export type CreateNFT = {
 
 export const useCreateNFT = () => {
   const { chainId } = useEthers()
+  const { logout } = useLogin()
 
   const prepareMint = async (
     createNftProps: CreateNFT
   ): Promise<{ ipfsUrl: string; id: string }> => {
     if (!chainId) {
-      console.log('No chainId provided')
+      toast.error('Please reconnect your wallet.')
+      logout()
       return
     }
+
     const {
       nftFile,
       pictureFile,
