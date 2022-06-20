@@ -54,7 +54,8 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
 
   const authLicenseSellingsTotalAmount = authLicenseSellings.reduce(
     (supply, selling) =>
-      supply + selling.saleVoucher?.supply ?? selling.mintVoucher.supply,
+      supply +
+      (selling.saleVoucher?.supply ?? selling.mintVoucher?.supply ?? 0),
     0
   )
 
