@@ -51,9 +51,7 @@ export const useBuy = () => {
         buyProps.amountToBuy,
         buyProps.selling.mintVoucher,
         {
-          value: Web3.utils.toWei(
-            buyProps.selling.mintVoucher.price.toString()
-          ),
+          value: buyProps.selling.mintVoucher.price,
         }
       )
     } else {
@@ -61,9 +59,7 @@ export const useBuy = () => {
         buyProps.amountToBuy,
         buyProps.selling.saleVoucher,
         {
-          value: Web3.utils.toWei(
-            buyProps.selling.mintVoucher.price.toString()
-          ),
+          value: buyProps.selling.mintVoucher.price,
         }
       )
     }
