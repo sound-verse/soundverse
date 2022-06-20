@@ -57,7 +57,7 @@ export class RPCListenerService implements OnApplicationBootstrap {
       console.log(event);
       this.handleEvent(event);
     });
-    console.log(`RPC Listener listens to: ${contractType} ${eventType}`);
+    console.log(`RPC Listener listens to: ${contract.address} ${contractType} ${eventType}`);
   }
 
   handleEvent(event: IEventMessage): void {
