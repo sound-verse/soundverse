@@ -92,6 +92,7 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
                   short={true}
                   className="inline-block font-bold"
                   color={generateUserColor(chatMessage.sender.ethAddress)}
+                  fullName={true}
                 />
                 : <span className="break-words">{chatMessage.message}</span>
               </div>
