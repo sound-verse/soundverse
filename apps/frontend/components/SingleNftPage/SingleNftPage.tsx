@@ -35,6 +35,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
   const [showBoughtSuccess, setShowBoughtSuccess] = useState<boolean>(false)
   const [showUnlistedSuccess, setShowUnlistedSuccess] = useState<boolean>(false)
   const [showing, setShowing] = useState<Boolean>(false)
+  const [showIsUnlisting, setShowIsUnlisting] = useState<Boolean>(false)
 
   // useEffect(() => {
   //   if (!authUser && router.isReady) {
@@ -123,6 +124,11 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
   useEffect(() => {
     if (unlistNftState.status === 'Success') {
       setShowUnlistedSuccess(true)
+      setShowIsUnlisting(false)
+    }
+    if (unlistNftState.status === 'Exception') {
+      toast.error('Error unlisting the NFT.')
+      setShowIsUnlisting(false)
     }
   }, [unlistNftState])
 
@@ -157,6 +163,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
       toast.error('Please connect your wallet.')
       return
     }
+    setShowIsUnlisting(true)
     await unlistNft({ selling: authMasterSelling })
   }
 
@@ -165,6 +172,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
       toast.error('Please connect your wallet.')
       return
     }
+    setShowIsUnlisting(true)
     await unlistNft({ selling: selectedSelling })
   }
 
@@ -550,13 +558,13 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
         </div>
       </Modal>
       <Modal
-        isOpen={showing}
+        isOpen={showing || showIsUnlisting}
         className="flex justify-center items-center h-full"
       >
         <div className="w-1/2 h-1/2 rounded-3xl p-10 bg-grey-dark flex flex-col justify-between items-center">
           <div className="h-full w-full justify-center items-center flex flex-col">
             <div className="text-white text-2xl font-bold mb-10">
-              Buying NFT
+              {showIsUnlisting ? 'Unlisting' : 'Buying'} NFT
             </div>
             <Bars color="#7A64FF" height={80} width={80} />
           </div>
