@@ -19,6 +19,18 @@ export const BuyLicense = ({
 }: BuyLicenseProps) => {
   const [selectedLicense, setSelectedLicense] = useState<string>(undefined)
 
+  const getSellingSupplyLeft = (selling: Selling) => {
+    const alreadyBoughtSupply = selling.buyers.reduce(
+      (amount, buyer) => amount + buyer.supply,
+      0
+    )
+
+    return (
+      (selling.saleVoucher?.supply ?? selling.mintVoucher.supply) -
+      alreadyBoughtSupply
+    )
+  }
+
   return (
     <div className=" bg-grey-dark flex flex-col rounded-2xl w-full pt-5">
       <div className="rounded-b-2xl mb-5 bg-grey-medium">
@@ -70,7 +82,7 @@ export const BuyLicense = ({
               </Link>
             </div>
             <div className="col-start-9 text-center">
-              {selling.mintVoucher?.supply ?? selling.saleVoucher.supply}
+              {getSellingSupplyLeft(selling)}
             </div>
           </div>
         ))}
