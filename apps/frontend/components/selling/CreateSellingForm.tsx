@@ -9,6 +9,7 @@ import { useProfile } from '../../hooks/useProfile'
 import { useRouter } from 'next/router'
 import { useCreateSelling } from '../../hooks/contracts/useCreateSelling'
 import { AuthUser, Nft, NftType } from '../../common/graphql/schema.d'
+import { useAuthContext } from '../../context/AuthContext'
 
 export type CreateSellingFormProps = {
   user: AuthUser
@@ -26,17 +27,33 @@ export const CreateSellingForm = ({
   const [loading, setLoading] = useState<Boolean>(false)
   const router = useRouter()
   const { createSelling, selling } = useCreateSelling()
+  const { authUser } = useAuthContext()
 
   const initialValues = { price: 0, amount: 0 }
 
   let userSupply = 0
+  let availableSupply = 0
 
   if (nftType === NftType.Master) {
     userSupply = nft.masterOwner.supply
+    availableSupply = userSupply
   } else {
     userSupply = nft.licenseOwners.find(
       (licenseOwner) => licenseOwner.user.id === user.id
     ).supply
+
+    const authLicenseSellings = nft.sellings?.licenseSellings?.filter(
+      (selling) => selling.seller.id === authUser?.id
+    )
+
+    const alreadyListedSupply = authLicenseSellings.reduce(
+      (supply, selling) =>
+        supply +
+        (selling.saleVoucher?.supply ?? selling.mintVoucher?.supply ?? 0),
+      0
+    )
+
+    availableSupply = userSupply - alreadyListedSupply
   }
 
   useEffect(() => {
@@ -76,7 +93,7 @@ export const CreateSellingForm = ({
     amount: Yup.number()
       .typeError('Please enter the amount you want to sell')
       .min(1, 'You have to enter a minimum amount of 1')
-      .max(userSupply, `Your max supply on this nft is ${userSupply}`)
+      .max(availableSupply, `Your max supply on this nft is ${availableSupply}`)
       .required('Please enter a number'),
   })
 
@@ -135,7 +152,7 @@ export const CreateSellingForm = ({
                   </div>
                 </div>
                 <div>
-                  <div>{userSupply}</div>
+                  <div>{availableSupply}</div>
                   <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
                   <div className="text-grey-light mt-2 text-xs">
                     Total number of licenses available
