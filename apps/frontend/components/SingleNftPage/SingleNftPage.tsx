@@ -415,7 +415,13 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                           )}
                       {isListable && (
                         <Button
-                          text="List Nft"
+                          text={`List ${
+                            nftType === NftType.Master
+                              ? 'Master'
+                              : authLicenseSellingsTotalAmount > 0
+                              ? 'more Licenses'
+                              : 'Licenses'
+                          }`}
                           type="purple"
                           className="w-48 mx-2"
                           onClick={() => setShowCreateListing(true)}
@@ -423,7 +429,9 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                       )}
                       {isUnlistable && (
                         <Button
-                          text="Unlist Nft"
+                          text={`Unlist ${
+                            nftType === NftType.Master ? 'Master' : 'Licenses'
+                          }`}
                           type="purple"
                           className="w-48 mx-2"
                           onClick={handleUnlistNft}
