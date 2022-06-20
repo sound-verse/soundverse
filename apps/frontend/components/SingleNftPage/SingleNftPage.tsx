@@ -17,6 +17,7 @@ import { BuyLicense } from '../selling/BuyLicense'
 import Modal from 'react-modal'
 import Web3 from 'web3'
 import { Bars } from 'react-loader-spinner'
+import { useLogin } from '../../hooks/useLogin'
 
 type SingleNftPageProps = {
   nft: Nft
@@ -25,6 +26,7 @@ type SingleNftPageProps = {
 
 export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
   const { authUser } = useAuthContext()
+  const { authenticated } = useLogin()
   const [showCreateListing, setShowCreateListing] = useState<boolean>(false)
   const [showBuyLicense, setShowBuyLicense] = useState<boolean>(false)
   const [selectedSelling, setSelectedSelling] = useState<Selling>(undefined)
@@ -124,6 +126,10 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
   }, [unlistNftState])
 
   const handleBuyNft = async () => {
+    if (!authenticated) {
+      toast.error('Please connect your wallet.')
+      return
+    }
     setShowing(true)
     await buyNft({
       nft,
@@ -133,6 +139,10 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
   }
 
   const handleBuyLicense = async () => {
+    if (!authenticated) {
+      toast.error('Please connect your wallet.')
+      return
+    }
     setShowing(true)
     await buyNft({
       nft,
@@ -142,6 +152,10 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
   }
 
   const handleUnlistNft = async () => {
+    if (!authenticated) {
+      toast.error('Please connect your wallet.')
+      return
+    }
     await unlistNft({
       ...(nftType === NftType.License
         ? { selling: authLicenseSellings[0] }

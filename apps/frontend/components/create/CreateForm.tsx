@@ -9,6 +9,7 @@ import Modal from 'react-modal'
 import { Bars } from 'react-loader-spinner'
 import styles from './CreateForm.module.css'
 import cn from 'classnames'
+import { useLogin } from '../../hooks/useLogin'
 
 const FILE_SIZE = 100000000
 
@@ -43,6 +44,7 @@ export const CreateForm = () => {
   const [pictureFileError, setPictureFileError] = useState<String>('')
   const [firstStepValues, setFirstStepValues] = useState<FirstStepValues>()
   const [showSecondStep, setShowSecondStep] = useState(false)
+  const { authenticated } = useLogin()
 
   const initialValuesFirstStep: FirstStepValues = {
     name: '',
@@ -119,6 +121,10 @@ export const CreateForm = () => {
   }
 
   const onSubmit = async (values, onSubmitProps) => {
+    if (!authenticated) {
+      toast.error('Please connect your wallet.')
+      return
+    }
     try {
       setShowing(true)
       const { id } = await prepareMint({
