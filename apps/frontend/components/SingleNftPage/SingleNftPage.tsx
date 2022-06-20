@@ -107,6 +107,13 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
   useEffect(() => {
     if (buyNftState.status === 'Success') {
       setShowBoughtSuccess(true)
+      setShowing(false)
+    }
+    if (buyNftState.status === 'Exception') {
+      toast.error(
+        'Error buying the NFT. Do you have enough funds in your wallet?'
+      )
+      setShowing(false)
     }
   }, [buyNftState])
 
@@ -123,10 +130,10 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
       selling: nft.sellings.masterSelling,
       amountToBuy: 1,
     })
-    setShowing(false)
   }
 
   const handleBuyLicense = async () => {
+    setShowing(true)
     await buyNft({
       nft,
       selling: selectedSelling,
@@ -452,7 +459,6 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
       </Layout>
       <Modal
         isOpen={showBoughtSuccess || showUnlistedSuccess}
-        contentLabel="onRequestClose Example"
         className="flex justify-center items-center h-full"
       >
         <div className="w-1/2 h-1/2 rounded-3xl p-10 bg-grey-dark flex flex-col justify-between items-center">
@@ -480,7 +486,6 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
       </Modal>
       <Modal
         isOpen={showing}
-        contentLabel="onRequestClose Example"
         className="flex justify-center items-center h-full"
       >
         <div className="w-1/2 h-1/2 rounded-3xl p-10 bg-grey-dark flex flex-col justify-between items-center">

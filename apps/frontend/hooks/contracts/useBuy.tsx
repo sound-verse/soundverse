@@ -28,14 +28,10 @@ export const useBuy = () => {
   const abi = new utils.Interface(MarketContractAbi.abi)
   const contract = new Contract(marketContractAddress, abi)
 
-  const { state: redeemItemState, send: sendRedeemItem } = useContractFunction(
-    contract as any,
-    'redeemMintVoucher'
-  )
-  const {
-    state: redeemItemSecondarySaleState,
-    send: sendRedeemItemSecondarySale,
-  } = useContractFunction(contract as any, 'redeemSaleVoucher')
+  const { state: redeemMintVoucherState, send: sendRedeemMintVoucher } =
+    useContractFunction(contract as any, 'redeemMintVoucher')
+  const { state: redeemSaleVoucherState, send: sendRedeemSaleVoucher } =
+    useContractFunction(contract as any, 'redeemSaleVoucher')
 
   useEffect(() => {
     if (buyProps) {
@@ -50,26 +46,22 @@ export const useBuy = () => {
       return
     }
 
-    try {
-      if (isMintVoucher) {
-        await sendRedeemItem(
-          buyProps.amountToBuy,
-          buyProps.selling.mintVoucher,
-          {
-            value: calculateServiceFees(buyProps.selling.mintVoucher.price),
-          }
-        )
-      } else {
-        await sendRedeemItemSecondarySale(
-          buyProps.amountToBuy,
-          buyProps.selling.saleVoucher,
-          {
-            value: calculateServiceFees(buyProps.selling.saleVoucher.price),
-          }
-        )
-      }
-    } catch (error) {
-      toast.error('Error buying your NFT!')
+    if (isMintVoucher) {
+      await sendRedeemMintVoucher(
+        buyProps.amountToBuy,
+        buyProps.selling.mintVoucher,
+        {
+          value: calculateServiceFees(buyProps.selling.mintVoucher.price),
+        }
+      )
+    } else {
+      await sendRedeemSaleVoucher(
+        buyProps.amountToBuy,
+        buyProps.selling.saleVoucher,
+        {
+          value: calculateServiceFees(buyProps.selling.saleVoucher.price),
+        }
+      )
     }
   }
 
@@ -83,6 +75,8 @@ export const useBuy = () => {
 
   return {
     buyNft,
-    buyNftState: isMintVoucher ? redeemItemState : redeemItemSecondarySaleState,
+    buyNftState: isMintVoucher
+      ? redeemMintVoucherState
+      : redeemSaleVoucherState,
   }
 }
