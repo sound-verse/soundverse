@@ -68,7 +68,8 @@ export default function Profile({
                   ethAddress={activeUser.ethAddress}
                   name={activeUser.name}
                   short={activeUser.name ? false : true}
-                  className="font-bold text-2xl mt-10 mb-3"
+                  fullName={true}
+                  className="font-bold text-lg mt-10 mb-3 text-center"
                 />
                 {generateShortEthAddress(activeUser.ethAddress, 10)}
               </div>

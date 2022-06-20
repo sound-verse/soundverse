@@ -11,6 +11,7 @@ export type ProfileNameProps = {
   className?: string
   customEthLength?: number
   color?: string
+  fullName?: boolean
 }
 
 export const ProfileName = ({
@@ -20,16 +21,24 @@ export const ProfileName = ({
   className = '',
   customEthLength,
   color,
+  fullName = false,
 }: ProfileNameProps) => {
+  let displayName
+
+  if (name) {
+    displayName = fullName
+      ? name
+      : short
+      ? `${name.substring(0, 10)}${name.length > 10 ? '...' : ''}`
+      : name
+  } else {
+    displayName = short
+      ? generateShortEthAddress(ethAddress, customEthLength)
+      : ethAddress
+  }
   return (
-    <div className={cn(className)} style={{color}}>
-      {name
-        ? short
-          ? `${name.substring(0, 10)}${name.length > 10 ? '...' : ''}`
-          : name
-        : short
-        ? generateShortEthAddress(ethAddress, customEthLength)
-        : ethAddress}
+    <div className={cn(className)} style={{ color }}>
+      {displayName}
     </div>
   )
 }

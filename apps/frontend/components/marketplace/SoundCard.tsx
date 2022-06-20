@@ -121,6 +121,7 @@ function SoundCard({
                 name={nft.creator.name}
                 short={true}
                 className="text-[0.65rem]"
+                fullName={true}
               />
             </div>
           </div>

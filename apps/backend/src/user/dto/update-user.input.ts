@@ -44,6 +44,6 @@ export class UpdateUserInput {
   @Transform(({ value }) => xss(value))
   @Field({ nullable: true })
   @ValidateIf((schema) => !!schema.name)
-  @MaxLength(20)
+  @MaxLength(30)
   name?: string;
 }

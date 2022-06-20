@@ -75,7 +75,9 @@ export const EditProfileForm = ({
     setFileError('')
   }
 
-  const validationSchema = Yup.object().shape({})
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().max(30, 'Profile Name can only be 30 characters long'),
+  })
 
   const onSubmit = async (
     { name, description, twitter, instagram, discord, spotify, soundcloud },
@@ -163,7 +165,7 @@ export const EditProfileForm = ({
                   />
                   <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
                   <div className="text-grey-light mt-2 text-xs">
-                    max. 20 characters
+                    max. 30 characters
                   </div>
                   <div className={styles.error}>
                     <ErrorMessage name="name" />
