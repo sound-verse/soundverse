@@ -30,7 +30,7 @@ export const useLogin = () => {
     GenerateVerificationTokenMutationVariables
   >(GENERATE_VERIFICATION_TOKEN)
   const [login] = useMutation<LoginMutation, LoginMutationVariables>(LOGIN)
-  const { jwtToken, setAuthToken, setLoggedInUser } = useAuthContext()
+  const { jwtToken, setAuthToken, setLoggedInUser, authUser } = useAuthContext()
   const { data, loading, refetch } = useQuery<MeQuery, MeQueryVariables>(ME)
   const {
     account,
@@ -92,7 +92,6 @@ export const useLogin = () => {
   const setAuthUser = useCallback(
     (authUser: User) => {
       setLoggedInUser(authUser)
-      setAuthenticated(authUser ? true : false)
     },
     [setLoggedInUser]
   )
@@ -108,10 +107,12 @@ export const useLogin = () => {
   }, [jwtUser, data])
 
   useEffect(() => {
-    if (!chainId && authenticated && ethLibrary) {
-      activate(ethLibrary)
+    if (authUser) {
+      setAuthenticated(true)
+    } else {
+      setAuthenticated(false)
     }
-  }, [activate, authenticated, chainId, ethLibrary])
+  }, [authUser])
 
   useEffect(() => {
     if (account && chainId && !correctChainIds.includes(chainId)) {
@@ -123,11 +124,12 @@ export const useLogin = () => {
       account.toLowerCase() !== jwtUser?.ethAddress.toLowerCase()
     ) {
       setAuthUser(undefined)
+      setAuthenticated(false)
       authenticate()
     }
-    if (!account && authenticated) {
-      activateBrowserWallet()
-    }
+    // if (!account && authenticated) {
+    //   activateBrowserWallet()
+    // }
   }, [account, chainId])
 
   const loginUser = useCallback(() => {

@@ -20,7 +20,6 @@ import { useCallback, useEffect, useState } from 'react'
 import Web3 from 'web3'
 import { CREATE_MINT_SELLING } from '../../common/graphql/mutations/create-mint-selling.mutation'
 import { add } from 'date-fns'
-import { useLogin } from '../useLogin'
 
 export const saleVoucherTypes = {
   SVVoucher: [
@@ -66,7 +65,6 @@ export const useCreateSelling = () => {
   const [createSellingInputProps, setCreateSellingInputProps] =
     useState<CreateSellingInputProps>(undefined)
   const [contractAddress, setContractAddress] = useState<string>(undefined)
-  const { logout } = useLogin()
 
   const [createSellingMutation] = useMutation<
     CreateSellingMutation,
@@ -219,12 +217,6 @@ export const useCreateSelling = () => {
   const createSelling = async (
     createSellingInputProps: CreateSellingInputProps
   ) => {
-    if (!authUser || !chainId) {
-      toast.error('Please reconnect your wallet.')
-      logout()
-      return
-    }
-
     setCreateSellingInputProps(createSellingInputProps)
   }
 
