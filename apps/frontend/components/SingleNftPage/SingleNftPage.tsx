@@ -349,6 +349,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                             name={nft.creator.name}
                             className="inline-block font-bold text-purple"
                             short={true}
+                            fullName={true}
                           />
                         </a>
                       </Link>
@@ -372,6 +373,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                                       name={licenseOwner.user.name}
                                       className="inline-block font-bold text-purple"
                                       short={true}
+                                      fullName={true}
                                     />
                                   </a>
                                 </Link>
@@ -392,6 +394,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                                 name={nft.masterOwner.user.name}
                                 className="inline-block font-bold text-purple"
                                 short={true}
+                                fullName={true}
                               />
                             </a>
                           </Link>
