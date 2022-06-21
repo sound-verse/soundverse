@@ -45,7 +45,7 @@ export class RPCListenerService implements OnApplicationBootstrap {
       const abi = this.parseAbi(contractType);
       const contract = new ethers.Contract(contractEvent.contractAddress as string, abi, this.wsProvider);
       contractEvent.listensTo.forEach((eventType: EventType) => {
-        void this.checkForMissedEvents(contract, eventType, contractType, 100000);
+        void this.checkForMissedEvents(contract, eventType, contractType, 500000);
         this.subscribeToEvent(eventType, contract, contractType);
       });
     });
@@ -76,27 +76,35 @@ export class RPCListenerService implements OnApplicationBootstrap {
     console.log('Checking for missed events...');
     const eventFilter = contract.filters[eventType]();
     const latestBlock = await this.wsProvider.getBlockNumber();
-    const fromBlock = latestBlock - lookBackStep;
-    const events = await contract.queryFilter(eventFilter, fromBlock);
+    const blockBatchSize = 10000;
+    const iterations = lookBackStep / blockBatchSize;
+    const batchArray: number[] = Array(iterations).fill(blockBatchSize);
+    let currentBatchPosition = latestBlock - lookBackStep;
 
-    const eventTxHashes = events.map((event) => event.transactionHash);
-
-    const missedTxHashes = await this.rpcHistoryService.getMissedTxHashed({
-      contractAddress: contract.address,
-      eventType,
-      txHashes: eventTxHashes,
-    });
-
-    const missedEvents = events.filter((event) =>
-      missedTxHashes.find((txHash) => txHash === event.transactionHash),
+    await Promise.all(
+      batchArray.map(async (batchSize) => {
+        const events = await contract.queryFilter(
+          eventFilter,
+          currentBatchPosition,
+          currentBatchPosition + batchSize,
+        );
+        const eventTxHashes = events.map((event) => event.transactionHash);
+        const missedTxHashes = await this.rpcHistoryService.getMissedTxHashed({
+          contractAddress: contract.address,
+          eventType,
+          txHashes: eventTxHashes,
+        });
+        const missedEvents = events.filter((event) =>
+          missedTxHashes.find((txHash) => txHash === event.transactionHash),
+        );
+        console.log(`Found: ${missedEvents.length} missing events.`);
+        missedEvents.forEach((eventValues) => {
+          const event = this.prepareEvent(eventValues, contractType, contract, eventType);
+          this.handleEvent(event);
+        });
+        currentBatchPosition += batchSize;
+      }),
     );
-
-    console.log(`Found: ${missedEvents.length} missing events.`);
-
-    missedEvents.forEach((eventValues) => {
-      const event = this.prepareEvent(eventValues, contractType, contract, eventType);
-      this.handleEvent(event);
-    });
   }
 
   subscribeToEvent(eventType: EventType, contract: Contract, contractType: ContractType): void {
