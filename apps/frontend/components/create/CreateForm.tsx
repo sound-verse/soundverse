@@ -275,11 +275,11 @@ export const CreateForm = () => {
             Royalty Settings for secondary sales of Master and Licenses
           </div>
           <div className="text-grey-light leading-6">
-            Set your royalty percentage you would like to receive on every
+            Set the royalty percentage you would like to receive on every
             secondary trade of your Master and Licences.{' '}
             <span className="text-purple underline">
-              Caution: You won’t be able to change this royalty percentage after
-              minting you NFT!
+              Caution: You won't be able to change this royalty percentage after
+              minting your NFT!
             </span>
           </div>
           <div className="text-white font-bold text-sm mt-10">
@@ -353,8 +353,8 @@ export const CreateForm = () => {
       <div className={styles.informationStepContent}>
         <div className={styles.informationStepHeader}>Upload music</div>
         <div className={styles.informationStepBody}>
-          You are obligated to publish only musics that you have full right on
-          them. As soon as you mint your music as an NFT, you music is on
+          You may only publish music for which you have full rights on. 
+          As soon as you mint your music as an NFT, your music is on the
           blockchain and no one can remove it anymore.
         </div>
       </div>
@@ -366,18 +366,18 @@ export const CreateForm = () => {
       <div className={styles.informationStepContent}>
         <div className={styles.informationStepHeader}>Master NFT</div>
         <div className={styles.informationStepBody}>
-          Your Master is a unique 1/1 valuable NFT. Owner of your Master will
-          own initially all the unsold Licenses and he get royalty on every
-          trade on each Licenses
+          Your Master is a unique 1/1 valuable NFT. The owner of your Master will
+          initially own all the unsold Licenses and get royalties on every
+          trade on each License.
         </div>
       </div>
       <div className={cn(styles.informationStepContent, 'mt-10')}>
         <div className={styles.informationStepHeader}>License NFT</div>
         <div className={styles.informationStepBody}>
           All your License NFTs belong to the owner of the Master NFT initially.
-          Your fans can use, buy, trade, collect or monitise your Licenses and
-          everytime they earn money with them, creator and Master owner will
-          earn also money with them automatically.
+          Your fans can use, buy, trade, collect or monetize your Licenses and
+          everytime they earn money with them, the creator and Master owner will
+          also earn money with them automatically.
         </div>
       </div>
     </div>
