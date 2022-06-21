@@ -12,6 +12,8 @@ import { Selling, SellingDocument } from '../selling/selling.schema';
 import { NftType } from '../common/enums/nftType.enum';
 import { SellingStatus } from '../common/enums/sellingStatus.enum';
 import { UserNfts } from './dto/output/user-nfts.output';
+import { NftHistoryService } from '../nft-history/nft-history.service';
+import { EventType } from '@soundverse/shared-rpc-listener-service';
 
 export interface CreateNftMetadata {
   name: string;
@@ -44,6 +46,7 @@ export class NftService {
     private configService: ConfigService,
     private tagService: TagService,
     private userService: UserService,
+    private nftHistoryService: NftHistoryService,
   ) {}
 
   async createNft(createNftInput: CreateNftInput): Promise<Nft> {
@@ -79,11 +82,13 @@ export class NftService {
         masterOwner: {
           user: createNftInput.user._id,
           supply: 1,
+          transactionHashes: [],
         },
         licenseOwners: [
           {
             user: createNftInput.user._id,
             supply: createNftInput.supply,
+            transactionHashes: [],
           },
         ],
       },
@@ -138,7 +143,14 @@ export class NftService {
     );
   }
 
-  async transferMaster(from: string, to: string, tokenId: number, chainId: number) {
+  async transferMaster(
+    from: string,
+    to: string,
+    tokenId: number,
+    chainId: number,
+    transactionHash: string,
+    contractAddress: string,
+  ) {
     //TODO: Bad implementation! We need to find a way, to wait for the MasterMintEvent, before tansfer event is fireing!
     await new Promise((resolve) =>
       setTimeout(() => {
@@ -146,17 +158,56 @@ export class NftService {
       }, 1000),
     );
 
+    const existingTxHash = await this.nftHistoryService.isHistoryItemPresent(
+      transactionHash,
+      EventType.TRANSFER,
+      contractAddress,
+    );
+
+    if (existingTxHash) {
+      console.log(
+        `Error transferring ownership - transactionHash already processed! FROM: ${from} TO: ${to} TXHash: ${transactionHash}`,
+      );
+      return;
+    }
+
     const nft = await this.nftModel.findOne({ tokenId, chainId });
+
+    if (!nft) {
+      console.log(
+        `Error transferring ownership - NFT not found! FROM: ${from} TO: ${to} TXHash: ${transactionHash}`,
+      );
+      return;
+    }
+
     let receiver = await this.userService.findByETHAddress(to);
+    const sender = await this.userService.findByETHAddress(from);
 
     if (!receiver) {
       receiver = await this.userService.create({ ethAddress: to });
     }
 
-    await this.setMasterOwner(nft, receiver);
+    await this.setMasterOwner(nft, receiver, transactionHash);
+
+    await this.nftHistoryService.create({
+      contractAddress,
+      eventType: EventType.TRANSFER,
+      from: sender._id,
+      to: receiver._id,
+      nft: nft._id,
+      transactionHash,
+    });
   }
 
-  async transferLicense(from: string, to: string, tokenId: number, amount: number, chainId: number) {
+  async transferLicense(
+    from: string,
+    to: string,
+    tokenId: number,
+    amount: number,
+    chainId: number,
+    transactionHash: string,
+    contractAddress: string,
+  ) {
     //TODO: Bad implementation! We need to find a way, to wait for the MasterMintEvent, before tansfer event is fireing!
     await new Promise((resolve) =>
       setTimeout(() => {
@@ -164,7 +215,28 @@ export class NftService {
       }, 1000),
     );
 
+    const existingTxHash = await this.nftHistoryService.isHistoryItemPresent(
+      transactionHash,
+      EventType.TRANSFER_SINGLE,
+      contractAddress,
+    );
+
+    if (existingTxHash) {
+      console.log(
+        `Error transferring ownership - transactionHash already processed! FROM: ${from} TO: ${to} TXHash: ${transactionHash}`,
+      );
+      return;
+    }
+
     const nft = await this.nftModel.findOne({ tokenId, chainId });
+
+    if (!nft) {
+      console.log(
+        `Error transferring ownership - NFT not found! FROM: ${from} TO: ${to} TXHash: ${transactionHash}`,
+      );
+      return;
+    }
+
     let receiver = await this.userService.findByETHAddress(to);
     let sender = await this.userService.findByETHAddress(from);
 
@@ -176,8 +248,17 @@ export class NftService {
       sender = await this.userService.create({ ethAddress: from });
     }
 
-    await this.setLicenseOwner(nft, receiver, amount);
-    await this.setLicenseOwner(nft, sender, -amount);
+    await this.setLicenseOwner(nft, receiver, amount, transactionHash);
+    await this.setLicenseOwner(nft, sender, -amount, transactionHash);
+
+    await this.nftHistoryService.create({
+      contractAddress,
+      eventType: EventType.TRANSFER_SINGLE,
+      from: sender._id,
+      to: receiver._id,
+      nft: nft._id,
+      transactionHash,
+    });
   }
 
   async changeOwner(
@@ -187,6 +268,7 @@ export class NftService {
     chainId: number,
     transactionHash: string,
     voucherType: 'mint_voucher' | 'sale_voucher',
+    contractAddress: string,
   ) {
     const selling = await this.sellingModel.findOne({
       ...(voucherType === 'mint_voucher'
@@ -218,18 +300,15 @@ export class NftService {
       (licenseOwner) => licenseOwner.user._id.toString() === seller._id.toString(),
     );
 
-    const masterOwnerLicenseSupply = nft.licenseOwners.reduce((supply, license) => {
-      if (license.user._id.toString() === masterOwner.id.toString()) {
-        return supply + license.supply;
-      }
-      return supply;
-    }, 0);
-
-    const existingTxHash = selling.buyers.find((buyer) => buyer.transactionHash === transactionHash);
+    const existingTxHash = await this.nftHistoryService.isHistoryItemPresent(
+      transactionHash,
+      voucherType === 'mint_voucher' ? EventType.REDEEMED_MINT_VOUCHER : EventType.REDEEMED_SALE_VOUCHER,
+      contractAddress,
+    );
 
     if (existingTxHash) {
       console.log(
-        `Error transferring ownership - transactionHash already processed! FROM: ${seller.ethAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
+        `Error transferring ownership - transactionHash already processed! FROM: ${seller.ethAddress} TO: ${buyer.ethAddress} TXHash: ${transactionHash}`,
       );
       return;
     }
@@ -276,7 +355,7 @@ export class NftService {
       return;
     }
 
-    selling.buyers.push({ user: buyer._id, supply: amount, transactionHash });
+    selling.buyers.push({ user: buyer._id, supply: amount });
     await this.sellingModel.updateOne({ _id: selling._id }, { $set: { buyers: selling.buyers } });
 
     if (
@@ -290,9 +369,20 @@ export class NftService {
         { $set: { sellingStatus: SellingStatus.CLOSED } },
       );
     }
+
+    await this.nftHistoryService.create({
+      contractAddress,
+      eventType:
+        voucherType === 'mint_voucher' ? EventType.REDEEMED_MINT_VOUCHER : EventType.REDEEMED_SALE_VOUCHER,
+      from: seller._id,
+      to: buyer._id,
+      selling: selling._id,
+      nft: nft._id,
+      transactionHash,
+    });
   }
 
-  async setMasterOwner(nft: Nft, newMasterOwner: User) {
+  async setMasterOwner(nft: Nft, newMasterOwner: User, transactionHash: string) {
     await this.nftModel.updateOne(
       {
         _id: nft._id,
@@ -301,11 +391,14 @@ export class NftService {
         $set: {
           'masterOwner.user': newMasterOwner._id,
         },
+        $addToSet: {
+          'masterOwner.transactionHashes': transactionHash,
+        },
       },
     );
   }
 
-  async setLicenseOwner(nft: Nft, newLicenseOwner: User, supply: number) {
+  async setLicenseOwner(nft: Nft, newLicenseOwner: User, supply: number, transactionHash: string) {
     const existingLicenseOwner = nft.licenseOwners.find(
       (licenseOwner) => licenseOwner.user._id.toString() === newLicenseOwner._id.toString(),
     );
@@ -317,7 +410,10 @@ export class NftService {
       query['licenseOwners.user'] = existingLicenseOwner.user._id;
       updateOperation = {
         $set: {
-          'licenseOwners.$': { ...existingLicenseOwner, supply: existingLicenseOwner.supply + supply },
+          'licenseOwners.$': {
+            ...existingLicenseOwner,
+            supply: existingLicenseOwner.supply + supply,
+          },
         },
       };
     } else if (existingLicenseOwner && existingLicenseOwner.supply + supply === 0) {
@@ -327,7 +423,11 @@ export class NftService {
         },
       };
     } else if (!existingLicenseOwner) {
-      updateOperation = { $addToSet: { licenseOwners: { user: newLicenseOwner._id, supply } } };
+      updateOperation = {
+        $addToSet: {
+          licenseOwners: { user: newLicenseOwner._id, supply },
+        },
+      };
     }
 
     await this.nftModel.updateOne(query, updateOperation);

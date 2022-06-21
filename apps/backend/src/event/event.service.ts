@@ -65,7 +65,14 @@ export class EventService implements OnApplicationBootstrap {
             const to: string = args[1];
             const tokenId: number = BigNumber.from(args[2]).toNumber();
             if (from !== nullAddress) {
-              await this.nftService.transferMaster(from, to, tokenId, event.chainId);
+              await this.nftService.transferMaster(
+                from,
+                to,
+                tokenId,
+                event.chainId,
+                event.transactionHash,
+                event.address,
+              );
             }
             break;
           }
@@ -82,7 +89,15 @@ export class EventService implements OnApplicationBootstrap {
             const tokenId: number = BigNumber.from(args[3]).toNumber();
             const amount: number = BigNumber.from(args[4]).toNumber();
             if (from !== nullAddress) {
-              await this.nftService.transferLicense(from, to, tokenId, amount, event.chainId);
+              await this.nftService.transferLicense(
+                from,
+                to,
+                tokenId,
+                amount,
+                event.chainId,
+                event.transactionHash,
+                event.address,
+              );
             }
             break;
           }
@@ -109,6 +124,7 @@ export class EventService implements OnApplicationBootstrap {
               event.chainId,
               event.transactionHash,
               'mint_voucher',
+              event.address,
             );
             break;
           }
@@ -124,6 +140,7 @@ export class EventService implements OnApplicationBootstrap {
               event.chainId,
               event.transactionHash,
               'sale_voucher',
+              event.address,
             );
             break;
           }

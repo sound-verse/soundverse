@@ -12,9 +12,6 @@ class Buyer {
 
   @Prop({ min: 1 })
   supply: number;
-
-  @Prop()
-  transactionHash: string;
 }
 
 export class MintVoucher {

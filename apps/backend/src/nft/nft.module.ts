@@ -12,6 +12,7 @@ import { TagModule } from '../tag/tag.module';
 import { SellingModule } from '../selling/selling.module';
 import { User, UserSchema } from '../user/user.schema';
 import { Selling, SellingSchema } from '../selling/selling.schema';
+import { NftHistoryModule } from '../nft-history/nft-history.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { Selling, SellingSchema } from '../selling/selling.schema';
     MongooseModule.forFeature([{ name: Selling.name, schema: SellingSchema }]),
     UserModule,
     TagModule,
+    NftHistoryModule,
   ],
   providers: [NftResolver, NftService, FileService, S3Service],
   exports: [NftService],
