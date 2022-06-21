@@ -526,6 +526,22 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                           {nft.metadata.description}
                         </div>
                       </div>
+                      <div className="flex justify-end items-center mt-10">
+                        <div className="flex flex-col items-center justify-center">
+                          <div className="text-3xl font-bold">
+                            {nft.royaltyFeeMaster / 100}%
+                          </div>
+                          <div className="text-sm text-grey-light">Royalty</div>
+                        </div>
+                        <div className="flex flex-col items-center justify-center ml-16">
+                          <div className="text-3xl font-bold">
+                            {nft.creatorOwnerSplit / 100}%
+                          </div>
+                          <div className="text-sm text-grey-light">
+                            Creator / Owner split
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>

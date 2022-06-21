@@ -64,7 +64,9 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
                   />
                 )}
               </div>
-              <div className="text-white">{room.activeUsers.length}</div>
+              <div className="text-white">
+                Listeners: {room.activeUsers.length}
+              </div>
             </div>
             {isHost && <HostControls room={room} className="mt-2" />}
             <div className="flex items-start mt-16 border-b pb-5 border-grey-medium">

@@ -146,8 +146,11 @@ function SoundCard({
                   </div>
                 </div>
               ) : (
-                <div className="flex flex-col w-full h-full justify-center">
+                <div className="flex justify-between items-baseline text-xs">
                   <div className="text-grey-light">Nft not listed</div>
+                  <div className="rounded px-2 py-[2px] text-black bg-[#FFEA2F]">
+                    #1 of 1
+                  </div>
                 </div>
               )
             ) : nft.sellings.licenseSellings[0] ? (
@@ -167,8 +170,11 @@ function SoundCard({
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col w-full h-full justify-center text-xs">
+              <div className="flex justify-between items-baseline text-xs">
                 <div className="text-grey-light">Nft not listed</div>
+                <div className="bg-white rounded px-2 py-[2px] text-black">
+                  # of {nft.supply}
+                </div>
               </div>
             )}
           </div>
