@@ -78,7 +78,8 @@ export class RPCListenerService implements OnApplicationBootstrap {
     const latestBlock = await this.wsProvider.getBlockNumber();
     const blockBatchSize = 10000;
     const iterations = lookBackStep / blockBatchSize;
-    const batchArray: number[] = Array(iterations).fill(blockBatchSize);
+    const batchArray: number[] = Array(iterations + 1).fill(blockBatchSize);
+    batchArray[batchArray.length - 1] = latestBlock % blockBatchSize;
     let currentBatchPosition = latestBlock - lookBackStep;
 
     await Promise.all(
