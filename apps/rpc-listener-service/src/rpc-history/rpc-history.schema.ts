@@ -3,8 +3,6 @@ import { EventType } from '@soundverse/shared-rpc-listener-service';
 import { Document, Types } from 'mongoose';
 import { BaseDBObject } from '../BaseDBObject';
 
-export type RPCHistoryDocument = RPCHistory & Document<Types.ObjectId>;
-
 @Schema()
 export class RPCHistory extends BaseDBObject {
   constructor(partial: Partial<RPCHistory> = {}) {
@@ -25,6 +23,7 @@ export class RPCHistory extends BaseDBObject {
   seenAt: Date;
 }
 
+export type RPCHistoryDocument = RPCHistory & Document<Types.ObjectId>;
 export const RPCHistorySchema = SchemaFactory.createForClass(RPCHistory);
 
 RPCHistorySchema.index({ seenAt: 1, contractAddress: 1, eventType: 1 });

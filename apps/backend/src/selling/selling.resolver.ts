@@ -49,10 +49,9 @@ export class SellingResolver {
       return;
     }
     const buyersUser = await this.userService.findUserByIds(selling.buyers.map((buyer) => buyer.user));
-
-    return buyersUser.map((buyerUser) => ({
-      user: buyerUser,
-      supply: selling.buyers.find((buyer) => buyer?.user?.toString() === buyerUser?._id?.toString()).supply,
+    return selling.buyers.map((buyer) => ({
+      ...buyer,
+      user: buyersUser.find((buyerUser) => buyerUser._id.toString() === buyer.user.toString()),
     }));
   }
 }

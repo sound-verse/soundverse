@@ -18,6 +18,12 @@ export interface GetPastHistoryProps {
   eventType: EventType;
 }
 
+export interface GetMissedEventsProps {
+  txHashes: string[];
+  contractAddress: string;
+  eventType: EventType;
+}
+
 @Injectable()
 export class RPCHistoryService {
   constructor(
@@ -35,5 +41,19 @@ export class RPCHistoryService {
       contractAddress: getPastHistoryProps.contractAddress,
       eventType: getPastHistoryProps.eventType,
     });
+  }
+
+  async getMissedTxHashed(getMissedEventsProps: GetMissedEventsProps) {
+    const existingHistoryEntries = await this.RPCHistoryModel.find({
+      contractAddress: getMissedEventsProps.contractAddress,
+      eventType: getMissedEventsProps.eventType,
+      txHash: { $in: getMissedEventsProps.txHashes },
+    });
+
+    const missedTxHashes = getMissedEventsProps.txHashes.filter(
+      (txHash) => !existingHistoryEntries.find((historyEntry) => historyEntry.txHash === txHash),
+    );
+
+    return missedTxHashes;
   }
 }
