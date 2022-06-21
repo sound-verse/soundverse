@@ -3,9 +3,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CoreModule } from '../core/core.module';
 import { RPCListenerService } from './rpc-listener.service';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
+import { RPCHistoryModule } from '../rpc-history/rpc-history.module';
 
 @Module({
-  imports: [CoreModule, ConfigModule],
+  imports: [CoreModule, ConfigModule, RPCHistoryModule],
   providers: [
     RPCListenerService,
     {
