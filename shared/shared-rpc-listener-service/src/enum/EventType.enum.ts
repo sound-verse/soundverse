@@ -3,4 +3,6 @@ export enum EventType {
   REDEEMED_SALE_VOUCHER = "RedeemedSaleVoucher",
   MASTER_MINT_EVENT = "MasterMintEvent",
   UNLISTED_NFT = "UnlistedNFT",
+  TRANSFER = "Transfer",
+  TRANSFER_SINGLE = "TransferSingle",
 }

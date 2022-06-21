@@ -59,6 +59,33 @@ export class EventService implements OnApplicationBootstrap {
             );
             break;
           }
+          case EventType.TRANSFER: {
+            const args = event.args;
+            const from: string = args[0];
+            const to: string = args[1];
+            const tokenId: number = BigNumber.from(args[2]).toNumber();
+            if (from !== nullAddress) {
+              await this.nftService.transferMaster(from, to, tokenId, event.chainId);
+            }
+            break;
+          }
+        }
+        break;
+      }
+      case ContractType.LICENSE: {
+        switch (eventType) {
+          case EventType.TRANSFER_SINGLE: {
+            const args = event.args;
+            const operator: string = args[0];
+            const from: string = args[1];
+            const to: string = args[2];
+            const tokenId: number = BigNumber.from(args[3]).toNumber();
+            const amount: number = BigNumber.from(args[4]).toNumber();
+            if (from !== nullAddress) {
+              await this.nftService.transferLicense(from, to, tokenId, amount, event.chainId);
+            }
+            break;
+          }
         }
         break;
       }

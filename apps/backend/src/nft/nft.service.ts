@@ -138,6 +138,48 @@ export class NftService {
     );
   }
 
+  async transferMaster(from: string, to: string, tokenId: number, chainId: number) {
+    //TODO: Bad implementation! We need to find a way, to wait for the MasterMintEvent, before tansfer event is fireing!
+    await new Promise((resolve) =>
+      setTimeout(() => {
+        resolve(true);
+      }, 1000),
+    );
+
+    const nft = await this.nftModel.findOne({ tokenId, chainId });
+    let receiver = await this.userService.findByETHAddress(to);
+
+    if (!receiver) {
+      receiver = await this.userService.create({ ethAddress: to });
+    }
+
+    await this.setMasterOwner(nft, receiver);
+  }
+
+  async transferLicense(from: string, to: string, tokenId: number, amount: number, chainId: number) {
+    //TODO: Bad implementation! We need to find a way, to wait for the MasterMintEvent, before tansfer event is fireing!
+    await new Promise((resolve) =>
+      setTimeout(() => {
+        resolve(true);
+      }, 1000),
+    );
+
+    const nft = await this.nftModel.findOne({ tokenId, chainId });
+    let receiver = await this.userService.findByETHAddress(to);
+    let sender = await this.userService.findByETHAddress(from);
+
+    if (!receiver) {
+      receiver = await this.userService.create({ ethAddress: to });
+    }
+
+    if (!sender) {
+      sender = await this.userService.create({ ethAddress: from });
+    }
+
+    await this.setLicenseOwner(nft, receiver, amount);
+    await this.setLicenseOwner(nft, sender, -amount);
+  }
+
   async changeOwner(
     saleSignature: string,
     buyerEthAddress: string,
@@ -146,13 +188,6 @@ export class NftService {
     transactionHash: string,
     voucherType: 'mint_voucher' | 'sale_voucher',
   ) {
-    //TODO: Bad implementation! We need to find a way, to wait for the MasterMintEvent, before tansfer event is fireing!
-    await new Promise((resolve) =>
-      setTimeout(() => {
-        resolve(true);
-      }, 1000),
-    );
-
     const selling = await this.sellingModel.findOne({
       ...(voucherType === 'mint_voucher'
         ? { 'mintVoucher.signature': saleSignature }
@@ -239,15 +274,6 @@ export class NftService {
         `Error transferring ownership - Seller has not enough supply! FROM: ${seller.ethAddress} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
       );
       return;
-    }
-
-    if (selling.nftType === NftType.MASTER) {
-      await this.setMasterOwner(nft, buyer);
-      await this.setLicenseOwner(nft, buyer, masterOwnerLicenseSupply);
-      await this.setLicenseOwner(nft, seller, -masterOwnerLicenseSupply);
-    } else {
-      await this.setLicenseOwner(nft, buyer, amount);
-      await this.setLicenseOwner(nft, seller, -amount);
     }
 
     selling.buyers.push({ user: buyer._id, supply: amount, transactionHash });

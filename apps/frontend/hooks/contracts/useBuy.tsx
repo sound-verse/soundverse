@@ -38,6 +38,8 @@ export const useBuy = () => {
 
   const isMintVoucher = buyProps?.selling?.saleVoucher ? false : true
 
+  console.log(isMintVoucher, buyProps?.selling)
+
   const executeBuy = async () => {
     if (isMintVoucher) {
       await sendRedeemMintVoucher(
@@ -52,7 +54,7 @@ export const useBuy = () => {
         buyProps.amountToBuy,
         buyProps.selling.saleVoucher,
         {
-          value: buyProps.selling.mintVoucher.price,
+          value: buyProps.selling.saleVoucher.price,
         }
       )
     }

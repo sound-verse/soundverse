@@ -6,8 +6,14 @@ export default () => ({
       contractEvents: [
         {
           contractAddress: '0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9',
-          listensTo: [EventType.MASTER_MINT_EVENT],
+          listensTo: [EventType.MASTER_MINT_EVENT, EventType.TRANSFER],
           contractType: ContractType.MASTER,
+          version: '0.1',
+        },
+        {
+          contractAddress: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512',
+          listensTo: [EventType.TRANSFER_SINGLE],
+          contractType: ContractType.LICENSE,
           version: '0.1',
         },
         {
@@ -26,8 +32,14 @@ export default () => ({
       contractEvents: [
         {
           contractAddress: '0x46392Cb3745a4CAa39eC2c771820AD2636ac9E2d',
-          listensTo: [EventType.MASTER_MINT_EVENT],
+          listensTo: [EventType.MASTER_MINT_EVENT, EventType.TRANSFER],
           contractType: ContractType.MASTER,
+          version: '0.1',
+        },
+        {
+          contractAddress: '0x997308E9563F5D8EE56E6129657fb2b5c5C7015C',
+          listensTo: [EventType.TRANSFER_SINGLE],
+          contractType: ContractType.LICENSE,
           version: '0.1',
         },
         {
