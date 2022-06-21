@@ -12,7 +12,6 @@ import {
 } from '@soundverse/shared-rpc-listener-service';
 import { ClientProxy } from '@nestjs/microservices';
 import { RPCHistoryService } from '../rpc-history/rpc-history.service';
-import { sub } from 'date-fns';
 import { Interval } from '@nestjs/schedule';
 
 @Injectable()
