@@ -12,7 +12,9 @@ import {
 } from '@soundverse/shared-rpc-listener-service';
 import { ClientProxy } from '@nestjs/microservices';
 import { RPCHistoryService } from '../rpc-history/rpc-history.service';
-import { Interval } from '@nestjs/schedule';
+
+const EXPECTED_PONG_BACK = 15000;
+const KEEP_ALIVE_CHECK_INTERVAL = 7500;
 
 @Injectable()
 export class RPCListenerService implements OnApplicationBootstrap {
@@ -22,19 +24,54 @@ export class RPCListenerService implements OnApplicationBootstrap {
     private configService: ConfigService,
     private rpcHistoryService: RPCHistoryService,
     @Inject('SC_BLOCKCHAIN_EVENTS_SERVICE') private scBlockchainEventsService: ClientProxy,
-  ) {
-    this.wsProvider = new ethers.providers.WebSocketProvider(configService.get('RPC_URL'));
-  }
+  ) {}
 
   async onApplicationBootstrap() {
     try {
+      await this.scBlockchainEventsService.connect();
+      this.startConnection();
       const { chainId } = await this.wsProvider.getNetwork();
       this.chainId = chainId;
-      await this.scBlockchainEventsService.connect();
-      this.listen();
     } catch (e) {
       console.log('ERROR: could not connect to RPC node!', e);
     }
+  }
+
+  startConnection() {
+    this.wsProvider = new ethers.providers.WebSocketProvider(this.configService.get('RPC_URL'));
+
+    let pingTimeout = null;
+    let keepAliveInterval = null;
+
+    this.wsProvider._websocket.on('open', () => {
+      keepAliveInterval = setInterval(() => {
+        console.log('Checking if the connection is alive, sending a ping');
+
+        this.wsProvider._websocket.ping();
+
+        // Use `WebSocket#terminate()`, which immediately destroys the connection,
+        // instead of `WebSocket#close()`, which waits for the close timer.
+        // Delay should be equal to the interval at which your server
+        // sends out pings plus a conservative assumption of the latency.
+        pingTimeout = setTimeout(() => {
+          this.wsProvider._websocket.terminate();
+        }, EXPECTED_PONG_BACK);
+      }, KEEP_ALIVE_CHECK_INTERVAL);
+
+      this.listen();
+    });
+
+    this.wsProvider._websocket.on('close', () => {
+      console.log('The websocket connection was closed');
+      clearInterval(keepAliveInterval);
+      clearTimeout(pingTimeout);
+      this.startConnection();
+    });
+
+    this.wsProvider._websocket.on('pong', () => {
+      console.log('Received pong, so connection is alive, clearing the timeout');
+      clearInterval(pingTimeout);
+    });
   }
 
   listen() {
@@ -45,26 +82,12 @@ export class RPCListenerService implements OnApplicationBootstrap {
       const abi = this.parseAbi(contractType);
       const contract = new ethers.Contract(contractEvent.contractAddress as string, abi, this.wsProvider);
       contractEvent.listensTo.forEach((eventType: EventType) => {
-        void this.checkForMissedEvents(contract, eventType, contractType, 500000);
+        void this.checkForMissedEvents(contract, eventType, contractType, 1000000);
         this.subscribeToEvent(eventType, contract, contractType);
       });
     });
 
     console.log(`RPC Listener startet`);
-  }
-
-  @Interval(5 * 60 * 1000)
-  checkForMissedEventsInterval() {
-    const contractEvents =
-      this.configService.get('RPCListenerConfig')[this.configService.get('ENVIRONMENT')].contractEvents;
-    contractEvents.forEach((contractEvent) => {
-      const contractType: ContractType = contractEvent.contractType;
-      const abi = this.parseAbi(contractType);
-      const contract = new ethers.Contract(contractEvent.contractAddress as string, abi, this.wsProvider);
-      contractEvent.listensTo.forEach((eventType: EventType) => {
-        void this.checkForMissedEvents(contract, eventType, contractType, 10000);
-      });
-    });
   }
 
   async checkForMissedEvents(
@@ -78,9 +101,12 @@ export class RPCListenerService implements OnApplicationBootstrap {
     const latestBlock = await this.wsProvider.getBlockNumber();
     const blockBatchSize = 10000;
     const iterations = lookBackStep / blockBatchSize;
-    const batchArray: number[] = Array(iterations + 1).fill(blockBatchSize);
-    batchArray[batchArray.length - 1] = latestBlock % blockBatchSize;
+    const batchArray: number[] = Array(Math.floor(iterations)).fill(blockBatchSize);
+    batchArray[batchArray.length] = lookBackStep % blockBatchSize;
     let currentBatchPosition = latestBlock - lookBackStep;
+
+    console.log(batchArray);
+    console.log(batchArray.length);
 
     await Promise.all(
       batchArray.map(async (batchSize) => {
@@ -98,7 +124,11 @@ export class RPCListenerService implements OnApplicationBootstrap {
         const missedEvents = events.filter((event) =>
           missedTxHashes.find((txHash) => txHash === event.transactionHash),
         );
-        console.log(`Found: ${missedEvents.length} missing events.`);
+        console.log(
+          `Checked from block: ${currentBatchPosition} to block: ${
+            currentBatchPosition + batchSize
+          } where latest block is: ${latestBlock} and found ${missedEvents.length} lost events.`,
+        );
         missedEvents.forEach((eventValues) => {
           const event = this.prepareEvent(eventValues, contractType, contract, eventType);
           this.handleEvent(event);
@@ -114,6 +144,7 @@ export class RPCListenerService implements OnApplicationBootstrap {
       const preparedEvent = this.prepareEvent(event, contractType, contract, eventType);
       this.handleEvent(preparedEvent);
     });
+
     console.log(`RPC Listener listens to: ${contract.address} ${contractType} ${eventType}`);
   }
 
