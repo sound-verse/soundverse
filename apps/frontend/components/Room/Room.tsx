@@ -61,6 +61,7 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
                     name={room.creator.name}
                     short={true}
                     className="ml-2"
+                    fullName={true}
                   />
                 )}
               </div>
