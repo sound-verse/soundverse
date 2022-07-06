@@ -21,6 +21,7 @@ import { Track, useAudioContext } from '../../context/AudioContext'
 import { useHostControls } from '../../hooks/rooms/useHostControls'
 import Button from '../../components/common/Button'
 import { useJoinRoom } from '../../hooks/rooms/useJoinRoom'
+import { useLeaveRoom } from '../../hooks/rooms/useLeaveRoom'
 
 export default function Soundverse() {
   const router = useRouter()
@@ -44,6 +45,7 @@ export default function Soundverse() {
   const { playNextSong, updateCurrentSong } = useHostControls()
   const [showWelcomeModal, setShowWelcomeModal] = useState<boolean>(false)
   const { joinRoom } = useJoinRoom()
+  const { leaveRoom } = useLeaveRoom()
 
   const isHost = roomData?.room?.creator?.id === (authUser?.id ?? '')
 
@@ -93,6 +95,16 @@ export default function Soundverse() {
   }, [])
 
   useEffect(() => {
+    if (!room?.id || !authUser) {
+      return
+    }
+    joinRoom({ roomId: room.id })
+    return () => {
+      leaveRoom({ roomId: room.id })
+    }
+  }, [authUser, room?.id])
+
+  useEffect(() => {
     if (!isHost) {
       return
     }
@@ -117,7 +129,9 @@ export default function Soundverse() {
     if (!roomId) {
       return
     }
-    setShowWelcomeModal(true)
+    if (isHost) {
+      setShowWelcomeModal(true)
+    }
     setLoading(true)
     subscribeToMore({
       document: ROOM_UPDATED,

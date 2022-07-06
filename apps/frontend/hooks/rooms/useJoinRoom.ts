@@ -11,7 +11,7 @@ export const useJoinRoom = () => {
   const [joinRoomMutation, { data: joinRoomData }] = useMutation<
     JoinRoomMutation,
     JoinRoomMutationVariables
-  >(JOIN_ROOM)
+  >(JOIN_ROOM, {fetchPolicy: 'no-cache'})
 
   const joinRoom = useCallback(async (joinRoomInput: JoinRoomInput) => {
     await joinRoomMutation({ variables: { joinRoomInput } })

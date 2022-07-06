@@ -14,6 +14,7 @@ import cn from 'classnames'
 import MetaMaskOnboarding from '@metamask/onboarding'
 import { InjectedConnector } from '@pangolindex/web3-react-injected-connector'
 import { POLYGON_TESTNET_PARAMS } from './constants'
+import { useLeaveRoom } from '../hooks/rooms/useLeaveRoom'
 
 declare var window: any
 

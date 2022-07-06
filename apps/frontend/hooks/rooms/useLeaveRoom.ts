@@ -6,14 +6,19 @@ import {
   LeaveRoomMutation,
   LeaveRoomMutationVariables,
 } from '../../common/graphql/schema.d'
+import { useAuthContext } from '../../context/AuthContext'
 
 export const useLeaveRoom = () => {
   const [leaveRoomMutation, { data: leaveRoomData }] = useMutation<
     LeaveRoomMutation,
     LeaveRoomMutationVariables
-  >(LEAVE_ROOM)
+  >(LEAVE_ROOM, { fetchPolicy: 'no-cache' })
+  const { jwtToken } = useAuthContext()
 
   const leaveRoom = useCallback(async (leaveRoomInput: LeaveRoomInput) => {
+    if (!jwtToken) {
+      return
+    }
     await leaveRoomMutation({ variables: { leaveRoomInput } })
   }, [])
 
