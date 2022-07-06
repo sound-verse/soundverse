@@ -370,6 +370,15 @@ export class NftService {
       );
     }
 
+    if (
+      selling.nftType === NftType.MASTER 
+    ) {
+      await this.sellingModel.updateMany(
+        { nft: nft._id, seller: seller._id },
+        { $set: { sellingStatus: SellingStatus.CLOSED } },
+      );
+    }
+
     await this.nftHistoryService.create({
       contractAddress,
       eventType:
