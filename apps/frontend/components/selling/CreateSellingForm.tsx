@@ -29,7 +29,7 @@ export const CreateSellingForm = ({
   const { createSelling, selling } = useCreateSelling()
   const { authUser } = useAuthContext()
 
-  const initialValues = { price: 0, amount: 0 }
+  const initialValues = { price: 0, amount: nftType === NftType.Master ? 1 : 0 }
 
   let userSupply = 0
   let availableSupply = 0
@@ -147,30 +147,37 @@ export const CreateSellingForm = ({
                   </div>
                 </div>
               </div>
-              <div className="text-white font-bold text-sm mt-10">Amount</div>
-              <div className="flex justify-start items-baseline mt-5">
-                <div className="mr-5">
-                  <Field
-                    id="amount"
-                    name="amount"
-                    className="outline-none bg-grey-dark text-white w-full"
-                  />
-                  <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
-                  <div className="text-grey-light mt-2 text-xs">
-                    Number of licenses you want to sell
+              {nftType === NftType.License && (
+                <>
+                  <div className="text-white font-bold text-sm mt-10">
+                    Amount
                   </div>
-                  <div className={styles.error}>
-                    <ErrorMessage name="amount" />
+
+                  <div className="flex justify-start items-baseline mt-5">
+                    <div className="mr-5">
+                      <Field
+                        id="amount"
+                        name="amount"
+                        className="outline-none bg-grey-dark text-white w-full"
+                      />
+                      <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
+                      <div className="text-grey-light mt-2 text-xs">
+                        Number of licenses you want to sell
+                      </div>
+                      <div className={styles.error}>
+                        <ErrorMessage name="amount" />
+                      </div>
+                    </div>
+                    <div>
+                      <div>{availableSupply}</div>
+                      <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
+                      <div className="text-grey-light mt-2 text-xs">
+                        Total number of licenses available
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div>
-                  <div>{availableSupply}</div>
-                  <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
-                  <div className="text-grey-light mt-2 text-xs">
-                    Total number of licenses available
-                  </div>
-                </div>
-              </div>
+                </>
+              )}
               <div className="text-white font-bold text-sm mt-10">Fees</div>
               <div className="text-grey-light text-md mt-5 text-sm">
                 Service fee: 3.5%
