@@ -31,7 +31,9 @@ export const useLogin = () => {
   >(GENERATE_VERIFICATION_TOKEN)
   const [login] = useMutation<LoginMutation, LoginMutationVariables>(LOGIN)
   const { jwtToken, setAuthToken, setLoggedInUser, authUser } = useAuthContext()
-  const { data, loading, refetch } = useQuery<MeQuery, MeQueryVariables>(ME)
+  const { data, loading, refetch } = useQuery<MeQuery, MeQueryVariables>(ME, {
+    fetchPolicy: 'no-cache',
+  })
   const authenticationPending = useRef(false)
 
   const {

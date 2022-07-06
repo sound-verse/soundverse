@@ -38,7 +38,9 @@ export default function Soundverse() {
     error: roomError,
     subscribeToMore,
   } = useQuery<GetRoomQuery, GetRoomQueryVariables>(GET_ROOM, {
-    variables: { roomFilter: { id: roomId?.toString() ?? '' } },
+    variables: {
+      roomFilter: { id: roomId?.toString() ?? '' },
+    },
   })
 
   const { setCurrentTrack } = useAudioContext()

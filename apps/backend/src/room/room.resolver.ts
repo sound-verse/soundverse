@@ -8,7 +8,7 @@ import { User } from '../user/dto/output/user.output';
 import { UserService } from '../user/user.service';
 import { CreateRoomInput } from './dto/input/create-room.input';
 import { RoomFilter } from './dto/input/room-filter.input';
-import { Room } from './dto/output/room.output';
+import { ChatMessage, Room } from './dto/output/room.output';
 import { Rooms } from './dto/output/rooms.output';
 import { RoomService } from './room.service';
 import { JoinRoomInput } from './dto/input/join-room.input';
@@ -131,6 +131,17 @@ export class RoomResolver {
     },
   })
   roomUpdated(@Args('roomId') roomId: string) {
+    console.log('lel');
     return this.pubSub.asyncIterator(ROOM_UPDATED_EVENT);
+  }
+
+  @ResolveField(() => [ChatMessage])
+  async chat(@Parent() room: Room) {
+    return await Promise.all(
+      room.chat.map((chatMassage) => {
+        const sender = this.userService.findUserById(chatMassage.sender._id);
+        return { ...chatMassage, sender };
+      }),
+    );
   }
 }

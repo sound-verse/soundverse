@@ -11,7 +11,7 @@ export const useChat = () => {
   const [createChatMessageMutation] = useMutation<
     CreateChatMessageMutation,
     CreateChatMessageMutationVariables
-  >(CREATE_CHAT_MESSAGE)
+  >(CREATE_CHAT_MESSAGE, { fetchPolicy: 'no-cache' })
 
   const createChatMessage = useCallback(
     async (createChatMessageInput: CreateChatMessageInput) => {

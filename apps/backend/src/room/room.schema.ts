@@ -20,8 +20,8 @@ export class PlaylistItem {
 }
 
 export class ChatMessage {
-  @Prop()
-  sender: User;
+  @Prop({ type: Types.ObjectId, ref: 'User' })
+  sender: Types.ObjectId;
 
   @Prop()
   message: string;

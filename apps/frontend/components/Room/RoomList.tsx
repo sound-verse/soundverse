@@ -20,16 +20,21 @@ export const RoomList: FC<RoomListProps> = ({ rooms }) => {
   const { data: masterRoom, subscribeToMore } = useQuery<
     GetRoomQuery,
     GetRoomQueryVariables
-  >(GET_ROOM, { variables: { roomFilter: { isMasterRoom: true } } })
+  >(GET_ROOM, {
+    variables: { roomFilter: { isMasterRoom: true } },
+    fetchPolicy: 'cache-and-network',
+  })
 
   useEffect(() => {
     if (!masterRoom?.room) {
       return
     }
+    console.log('subscribing to more')
     subscribeToMore({
       document: ROOM_UPDATED,
       variables: { roomId: masterRoom.room.id },
       updateQuery: (prev, { subscriptionData }: { subscriptionData: any }) => {
+        console.log('updateuqery')
         if (subscriptionData.data.roomUpdated) {
           return { room: subscriptionData.data.roomUpdated }
         }
