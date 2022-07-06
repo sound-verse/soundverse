@@ -277,6 +277,9 @@ export class NftService {
     });
 
     if (!selling) {
+      console.log(
+        `Error transferring ownership - Selling not found! sale signature: ${saleSignature} TO: ${buyerEthAddress} TXHash: ${transactionHash}`,
+      );
       return;
     }
 
@@ -370,9 +373,7 @@ export class NftService {
       );
     }
 
-    if (
-      selling.nftType === NftType.MASTER 
-    ) {
+    if (selling.nftType === NftType.MASTER) {
       await this.sellingModel.updateMany(
         { nft: nft._id, seller: seller._id },
         { $set: { sellingStatus: SellingStatus.CLOSED } },

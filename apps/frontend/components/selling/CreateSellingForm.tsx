@@ -53,7 +53,14 @@ export const CreateSellingForm = ({
       0
     )
 
-    availableSupply = userSupply - alreadyListedSupply
+    const alreadySoldSupply = authLicenseSellings.reduce(
+      (supply, selling) =>
+        supply +
+        selling.buyers.reduce((supply, buyer) => supply + buyer.supply, 0),
+      0
+    )
+
+    availableSupply = userSupply - (alreadyListedSupply - alreadySoldSupply)
   }
 
   useEffect(() => {
