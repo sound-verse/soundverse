@@ -14,6 +14,7 @@ import { SellingStatus } from '../common/enums/sellingStatus.enum';
 import { UserNfts } from './dto/output/user-nfts.output';
 import { NftHistoryService } from '../nft-history/nft-history.service';
 import { EventType } from '@soundverse/shared-rpc-listener-service';
+import { truncateSync } from 'fs';
 
 export interface CreateNftMetadata {
   name: string;
@@ -118,6 +119,7 @@ export class NftService {
 
   async findNft({ ipfsUrl, tokenId, id }: NftFilter): Promise<Nft> {
     const searchObject = {
+      active: true,
       ...(ipfsUrl && { ipfsUrl }),
       ...(tokenId && { tokenId }),
       ...(id && { _id: id }),
@@ -445,7 +447,7 @@ export class NftService {
 
   async getNfts(limitOfDocuments = 100, documentsToSkip = 0, filter?: NftsFilter): Promise<Nft[]> {
     const findQuery = this.nftModel
-      .find({ verified: true })
+      .find({ verified: true, active: true })
       .sort({ _id: 1 })
       .skip(documentsToSkip)
       .limit(limitOfDocuments);
@@ -459,11 +461,13 @@ export class NftService {
 
     const ownedMasterNfts = await this.nftModel.find({
       verified: true,
+      active: true,
       'masterOwner.user': user._id,
     });
 
     const ownedLicenseNfts = await this.nftModel.find({
       verified: true,
+      active: true,
       'licenseOwners.user': user._id,
     });
 
