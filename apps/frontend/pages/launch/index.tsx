@@ -107,15 +107,9 @@ export default function Launch() {
     if (!data) {
       return
     }
-    const userLicenseNfts = deduplicateNfts([
-      ...data.userNfts.createdLicenseNfts,
-      ...data.userNfts.ownedLicenseNfts,
-    ])
+    const userLicenseNfts = deduplicateNfts([...data.userNfts.ownedLicenseNfts])
 
-    const userMasterNfts = deduplicateNfts([
-      ...data.userNfts.createdMasterNfts,
-      ...data.userNfts.ownedMasterNfts,
-    ])
+    const userMasterNfts = deduplicateNfts([...data.userNfts.ownedMasterNfts])
 
     setLicenseNfts(userLicenseNfts)
     setMasterNfts(userMasterNfts)
