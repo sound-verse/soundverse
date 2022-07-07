@@ -6,7 +6,14 @@ import SoundCard from '../../components/marketplace/SoundCard'
 import { ProfileName } from '../../components/profile'
 import Button from '../../components/common/Button'
 import Link from 'next/link'
-import { Nft, NftOwner, NftType, Selling } from '../../common/graphql/schema.d'
+import {
+  MintVoucher,
+  Nft,
+  NftOwner,
+  NftType,
+  SaleVoucher,
+  Selling,
+} from '../../common/graphql/schema.d'
 import { CreateSellingForm } from '../selling/CreateSellingForm'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
@@ -103,6 +110,29 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
     ) {
       isBuyable = true
     }
+  }
+
+  let lowestAskSellingVoucher
+  if (nftType === NftType.Master) {
+    lowestAskSellingVoucher =
+      nft.sellings.masterSelling?.saleVoucher ??
+      nft.sellings.masterSelling?.mintVoucher ??
+      undefined
+  } else {
+    lowestAskSellingVoucher = nft.sellings?.licenseSellings?.reduce(
+      (lowest: MintVoucher | SaleVoucher, selling: Selling) => {
+        return parseFloat(Web3.utils.fromWei(lowest?.price ?? '0')) >
+          parseFloat(
+            Web3.utils.fromWei(
+              selling.saleVoucher?.price ?? selling.mintVoucher?.price
+            )
+          )
+          ? selling?.saleVoucher ?? selling?.mintVoucher
+          : lowest
+      },
+      nft.sellings?.licenseSellings[0]?.mintVoucher ??
+        nft.sellings?.licenseSellings[0]?.saleVoucher
+    )
   }
 
   const { buyNft, buyNftState } = useBuy()
@@ -409,26 +439,18 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                     </div>
                     <div className="mt-10">
                       {NftType.Master
-                        ? nft.sellings.masterSelling && (
+                        ? lowestAskSellingVoucher && (
                             <div className="flex flex-col mb-10">
                               <div className="flex mb-2">
                                 <div className="text-xl text-bolder mr-2">
                                   {parseFloat(
                                     Web3.utils.fromWei(
-                                      nft.sellings.masterSelling.saleVoucher
-                                        ?.price ??
-                                        nft.sellings.masterSelling.mintVoucher
-                                          .price
+                                      lowestAskSellingVoucher.price
                                     )
                                   ).toFixed(2)}
                                 </div>
                                 <div className="text-grey-medium text-xs">
-                                  {(
-                                    nft.sellings.masterSelling.saleVoucher
-                                      ?.currency ??
-                                    nft.sellings.masterSelling.mintVoucher
-                                      .currency
-                                  ).toUpperCase()}
+                                  {lowestAskSellingVoucher.currency.toUpperCase()}
                                 </div>
                               </div>
                               <div className="text-md text-grey-light">
@@ -436,26 +458,18 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                               </div>
                             </div>
                           )
-                        : nft.sellings.licenseSellings[0] && (
+                        : lowestAskSellingVoucher && (
                             <div className="flex flex-col mb-10">
                               <div className="flex mb-2">
                                 <div className="text-3xl text-bolder mr-2">
                                   {parseFloat(
                                     Web3.utils.fromWei(
-                                      nft.sellings.licenseSellings[0]
-                                        .saleVoucher?.price ??
-                                        nft.sellings.licenseSellings[0]
-                                          .mintVoucher.price
+                                      lowestAskSellingVoucher.price
                                     )
                                   ).toFixed(2)}
                                 </div>
                                 <div className="text-grey-medium text-sm">
-                                  {(
-                                    nft.sellings.licenseSellings[0].saleVoucher
-                                      ?.currency ??
-                                    nft.sellings.licenseSellings[0].mintVoucher
-                                      .currency
-                                  ).toUpperCase()}
+                                  {lowestAskSellingVoucher.currency.toUpperCase()}
                                 </div>
                               </div>
                               <div className="text-sm text-grey-light">
