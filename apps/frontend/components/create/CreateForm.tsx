@@ -320,8 +320,8 @@ export const CreateForm = () => {
             Secondary sales distribution
           </div>
           <div className="text-grey-light leading-6">
-            Your Master NFT owner will receive this % income from secondary
-            sales of your License NFTs. By default you are the Master owner and
+            You as the Master NFT creator will receive this % income from secondary
+            sales of your License NFTs. By default you are the Master NFT creator and owner -
             you can either sell it or keep it for yourself.
           </div>
           <div className="mt-6 w-full">
