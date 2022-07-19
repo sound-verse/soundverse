@@ -288,12 +288,12 @@ export class RoomService {
     await this.pubSub.publish(ROOMS_UPDATED_EVENT, { roomsUpdated: rooms });
   }
 
-  @Interval(10 * 1000)
+  @Interval(3 * 1000)
   async updateActiveRooms(): Promise<void> {
     const activeRooms = await this.roomModel.find({
       active: true,
     });
 
-    await Promise.all(activeRooms.map((room) => this.updateCurrentSong(room, 10)));
+    await Promise.all(activeRooms.map((room) => this.updateCurrentSong(room, 3)));
   }
 }
