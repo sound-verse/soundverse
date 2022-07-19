@@ -188,7 +188,7 @@ export default function Soundverse() {
                   : 'Welcome back host.'}
               </div>
               <Button
-                text={`${isHost ? 'Rejoin Channel' : 'Click here to join'}`}
+                text={'Join Channel'}
                 type="purple"
                 onClick={handleJoinRoom}
                 className="!text-base !px-10 py-5"
