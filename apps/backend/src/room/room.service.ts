@@ -267,12 +267,12 @@ export class RoomService {
     } as any;
   }
 
-  @Interval(5 * 60 * 1000)
-  async removeDeadRooms(): Promise<void> {
-    const expirationTime = 5 * 60 * 1000; // 5 Minutes
+  @Interval(60 * 60 * 1000)
+  async removeExpiredRooms(): Promise<void> {
+    const expirationTime = 24 * 60 * 60 * 1000;
     const expiredRooms = await this.roomModel.find({
       isMasterRoom: false,
-      updatedAt: { $lt: new Date(Date.now() - expirationTime) },
+      createdAt: { $lt: new Date(Date.now() - expirationTime) },
     });
 
     const expiredRoomsIds = expiredRooms.map((room) => room._id);
