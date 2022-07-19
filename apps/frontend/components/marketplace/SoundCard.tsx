@@ -49,8 +49,6 @@ function SoundCard({
       play: true,
       nftType,
       restart: true,
-      onTrackFinish: () => {},
-      onTrackProgress: () => {},
       isRoomPlayer: false,
     })
   }
