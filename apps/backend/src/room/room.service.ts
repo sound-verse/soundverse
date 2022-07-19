@@ -171,13 +171,23 @@ export class RoomService {
       return;
     }
     let updatedRoom;
+    const currentTrackLastUpdated = new Date(room.currentTrack.updatedAt);
+
+    if (currentTrackLastUpdated.getTime() + secondsToAdd * 1000 > Date.now()) {
+      return;
+    }
 
     if (room.currentTrack.currentPosition > room.currentTrack.nft.trackDuration) {
       updatedRoom = await this.playNextSong(room);
     } else {
       updatedRoom = await this.roomModel.findOneAndUpdate(
         { _id: room._id },
-        { $set: { 'currentTrack.currentPosition': room.currentTrack.currentPosition + secondsToAdd } },
+        {
+          $set: {
+            'currentTrack.currentPosition': room.currentTrack.currentPosition + secondsToAdd,
+            'currentTrack.updatedAt': Date.now(),
+          },
+        },
         { new: true },
       );
     }

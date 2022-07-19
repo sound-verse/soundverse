@@ -17,6 +17,9 @@ export class PlaylistItem {
 
   @Prop({ default: 0 })
   currentPosition?: number;
+
+  @Prop({ default: () => Date.now() })
+  updatedAt: Date;
 }
 
 export class ChatMessage {
