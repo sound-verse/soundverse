@@ -18,7 +18,7 @@ export const RoomUser: FC<RoomUserProps> = ({ user, className }) => {
           height={10}
           width={10}
         />
-        <div className="text-grey-light mt-1">
+        <div className="text-black mt-1">
           <ProfileName
             ethAddress={user.ethAddress}
             name={user.name}

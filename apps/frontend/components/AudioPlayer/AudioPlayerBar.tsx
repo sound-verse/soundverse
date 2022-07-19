@@ -12,7 +12,7 @@ export type AudioPlayerBarProps = {}
 
 const formWaveSurferOptions = (ref) => ({
   container: ref,
-  waveColor: 'white',
+  waveColor: 'black',
   progressColor: '#8E65FF',
   cursorColor: '#8E65FF',
   height: 50,
@@ -142,7 +142,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
             )}
           </div>
           <div className="flex-col text-left justify-start">
-            <div className="text-white font-bold text-sm">
+            <div className="text-black font-bold text-sm">
               {currentTrack.trackName.length > 30
                 ? `${currentTrack.trackName.substring(0, 25)}...`
                 : currentTrack.trackName}

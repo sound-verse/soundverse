@@ -6,6 +6,7 @@ import SoundCard from '../marketplace/SoundCard'
 import { ProfileName } from '../profile'
 import cn from 'classnames'
 import s from './Chat.module.css'
+import { useAudioContext } from '../../context/AudioContext'
 
 type ChatProps = {
   className?: string
@@ -20,6 +21,15 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
   const [userChat, setUserChat] = useState<ChatMessage[]>(chat)
   const [loading, setLoading] = useState<boolean>(false)
   const messagesEndRef = useRef(null)
+  const { currentTrack } = useAudioContext()
+
+  let marginBottom
+
+  if (currentTrack.visible) {
+    marginBottom = 'mb-[220px]'
+  } else {
+    marginBottom = 'mb-[160px]'
+  }
 
   function generateUserColor(ethAddress) {
     return '#' + ethAddress.substring(36, 42)
@@ -69,18 +79,20 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
   }
 
   return (
-    <div className={cn(s.root, '', className)}>
-      <div className="flex flex-col w-[250px] h-screen">
+    <div className={cn(s.root, className)}>
+      <div
+        className={cn('flex flex-col w-[350px] h-screen mt-10')}
+      >
         <div
           className={cn(
-            'text-white font-bold text-sm text-center py-2 border-b-1 border-b border-grey-light bg-grey-dark pt-2'
+            'text-black font-bold text-sm text-left pl-5 py-2 border-b-1 border-b border-grey-light bg-white pt-2 rounded-t-2xl', s.boxShadow
           )}
         >
           {roomId === '' ? 'Community' : 'Room'} Chat
         </div>
         <div
           className={cn(
-            'text-white p-2 overflow-y-auto bg-grey-dark h-full text-xs'
+            'text-black p-2 overflow-y-auto bg-white h-full text-xs',s.boxShadow
           )}
         >
           {userChat.map((chatMessage, key) => {
@@ -102,12 +114,13 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
         </div>
         <div
           className={cn(
-            'py-4 border-t border-t-1 border-grey-light w-full mt-auto mb-[140px] bg-grey-dark '
+            'py-4 border-t border-t-1 border-grey-light w-full mt-auto bg-white rounded-b-2xl',s.boxShadow,
+            marginBottom
           )}
         >
           <div
             className={cn(
-              'flex justify-center items-center content-center bg-grey-dark'
+              'flex justify-center items-center content-center bg-white'
             )}
           >
             <input
@@ -125,7 +138,7 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
               }`}
               onKeyDown={sendChatMessage}
               value={chatMessage}
-              className="p-2 bg-grey-medium text-grey-light rounded-2xl w-full text-xs mx-2 h-8"
+              className="p-2 bg-grey-light text-black rounded-2xl w-full text-xs mx-2 h-8 placeholder-black"
             />
           </div>
         </div>

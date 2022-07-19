@@ -34,7 +34,7 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
         currentTrack={room.currentTrack}
         className="mt-16"
       />
-      <div className="flex flex-col ml-10 w-full mr-60 text-sm">
+      <div className="flex flex-col ml-10 w-full mr-[360px] text-sm">
         <div className="mb-5">
           <Button
             className={styles.closeButton}
@@ -43,13 +43,13 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
             onClick={handleLeaveSoundverse}
           />
         </div>
-        <div className="text-white font-bold text-lg">
+        <div className="text-black font-bold text-lg">
           Soundverse #{room.id.substring(room.id.length - 4)}
         </div>
         <div className="flex justify-center items-start w-full">
-          <div className="rounded-3xl bg-grey-dark p-5 mt-5 flex flex-col w-full">
+          <div className="rounded-3xl bg-white p-5 mt-5 flex flex-col w-full">
             <div className="flex justify-between">
-              <div className="text-grey-light flex text-sm">
+              <div className="text-black flex text-sm">
                 Hosted by
                 {isHost ? (
                   ' you'
@@ -58,7 +58,7 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
                     ethAddress={room.creator.ethAddress}
                     name={room.creator.name}
                     short={true}
-                    className="ml-2"
+                    className="ml-1"
                     fullName={true}
                   />
                 )}
@@ -79,7 +79,7 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
           </div>
         </div>
       </div>
-      <div className="absolute right-[210px]">
+      <div className="absolute right-[310px]">
         <Chat roomId={room.id} chat={room.chat} className="fixed -mt-9" />
       </div>
     </div>

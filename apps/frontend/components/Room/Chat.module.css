@@ -1,7 +1,7 @@
 .root {
-  @apply w-[250px];
+  @apply w-[350px];
 }
 
-.bgDark {
-  box-shadow: 1px 1px 4px #0f0f0f, -0.5px -0.5px 1px #656262;
+.boxShadow {
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
