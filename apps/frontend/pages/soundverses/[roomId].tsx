@@ -39,6 +39,8 @@ export default function Soundverse() {
     },
   })
 
+  console.log(room?.currentTrack)
+
   const { setCurrentTrack } = useAudioContext()
   const [showWelcomeModal, setShowWelcomeModal] = useState<boolean>(false)
   const { joinRoom } = useJoinRoom()
