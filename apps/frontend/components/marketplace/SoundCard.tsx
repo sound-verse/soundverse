@@ -38,6 +38,7 @@ function SoundCard({
   const handleMusicClick = () => {
     setCurrentTrack({
       url: nft.fileUrl,
+      waveForm: nft.soundWave,
       trackName: nft.metadata.name,
       currentPosition: 0,
       creatorName: nft.creator.name,

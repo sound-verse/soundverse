@@ -1,4 +1,4 @@
-import { Field, InputType, Int } from '@nestjs/graphql';
+import { Field, Float, InputType, Int } from '@nestjs/graphql';
 import { Transform } from 'class-transformer';
 import { Max, MaxLength } from 'class-validator';
 import xss from 'xss';
@@ -45,4 +45,10 @@ export class NftInput {
 
   @Field({ nullable: true })
   chainId?: number;
+
+  @Field(() => Float)
+  trackDuration: number;
+
+  @Field(()=>[Float])
+  soundWave: [number];
 }

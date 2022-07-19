@@ -29,7 +29,6 @@ export const RoomList: FC<RoomListProps> = ({ rooms }) => {
     if (!masterRoom?.room) {
       return
     }
-    console.log('subscribing to more')
     subscribeToMore({
       document: ROOM_UPDATED,
       variables: { roomId: masterRoom.room.id },

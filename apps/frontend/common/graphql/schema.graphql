@@ -71,7 +71,7 @@ type MintVoucher {
   signature: String!
   supply: Int!
   tokenUri: String!
-  validUntil: String!
+  validUntil: Float!
 }
 
 input MintVoucherInput {
@@ -80,7 +80,7 @@ input MintVoucherInput {
   price: String!
   signature: String!
   supply: Int!
-  validUntil: String!
+  validUntil: Timestamp!
 }
 
 type Mutation {
@@ -118,8 +118,10 @@ type Nft {
   royaltyFeeLicense: Float!
   royaltyFeeMaster: Float!
   sellings: NftSelling
+  soundWave: [Float!]!
   supply: Float!
   tokenId: Float
+  trackDuration: Float!
   transactionHash: String
 }
 
@@ -135,8 +137,10 @@ input NftInput {
   metadata: NftMetadataInput!
   royaltyFeeLicense: Int!
   royaltyFeeMaster: Int!
+  soundWave: [Float!]!
   supply: Float!
   tags: [String!]!
+  trackDuration: Float!
   transactionHash: String
 }
 
@@ -218,7 +222,7 @@ type SaleVoucher {
   signature: String!
   supply: Int!
   tokenUri: String!
-  validUntil: String!
+  validUntil: Float!
 }
 
 input SaleVoucherInput {
@@ -228,7 +232,7 @@ input SaleVoucherInput {
   price: String!
   signature: String!
   supply: Int!
-  validUntil: String!
+  validUntil: Timestamp!
 }
 
 type Selling {
@@ -247,6 +251,11 @@ type Subscription {
   roomUpdated(roomId: String!): Room!
   roomsUpdated: [Room!]!
 }
+
+"""
+`Date` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+"""
+scalar Timestamp
 
 input UpdateCurrentSongInput {
   currentPosition: Float!

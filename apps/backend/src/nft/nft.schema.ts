@@ -76,6 +76,12 @@ export class Nft extends BaseDBObject {
   fileUrl: string;
 
   @Prop()
+  trackDuration: number;
+
+  @Prop()
+  soundWave: [number];
+
+  @Prop()
   filePictureUrl: string;
 
   @Prop()

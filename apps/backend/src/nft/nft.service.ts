@@ -36,6 +36,8 @@ export interface CreateNftInput {
   royaltyFeeMaster: number;
   royaltyFeeLicense: number;
   creatorOwnerSplit: number;
+  trackDuration: number;
+  soundWave: [number];
 }
 
 @Injectable()
@@ -80,6 +82,8 @@ export class NftService {
         royaltyFeeMaster: createNftInput.royaltyFeeMaster,
         royaltyFeeLicense: createNftInput.royaltyFeeLicense,
         creatorOwnerSplit: createNftInput.creatorOwnerSplit,
+        trackDuration: createNftInput.trackDuration,
+        soundWave: createNftInput.soundWave,
         masterOwner: {
           user: createNftInput.user._id,
           supply: 1,

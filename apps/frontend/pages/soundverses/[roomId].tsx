@@ -15,10 +15,8 @@ import Modal from 'react-modal'
 import { Bars } from 'react-loader-spinner'
 import Custom404 from '../404'
 import { ROOM_UPDATED } from '../../common/graphql/subscriptions/room-updated.subscription'
-import { useReviveRoom } from '../../hooks/rooms/useReviveRoom'
 import { useAuthContext } from '../../context/AuthContext'
 import { Track, useAudioContext } from '../../context/AudioContext'
-import { useHostControls } from '../../hooks/rooms/useHostControls'
 import Button from '../../components/common/Button'
 import { useJoinRoom } from '../../hooks/rooms/useJoinRoom'
 import { useLeaveRoom } from '../../hooks/rooms/useLeaveRoom'
@@ -28,8 +26,6 @@ export default function Soundverse() {
   const [room, setRoom] = useState<Room>(null)
   const [loading, setLoading] = useState<boolean>(true)
   const { authUser } = useAuthContext()
-  const [roomDataSub, setRoomDataSub] = useState<Room>(null)
-  const { reviveRoom } = useReviveRoom()
   const { roomId } = router.query
   const {
     data: roomData,
@@ -44,7 +40,6 @@ export default function Soundverse() {
   })
 
   const { setCurrentTrack } = useAudioContext()
-  const { playNextSong, updateCurrentSong } = useHostControls()
   const [showWelcomeModal, setShowWelcomeModal] = useState<boolean>(false)
   const { joinRoom } = useJoinRoom()
   const { leaveRoom } = useLeaveRoom()
@@ -62,6 +57,7 @@ export default function Soundverse() {
 
       setCurrentTrack({
         url: nft.fileUrl,
+        waveForm: nft.soundWave,
         trackName: nft.metadata.name,
         currentPosition: room.currentTrack?.currentPosition ?? 0,
         creatorName: nft.creator.name,
@@ -71,8 +67,6 @@ export default function Soundverse() {
         contractAddress,
         play: true,
         nftType,
-        onTrackFinish: isHost ? playNextSong : () => {},
-        onTrackProgress: isHost ? updateCurrentSong : ({}) => {},
         isRoomPlayer: true,
       })
     }
@@ -107,18 +101,6 @@ export default function Soundverse() {
   }, [authUser, room?.id])
 
   useEffect(() => {
-    if (!isHost) {
-      return
-    }
-    const reviveInterval = setInterval(() => {
-      reviveRoom()
-    }, 30000)
-    return () => {
-      clearInterval(reviveInterval)
-    }
-  }, [isHost])
-
-  useEffect(() => {
     if (!room) {
       return
     }
@@ -131,9 +113,7 @@ export default function Soundverse() {
     if (!roomId) {
       return
     }
-    if (isHost) {
-      setShowWelcomeModal(true)
-    }
+    setShowWelcomeModal(true)
     setLoading(true)
     subscribeToMore({
       document: ROOM_UPDATED,
@@ -205,10 +185,10 @@ export default function Soundverse() {
                   ? `Welcome to the room #${room?.id?.substring(
                       room?.id?.length - 4
                     )}`
-                  : "Welcome back host. Don't forget that the channel will close, if your not active on it."}
+                  : 'Welcome back host.'}
               </div>
               <Button
-                text={`${isHost ? 'Understood' : 'Click here to join'}`}
+                text={`${isHost ? 'Rejoin Channel' : 'Click here to join'}`}
                 type="purple"
                 onClick={handleJoinRoom}
                 className="!text-base !px-10 py-5"

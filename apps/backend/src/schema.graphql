@@ -77,6 +77,8 @@ type Nft {
   licenseContractAddress: String!
   ipfsUrl: String!
   fileUrl: String!
+  trackDuration: Float!
+  soundWave: [Float!]!
   chainId: Int!
   filePictureUrl: String!
   transactionHash: String
@@ -187,9 +189,6 @@ type Mutation {
   createSelling(createSellingInput: CreateSellingInput!): Selling!
   createRoom(createRoomInput: CreateRoomInput!): Room!
   reviveRoom: Room!
-  nextSong: Room!
-  prevSong: Room!
-  updateCurrentSong(updateCurrentSongInput: UpdateCurrentSongInput!): Room!
   joinRoom(joinRoomInput: JoinRoomInput!): Room!
   leaveRoom(leaveRoomInput: LeaveRoomInput!): Room!
   createChatMessage(createChatMessageInput: CreateChatMessageInput!): Room!
@@ -228,6 +227,8 @@ input NftInput {
   creatorOwnerSplit: Int!
   transactionHash: String
   chainId: Float
+  trackDuration: Float!
+  soundWave: [Float!]!
 }
 
 input NftMetadataInput {
@@ -276,10 +277,6 @@ input CreateRoomInput {
 input PlaylistItemInput {
   nftId: String!
   nftType: String!
-}
-
-input UpdateCurrentSongInput {
-  currentPosition: Float!
 }
 
 input JoinRoomInput {

@@ -17,7 +17,6 @@ import { LeaveRoomInput } from './dto/input/leave-room.input';
 import { PUB_SUB } from '../core/pubSub.module';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { valueFromAST } from 'graphql';
-import { UpdateCurrentSongInput } from './dto/input/update-current-song.input';
 import { CreateChatMessageInput } from './dto/input/create-chat-message.input';
 
 export const ROOM_UPDATED_EVENT = 'roomUpdated';
@@ -70,32 +69,6 @@ export class RoomResolver {
 
   @UseGuards(GqlAuthGuard)
   @Mutation(() => Room)
-  async nextSong(@CurrentUser() user: UserSchema) {
-    const room = await this.roomService.playNextSong(user);
-    await this.pubSub.publish(ROOM_UPDATED_EVENT, { roomUpdated: room });
-    return room;
-  }
-
-  @UseGuards(GqlAuthGuard)
-  @Mutation(() => Room)
-  async prevSong(@CurrentUser() user: UserSchema) {
-    const room = await this.roomService.playPreviousSong(user);
-    await this.pubSub.publish(ROOM_UPDATED_EVENT, { roomUpdated: room });
-    return room;
-  }
-
-  @UseGuards(GqlAuthGuard)
-  @Mutation(() => Room)
-  async updateCurrentSong(
-    @CurrentUser() user: UserSchema,
-    @Args('updateCurrentSongInput') updateCurrentSongInput: UpdateCurrentSongInput,
-  ) {
-    const room = await this.roomService.updateCurrentSong(user, updateCurrentSongInput);
-    return room;
-  }
-
-  @UseGuards(GqlAuthGuard)
-  @Mutation(() => Room)
   async joinRoom(@CurrentUser() user: UserSchema, @Args('joinRoomInput') joinRoomInput: JoinRoomInput) {
     const room = await this.roomService.addUserToRoom(user, joinRoomInput);
     await this.pubSub.publish(ROOM_UPDATED_EVENT, { roomUpdated: room });
@@ -131,7 +104,6 @@ export class RoomResolver {
     },
   })
   roomUpdated(@Args('roomId') roomId: string) {
-    console.log('lel');
     return this.pubSub.asyncIterator(ROOM_UPDATED_EVENT);
   }
 

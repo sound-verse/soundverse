@@ -18,6 +18,7 @@ export type Track = {
   contractAddress?: string
   trackName?: string
   url?: string
+  waveForm?: number[],
   currentPosition?: number
   creatorName?: string
   trackPictureUrl?: string
@@ -31,8 +32,6 @@ export type Track = {
   isPlaying?: boolean
   nftType?: NftType
   restart?: boolean
-  onTrackFinish?: () => void
-  onTrackProgress?: (updateCurrentSongInput: UpdateCurrentSongInput) => void
   isRoomPlayer?: boolean
 }
 
@@ -57,6 +56,7 @@ const initialState: State = {
     contractAddress: '',
     trackName: '',
     url: '',
+    waveForm: [0],
     currentPosition: 0,
     creatorEthAddress: '',
     creatorName: '',
@@ -69,9 +69,7 @@ const initialState: State = {
     isPlaying: false,
     restart: false,
     nftType: NftType.Master,
-    onTrackFinish: () => {},
     isRoomPlayer: false,
-    onTrackProgress: () => {},
   } as Track,
 }
 

@@ -1,4 +1,4 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
 import { BaseModel } from '../../../graphql/types/base-model.types';
 import { Selling } from '../../../selling/dto/output/selling.output';
 import { User } from '../../../user/dto/output/user.output';
@@ -49,6 +49,12 @@ export class Nft extends BaseModel {
 
   @Field()
   fileUrl: string;
+
+  @Field()
+  trackDuration: number;
+
+  @Field(() => [Float])
+  soundWave: [number];
 
   @Field(() => Int)
   chainId: number;

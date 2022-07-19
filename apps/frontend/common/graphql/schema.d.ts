@@ -16,6 +16,8 @@ export type Scalars = {
   Boolean: boolean
   Int: number
   Float: number
+  /** `Date` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch. */
+  Timestamp: any
   /** The `Upload` scalar type represents a file upload. */
   Upload: any
 }
@@ -95,7 +97,7 @@ export type MintVoucher = {
   signature: Scalars['String']
   supply: Scalars['Int']
   tokenUri: Scalars['String']
-  validUntil: Scalars['String']
+  validUntil: Scalars['Float']
 }
 
 export type MintVoucherInput = {
@@ -104,7 +106,7 @@ export type MintVoucherInput = {
   price: Scalars['String']
   signature: Scalars['String']
   supply: Scalars['Int']
-  validUntil: Scalars['String']
+  validUntil: Scalars['Timestamp']
 }
 
 export type Mutation = {
@@ -194,8 +196,10 @@ export type Nft = {
   royaltyFeeLicense: Scalars['Float']
   royaltyFeeMaster: Scalars['Float']
   sellings?: Maybe<NftSelling>
+  soundWave: Array<Scalars['Float']>
   supply: Scalars['Float']
   tokenId?: Maybe<Scalars['Float']>
+  trackDuration: Scalars['Float']
   transactionHash?: Maybe<Scalars['String']>
 }
 
@@ -211,8 +215,10 @@ export type NftInput = {
   metadata: NftMetadataInput
   royaltyFeeLicense: Scalars['Int']
   royaltyFeeMaster: Scalars['Int']
+  soundWave: Array<Scalars['Float']>
   supply: Scalars['Float']
   tags: Array<Scalars['String']>
+  trackDuration: Scalars['Float']
   transactionHash?: InputMaybe<Scalars['String']>
 }
 
@@ -324,7 +330,7 @@ export type SaleVoucher = {
   signature: Scalars['String']
   supply: Scalars['Int']
   tokenUri: Scalars['String']
-  validUntil: Scalars['String']
+  validUntil: Scalars['Float']
 }
 
 export type SaleVoucherInput = {
@@ -334,7 +340,7 @@ export type SaleVoucherInput = {
   price: Scalars['String']
   signature: Scalars['String']
   supply: Scalars['Int']
-  validUntil: Scalars['String']
+  validUntil: Scalars['Timestamp']
 }
 
 export type Selling = {
@@ -431,6 +437,8 @@ export type NftFragmentFragment = {
   masterContractAddress: string
   licenseContractAddress: string
   fileUrl: string
+  trackDuration: number
+  soundWave: Array<number>
   filePictureUrl: string
   ipfsUrl: string
   transactionHash?: string | null
@@ -545,7 +553,7 @@ export type NftFragmentFragment = {
         signature: string
         supply: number
         currency: string
-        validUntil: string
+        validUntil: number
       } | null
       mintVoucher?: {
         __typename?: 'MintVoucher'
@@ -559,7 +567,7 @@ export type NftFragmentFragment = {
         royaltyFeeMaster: number
         royaltyFeeLicense: number
         creatorOwnerSplit: number
-        validUntil: string
+        validUntil: number
       } | null
     } | null
     licenseSellings?: Array<{
@@ -612,7 +620,7 @@ export type NftFragmentFragment = {
         signature: string
         supply: number
         currency: string
-        validUntil: string
+        validUntil: number
       } | null
       mintVoucher?: {
         __typename?: 'MintVoucher'
@@ -626,7 +634,7 @@ export type NftFragmentFragment = {
         royaltyFeeMaster: number
         royaltyFeeLicense: number
         creatorOwnerSplit: number
-        validUntil: string
+        validUntil: number
       } | null
     }> | null
   } | null
@@ -662,6 +670,8 @@ export type RoomFragmentFragment = {
       masterContractAddress: string
       licenseContractAddress: string
       fileUrl: string
+      trackDuration: number
+      soundWave: Array<number>
       filePictureUrl: string
       ipfsUrl: string
       transactionHash?: string | null
@@ -780,7 +790,7 @@ export type RoomFragmentFragment = {
             signature: string
             supply: number
             currency: string
-            validUntil: string
+            validUntil: number
           } | null
           mintVoucher?: {
             __typename?: 'MintVoucher'
@@ -794,7 +804,7 @@ export type RoomFragmentFragment = {
             royaltyFeeMaster: number
             royaltyFeeLicense: number
             creatorOwnerSplit: number
-            validUntil: string
+            validUntil: number
           } | null
         } | null
         licenseSellings?: Array<{
@@ -847,7 +857,7 @@ export type RoomFragmentFragment = {
             signature: string
             supply: number
             currency: string
-            validUntil: string
+            validUntil: number
           } | null
           mintVoucher?: {
             __typename?: 'MintVoucher'
@@ -861,7 +871,7 @@ export type RoomFragmentFragment = {
             royaltyFeeMaster: number
             royaltyFeeLicense: number
             creatorOwnerSplit: number
-            validUntil: string
+            validUntil: number
           } | null
         }> | null
       } | null
@@ -878,6 +888,8 @@ export type RoomFragmentFragment = {
       masterContractAddress: string
       licenseContractAddress: string
       fileUrl: string
+      trackDuration: number
+      soundWave: Array<number>
       filePictureUrl: string
       ipfsUrl: string
       transactionHash?: string | null
@@ -996,7 +1008,7 @@ export type RoomFragmentFragment = {
             signature: string
             supply: number
             currency: string
-            validUntil: string
+            validUntil: number
           } | null
           mintVoucher?: {
             __typename?: 'MintVoucher'
@@ -1010,7 +1022,7 @@ export type RoomFragmentFragment = {
             royaltyFeeMaster: number
             royaltyFeeLicense: number
             creatorOwnerSplit: number
-            validUntil: string
+            validUntil: number
           } | null
         } | null
         licenseSellings?: Array<{
@@ -1063,7 +1075,7 @@ export type RoomFragmentFragment = {
             signature: string
             supply: number
             currency: string
-            validUntil: string
+            validUntil: number
           } | null
           mintVoucher?: {
             __typename?: 'MintVoucher'
@@ -1077,7 +1089,7 @@ export type RoomFragmentFragment = {
             royaltyFeeMaster: number
             royaltyFeeLicense: number
             creatorOwnerSplit: number
-            validUntil: string
+            validUntil: number
           } | null
         }> | null
       } | null
@@ -1169,7 +1181,7 @@ export type SellingFragmentFragment = {
     signature: string
     supply: number
     currency: string
-    validUntil: string
+    validUntil: number
   } | null
   mintVoucher?: {
     __typename?: 'MintVoucher'
@@ -1183,7 +1195,7 @@ export type SellingFragmentFragment = {
     royaltyFeeMaster: number
     royaltyFeeLicense: number
     creatorOwnerSplit: number
-    validUntil: string
+    validUntil: number
   } | null
 }
 
@@ -1239,6 +1251,8 @@ export type CreateChatMessageMutation = {
         masterContractAddress: string
         licenseContractAddress: string
         fileUrl: string
+        trackDuration: number
+        soundWave: Array<number>
         filePictureUrl: string
         ipfsUrl: string
         transactionHash?: string | null
@@ -1357,7 +1371,7 @@ export type CreateChatMessageMutation = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -1371,7 +1385,7 @@ export type CreateChatMessageMutation = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           } | null
           licenseSellings?: Array<{
@@ -1424,7 +1438,7 @@ export type CreateChatMessageMutation = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -1438,7 +1452,7 @@ export type CreateChatMessageMutation = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           }> | null
         } | null
@@ -1455,6 +1469,8 @@ export type CreateChatMessageMutation = {
         masterContractAddress: string
         licenseContractAddress: string
         fileUrl: string
+        trackDuration: number
+        soundWave: Array<number>
         filePictureUrl: string
         ipfsUrl: string
         transactionHash?: string | null
@@ -1573,7 +1589,7 @@ export type CreateChatMessageMutation = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -1587,7 +1603,7 @@ export type CreateChatMessageMutation = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           } | null
           licenseSellings?: Array<{
@@ -1640,7 +1656,7 @@ export type CreateChatMessageMutation = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -1654,7 +1670,7 @@ export type CreateChatMessageMutation = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           }> | null
         } | null
@@ -1753,7 +1769,7 @@ export type CreateMintSellingMutation = {
       signature: string
       supply: number
       currency: string
-      validUntil: string
+      validUntil: number
     } | null
     mintVoucher?: {
       __typename?: 'MintVoucher'
@@ -1767,7 +1783,7 @@ export type CreateMintSellingMutation = {
       royaltyFeeMaster: number
       royaltyFeeLicense: number
       creatorOwnerSplit: number
-      validUntil: string
+      validUntil: number
     } | null
   }
 }
@@ -1808,6 +1824,8 @@ export type CreateRoomMutation = {
         masterContractAddress: string
         licenseContractAddress: string
         fileUrl: string
+        trackDuration: number
+        soundWave: Array<number>
         filePictureUrl: string
         ipfsUrl: string
         transactionHash?: string | null
@@ -1926,7 +1944,7 @@ export type CreateRoomMutation = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -1940,7 +1958,7 @@ export type CreateRoomMutation = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           } | null
           licenseSellings?: Array<{
@@ -1993,7 +2011,7 @@ export type CreateRoomMutation = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -2007,7 +2025,7 @@ export type CreateRoomMutation = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           }> | null
         } | null
@@ -2024,6 +2042,8 @@ export type CreateRoomMutation = {
         masterContractAddress: string
         licenseContractAddress: string
         fileUrl: string
+        trackDuration: number
+        soundWave: Array<number>
         filePictureUrl: string
         ipfsUrl: string
         transactionHash?: string | null
@@ -2142,7 +2162,7 @@ export type CreateRoomMutation = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -2156,7 +2176,7 @@ export type CreateRoomMutation = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           } | null
           licenseSellings?: Array<{
@@ -2209,7 +2229,7 @@ export type CreateRoomMutation = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -2223,7 +2243,7 @@ export type CreateRoomMutation = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           }> | null
         } | null
@@ -2322,7 +2342,7 @@ export type CreateSellingMutation = {
       signature: string
       supply: number
       currency: string
-      validUntil: string
+      validUntil: number
     } | null
     mintVoucher?: {
       __typename?: 'MintVoucher'
@@ -2336,7 +2356,7 @@ export type CreateSellingMutation = {
       royaltyFeeMaster: number
       royaltyFeeLicense: number
       creatorOwnerSplit: number
-      validUntil: string
+      validUntil: number
     } | null
   }
 }
@@ -2386,6 +2406,8 @@ export type JoinRoomMutation = {
         masterContractAddress: string
         licenseContractAddress: string
         fileUrl: string
+        trackDuration: number
+        soundWave: Array<number>
         filePictureUrl: string
         ipfsUrl: string
         transactionHash?: string | null
@@ -2504,7 +2526,7 @@ export type JoinRoomMutation = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -2518,7 +2540,7 @@ export type JoinRoomMutation = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           } | null
           licenseSellings?: Array<{
@@ -2571,7 +2593,7 @@ export type JoinRoomMutation = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -2585,7 +2607,7 @@ export type JoinRoomMutation = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           }> | null
         } | null
@@ -2602,6 +2624,8 @@ export type JoinRoomMutation = {
         masterContractAddress: string
         licenseContractAddress: string
         fileUrl: string
+        trackDuration: number
+        soundWave: Array<number>
         filePictureUrl: string
         ipfsUrl: string
         transactionHash?: string | null
@@ -2720,7 +2744,7 @@ export type JoinRoomMutation = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -2734,7 +2758,7 @@ export type JoinRoomMutation = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           } | null
           licenseSellings?: Array<{
@@ -2787,7 +2811,7 @@ export type JoinRoomMutation = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -2801,7 +2825,7 @@ export type JoinRoomMutation = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           }> | null
         } | null
@@ -2880,6 +2904,8 @@ export type LeaveRoomMutation = {
         masterContractAddress: string
         licenseContractAddress: string
         fileUrl: string
+        trackDuration: number
+        soundWave: Array<number>
         filePictureUrl: string
         ipfsUrl: string
         transactionHash?: string | null
@@ -2998,7 +3024,7 @@ export type LeaveRoomMutation = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -3012,7 +3038,7 @@ export type LeaveRoomMutation = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           } | null
           licenseSellings?: Array<{
@@ -3065,7 +3091,7 @@ export type LeaveRoomMutation = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -3079,7 +3105,7 @@ export type LeaveRoomMutation = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           }> | null
         } | null
@@ -3096,6 +3122,8 @@ export type LeaveRoomMutation = {
         masterContractAddress: string
         licenseContractAddress: string
         fileUrl: string
+        trackDuration: number
+        soundWave: Array<number>
         filePictureUrl: string
         ipfsUrl: string
         transactionHash?: string | null
@@ -3214,7 +3242,7 @@ export type LeaveRoomMutation = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -3228,7 +3256,7 @@ export type LeaveRoomMutation = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           } | null
           licenseSellings?: Array<{
@@ -3281,7 +3309,7 @@ export type LeaveRoomMutation = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -3295,7 +3323,7 @@ export type LeaveRoomMutation = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           }> | null
         } | null
@@ -3381,6 +3409,8 @@ export type NextSongMutation = {
         masterContractAddress: string
         licenseContractAddress: string
         fileUrl: string
+        trackDuration: number
+        soundWave: Array<number>
         filePictureUrl: string
         ipfsUrl: string
         transactionHash?: string | null
@@ -3499,7 +3529,7 @@ export type NextSongMutation = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -3513,7 +3543,7 @@ export type NextSongMutation = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           } | null
           licenseSellings?: Array<{
@@ -3566,7 +3596,7 @@ export type NextSongMutation = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -3580,7 +3610,7 @@ export type NextSongMutation = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           }> | null
         } | null
@@ -3597,6 +3627,8 @@ export type NextSongMutation = {
         masterContractAddress: string
         licenseContractAddress: string
         fileUrl: string
+        trackDuration: number
+        soundWave: Array<number>
         filePictureUrl: string
         ipfsUrl: string
         transactionHash?: string | null
@@ -3715,7 +3747,7 @@ export type NextSongMutation = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -3729,7 +3761,7 @@ export type NextSongMutation = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           } | null
           licenseSellings?: Array<{
@@ -3782,7 +3814,7 @@ export type NextSongMutation = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -3796,7 +3828,7 @@ export type NextSongMutation = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           }> | null
         } | null
@@ -3873,6 +3905,8 @@ export type PrevSongMutation = {
         masterContractAddress: string
         licenseContractAddress: string
         fileUrl: string
+        trackDuration: number
+        soundWave: Array<number>
         filePictureUrl: string
         ipfsUrl: string
         transactionHash?: string | null
@@ -3991,7 +4025,7 @@ export type PrevSongMutation = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -4005,7 +4039,7 @@ export type PrevSongMutation = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           } | null
           licenseSellings?: Array<{
@@ -4058,7 +4092,7 @@ export type PrevSongMutation = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -4072,7 +4106,7 @@ export type PrevSongMutation = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           }> | null
         } | null
@@ -4089,6 +4123,8 @@ export type PrevSongMutation = {
         masterContractAddress: string
         licenseContractAddress: string
         fileUrl: string
+        trackDuration: number
+        soundWave: Array<number>
         filePictureUrl: string
         ipfsUrl: string
         transactionHash?: string | null
@@ -4207,7 +4243,7 @@ export type PrevSongMutation = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -4221,7 +4257,7 @@ export type PrevSongMutation = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           } | null
           licenseSellings?: Array<{
@@ -4274,7 +4310,7 @@ export type PrevSongMutation = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -4288,7 +4324,7 @@ export type PrevSongMutation = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           }> | null
         } | null
@@ -4365,6 +4401,8 @@ export type ReviveRoomMutation = {
         masterContractAddress: string
         licenseContractAddress: string
         fileUrl: string
+        trackDuration: number
+        soundWave: Array<number>
         filePictureUrl: string
         ipfsUrl: string
         transactionHash?: string | null
@@ -4483,7 +4521,7 @@ export type ReviveRoomMutation = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -4497,7 +4535,7 @@ export type ReviveRoomMutation = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           } | null
           licenseSellings?: Array<{
@@ -4550,7 +4588,7 @@ export type ReviveRoomMutation = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -4564,7 +4602,7 @@ export type ReviveRoomMutation = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           }> | null
         } | null
@@ -4581,6 +4619,8 @@ export type ReviveRoomMutation = {
         masterContractAddress: string
         licenseContractAddress: string
         fileUrl: string
+        trackDuration: number
+        soundWave: Array<number>
         filePictureUrl: string
         ipfsUrl: string
         transactionHash?: string | null
@@ -4699,7 +4739,7 @@ export type ReviveRoomMutation = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -4713,7 +4753,7 @@ export type ReviveRoomMutation = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           } | null
           licenseSellings?: Array<{
@@ -4766,7 +4806,7 @@ export type ReviveRoomMutation = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -4780,7 +4820,7 @@ export type ReviveRoomMutation = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           }> | null
         } | null
@@ -4859,6 +4899,8 @@ export type UpdateCurrentSongMutation = {
         masterContractAddress: string
         licenseContractAddress: string
         fileUrl: string
+        trackDuration: number
+        soundWave: Array<number>
         filePictureUrl: string
         ipfsUrl: string
         transactionHash?: string | null
@@ -4977,7 +5019,7 @@ export type UpdateCurrentSongMutation = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -4991,7 +5033,7 @@ export type UpdateCurrentSongMutation = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           } | null
           licenseSellings?: Array<{
@@ -5044,7 +5086,7 @@ export type UpdateCurrentSongMutation = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -5058,7 +5100,7 @@ export type UpdateCurrentSongMutation = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           }> | null
         } | null
@@ -5075,6 +5117,8 @@ export type UpdateCurrentSongMutation = {
         masterContractAddress: string
         licenseContractAddress: string
         fileUrl: string
+        trackDuration: number
+        soundWave: Array<number>
         filePictureUrl: string
         ipfsUrl: string
         transactionHash?: string | null
@@ -5193,7 +5237,7 @@ export type UpdateCurrentSongMutation = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -5207,7 +5251,7 @@ export type UpdateCurrentSongMutation = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           } | null
           licenseSellings?: Array<{
@@ -5260,7 +5304,7 @@ export type UpdateCurrentSongMutation = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -5274,7 +5318,7 @@ export type UpdateCurrentSongMutation = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           }> | null
         } | null
@@ -5330,6 +5374,8 @@ export type GetNftQuery = {
     masterContractAddress: string
     licenseContractAddress: string
     fileUrl: string
+    trackDuration: number
+    soundWave: Array<number>
     filePictureUrl: string
     ipfsUrl: string
     transactionHash?: string | null
@@ -5444,7 +5490,7 @@ export type GetNftQuery = {
           signature: string
           supply: number
           currency: string
-          validUntil: string
+          validUntil: number
         } | null
         mintVoucher?: {
           __typename?: 'MintVoucher'
@@ -5458,7 +5504,7 @@ export type GetNftQuery = {
           royaltyFeeMaster: number
           royaltyFeeLicense: number
           creatorOwnerSplit: number
-          validUntil: string
+          validUntil: number
         } | null
       } | null
       licenseSellings?: Array<{
@@ -5511,7 +5557,7 @@ export type GetNftQuery = {
           signature: string
           supply: number
           currency: string
-          validUntil: string
+          validUntil: number
         } | null
         mintVoucher?: {
           __typename?: 'MintVoucher'
@@ -5525,7 +5571,7 @@ export type GetNftQuery = {
           royaltyFeeMaster: number
           royaltyFeeLicense: number
           creatorOwnerSplit: number
-          validUntil: string
+          validUntil: number
         } | null
       }> | null
     } | null
@@ -5547,6 +5593,8 @@ export type GetNftsQuery = {
     masterContractAddress: string
     licenseContractAddress: string
     fileUrl: string
+    trackDuration: number
+    soundWave: Array<number>
     filePictureUrl: string
     ipfsUrl: string
     transactionHash?: string | null
@@ -5661,7 +5709,7 @@ export type GetNftsQuery = {
           signature: string
           supply: number
           currency: string
-          validUntil: string
+          validUntil: number
         } | null
         mintVoucher?: {
           __typename?: 'MintVoucher'
@@ -5675,7 +5723,7 @@ export type GetNftsQuery = {
           royaltyFeeMaster: number
           royaltyFeeLicense: number
           creatorOwnerSplit: number
-          validUntil: string
+          validUntil: number
         } | null
       } | null
       licenseSellings?: Array<{
@@ -5728,7 +5776,7 @@ export type GetNftsQuery = {
           signature: string
           supply: number
           currency: string
-          validUntil: string
+          validUntil: number
         } | null
         mintVoucher?: {
           __typename?: 'MintVoucher'
@@ -5742,7 +5790,7 @@ export type GetNftsQuery = {
           royaltyFeeMaster: number
           royaltyFeeLicense: number
           creatorOwnerSplit: number
-          validUntil: string
+          validUntil: number
         } | null
       }> | null
     } | null
@@ -5785,6 +5833,8 @@ export type GetRoomQuery = {
         masterContractAddress: string
         licenseContractAddress: string
         fileUrl: string
+        trackDuration: number
+        soundWave: Array<number>
         filePictureUrl: string
         ipfsUrl: string
         transactionHash?: string | null
@@ -5903,7 +5953,7 @@ export type GetRoomQuery = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -5917,7 +5967,7 @@ export type GetRoomQuery = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           } | null
           licenseSellings?: Array<{
@@ -5970,7 +6020,7 @@ export type GetRoomQuery = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -5984,7 +6034,7 @@ export type GetRoomQuery = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           }> | null
         } | null
@@ -6001,6 +6051,8 @@ export type GetRoomQuery = {
         masterContractAddress: string
         licenseContractAddress: string
         fileUrl: string
+        trackDuration: number
+        soundWave: Array<number>
         filePictureUrl: string
         ipfsUrl: string
         transactionHash?: string | null
@@ -6119,7 +6171,7 @@ export type GetRoomQuery = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -6133,7 +6185,7 @@ export type GetRoomQuery = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           } | null
           licenseSellings?: Array<{
@@ -6186,7 +6238,7 @@ export type GetRoomQuery = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -6200,7 +6252,7 @@ export type GetRoomQuery = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           }> | null
         } | null
@@ -6279,6 +6331,8 @@ export type GetRoomsQuery = {
           masterContractAddress: string
           licenseContractAddress: string
           fileUrl: string
+          trackDuration: number
+          soundWave: Array<number>
           filePictureUrl: string
           ipfsUrl: string
           transactionHash?: string | null
@@ -6397,7 +6451,7 @@ export type GetRoomsQuery = {
                 signature: string
                 supply: number
                 currency: string
-                validUntil: string
+                validUntil: number
               } | null
               mintVoucher?: {
                 __typename?: 'MintVoucher'
@@ -6411,7 +6465,7 @@ export type GetRoomsQuery = {
                 royaltyFeeMaster: number
                 royaltyFeeLicense: number
                 creatorOwnerSplit: number
-                validUntil: string
+                validUntil: number
               } | null
             } | null
             licenseSellings?: Array<{
@@ -6464,7 +6518,7 @@ export type GetRoomsQuery = {
                 signature: string
                 supply: number
                 currency: string
-                validUntil: string
+                validUntil: number
               } | null
               mintVoucher?: {
                 __typename?: 'MintVoucher'
@@ -6478,7 +6532,7 @@ export type GetRoomsQuery = {
                 royaltyFeeMaster: number
                 royaltyFeeLicense: number
                 creatorOwnerSplit: number
-                validUntil: string
+                validUntil: number
               } | null
             }> | null
           } | null
@@ -6495,6 +6549,8 @@ export type GetRoomsQuery = {
           masterContractAddress: string
           licenseContractAddress: string
           fileUrl: string
+          trackDuration: number
+          soundWave: Array<number>
           filePictureUrl: string
           ipfsUrl: string
           transactionHash?: string | null
@@ -6613,7 +6669,7 @@ export type GetRoomsQuery = {
                 signature: string
                 supply: number
                 currency: string
-                validUntil: string
+                validUntil: number
               } | null
               mintVoucher?: {
                 __typename?: 'MintVoucher'
@@ -6627,7 +6683,7 @@ export type GetRoomsQuery = {
                 royaltyFeeMaster: number
                 royaltyFeeLicense: number
                 creatorOwnerSplit: number
-                validUntil: string
+                validUntil: number
               } | null
             } | null
             licenseSellings?: Array<{
@@ -6680,7 +6736,7 @@ export type GetRoomsQuery = {
                 signature: string
                 supply: number
                 currency: string
-                validUntil: string
+                validUntil: number
               } | null
               mintVoucher?: {
                 __typename?: 'MintVoucher'
@@ -6694,7 +6750,7 @@ export type GetRoomsQuery = {
                 royaltyFeeMaster: number
                 royaltyFeeLicense: number
                 creatorOwnerSplit: number
-                validUntil: string
+                validUntil: number
               } | null
             }> | null
           } | null
@@ -6753,6 +6809,8 @@ export type GetUserNftsQuery = {
       masterContractAddress: string
       licenseContractAddress: string
       fileUrl: string
+      trackDuration: number
+      soundWave: Array<number>
       filePictureUrl: string
       ipfsUrl: string
       transactionHash?: string | null
@@ -6871,7 +6929,7 @@ export type GetUserNftsQuery = {
             signature: string
             supply: number
             currency: string
-            validUntil: string
+            validUntil: number
           } | null
           mintVoucher?: {
             __typename?: 'MintVoucher'
@@ -6885,7 +6943,7 @@ export type GetUserNftsQuery = {
             royaltyFeeMaster: number
             royaltyFeeLicense: number
             creatorOwnerSplit: number
-            validUntil: string
+            validUntil: number
           } | null
         } | null
         licenseSellings?: Array<{
@@ -6938,7 +6996,7 @@ export type GetUserNftsQuery = {
             signature: string
             supply: number
             currency: string
-            validUntil: string
+            validUntil: number
           } | null
           mintVoucher?: {
             __typename?: 'MintVoucher'
@@ -6952,7 +7010,7 @@ export type GetUserNftsQuery = {
             royaltyFeeMaster: number
             royaltyFeeLicense: number
             creatorOwnerSplit: number
-            validUntil: string
+            validUntil: number
           } | null
         }> | null
       } | null
@@ -6964,6 +7022,8 @@ export type GetUserNftsQuery = {
       masterContractAddress: string
       licenseContractAddress: string
       fileUrl: string
+      trackDuration: number
+      soundWave: Array<number>
       filePictureUrl: string
       ipfsUrl: string
       transactionHash?: string | null
@@ -7082,7 +7142,7 @@ export type GetUserNftsQuery = {
             signature: string
             supply: number
             currency: string
-            validUntil: string
+            validUntil: number
           } | null
           mintVoucher?: {
             __typename?: 'MintVoucher'
@@ -7096,7 +7156,7 @@ export type GetUserNftsQuery = {
             royaltyFeeMaster: number
             royaltyFeeLicense: number
             creatorOwnerSplit: number
-            validUntil: string
+            validUntil: number
           } | null
         } | null
         licenseSellings?: Array<{
@@ -7149,7 +7209,7 @@ export type GetUserNftsQuery = {
             signature: string
             supply: number
             currency: string
-            validUntil: string
+            validUntil: number
           } | null
           mintVoucher?: {
             __typename?: 'MintVoucher'
@@ -7163,7 +7223,7 @@ export type GetUserNftsQuery = {
             royaltyFeeMaster: number
             royaltyFeeLicense: number
             creatorOwnerSplit: number
-            validUntil: string
+            validUntil: number
           } | null
         }> | null
       } | null
@@ -7175,6 +7235,8 @@ export type GetUserNftsQuery = {
       masterContractAddress: string
       licenseContractAddress: string
       fileUrl: string
+      trackDuration: number
+      soundWave: Array<number>
       filePictureUrl: string
       ipfsUrl: string
       transactionHash?: string | null
@@ -7293,7 +7355,7 @@ export type GetUserNftsQuery = {
             signature: string
             supply: number
             currency: string
-            validUntil: string
+            validUntil: number
           } | null
           mintVoucher?: {
             __typename?: 'MintVoucher'
@@ -7307,7 +7369,7 @@ export type GetUserNftsQuery = {
             royaltyFeeMaster: number
             royaltyFeeLicense: number
             creatorOwnerSplit: number
-            validUntil: string
+            validUntil: number
           } | null
         } | null
         licenseSellings?: Array<{
@@ -7360,7 +7422,7 @@ export type GetUserNftsQuery = {
             signature: string
             supply: number
             currency: string
-            validUntil: string
+            validUntil: number
           } | null
           mintVoucher?: {
             __typename?: 'MintVoucher'
@@ -7374,7 +7436,7 @@ export type GetUserNftsQuery = {
             royaltyFeeMaster: number
             royaltyFeeLicense: number
             creatorOwnerSplit: number
-            validUntil: string
+            validUntil: number
           } | null
         }> | null
       } | null
@@ -7386,6 +7448,8 @@ export type GetUserNftsQuery = {
       masterContractAddress: string
       licenseContractAddress: string
       fileUrl: string
+      trackDuration: number
+      soundWave: Array<number>
       filePictureUrl: string
       ipfsUrl: string
       transactionHash?: string | null
@@ -7504,7 +7568,7 @@ export type GetUserNftsQuery = {
             signature: string
             supply: number
             currency: string
-            validUntil: string
+            validUntil: number
           } | null
           mintVoucher?: {
             __typename?: 'MintVoucher'
@@ -7518,7 +7582,7 @@ export type GetUserNftsQuery = {
             royaltyFeeMaster: number
             royaltyFeeLicense: number
             creatorOwnerSplit: number
-            validUntil: string
+            validUntil: number
           } | null
         } | null
         licenseSellings?: Array<{
@@ -7571,7 +7635,7 @@ export type GetUserNftsQuery = {
             signature: string
             supply: number
             currency: string
-            validUntil: string
+            validUntil: number
           } | null
           mintVoucher?: {
             __typename?: 'MintVoucher'
@@ -7585,7 +7649,7 @@ export type GetUserNftsQuery = {
             royaltyFeeMaster: number
             royaltyFeeLicense: number
             creatorOwnerSplit: number
-            validUntil: string
+            validUntil: number
           } | null
         }> | null
       } | null
@@ -7650,6 +7714,8 @@ export type RoomUpdatedSubscription = {
         masterContractAddress: string
         licenseContractAddress: string
         fileUrl: string
+        trackDuration: number
+        soundWave: Array<number>
         filePictureUrl: string
         ipfsUrl: string
         transactionHash?: string | null
@@ -7768,7 +7834,7 @@ export type RoomUpdatedSubscription = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -7782,7 +7848,7 @@ export type RoomUpdatedSubscription = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           } | null
           licenseSellings?: Array<{
@@ -7835,7 +7901,7 @@ export type RoomUpdatedSubscription = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -7849,7 +7915,7 @@ export type RoomUpdatedSubscription = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           }> | null
         } | null
@@ -7866,6 +7932,8 @@ export type RoomUpdatedSubscription = {
         masterContractAddress: string
         licenseContractAddress: string
         fileUrl: string
+        trackDuration: number
+        soundWave: Array<number>
         filePictureUrl: string
         ipfsUrl: string
         transactionHash?: string | null
@@ -7984,7 +8052,7 @@ export type RoomUpdatedSubscription = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -7998,7 +8066,7 @@ export type RoomUpdatedSubscription = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           } | null
           licenseSellings?: Array<{
@@ -8051,7 +8119,7 @@ export type RoomUpdatedSubscription = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -8065,7 +8133,7 @@ export type RoomUpdatedSubscription = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           }> | null
         } | null
@@ -8142,6 +8210,8 @@ export type RoomsUpdatedSubscription = {
         masterContractAddress: string
         licenseContractAddress: string
         fileUrl: string
+        trackDuration: number
+        soundWave: Array<number>
         filePictureUrl: string
         ipfsUrl: string
         transactionHash?: string | null
@@ -8260,7 +8330,7 @@ export type RoomsUpdatedSubscription = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -8274,7 +8344,7 @@ export type RoomsUpdatedSubscription = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           } | null
           licenseSellings?: Array<{
@@ -8327,7 +8397,7 @@ export type RoomsUpdatedSubscription = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -8341,7 +8411,7 @@ export type RoomsUpdatedSubscription = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           }> | null
         } | null
@@ -8358,6 +8428,8 @@ export type RoomsUpdatedSubscription = {
         masterContractAddress: string
         licenseContractAddress: string
         fileUrl: string
+        trackDuration: number
+        soundWave: Array<number>
         filePictureUrl: string
         ipfsUrl: string
         transactionHash?: string | null
@@ -8476,7 +8548,7 @@ export type RoomsUpdatedSubscription = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -8490,7 +8562,7 @@ export type RoomsUpdatedSubscription = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           } | null
           licenseSellings?: Array<{
@@ -8543,7 +8615,7 @@ export type RoomsUpdatedSubscription = {
               signature: string
               supply: number
               currency: string
-              validUntil: string
+              validUntil: number
             } | null
             mintVoucher?: {
               __typename?: 'MintVoucher'
@@ -8557,7 +8629,7 @@ export type RoomsUpdatedSubscription = {
               royaltyFeeMaster: number
               royaltyFeeLicense: number
               creatorOwnerSplit: number
-              validUntil: string
+              validUntil: number
             } | null
           }> | null
         } | null

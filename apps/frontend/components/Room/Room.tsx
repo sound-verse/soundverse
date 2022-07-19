@@ -6,9 +6,7 @@ import { useLeaveRoom } from '../../hooks/rooms/useLeaveRoom'
 import Button from '../common/Button'
 import { ProfileName } from '../profile'
 import { Chat } from './Chat'
-import { HostControls } from './HostControls'
 import { Playlist } from './Playlist'
-import { RoomListElement } from './RoomListElement'
 import { RoomUser } from './RoomUser'
 import styles from './Room.module.css'
 
@@ -69,7 +67,6 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
                 Listeners: {room.activeUsers.length}
               </div>
             </div>
-            {isHost && <HostControls room={room} className="mt-2" />}
             <div className="flex items-start mt-16 border-b pb-5 border-grey-medium">
               <RoomUser user={room.creator} />
             </div>

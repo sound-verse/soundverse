@@ -13,6 +13,8 @@ export const NFT_FRAGMENT = gql`
     masterContractAddress
     licenseContractAddress
     fileUrl
+    trackDuration
+    soundWave
     filePictureUrl
     ipfsUrl
     transactionHash

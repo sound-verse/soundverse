@@ -78,6 +78,8 @@ export class NftResolver {
         royaltyFeeMaster: nftData.royaltyFeeMaster,
         royaltyFeeLicense: nftData.royaltyFeeLicense,
         creatorOwnerSplit: nftData.creatorOwnerSplit,
+        soundWave: nftData.soundWave,
+        trackDuration: nftData.trackDuration,
       });
     }
   }

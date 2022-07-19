@@ -15,7 +15,6 @@ const formWaveSurferOptions = (ref) => ({
   waveColor: 'white',
   progressColor: '#8E65FF',
   cursorColor: '#8E65FF',
-  // responsive: true,
   height: 50,
   pixelRatio: 1,
   normalize: true,
@@ -47,13 +46,6 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
       }
     }
   }, [])
-
-  // useEffect(() => {
-  //   if (!wavesurfer.current) {
-  //     return
-  //   }
-  //   gotoTrackPosition(currentTrack.currentPosition)
-  // }, [currentTrack.currentPosition])
 
   useEffect(() => {
     if (!wavesurfer.current) {
@@ -107,35 +99,16 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
       ...options,
       ...(currentTrack.isRoomPlayer && { interact: false }),
     })
-    wavesurfer.current.load(url)
+    wavesurfer.current.load(url, currentTrack.waveForm)
 
     wavesurfer.current.on('ready', () => {
       if (currentTrack.play) {
         setCurrentTrack({
+          isLoading: false,
           isPlaying: true,
         })
         setPlayerIsReady(true)
         wavesurfer.current.play()
-      }
-    })
-
-    wavesurfer.current.on('waveform-ready', () => {
-      setCurrentTrack({
-        isLoading: false,
-      })
-    })
-
-    wavesurfer.current.on('finish', () => {
-      setCurrentTrack({ isPlaying: false })
-      currentTrack.onTrackFinish()
-    })
-
-    wavesurfer.current.on('audioprocess', (progress) => {
-      const position = progress.toFixed(2)
-      if (position % 3 == 0 && position > 0) {
-        currentTrack.onTrackProgress({
-          currentPosition: parseFloat(position),
-        })
       }
     })
   }
@@ -282,17 +255,6 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
           )}
         </div>
       </div>
-      {currentTrack.isLoading && (
-        <div
-          className={cn(
-            styles.playbar,
-            'flex self-center items-center justify-center !bg-transparent text-white'
-          )}
-        >
-          <Bars color="#7A64FF" height={30} width={30} />{' '}
-          <span className="ml-2">Loading wave form</span>
-        </div>
-      )}
     </div>
   )
 }

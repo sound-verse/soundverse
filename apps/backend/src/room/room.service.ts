@@ -14,7 +14,6 @@ import { Interval } from '@nestjs/schedule';
 import { PUB_SUB } from '../core/pubSub.module';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { ROOMS_UPDATED_EVENT, ROOM_UPDATED_EVENT } from './room.resolver';
-import { UpdateCurrentSongInput } from './dto/input/update-current-song.input';
 import { CreateChatMessageInput } from './dto/input/create-chat-message.input';
 import { SellingService } from '../selling/selling.service';
 
@@ -23,7 +22,6 @@ export class RoomService {
   constructor(
     @InjectModel(Room.name) private roomModel: Model<RoomDocument>,
     private nftService: NftService,
-    private userService: UserService,
     private sellingService: SellingService,
     @Inject(PUB_SUB) private pubSub: RedisPubSub,
   ) {}
@@ -53,12 +51,11 @@ export class RoomService {
       active: true,
     });
 
-    const newRoom = await this.playNextSong(user);
+    const newRoom = await this.playNextSong(room);
     return newRoom;
   }
 
-  async playNextSong(user: User) {
-    const room = await this.getRoomByCreator(user);
+  async playNextSong(room: Room) {
     const songIndex = room.playlistItems.findIndex((item) => {
       return (
         item.nft._id.toString() === room.currentTrack?.nft._id.toString() &&
@@ -78,14 +75,13 @@ export class RoomService {
 
     const updatedRoom = await this.roomModel.findOneAndUpdate(
       { _id: room._id },
-      { $set: { currentTrack } },
+      { $set: { currentTrack: { ...currentTrack, currentPosition: 0 } } },
       { new: true },
     );
     return updatedRoom;
   }
 
-  async playPreviousSong(user: User) {
-    const room = await this.getRoomByCreator(user);
+  async playPreviousSong(room: Room) {
     const songIndex = room.playlistItems.findIndex(
       (item) =>
         item.nft._id.toString() === room.currentTrack?.nft._id.toString() &&
@@ -107,22 +103,6 @@ export class RoomService {
       { $set: { currentTrack } },
       { new: true },
     );
-
-    return updatedRoom;
-  }
-
-  async updateCurrentSong(user: User, updateCurrentSongInput: UpdateCurrentSongInput) {
-    const room = await this.getRoomByCreator(user);
-    if (!room) {
-      return;
-    }
-    const updatedRoom = await this.roomModel.findOneAndUpdate(
-      { _id: room._id },
-      { $set: { 'currentTrack.currentPosition': updateCurrentSongInput.currentPosition } },
-      { new: true },
-    );
-
-    await this.pubSub.publish(ROOM_UPDATED_EVENT, { roomUpdated: updatedRoom });
 
     return updatedRoom;
   }
@@ -184,6 +164,27 @@ export class RoomService {
       { $set: { updatedAt: Date.now() } },
       { new: true },
     );
+  }
+
+  async updateCurrentSong(room: Room, secondsToAdd: number) {
+    if (!room.playlistItems) {
+      return;
+    }
+    let updatedRoom;
+
+    if (room.currentTrack.currentPosition > room.currentTrack.nft.trackDuration) {
+      updatedRoom = await this.playNextSong(room);
+    } else {
+      updatedRoom = await this.roomModel.findOneAndUpdate(
+        { _id: room._id },
+        { $set: { 'currentTrack.currentPosition': room.currentTrack.currentPosition + secondsToAdd } },
+        { new: true },
+      );
+    }
+
+    await this.pubSub.publish(ROOM_UPDATED_EVENT, { roomUpdated: updatedRoom });
+
+    return updatedRoom;
   }
 
   async addUserToRoom(user: User, joinRoomInput: JoinRoomInput) {
@@ -285,5 +286,14 @@ export class RoomService {
 
     const rooms = await this.getActiveRooms();
     await this.pubSub.publish(ROOMS_UPDATED_EVENT, { roomsUpdated: rooms });
+  }
+
+  @Interval(10 * 1000)
+  async updateActiveRooms(): Promise<void> {
+    const activeRooms = await this.roomModel.find({
+      active: true,
+    });
+
+    await Promise.all(activeRooms.map((room) => this.updateCurrentSong(room, 10)));
   }
 }

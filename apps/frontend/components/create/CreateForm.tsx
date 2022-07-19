@@ -36,6 +36,8 @@ export const SUPPORTED_FORMATS_MUSIC = ['audio/mpeg', 'audio/wav']
 
 export const CreateForm = () => {
   const [nftFile, setNftFile] = useState<File>(undefined)
+  const [nftWaveForm, setNftWaveForm] = useState<[number]>([0])
+  const [nftDuration, setNftDuration] = useState<number>(0)
   const [pictureFile, setPictureFile] = useState<File>(undefined)
   const [showing, setShowing] = useState<Boolean>(false)
   const router = useRouter()
@@ -45,6 +47,8 @@ export const CreateForm = () => {
   const [firstStepValues, setFirstStepValues] = useState<FirstStepValues>()
   const [showSecondStep, setShowSecondStep] = useState(false)
   const { authenticated } = useLogin()
+  const WavesurferLibrary = useRef(null)
+  const waveformRef = useRef(null)
 
   const initialValuesFirstStep: FirstStepValues = {
     name: '',
@@ -62,7 +66,8 @@ export const CreateForm = () => {
     e: React.ChangeEvent<HTMLInputElement>,
     setFile: React.Dispatch<React.SetStateAction<File>>,
     setFileError: React.Dispatch<React.SetStateAction<String>>,
-    supportedFormats: string[]
+    supportedFormats: string[],
+    type: 'nft' | 'picture'
   ) => {
     const fileSize = e.target.files[0].size
     const fileType = e.target.files[0].type
@@ -78,8 +83,67 @@ export const CreateForm = () => {
       return
     }
 
-    setFile(file)
-    setFileError('')
+    if (type === 'picture') {
+      setFile(file)
+      setFileError('')
+      return
+    }
+
+    const reader = new FileReader()
+
+    reader.onload = (event) => {
+      const audioContext = new window.AudioContext()
+
+      if (!audioContext) {
+        return
+      }
+
+      audioContext.decodeAudioData(
+        event.target.result as any,
+        function (buffer) {
+          const duration = buffer.duration
+          setNftDuration(duration)
+          processWaveForm(file)
+          setFile(file)
+          setFileError('')
+        }
+      )
+    }
+
+    reader.onerror = (event) => {
+      console.log(event)
+    }
+
+    reader.readAsArrayBuffer(file)
+  }
+
+  const processWaveForm = async (file: File) => {
+    if (!WavesurferLibrary.current) {
+      WavesurferLibrary.current = await (await import('wavesurfer.js')).default
+    }
+
+    const wavesurfer = await WavesurferLibrary.current.create({
+      container: waveformRef.current,
+    })
+
+    const reader = new FileReader()
+
+    reader.onload = (event) => {
+      const blob = new window.Blob([new Uint8Array(event.target.result as any)])
+      const audio = new Audio()
+      audio.src = URL.createObjectURL(blob)
+      wavesurfer.load(audio)
+    }
+
+    reader.onerror = (error) => {
+      console.log(error)
+    }
+
+    reader.readAsArrayBuffer(file)
+
+    wavesurfer.on('ready', function () {
+      setNftWaveForm(wavesurfer.backend.getPeaks(100))
+    })
   }
 
   const validationSchemaFirstStep = Yup.object().shape({
@@ -136,6 +200,8 @@ export const CreateForm = () => {
         royaltyFeeMaster: values.royaltyFeeMaster,
         royaltyFeeLicense: values.royaltyFeeMaster,
         creatorOwnerSplit: values.creatorOwnerSplit,
+        trackDuration: nftDuration,
+        soundWave: nftWaveForm,
       })
       if (id) {
         router.push(`/license/${id}`)
@@ -178,7 +244,8 @@ export const CreateForm = () => {
                   e,
                   setNftFile,
                   setNftFileError,
-                  SUPPORTED_FORMATS_MUSIC
+                  SUPPORTED_FORMATS_MUSIC,
+                  'nft'
                 )
               }
             ></Field>
@@ -204,7 +271,8 @@ export const CreateForm = () => {
                   e,
                   setPictureFile,
                   setPictureFileError,
-                  SUPPORTED_FORMATS_PICTURE
+                  SUPPORTED_FORMATS_PICTURE,
+                  'picture'
                 )
               }
             ></input>
@@ -278,8 +346,8 @@ export const CreateForm = () => {
             Set the royalty percentage you would like to receive on every
             secondary trade of your Master and Licences.{' '}
             <span className="text-purple underline">
-              Caution: You won't be able to change this royalty percentage after
-              minting your NFT!
+              Caution: You {"won't"} be able to change this royalty percentage
+              after minting your NFT!
             </span>
           </div>
           <div className="text-white font-bold text-sm mt-10">
@@ -353,9 +421,9 @@ export const CreateForm = () => {
       <div className={styles.informationStepContent}>
         <div className={styles.informationStepHeader}>Upload music</div>
         <div className={styles.informationStepBody}>
-          You may only publish music for which you have full rights on. 
-          As soon as you mint your music as an NFT, your music is on the
-          blockchain and no one can remove it anymore.
+          You may only publish music for which you have full rights on. As soon
+          as you mint your music as an NFT, your music is on the blockchain and
+          no one can remove it anymore.
         </div>
       </div>
     </div>
@@ -366,8 +434,8 @@ export const CreateForm = () => {
       <div className={styles.informationStepContent}>
         <div className={styles.informationStepHeader}>Master NFT</div>
         <div className={styles.informationStepBody}>
-          Your Master is a unique 1/1 valuable NFT. The owner of your Master will
-          initially own all the unsold Licenses and get royalties on every
+          Your Master is a unique 1/1 valuable NFT. The owner of your Master
+          will initially own all the unsold Licenses and get royalties on every
           trade on each License.
         </div>
       </div>
@@ -392,6 +460,7 @@ export const CreateForm = () => {
         {!showSecondStep
           ? renderInformationFirstStep()
           : renderInformationSecondStep()}
+        <div ref={waveformRef} />
       </div>
       <Modal
         isOpen={showing}
