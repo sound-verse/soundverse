@@ -12,7 +12,7 @@ export type AudioPlayerBarProps = {}
 
 const formWaveSurferOptions = (ref) => ({
   container: ref,
-  waveColor: 'black',
+  waveColor: 'grey',
   progressColor: '#8E65FF',
   cursorColor: '#8E65FF',
   height: 50,
@@ -136,6 +136,8 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
                     height={40}
                     layout="fixed"
                     className="rounded-2xl"
+                    objectFit='cover'
+                    quality={90}
                   />
                 </a>
               </Link>

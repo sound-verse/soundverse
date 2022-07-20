@@ -1,11 +1,7 @@
 import React, { useState } from 'react'
-import Image from 'next/image'
-import Blockies from 'react-blockies'
-import { generateShortEthAddress } from '../../utils/common'
 import SoundCard from '../marketplace/SoundCard'
-import styles from './ProfileNftTabs.module.css'
-import { connectContractToSigner } from '@usedapp/core'
 import { Nft, NftType } from '../../common/graphql/schema.d'
+import cn from 'classnames'
 
 export type ProfileNftTabsProps = {
   createdNfts: Nft[]
@@ -27,6 +23,7 @@ export const ProfileNftTabs = ({
   className = '',
 }: ProfileNftTabsProps) => {
   const [activeTab, setActiveTab] = useState<PROFILE_TAB>(PROFILE_TAB.CREATED)
+  const [ownedActive, setOwnedActive] = useState(true)
 
   const collectedMasterNfts = ownedMasterNfts.filter(
     (ownedMasterNft) =>
@@ -39,39 +36,28 @@ export const ProfileNftTabs = ({
 
   return (
     <div className={className}>
-      <div className="flex">
+      <div className="flex mb-10 select-none">
         <div
-          className="uppercase text-white font-semibold text-2xl cursor-pointer mr-10"
-          onClick={() => setActiveTab(PROFILE_TAB.CREATED)}
+          className={cn(
+            'bg-white rounded text-black px-8 py-1 shadow-lg cursor-pointer',
+            ownedActive ? ' !bg-grey-medium !text-white ' : ''
+          )}
+          onClick={() => setOwnedActive(!ownedActive)}
         >
-          <span
-            className={`${activeTab === PROFILE_TAB.CREATED && styles.active}`}
-          >
-            Created
-          </span>
+          Minted
         </div>
+
         <div
-          className="uppercase text-white font-semibold text-2xl cursor-pointer mr-10"
-          onClick={() => setActiveTab(PROFILE_TAB.COLECTED)}
+          className={cn(
+            'bg-white rounded text-black px-8 py-1 shadow-lg cursor-pointer',
+            !ownedActive ? ' !bg-grey-medium !text-white ' : ''
+          )}
+          onClick={() => setOwnedActive(!ownedActive)}
         >
-          <span
-            className={`${activeTab === PROFILE_TAB.COLECTED && styles.active}`}
-          >
-            Collected
-          </span>
+          Owned
         </div>
-        {/* <div
-          className="uppercase text-white font-extrabold text-3xl cursor-pointer mr-10"
-          onClick={() => setActiveTab(PROFILE_TAB.FOR_SALE)}
-        >
-          <span
-            className={`${activeTab === PROFILE_TAB.FOR_SALE && styles.active}`}
-          >
-            On-Sale
-          </span>
-        </div> */}
       </div>
-      {activeTab === PROFILE_TAB.CREATED && (
+      {ownedActive && (
         <div className="grid xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 mt-16 gap-10">
           {createdNfts &&
             createdNfts.map((nft, key) => {
@@ -104,7 +90,7 @@ export const ProfileNftTabs = ({
             })}
         </div>
       )}
-      {activeTab === PROFILE_TAB.COLECTED && (
+      {!ownedActive && (
         <div className="grid xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 mt-16 gap-10">
           {collectedMasterNfts &&
             collectedMasterNfts.map((nft, key) => {

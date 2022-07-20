@@ -17,6 +17,7 @@ export type SoundCardProp = {
   className?: string
   contractAddress?: string
   showAudioBar?: boolean
+  activeLinks?: boolean
 }
 
 function SoundCard({
@@ -26,7 +27,7 @@ function SoundCard({
   nftType,
   contractAddress,
   showAudioBar = true,
-  onMusicClick = () => {},
+  activeLinks = true,
 }: SoundCardProp) {
   const [playCard, setPlayCard] = useState<boolean>(false)
   const { setCurrentTrack, currentTrack } = useAudioContext()
@@ -67,10 +68,28 @@ function SoundCard({
   }
   return (
     <div className={rootClassName}>
-      <Link
-        href={`/${nftType === NftType.Master ? 'master' : 'license'}/${nft.id}`}
-      >
-        <a>
+      {activeLinks ? (
+        <Link
+          href={`/${nftType === NftType.Master ? 'master' : 'license'}/${
+            nft.id
+          }`}
+        >
+          <a>
+            <div className={styles.soundCardHeaderTop}>
+              {nftType === NftType.Master ? 'Master' : 'License'}
+            </div>
+            <div className={styles.mplaceImage}>
+              <Image
+                src={nft.filePictureUrl}
+                layout="fill"
+                objectFit="cover"
+                className={'rounded-tl-2xl'}
+              />
+            </div>
+          </a>
+        </Link>
+      ) : (
+        <>
           <div className={styles.soundCardHeaderTop}>
             {nftType === NftType.Master ? 'Master' : 'License'}
           </div>
@@ -82,8 +101,9 @@ function SoundCard({
               className={'rounded-tl-2xl'}
             />
           </div>
-        </a>
-      </Link>
+        </>
+      )}
+
       <div className={styles.soundCardBody}>
         <div className={styles.imageOverlay}></div>
         <div className={styles.blur}>

@@ -21,8 +21,8 @@ export const PorfileSocialBar = ({
   discord,
   className,
 }: PorfileSocialBarProps) => {
-  const iconSize = 25
-  const iconClass = 'px-5 py-2 flex border-r border-grey-medium'
+  const iconSize = 20
+  const iconClass = 'px-2 py-2 flex border-r border-grey-medium'
   return (
     <div className={className}>
       <div

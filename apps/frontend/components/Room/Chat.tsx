@@ -85,19 +85,19 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
       >
         <div
           className={cn(
-            'text-black font-bold text-sm text-left pl-5 py-2 border-b-1 border-b border-grey-light bg-white pt-2 rounded-t-2xl', s.boxShadow
+            'text-black font-bold text-xl text-left pl-6 py-2 bg-white pt-6 rounded-t-2xl', s.boxShadow
           )}
         >
           {roomId === '' ? 'Community' : 'Room'} Chat
         </div>
         <div
           className={cn(
-            'text-black p-2 overflow-y-auto bg-white h-full text-xs',s.boxShadow
+            'text-black px-6 py-2 overflow-y-auto bg-white h-full text-xs',s.boxShadow
           )}
         >
           {userChat.map((chatMessage, key) => {
             return (
-              <div key={key} className="mb-1">
+              <div key={key} className="mb-2">
                 <ProfileName
                   ethAddress={chatMessage.sender.ethAddress}
                   name={chatMessage.sender.name}
@@ -138,7 +138,7 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
               }`}
               onKeyDown={sendChatMessage}
               value={chatMessage}
-              className="p-2 bg-grey-light text-black rounded-2xl w-full text-xs mx-2 h-8 placeholder-black"
+              className="p-2 bg-grey-light text-white rounded-2xl w-full text-xs mx-2 h-8 placeholder-white focus:outline-none"
             />
           </div>
         </div>

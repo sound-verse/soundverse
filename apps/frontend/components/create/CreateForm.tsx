@@ -229,7 +229,7 @@ export const CreateForm = () => {
     >
       <Form>
         <div className="flex flex-col">
-          <div className="text-white font-bold text-sm">Track</div>
+          <div className="text-black font-bold text-sm">Track</div>
           <div>
             <label htmlFor="nftFile" className={styles.buttonStyle}>
               Choose Music File
@@ -249,10 +249,10 @@ export const CreateForm = () => {
                 )
               }
             ></Field>
-            <div className="text-grey-light mt-3 text-xs">
+            <div className="text-grey-dark mt-3 text-xs">
               MP3, WAVE - Max 100Mb
             </div>
-            <div className="text-grey-light text-xs">
+            <div className="text-grey-dark text-xs">
               {nftFile && `Selected File: ${nftFile.name}`}
             </div>
             <div className={styles.error}>{nftFileError}</div>
@@ -276,32 +276,32 @@ export const CreateForm = () => {
                 )
               }
             ></input>
-            <div className="text-grey-light mt-3 text-xs">
+            <div className="text-grey-dark mt-3 text-xs">
               JPG, PNG - Max 100Mb
             </div>
           </div>
-          <div className="text-grey-light text-xs">
+          <div className="text-grey-dark text-xs">
             {pictureFile && `Selected File: ${pictureFile.name}`}
           </div>
           <div className={styles.error}>{pictureFileError}</div>
-          <div className="text-white font-bold text-sm mt-10">Track Name</div>
+          <div className="text-black font-bold text-sm mt-10">Track Name</div>
           <div className="mt-3 w-full">
             <Field
               id="name"
               name="name"
               placeholder="Ice in the dark..."
-              className="outline-none bg-grey-dark text-white w-full text-sm"
+              className="outline-none text-black w-full text-sm"
             />
             <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
-            <div className="text-grey-light mt-2 text-xs">
+            <div className="text-grey-dark mt-2 text-xs">
               max. 20 characters
             </div>
             <div className={styles.error}>
               <ErrorMessage name="name" />
             </div>
           </div>
-          <div className="text-white font-bold text-sm mt-10">Description</div>
-          <div className="mt-3 text-sm">
+          <div className="text-black font-bold text-sm mt-10">Description</div>
+          <div className="mt-3 text-sm text-black">
             <Field
               type="input"
               as="textarea"
@@ -333,16 +333,16 @@ export const CreateForm = () => {
     >
       <Form>
         <div
-          className="text-white mb-10 cursor-pointer"
+          className="text-black mb-10 cursor-pointer"
           onClick={() => setShowSecondStep(false)}
         >
           {'<-'} Back
         </div>
-        <div className="flex flex-col text-sm text-white">
+        <div className="flex flex-col text-sm text-black">
           <div className="font-bold mb-2">
             Royalty Settings for secondary sales of Master and Licenses
           </div>
-          <div className="text-grey-light leading-6">
+          <div className="text-grey-dark leading-6">
             Set the royalty percentage you would like to receive on every
             secondary trade of your Master and Licences.{' '}
             <span className="text-purple underline">
@@ -350,7 +350,7 @@ export const CreateForm = () => {
               after minting your NFT!
             </span>
           </div>
-          <div className="text-white font-bold text-sm mt-10">
+          <div className="text-black font-bold text-sm mt-10">
             Secondary royalty
           </div>
           <div className="mt-6 w-full">
@@ -358,36 +358,36 @@ export const CreateForm = () => {
               id="royaltyFeeMaster"
               name="royaltyFeeMaster"
               placeholder="5%, 10%, 15%, ..."
-              className="outline-none bg-grey-dark text-white w-full"
+              className="outline-none text-black w-full"
             />
             <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
-            <div className="text-grey-light mt-2 text-xs">
+            <div className="text-grey-dark mt-2 text-xs">
               5-15% are industry standards - Max is 50%
               <div className={styles.error}>
                 <ErrorMessage name="royaltyFeeMaster" />
               </div>
             </div>
           </div>
-          <div className="text-white font-bold text-sm mt-10">Licenses</div>
+          <div className="text-black font-bold text-sm mt-10">Licenses</div>
           <div className="mt-3 w-full">
             <Field
               id="licenses"
               name="licenses"
               placeholder="10000"
-              className="outline-none bg-grey-dark text-white w-full"
+              className="outline-none text-black w-full"
             />
             <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
-            <div className="text-grey-light mt-2 text-xs">
+            <div className="text-grey-dark mt-2 text-xs">
               min. 2 - max. 100.000
             </div>
             <div className={styles.error}>
               <ErrorMessage name="licenses" />
             </div>
           </div>
-          <div className="text-white font-bold text-sm mt-10 mb-2">
+          <div className="text-black font-bold text-sm mt-10 mb-2">
             Secondary sales distribution
           </div>
-          <div className="text-grey-light leading-6">
+          <div className="text-grey-dark leading-6">
             You as the Master NFT creator will receive this % income from secondary
             sales of your License NFTs. By default you are the Master NFT creator and owner -
             you can either sell it or keep it for yourself.
@@ -397,10 +397,10 @@ export const CreateForm = () => {
               id="creatorOwnerSplit"
               name="creatorOwnerSplit"
               placeholder="30"
-              className="outline-none bg-grey-dark text-white w-full"
+              className="outline-none  text-black w-full"
             />
             <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
-            <div className="text-grey-light mt-2 text-xs">
+            <div className="text-grey-dark mt-2 text-xs">
               Example: if you type in 30, 30% will go to the creator and 70%
               will go to the owner of this Master NFT. Max value 100.
               <div className={styles.error}>

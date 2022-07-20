@@ -216,7 +216,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
 
       <Layout>
         <main className="mx-auto">
-          <div className="grid grid-cols-1 xl:grid-cols-4 xl:h-screen text-white">
+          <div className="grid grid-cols-1 xl:grid-cols-4 xl:h-screen text-black">
             <div className="col-span-1">
               <div className="flex flex-col mt-5 mb-5">
                 <SoundCard className="h-full" nft={nft} nftType={nftType} />
@@ -234,7 +234,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                     </div> */}
                     <Button
                       text="BUY NOW"
-                      type="purple"
+                      type="normal"
                       className="w-52"
                       onClick={handleBuyLicense}
                     />
@@ -244,7 +244,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                   <div className="flex flex-col mt-5">
                     <Button
                       text="Unlist License"
-                      type="purple"
+                      type="normal"
                       className="w-52"
                       onClick={handleUnlistLicense}
                     />
@@ -293,7 +293,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                             </div>
                           </a>
                         </Link>
-                        <div className="font-grey-light flex">
+                        <div className="font-grey-dark flex">
                           by
                           <Link
                             href={`/profile/${nft.masterOwner.user.ethAddress}`}
@@ -371,7 +371,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
               ) : (
                 <div className="flex flex-col">
                   <div className="flex flex-col mt-5">
-                    <div className="text-white font-extrabold text-lg  font-AOCR ">
+                    <div className="text-black font-extrabold text-lg  font-AOCR ">
                       <Link href={`/profile/${nft.creator.ethAddress}`}>
                         <a>
                           <ProfileName
@@ -386,7 +386,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                       {' - '}
                       {nft.metadata.name}
                     </div>
-                    <div className="flex justify-between items-baseline text-white border-b border-grey-medium pb-5 text-sm">
+                    <div className="flex justify-between items-baseline text-black border-b border-grey-medium pb-5 text-sm">
                       <div className="mt-12">
                         Owned by: <br />
                         <br />
@@ -453,7 +453,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                                   {lowestAskSellingVoucher.currency.toUpperCase()}
                                 </div>
                               </div>
-                              <div className="text-md text-grey-light">
+                              <div className="text-md text-grey-dark">
                                 Lowest Ask
                               </div>
                             </div>
@@ -472,7 +472,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                                   {lowestAskSellingVoucher.currency.toUpperCase()}
                                 </div>
                               </div>
-                              <div className="text-sm text-grey-light">
+                              <div className="text-sm text-grey-dark">
                                 Lowest Ask
                               </div>
                             </div>
@@ -486,7 +486,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                               ? 'more Licenses'
                               : 'Licenses'
                           }`}
-                          type="purple"
+                          type="normal"
                           className="w-48 mx-2"
                           onClick={() => setShowCreateListing(true)}
                         />
@@ -494,7 +494,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                       {isUnlistable && nftType === NftType.Master && (
                         <Button
                           text={'Unlist Master'}
-                          type="purple"
+                          type="normal"
                           className="w-48 mx-2"
                           onClick={handleUnlistNft}
                         />
@@ -502,7 +502,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                       {isUnlistable && nftType === NftType.License && (
                         <Button
                           text={'Unlist Licenses'}
-                          type="purple"
+                          type="normal"
                           className="w-48 mx-2"
                           onClick={() => setShowUnlistLicense(true)}
                         />
@@ -510,7 +510,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                       {isBuyable && nftType === NftType.Master && (
                         <Button
                           text="Select and BUY"
-                          type="purple"
+                          type="normal"
                           className="w-48 mx-2"
                           onClick={handleBuyNft}
                         />
@@ -518,7 +518,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                       {isBuyable && nftType === NftType.License && (
                         <Button
                           text="BUY"
-                          type="purple"
+                          type="normal"
                           className="w-48 mx-2"
                           onClick={() => setShowBuyLicense(true)}
                         />
@@ -536,7 +536,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                         <div className="font-extrabold text-lg uppercase font-AOCR border-b border-grey-medium pb-5">
                           Details
                         </div>
-                        <div className="text-white mt-5 text-sm">
+                        <div className="text-black mt-5 text-sm">
                           {nft.metadata.description}
                         </div>
                       </div>
@@ -545,13 +545,13 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                           <div className="text-3xl font-bold">
                             {nft.royaltyFeeMaster / 100}%
                           </div>
-                          <div className="text-sm text-grey-light">Royalty</div>
+                          <div className="text-sm text-grey-dark">Royalty</div>
                         </div>
                         <div className="flex flex-col items-center justify-center ml-16">
                           <div className="text-3xl font-bold">
                             {nft.creatorOwnerSplit / 100}%
                           </div>
-                          <div className="text-sm text-grey-light">
+                          <div className="text-sm text-grey-dark">
                             Creator / Owner split
                           </div>
                         </div>
@@ -575,7 +575,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
               {showUnlistedSuccess && 'You successfully unlisted your NFT!'}
             </div>
             <Button
-              type="purple"
+              type="normal"
               text="Got it!"
               className="!px-16 !py-4 text-lg"
               onClick={() => {
