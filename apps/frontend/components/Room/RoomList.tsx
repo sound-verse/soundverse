@@ -45,7 +45,7 @@ export const RoomList: FC<RoomListProps> = ({ rooms }) => {
   return (
     <div className="flex justify-center items-start relative">
       {!rooms.length ? (
-        <div className="flex mt-40 justify-center items-center ml-72 text-black text-1xl">
+        <div className="flex mt-40 justify-center items-center text-black text-1xl">
           No rooms active yet, stay tuned!
         </div>
       ) : (
