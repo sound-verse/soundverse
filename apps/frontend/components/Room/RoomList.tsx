@@ -49,10 +49,10 @@ export const RoomList: FC<RoomListProps> = ({ rooms }) => {
           No rooms active yet, stay tuned!
         </div>
       ) : (
-        <div className="flex flex-col items-start mr-44 w-[650px] -mt-5">
+        <div className="flex flex-col items-start xl:mr-44 w-full xl:w-[650px] -mt-5">
           {rooms.map((room) => (
             <>
-            <RoomListElement room={room} key={room.id} />
+              <RoomListElement room={room} key={room.id} />
             </>
           ))}
         </div>

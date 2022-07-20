@@ -1,5 +1,5 @@
 .root {
-  @apply w-[350px];
+  @apply w-[350px] hidden xl:block;
 }
 
 .boxShadow {

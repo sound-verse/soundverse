@@ -45,7 +45,7 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
           className="mt-5"
         />
       </div>
-      <div className="flex flex-col ml-10 w-full mr-[360px] text-sm h-screen">
+      <div className="flex flex-col ml-10 w-full xl:mr-[360px] text-sm h-screen">
         <div
           className={cn(
             'flex justify-center items-start w-full h-full mb-[205px] pb-[10px] overflow-hidden'

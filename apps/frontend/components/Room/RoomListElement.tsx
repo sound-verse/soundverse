@@ -62,43 +62,48 @@ export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
               />
             </div>
           </div>
-          <div className="flex overflow-hidden mt-3">
-            <div
-              className={cn(
-                'flex flex-col items-center min-w-[80px] overflow-x-auto h-36 pt-2',
-                styles.scrollbar
-              )}
-            >
-              {room.activeUsers.map((user) => (
-                <>
-                  <div className="flex items-center -mt-2" key={user.id}>
-                    <ProfileImage
-                      ethAddress={user.ethAddress}
-                      imageUrl={user.profileImage}
-                      height={10}
-                      width={10}
-                      className="mr-1"
-                    />
-                    <div className="text-black mt-1 ml-1">
-                      <ProfileName
+          <div className="flex overflow-hidden mt-3 flex-wrap">
+            <div className='flex justify-between w-full md:w-auto'>
+              <div
+                className={cn(
+                  'flex flex-col items-center justify-start min-w-[80px] overflow-x-auto h-36 pt-2',
+                  styles.scrollbar
+                )}
+              >
+                {room.activeUsers.map((user) => (
+                  <>
+                    <div
+                      className="flex items-center justify-center -mt-2"
+                      key={user.id}
+                    >
+                      <ProfileImage
                         ethAddress={user.ethAddress}
-                        name={user.name}
-                        short={true}
-                        className="text-xs"
+                        imageUrl={user.profileImage}
+                        height={10}
+                        width={10}
+                        className={!user.profileImage ? '-ml-1' : ''}
                       />
+                      <div className="text-black mt-1 ml-1">
+                        <ProfileName
+                          ethAddress={user.ethAddress}
+                          name={user.name}
+                          short={true}
+                          className="text-xs"
+                        />
+                      </div>
                     </div>
-                  </div>
-                </>
-              ))}
+                  </>
+                ))}
+              </div>
+              <div className="ml-10">
+                <PlaylistPreview
+                  currentTrack={room.currentTrack}
+                  playlistItems={room.playlistItems}
+                />
+              </div>
             </div>
-            <div className="ml-10">
-              <PlaylistPreview
-                currentTrack={room.currentTrack}
-                playlistItems={room.playlistItems}
-              />
-            </div>
-            <div className="mt-20 ml-[40px]">
-              <div className="flex flex-col h-full whitespace-nowrap">
+            <div className="md:mt-20 ml-auto w-full md:w-auto">
+              <div className="flex flex-col h-full w-30 ">
                 <Button
                   text={'Enter the Soundverse'}
                   type={'normal'}

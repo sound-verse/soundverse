@@ -34,9 +34,6 @@ export const ProfileImage = ({
           seed={ethAddress}
           size={width}
           scale={3}
-          color="#dfe"
-          bgColor="#ffe"
-          spotColor="#abc"
           className={'rounded-full'}
         />
       )}
