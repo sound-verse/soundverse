@@ -19,6 +19,8 @@ import toast from 'react-hot-toast'
 import Modal from 'react-modal'
 import { Bars } from 'react-loader-spinner'
 import { useRouter } from 'next/router'
+import SoundCard from '../../components/marketplace/SoundCard'
+import cn from 'classnames'
 
 export default function Launch() {
   const { authUser } = useAuthContext()
@@ -30,6 +32,7 @@ export default function Launch() {
   const { createRoom, newRoom } = useCreateRoom()
   const [modalLoading, setModalLoading] = useState<boolean>(false)
   const router = useRouter()
+  const [selectedMasterSlider, setSelectedMasterSlider] = useState(true)
 
   const hasNfts = userLicenseNfts?.length > 0 || userMasterNfts?.length > 0
 
@@ -122,27 +125,34 @@ export default function Launch() {
       </Head>
       <Layout>
         {!authUser && !libraryLoading ? (
-          <div className="flex items-center justify-center h-screen -mt-24 text-white text-1xl">
+          <div className="flex items-center justify-center h-screen -mt-24 text-black text-1xl">
             Login with your wallet to see this page.
           </div>
         ) : !hasNfts ? (
-          <div className="flex items-center justify-center h-screen -mt-24 text-white text-1xl">
+          <div className="flex items-center justify-center h-screen -mt-24 text-black text-1xl">
             You have not collected any music NFTs.
           </div>
         ) : (
-          <main className="mx-auto">
-            <ModuleBg>
-              <Heading className="mb-12">My Library</Heading>
-              <div className="flex text-white">
-                <div className="min-w-[300px] border border-grey-medium mr-8 p-4 rounded">
-                  <Heading className="text-center">Selected for room</Heading>
+          <main className="mx-auto flex items-start justify-center  text-black">
+            <div className="flex flex-col mr-10">
+              <Button
+                className="flex mx-auto"
+                text="Launch your room now"
+                type="normal"
+                onClick={handleCreateRoom}
+              />
+              <ModuleBg className="mt-10">
+                <div className="mb-12 text-black text-center text-xl font-bold">
+                  Song Queue
+                </div>
+                <div className="rounded">
                   <div className="flex-col mt-6 cursor-pointer">
                     {selectedNfts &&
                       selectedNfts.map((nft, key) => {
                         return (
                           <div
                             key={key}
-                            className="border-b pb-2 border-grey-medium mr-4 mt-4"
+                            className="border-b pb-2 border-grey-medium mt-2"
                             onClick={() => handleClick(nft.nft, nft.nftType)}
                           >
                             <MiniNft nft={nft.nft} nftType={nft.nftType} />
@@ -150,71 +160,101 @@ export default function Launch() {
                         )
                       })}
                   </div>
-                  <div className="text-xs text-grey-medium text-center mt-12 mb-12">
+                  <div className="text-xs text-grey-medium text-center mt-12">
                     Click any song to add here
                   </div>
-                  <Button
-                    className="flex mx-auto"
-                    text="Launch your room now"
-                    type="purple"
-                    onClick={handleCreateRoom}
-                  />
                 </div>
-                <div className="pt-4">
-                  <Heading>My NFTs</Heading>
-                  <div className="flex mt-6 flex-wrap cursor-pointer">
-                    {userMasterNfts &&
-                      userMasterNfts.map((nft, key) => {
-                        const isSelected = selectedNfts.find(
-                          (selectedNft) =>
-                            selectedNft.nft.id === nft.id &&
-                            selectedNft.nftType === NftType.Master
-                        )
-                        return (
-                          <div
-                            key={key}
-                            className="border-b pb-2 border-grey-medium mr-4 mt-4"
-                            onClick={() => handleClick(nft, NftType.Master)}
-                          >
-                            <div className="flex items-center justify-center">
-                              <div
-                                className={`mr-4 w-4 h-4 border border-grey-medium rounded ${
-                                  isSelected ? 'bg-purple' : ''
-                                }`}
-                              ></div>
-                              <MiniNft nft={nft} nftType={NftType.Master} />
-                            </div>
-                          </div>
-                        )
-                      })}
-                    {userLicenseNfts &&
-                      userLicenseNfts.map((nft, key) => {
-                        const isSelected = selectedNfts.find(
-                          (selectedNft) =>
-                            selectedNft.nft.id === nft.id &&
-                            selectedNft.nftType === NftType.License
-                        )
-                        return (
-                          <div
-                            key={key}
-                            className="border-b pb-2 border-grey-medium mr-4 mt-4"
-                            onClick={() => handleClick(nft, NftType.License)}
-                          >
-                            <div className="flex items-center justify-center">
-                              <div
-                                className={`mr-4 w-4 h-4 border border-grey-medium rounded ${
-                                  isSelected ? 'bg-purple' : ''
-                                }`}
-                              ></div>
-                              <MiniNft nft={nft} nftType={NftType.License} />
-                            </div>
-                          </div>
-                        )
-                      })}
-                  </div>
+              </ModuleBg>
+            </div>
+            <div className="">
+              <div className="flex mb-10 select-none">
+                <div
+                  className={cn(
+                    'bg-white rounded text-black px-8 py-1 shadow-lg cursor-pointer',
+                    selectedMasterSlider ? ' !bg-grey-medium !text-white ' : ''
+                  )}
+                  onClick={() => setSelectedMasterSlider(!selectedMasterSlider)}
+                >
+                  Masters
+                </div>
+
+                <div
+                  className={cn(
+                    'bg-white rounded text-black px-8 py-1 shadow-lg cursor-pointer',
+                    !selectedMasterSlider ? ' !bg-grey-medium !text-white ' : ''
+                  )}
+                  onClick={() => setSelectedMasterSlider(!selectedMasterSlider)}
+                >
+                  Licenses
                 </div>
               </div>
-            </ModuleBg>
+              <div className="grid xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 gap-10">
+                {selectedMasterSlider &&
+                  userMasterNfts &&
+                  userMasterNfts.map((nft, key) => {
+                    if (!nft.filePictureUrl) {
+                      return
+                    }
+
+                    const isSelected = selectedNfts.find(
+                      (selectedNft) =>
+                        selectedNft.nft.id === nft.id &&
+                        selectedNft.nftType === NftType.Master
+                    )
+
+                    return (
+                      <div key={`soundcard-wrapper-${key}`}>
+                        <div
+                          className="spacer"
+                          onClick={() => handleClick(nft, NftType.Master)}
+                        >
+                          <SoundCard
+                            nft={nft}
+                            nftType={NftType.Master}
+                            key={key}
+                            activeLinks={false}
+                            className={
+                              isSelected ? 'opacity-50' : 'opacity-100'
+                            }
+                          />
+                        </div>
+                      </div>
+                    )
+                  })}
+                {!selectedMasterSlider &&
+                  userLicenseNfts &&
+                  userLicenseNfts.map((nft, key) => {
+                    if (!nft.filePictureUrl) {
+                      return
+                    }
+
+                    const isSelected = selectedNfts.find(
+                      (selectedNft) =>
+                        selectedNft.nft.id === nft.id &&
+                        selectedNft.nftType === NftType.License
+                    )
+
+                    return (
+                      <div key={`soundcard-wrapper-${key}`}>
+                        <div
+                          className="spacer"
+                          onClick={() => handleClick(nft, NftType.License)}
+                        >
+                          <SoundCard
+                            nft={nft}
+                            nftType={NftType.License}
+                            key={key}
+                            activeLinks={false}
+                            className={
+                              isSelected ? 'opacity-50' : 'opacity-100'
+                            }
+                          />
+                        </div>
+                      </div>
+                    )
+                  })}
+              </div>
+            </div>
           </main>
         )}
       </Layout>{' '}

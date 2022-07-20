@@ -7,7 +7,7 @@
 }
 
 .informationStepWrapper {
-  @apply flex flex-col p-8 border border-grey-medium rounded-xl w-[35rem] min-h-[4rem] mt-[2rem] ml-20 text-white;
+  @apply flex flex-col p-8 border border-grey-medium rounded-xl w-[35rem] min-h-[4rem] mt-[2rem] ml-20 text-black;
 }
 
 .informationStepHeader {
@@ -15,16 +15,17 @@
 }
 
 .informationStepBody {
-  @apply text-grey-light text-xs leading-5;
+  @apply text-black text-xs leading-5;
 }
 
 .wrapperStyle {
   border-radius: 1.5rem;
-  background: #272727;
+  background: white;
   width: 35rem;
   padding: 3rem;
   margin-top: 2rem;
   margin-bottom: 9rem;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
 .buttonStyle {
@@ -52,19 +53,8 @@
 }
 
 .mintButton {
-  padding-left: 6rem;
-  padding-right: 6rem;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  margin-top: 2.5rem;
-  font-weight: 500;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  color: white;
-  cursor: pointer;
-  border-radius: 9999px;
-  background: linear-gradient(145deg, #001299, #7ded77);
-  box-shadow: 1px 1px 4px #0f0f0f, -0.5px -0.5px 1px #656262;
+  @apply px-5 py-2 mt-5 w-52 text-center mx-auto text-white bg-grey-medium;
+  border-radius: 36.6927px;
 }
 
 .mintButton:hover {
@@ -73,7 +63,7 @@
 
 .descriptionField {
   width: 100%;
-  color: white;
+  color: black;
   background-color: transparent;
   border-width: 0.5px;
   border-radius: 1.5rem;

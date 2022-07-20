@@ -94,137 +94,104 @@ const Header = ({ className = '' }) => {
         <div className={styles.logo}>
           <Link href="/marketplace" passHref>
             <a>
-              <img src="/logo.svg" alt="next" />
+              <img src="/logo-black.svg" alt="next" />
             </a>
           </Link>
         </div>
-        <div className={styles.headerSpacer} />
-        {/* <input
-          type="text"
-          placeholder="find unpublished music NFTs"
-          className={styles.headerSearchbar}
-        ></input> */}
-        <div className={styles.headerSpacer} />
-        <div className={styles.headerSpacer} />
-        <div className={styles.headerSpacer} />
-        <div className={styles.headerSpacer} />
-        <div className={styles.headerSpacer} />
-        <div className={styles.headerSpacer} />
-        <div className={styles.headerSpacer} />
-        <div className={styles.headerSpacer} />
-        <div className={styles.headerSpacer} />
-        <div className={styles.headerSpacer} />
-        <div className={styles.headerSpacer} />
-        <div className={styles.headerSpacer} />
-        <div className={styles.headerSpacer} />
-        <div className={styles.headerSpacer} />
-        <div className={styles.headerSpacer} />
-        <div className={styles.headerSpacer} />
-        <div className={styles.headerSpacer} />
-        <div className={styles.headerSpacer} />
-        <div className={styles.headerSpacer} />
-        <div className={styles.headerSpacer} />
+        <div className={styles.linkWrapper}>
+          <Link href="/soundverses" passHref>
+            <p className={styles.marketplaceLink}>Soundverses</p>
+          </Link>
 
-        <Link href="/soundverses" passHref>
-          <p className={styles.marketplaceLink}>Soundverses</p>
-        </Link>
+          <Link href="/marketplace" passHref>
+            <p className={styles.marketplaceLink}>Marketplace</p>
+          </Link>
 
-        <div className={styles.headerSpacer} />
+          <Link href="/mint" passHref>
+            <p className={styles.marketplaceLink}>Mint</p>
+          </Link>
 
-        <Link href="/marketplace" passHref>
-          <p className={styles.marketplaceLink}>Marketplace</p>
-        </Link>
+          <Link href="/launch" passHref>
+            <p className={styles.marketplaceLink}>Launch</p>
+          </Link>
 
-        <div className={styles.headerSpacer} />
-
-        <Link href="/mint" passHref>
-          <p className={styles.marketplaceLink}>Mint</p>
-        </Link>
-
-        <div className={styles.headerSpacer} />
-
-        <Link href="/launch" passHref>
-          <p className={styles.marketplaceLink}>Launch</p>
-        </Link>
-
-        <div className={styles.headerSpacer} />
-
-        <div>
-          <button
-            className={styles.connectButton}
-            onClick={() => {
-              if (!authUser) {
-                setShowDropdown(false)
-                onboard()
-                loginUser()
-              }
-            }}
-            onMouseEnter={() => {
-              if (authUser) {
-                setShowDropdown(true)
-              }
-            }}
-          >
-            <div className={authUser ? styles.connectButtonLabel : 'block'}>
-              {/*blockies and account details go here*/}
-              {authUser && (
-                <div className={styles.profileButtonUserImage}>
-                  <ProfileImage
-                    ethAddress={authUser?.ethAddress}
-                    width={8}
-                    height={8}
-                    imageUrl={authUser?.profileImage}
-                  />
+          <div className={styles.connectButtonWrapper}>
+            <button
+              className={styles.connectButton}
+              onClick={() => {
+                if (!authUser) {
+                  setShowDropdown(false)
+                  onboard()
+                  loginUser()
+                }
+              }}
+              onMouseEnter={() => {
+                if (authUser) {
+                  setShowDropdown(true)
+                }
+              }}
+            >
+              <div className={authUser ? styles.connectButtonLabel : 'block'}>
+                {/*blockies and account details go here*/}
+                {authUser && (
+                  <div className={styles.profileButtonUserImage}>
+                    <ProfileImage
+                      ethAddress={authUser?.ethAddress}
+                      width={8}
+                      height={8}
+                      imageUrl={authUser?.profileImage}
+                    />
+                  </div>
+                )}
+                <div className={styles.connectButtonAddress}>
+                  {authUser ? (
+                    <ProfileName
+                      ethAddress={authUser?.ethAddress}
+                      name={authUser?.name}
+                      short={true}
+                    />
+                  ) : (
+                    'CONNECT'
+                  )}
                 </div>
-              )}
-              <div className={styles.connectButtonAddress}>
-                {authUser ? (
-                  <ProfileName
-                    ethAddress={authUser?.ethAddress}
-                    name={authUser?.name}
-                    short={true}
-                  />
-                ) : (
-                  'CONNECT'
+                {authUser && (
+                  <div className={styles.chevronDown}>
+                    <Image
+                      src="/img/chevronDown.svg"
+                      width={18}
+                      height={18}
+                      layout="fixed"
+                    />
+                  </div>
                 )}
               </div>
-              {authUser && (
-                <div className={styles.chevronDown}>
-                  <Image
-                    src="/img/chevronDown.svg"
-                    width={18}
-                    height={18}
-                    layout="fixed"
-                  />
-                </div>
-              )}
-            </div>
-          </button>
-          {showDropdown && (
-            <div
-              className={styles.dropdownWrapper}
-              onMouseLeave={() => setShowDropdown(false)}
-            >
-              <div className={styles.dropdownRect}>
-                <div className={styles.dropdownText}>
-                  {/*These links need dynamic path logic*/}
-                  <Link href={`/profile/${authUser?.ethAddress}`}>
-                    My profile
-                  </Link>
-                </div>
-                <div className={styles.ddhr}></div>
-                <div className={styles.dropdownText}>
-                  <button
-                    onClick={async () => {
-                      await logout()
-                    }}
-                  >
-                    Disconnect
-                  </button>
+            </button>
+            {showDropdown && (
+              <div
+                className={styles.dropdownWrapper}
+                onMouseLeave={() => setShowDropdown(false)}
+              >
+                <div className={styles.dropdownRect}>
+                  <div className={styles.dropdownText}>
+                    {/*These links need dynamic path logic*/}
+                    <Link href={`/profile/${authUser?.ethAddress}`}>
+                      My profile
+                    </Link>
+                  </div>
+                  <div className={styles.ddhr}></div>
+                  <div className={styles.dropdownText}>
+                    <button
+                      onClick={async () => {
+                        await logout()
+                      }}
+                    >
+                      Disconnect
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </div>

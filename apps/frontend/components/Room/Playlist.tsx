@@ -25,7 +25,7 @@ export const Playlist: FC<PlaylistProps> = ({
       <div className="flex flex-col">
         {currentTrack.nft && (
           <>
-            <div className="text-white font-semibold text-lg text-center">
+            <div className="text-black font-semibold text-lg text-center">
               Now playing
             </div>
             <SoundCard
@@ -36,7 +36,7 @@ export const Playlist: FC<PlaylistProps> = ({
             />
           </>
         )}
-        <div className="text-white font-semibold text-lg text-center">
+        <div className="text-black font-semibold text-lg text-center">
           Coming next
         </div>
         {reorderedPlaylistItems.map((item, key) => (

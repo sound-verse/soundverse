@@ -3,6 +3,8 @@ import { AuthUser, Selling } from '../../common/graphql/schema'
 import { ProfileName } from '../profile'
 import Link from 'next/link'
 import Web3 from 'web3'
+import styles from './BuyLicense.module.css'
+import cn from 'classnames'
 
 export type UnlistLicenseProps = {
   user: AuthUser
@@ -32,14 +34,19 @@ export const UnlistLicense = ({
   }
 
   return (
-    <div className=" bg-grey-dark flex flex-col rounded-2xl w-full pt-5 text-center">
+    <div
+      className={cn(
+        ' bg-white flex flex-col rounded-2xl w-full pt-5 text-center',
+        styles.boxShadow
+      )}
+    >
       <div className="rounded-b-2xl mb-5 bg-grey-medium">
-        <div className="grid bg-grey-dark grid-cols-7 pb-2 w-full px-5">
+        <div className="grid bg-white grid-cols-7 pb-2 w-full px-5">
           <div className="col-span-1">{userSellings.length} Availbable</div>
           <div className="col-start-3"></div>
           <div className="col-start-6"></div>
         </div>
-        <div className="grid bg-grey-dark grid-cols-10 pb-5 w-full px-5">
+        <div className="grid bg-white grid-cols-10 pb-5 w-full px-5">
           <div className="col-span-1"></div>
           <div className="col-span-3">Price</div>
           <div className="col-span-4">Owner</div>
@@ -48,15 +55,15 @@ export const UnlistLicense = ({
         {userSellings.map((selling, key) => (
           <div
             key={key}
-            className="grid bg-grey-medium grid-cols-10 py-3 border-b border-black px-5 items-baseline cursor-pointer"
+            className="grid bg-white grid-cols-10 py-3 border-b border-black px-5 items-baseline cursor-pointer last:border-none even:bg-grey-light"
             onClick={() => {
               setSelectedLicense(selling.id), setSelectedSelling(selling)
             }}
           >
             <div className="col-span-1">
               <div
-                className={`rounded-full border border-white w-4 h-4 mt-1 hover:bg-white ${
-                  selectedLicense === selling.id ? 'bg-white' : 'bg-none'
+                className={`rounded-full border border-black w-4 h-4 mt-1 hover:bg-black ${
+                  selectedLicense === selling.id ? 'bg-black' : 'bg-none'
                 }`}
               />
             </div>

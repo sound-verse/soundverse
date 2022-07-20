@@ -10,6 +10,7 @@ import { useRouter } from 'next/router'
 import { useCreateSelling } from '../../hooks/contracts/useCreateSelling'
 import { AuthUser, Nft, NftType } from '../../common/graphql/schema.d'
 import { useAuthContext } from '../../context/AuthContext'
+import cn from 'classnames'
 
 export type CreateSellingFormProps = {
   user: AuthUser
@@ -114,7 +115,9 @@ export const CreateSellingForm = ({
   return (
     <>
       <div className="flex items-center justify-center mt-5 w-full">
-        <div className="bg-grey-dark rounded-3xl p-16 w-full">
+        <div
+          className={cn('bg-white rounded-3xl p-16 w-full', styles.boxShadow)}
+        >
           <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
@@ -122,14 +125,14 @@ export const CreateSellingForm = ({
             enableReinitialize
           >
             <Form>
-              <div className="text-white font-bold text-sm mt-10 mb-5">
+              <div className="text-black font-bold text-sm mt-10 mb-5">
                 Type
               </div>
-              <div className="flex flex-col bg-grey-medium border border-white p-6 w-32 text-sm rounded-2xl justify-center items-center cursor-pointer">
+              <div className="flex flex-col bg-grey-medium text-white border border-white p-6 w-32 text-sm rounded-2xl justify-center items-center cursor-pointer">
                 <div>$</div>
                 <div>Fixed Price</div>
               </div>
-              <div className="text-white font-bold text-sm mt-10">Price</div>
+              <div className="text-black font-bold text-sm mt-10">Price</div>
               <div className="flex justify-start items-baseline mt-5">
                 <div className="border border-white font-bold rounded-full px-5 py-2 mr-8 text-sm ">
                   MATIC
@@ -139,7 +142,7 @@ export const CreateSellingForm = ({
                     id="price"
                     name="price"
                     placeholder="Amount"
-                    className="outline-none bg-grey-dark text-white w-full"
+                    className="outline-none  text-black w-full"
                   />
                   <div className="border-t-2 w-full border-grey-medium opacity-50"></div>
                   <div className={styles.error}>
@@ -149,7 +152,7 @@ export const CreateSellingForm = ({
               </div>
               {nftType === NftType.License && (
                 <>
-                  <div className="text-white font-bold text-sm mt-10">
+                  <div className="text-black font-bold text-sm mt-10">
                     Amount
                   </div>
 
@@ -158,10 +161,10 @@ export const CreateSellingForm = ({
                       <Field
                         id="amount"
                         name="amount"
-                        className="outline-none bg-grey-dark text-white w-full"
+                        className="outline-none  text-black w-full"
                       />
                       <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
-                      <div className="text-grey-light mt-2 text-xs">
+                      <div className="text-grey-dark mt-2 text-xs">
                         Number of licenses you want to sell
                       </div>
                       <div className={styles.error}>
@@ -171,19 +174,19 @@ export const CreateSellingForm = ({
                     <div>
                       <div>{availableSupply}</div>
                       <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
-                      <div className="text-grey-light mt-2 text-xs">
+                      <div className="text-grey-dark mt-2 text-xs">
                         Total number of licenses available
                       </div>
                     </div>
                   </div>
                 </>
               )}
-              <div className="text-white font-bold text-sm mt-10">Fees</div>
-              <div className="text-grey-light text-md mt-5 text-sm">
+              <div className="text-black font-bold text-sm mt-10">Fees</div>
+              <div className="text-grey-dark text-md mt-5 text-sm">
                 Service fee: 3.5%
               </div>
               <button
-                className="text-white cursor-pointer rounded-full bg-purple px-24 py-3 ml-auto mt-10 font-bold text-sm"
+                className="text-white cursor-pointer rounded-full bg-grey-medium px-24 py-3 ml-auto mt-10 font-bold text-sm"
                 type="submit"
               >
                 Complete Listing
@@ -195,11 +198,11 @@ export const CreateSellingForm = ({
       <Modal
         isOpen={loading}
         contentLabel="onRequestClose Example"
-        className="flex justify-center items-center h-full z-50"
+        className="flex justify-center  items-center h-full z-50"
       >
-        <div className="w-1/2 h-1/2 rounded-3xl p-10 bg-grey-dark flex flex-col justify-between items-center">
+        <div className="w-1/2 h-1/2 rounded-3xl p-10  flex flex-col justify-between items-center bg-grey-dark text-white">
           <div className="h-full w-full justify-center items-center flex flex-col">
-            <div className="text-white text-3xl font-bold mb-10">Listing</div>
+            <div className=" text-3xl font-bold mb-10">Listing</div>
             <Bars color="#7A64FF" height={80} width={80} />
           </div>
         </div>

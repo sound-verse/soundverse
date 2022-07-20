@@ -23,11 +23,11 @@ export const ProfileImage = ({
       {imageUrl ? (
         <Image
           src={imageUrl}
-          layout="fixed"
           width={width * 3}
           height={height * 3}
           quality={100}
-          className="rounded-full"
+          className="rounded-full"     
+          objectFit='cover'     
         />
       ) : (
         <Blockies
