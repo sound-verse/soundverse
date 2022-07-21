@@ -84,18 +84,15 @@
   height: 25px;
 }
 .connectButtonAddress {
+  @apply relative;
   font-size: 12px;
 }
 .dropdownWrapper {
-  position: absolute;
-  top: 65px;
-  right: 50px;
-
-  background-color: 'red';
-  z-index: 9999999;
+  @apply absolute mt-2;
+  z-index: 999;
 }
 .dropdownRect {
-  width: 240px;
+  width: 170px;
   height: 70px;
   border-radius: 10px;
   padding: 10px;
