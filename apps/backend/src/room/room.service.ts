@@ -27,6 +27,10 @@ export class RoomService {
   ) {}
 
   async createRoom(createRoomInput: CreateRoomInput, user: User): Promise<Room> {
+    if(!createRoomInput.playlistItems.length){
+      return;
+    }
+
     const nftIds = createRoomInput.playlistItems.map((playlistItem) => playlistItem.nftId);
     const nfts = await this.nftService.getByIds(nftIds);
 
