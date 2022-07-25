@@ -47,7 +47,7 @@ export class IPFSService {
     try {
       response = await axios(config);
     } catch (e) {
-      throw new BadRequestException(e);
+      throw new BadRequestException();
     }
 
     const ipfsResult: IPFSResult = response.data;
