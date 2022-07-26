@@ -149,6 +149,13 @@ export class NftService {
     );
   }
 
+  async isDuplicate(ipfsMetadataUrl: string): Promise<boolean> {
+    const nft = await this.nftModel.findOne({
+      ipfsUrl: ipfsMetadataUrl,
+    });
+    return !!nft;
+  }
+
   async transferMaster(
     from: string,
     to: string,

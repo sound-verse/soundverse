@@ -57,6 +57,7 @@
     "graphql-type-json": "^0.3.2",
     "graphql-upload": "^13.0.0",
     "graphql-ws": "^5.8.1",
+    "ipfs-http-client": "^56.0.3",
     "ipfs-only-hash": "^4.0.0",
     "mongoose": "^6.2.6",
     "passport": "^0.5.2",

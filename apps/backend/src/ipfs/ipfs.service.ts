@@ -1,111 +1,70 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import pinataSDK from '@pinata/sdk';
-import FormData from 'form-data';
-import { HttpService } from '@nestjs/axios';
-import axios, { AxiosResponse } from 'axios';
-import { AxiosRequestConfig } from 'axios';
-import { CreateNftMetadata } from '../nft/nft.service';
 import ipfsHasher from 'ipfs-only-hash';
+import { create } from 'ipfs-http-client';
+import { ReadStream } from 'fs';
+import { AddResult } from 'ipfs-core-types/src/root';
 import crypto from 'crypto';
-
-export interface IPFSResult {
-  IpfsHash: string;
-  PinSize: number;
-  Timestamp: string;
-  isDuplicate: boolean;
-}
 
 @Injectable()
 export class IPFSService {
-  pinata;
-  pinata_api_key;
-  pinata_secret_api_key;
-  constructor(private configService: ConfigService, private httpService: HttpService) {
-    this.pinata_api_key = this.configService.get<string>('PINATA_API_Key');
-    this.pinata_secret_api_key = this.configService.get<string>('PINATA_API_Secret');
-    this.pinata = pinataSDK(this.pinata_api_key, this.pinata_secret_api_key);
-  }
+  constructor(private configService: ConfigService) {}
 
-  async uploadFile(file: any, filename: string): Promise<IPFSResult> {
-    const data = new FormData();
-    data.append('file', file, { filename: filename });
+  async uploadFile(file: ReadStream, filename: string): Promise<AddResult> {
+    const auth =
+      'Basic ' +
+      Buffer.from(
+        `${this.configService.get('INFURA_PROJECT_ID')}:${this.configService.get('INFURA_PROJECT_SECRET')}`,
+      ).toString('base64');
 
-    const config: AxiosRequestConfig = {
-      method: 'post',
-      url: 'https://api.pinata.cloud/pinning/pinFileToIPFS',
-      maxBodyLength: Infinity,
+    const client = create({
+      host: 'ipfs.infura.io',
+      port: 5001,
+      protocol: 'https',
       headers: {
-        pinata_api_key: this.pinata_api_key,
-        pinata_secret_api_key: this.pinata_secret_api_key,
-        ...data.getHeaders(),
+        authorization: auth,
       },
-      data,
-    };
+    });
 
-    let response: AxiosResponse<any>;
+    let ipfsResult: AddResult;
     try {
-      response = await axios(config);
+      ipfsResult = await client.add({ path: filename, content: file });
     } catch (e) {
-      throw new BadRequestException();
+      throw new BadRequestException({ ...e, filename });
     }
 
-    const ipfsResult: IPFSResult = response.data;
     return ipfsResult;
   }
 
-  async uploadJson(file: CreateNftMetadata, filename: string): Promise<IPFSResult> {
-    const data = {
-      pinataMetadata: {
-        name: filename,
-      },
-      pinataContent: {
-        ...file,
-      },
-    };
+  async uploadJsonFile(jsonObjectString: string, filename: string): Promise<AddResult> {
+    const auth =
+      'Basic ' +
+      Buffer.from(
+        `${this.configService.get('INFURA_PROJECT_ID')}:${this.configService.get('INFURA_PROJECT_SECRET')}`,
+      ).toString('base64');
 
-    const config: AxiosRequestConfig = {
-      method: 'post',
-      url: 'https://api.pinata.cloud/pinning/pinJSONToIPFS',
+    const client = create({
+      host: 'ipfs.infura.io',
+      port: 5001,
+      protocol: 'https',
       headers: {
-        pinata_api_key: this.pinata_api_key,
-        pinata_secret_api_key: this.pinata_secret_api_key,
+        authorization: auth,
       },
-      data,
-    };
+    });
 
-    let response: AxiosResponse<any>;
+    let ipfsResult;
     try {
-      response = await axios(config);
+      ipfsResult = await client.add({ path: filename, content: jsonObjectString });
     } catch (e) {
-      throw new BadRequestException('Name already taken');
+      throw new BadRequestException({ ...e, filename });
     }
 
-    const ipfsResult: IPFSResult = response.data;
     return ipfsResult;
   }
 
   async getHashFromString(content: string): Promise<string> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return await ipfsHasher.of(content);
-  }
-
-  async unPinAll() {
-    const config: AxiosRequestConfig = {
-      method: 'get',
-      url: 'https://api.pinata.cloud/pinning/pinJobs?status=searching&sort=DESC',
-      headers: {
-        pinata_api_key: this.pinata_api_key,
-        pinata_secret_api_key: this.pinata_secret_api_key,
-      },
-    };
-
-    let response: AxiosResponse<any>;
-    try {
-      response = await axios(config);
-    } catch (e) {
-      throw new BadRequestException();
-    }
   }
 
   async storeNFTonIPFS(awsReadStream, rndFileName, nftData) {
@@ -120,7 +79,7 @@ export class IPFSService {
     }
 
     const ipfsFile = await this.uploadFile(awsReadStream, rndFileName);
-    const ipfsFileUrl = `ipfs://${ipfsFile.IpfsHash}`;
+    const ipfsFileUrl = `ipfs://${ipfsFile.cid}`;
 
     //There will be two ways to access the NFT, either with the pre hash or the metadata hash
     const metadataPreHash = await this.getHashFromString(
@@ -136,9 +95,9 @@ export class IPFSService {
       external_url: `${this.configService.get('METADATA_EXTERNAL_URL_BASE')}/${metadataPreHash}`,
     };
 
-    const ipfsMetadata = await this.uploadJson(metadata, ipfsFile.IpfsHash);
+    const ipfsMetadata = await this.uploadJsonFile(JSON.stringify(metadata), ipfsFile.cid.toString());
 
-    const ipfsMetadataUrl = `${this.configService.get('IPFS_GATEWAY_URL')}/${ipfsMetadata.IpfsHash}`;
+    const ipfsMetadataUrl = `${this.configService.get('IPFS_GATEWAY_URL')}/${ipfsMetadata.cid}`;
 
     return {
       ipfsMetadata,

@@ -62,7 +62,9 @@ export class NftResolver {
       nftData,
     );
 
-    if (ipfsMetadata.isDuplicate) {
+    const isDuplicate = await this.nftService.isDuplicate(ipfsMetadataUrl);
+
+    if (isDuplicate) {
       throw new ForbiddenException('This NFT was already created.');
     } else {
       return await this.nftService.createNft({
@@ -97,12 +99,6 @@ export class NftResolver {
   @Query(() => Nft, { nullable: true })
   async nft(@Args('filter') filter: NftFilter): Promise<NftSchema> {
     return await this.nftService.findNft(filter);
-  }
-
-  @Mutation(() => Boolean)
-  async unpinAll(): Promise<boolean> {
-    await this.ipfsService.unPinAll();
-    return true;
   }
 
   @UseGuards(GqlAuthGuardContinue)

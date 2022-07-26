@@ -150,6 +150,16 @@ env:
       secretKeyRef:
         name: do-secret-access-key-soundverse-testflight
         key: do-secret-access-key
+  - name: INFURA_PROJECT_ID
+    valueFrom:
+      secretKeyRef:
+        name: infura-project-id-soundverse-testflight
+        key: infura-project-id
+  - name: INFURA_PROJECT_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: infura-project-secret-soundverse-testflight
+        key: infura-project-secret
   - name: DO_SPACES_ENDPOINT
     value: ams3.digitaloceanspaces.com
   - name: MARKET_CONTRACT_ADDRESS
@@ -159,7 +169,7 @@ env:
   - name: LICENSE_CONTRACT_ADDRESS
     value: '0x997308E9563F5D8EE56E6129657fb2b5c5C7015C'
   - name: IPFS_GATEWAY_URL
-    value: 'https://gateway.pinata.cloud/ipfs'
+    value: 'https://soundverse.infura-ipfs.io/ipfs/'
   - name: METADATA_EXTERNAL_URL_BASE
     value: 'https://app.soundverse.io'
   - name: INTERNAL_FILE_URL_BASE

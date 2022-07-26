@@ -184,7 +184,6 @@ type Mutation {
   generateVerificationToken(data: VerificationTokenInput!): Int!
   login(data: LoginInput!): Auth!
   createNft(NFTFile: Upload!, pictureFile: Upload!, data: NftInput!): Nft!
-  unpinAll: Boolean!
   createMintSelling(createMintSellingInput: CreateMintSellingInput!): Selling!
   createSelling(createSellingInput: CreateSellingInput!): Selling!
   createRoom(createRoomInput: CreateRoomInput!): Room!

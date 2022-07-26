@@ -8,4 +8,4 @@ import { S3Service } from './s3.service';
   providers: [FileService, S3Service],
   exports: [FileService, S3Service],
 })
-export class IPFSModule {}
+export class FileModule {}
