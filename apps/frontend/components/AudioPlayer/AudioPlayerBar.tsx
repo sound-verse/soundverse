@@ -88,7 +88,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
     }
     setCurrentTrack({ isLoading: true })
     create(currentTrack.url)
-  }, [currentTrack.url])
+  }, [currentTrack.url, currentTrack.nftType])
 
   const create = async (url: string) => {
     if (!WavesurferLibrary.current) {
