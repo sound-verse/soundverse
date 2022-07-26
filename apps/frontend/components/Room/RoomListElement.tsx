@@ -66,7 +66,7 @@ export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
             <div className='flex justify-between w-full md:w-auto'>
               <div
                 className={cn(
-                  'flex flex-col items-center justify-start min-w-[80px] overflow-x-auto h-36 pt-2',
+                  'flex flex-col items-baseline justify-start w-[110px] overflow-x-auto h-36 pt-2',
                   styles.scrollbar
                 )}
               >
@@ -81,7 +81,7 @@ export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
                         imageUrl={user.profileImage}
                         height={10}
                         width={10}
-                        className={!user.profileImage ? '-ml-1' : ''}
+                        className={!user.profileImage ? '' : ''}
                       />
                       <div className="text-black mt-1 ml-1">
                         <ProfileName
@@ -103,7 +103,7 @@ export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
               </div>
             </div>
             <div className="md:mt-20 ml-auto w-full md:w-auto">
-              <div className="flex flex-col h-full w-30 ">
+              <div className="flex flex-col h-full w-[180px] ">
                 <Button
                   text={'Enter the Soundverse'}
                   type={'normal'}
