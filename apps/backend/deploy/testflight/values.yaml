@@ -169,7 +169,7 @@ env:
   - name: LICENSE_CONTRACT_ADDRESS
     value: '0x997308E9563F5D8EE56E6129657fb2b5c5C7015C'
   - name: IPFS_GATEWAY_URL
-    value: 'https://soundverse.infura-ipfs.io/ipfs/'
+    value: 'https://soundverse.infura-ipfs.io/ipfs'
   - name: METADATA_EXTERNAL_URL_BASE
     value: 'https://app.soundverse.io'
   - name: INTERNAL_FILE_URL_BASE
