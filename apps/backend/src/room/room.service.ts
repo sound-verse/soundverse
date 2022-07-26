@@ -71,7 +71,7 @@ export class RoomService {
 
     if (songIndex === -1) {
       currentTrack = room.playlistItems[0];
-    } else if (songIndex + 1 === room.playlistItems.length) {
+    } else if (songIndex  === room.playlistItems.length - 1) {
       currentTrack = room.playlistItems[0];
     } else {
       currentTrack = room.playlistItems[songIndex + 1];
