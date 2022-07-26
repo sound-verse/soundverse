@@ -81,7 +81,7 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
   return (
     <div className={cn(s.root, className)}>
       <div
-        className={cn('flex flex-col w-[350px] h-screen mt-10')}
+        className={cn('flex flex-col w-[350px] h-screen mt-7')}
       >
         <div
           className={cn(
@@ -114,7 +114,7 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
         </div>
         <div
           className={cn(
-            'py-4 border-t border-t-1 border-grey-light w-full mt-auto bg-white rounded-b-2xl',s.boxShadow,
+            'py-4 w-full mt-auto bg-white rounded-b-xl',s.boxShadow,
             marginBottom
           )}
         >
@@ -133,12 +133,12 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
                 loading
                   ? 'Hold on...'
                   : !authUser
-                  ? 'Login to chat'
-                  : 'Send a message'
+                  ? 'Login to chat...'
+                  : 'Send a message...'
               }`}
               onKeyDown={sendChatMessage}
               value={chatMessage}
-              className="p-2 bg-grey-light text-white rounded-2xl w-full text-xs mx-2 h-8 placeholder-white focus:outline-none"
+              className="p-2 bg-grey-medium text-white rounded-lg w-11/12 text-xs mx-2 h-8 placeholder-white focus:outline-none"
             />
           </div>
         </div>

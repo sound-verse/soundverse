@@ -13,17 +13,12 @@ export const Playlist: FC<PlaylistProps> = ({
   currentTrack,
   className,
 }) => {
-  const currentTrackIndex = playlistItems.findIndex((item) => {
-    return (
-      item.nft.id === currentTrack.nft.id &&
-      item.nftType === currentTrack.nftType
-    )
-  })
-
-  const firstPartPlaylist = playlistItems.slice(0, currentTrackIndex)
-  const lastPartPlaylist = playlistItems.slice(currentTrackIndex + 1)
-
-  const reorderedPlaylistItems = [...lastPartPlaylist, ...firstPartPlaylist]
+  const reorderedPlaylistItems = playlistItems.filter(
+    (item) =>
+      item.nft.id !== currentTrack.nft.id ||
+      item.nftType !== currentTrack.nftType
+  )
+  reorderedPlaylistItems.push(currentTrack)
 
   return (
     <div className={className}>

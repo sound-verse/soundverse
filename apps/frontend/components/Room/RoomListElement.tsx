@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { FC } from 'react'
+import React, { FC } from 'react'
 import { Room } from '../../common/graphql/schema'
 import { useJoinRoom } from '../../hooks/rooms/useJoinRoom'
 import Button from '../common/Button'
@@ -62,11 +62,11 @@ export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
               />
             </div>
           </div>
-          <div className="flex overflow-hidden mt-3 flex-wrap">
+          <div className="flex overflow-hidden mt-3 flex-nowrap">
             <div className='flex justify-between w-full md:w-auto'>
               <div
                 className={cn(
-                  'flex flex-col items-baseline justify-start w-[110px] overflow-x-auto h-36 pt-2',
+                  'flex flex-col items-center justify-start min-w-[60px] overflow-x-auto h-36 pt-2',
                   styles.scrollbar
                 )}
               >
@@ -81,7 +81,7 @@ export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
                         imageUrl={user.profileImage}
                         height={10}
                         width={10}
-                        className={!user.profileImage ? '' : ''}
+                        className={!user.profileImage ? '-ml-1' : ''}
                       />
                       <div className="text-black mt-1 ml-1">
                         <ProfileName
@@ -95,23 +95,24 @@ export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
                   </>
                 ))}
               </div>
-              <div className="ml-10">
+              <div className="ml-12">
                 <PlaylistPreview
                   currentTrack={room.currentTrack}
                   playlistItems={room.playlistItems}
                 />
               </div>
             </div>
-            <div className="md:mt-20 ml-auto w-full md:w-auto">
-              <div className="flex flex-col h-full w-[180px] ">
-                <Button
-                  text={'Enter the Soundverse'}
-                  type={'normal'}
-                  className={styles.enterButton}
+
+            <div className="mt-20 ml-auto w-full md:w-auto pt-6 p-2 ">
+              <div
+                  className={"bg-black rounded-md text-white px-5 py-2 shadow-lg cursor-pointer drop-shadow mb-2 p-2 ..."}
                   onClick={handleEnterSoundverse}
-                />
+              >
+                Enter the Soundverse
               </div>
             </div>
+
+
           </div>
         </div>
       </div>

@@ -309,7 +309,7 @@ export const CreateForm = () => {
               className={styles.descriptionField}
               id="trac-desc"
               placeholder="I am ..."
-              rows={8}
+              rows={2}
               cols={50}
             ></Field>
             <div className={styles.error}>
