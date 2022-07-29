@@ -45,7 +45,7 @@ export default function Marketplace({ initialNfts }: ProfileProps) {
   const MoreButton = () => {
     return (
       <button
-        className="hover:bg-purple-700 w-32 h-8 text-white text-xs font-bold border border-white rounded-xl"
+        className="hover:bg-purple-700 w-32 h-8 text-black text-xs font-bold border border-black rounded-xl"
         onClick={() => {
           getNFTs({ variables: { limit: _limit, skip: _skip } })
           moreButtonClicked = true

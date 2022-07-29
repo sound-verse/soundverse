@@ -18,7 +18,7 @@ export default function Mint() {
           {authUser ? (
             <CreateForm />
           ) : (
-            <div className="flex items-center justify-center h-screen -mt-24 text-white text-1xl">
+            <div className="flex items-center justify-center h-screen -mt-24 text-black text-1xl">
               Connect your wallet to create NFTs.
             </div>
           )}
