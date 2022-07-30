@@ -34,7 +34,7 @@
 .soundCardBody {
   @apply relative overflow-hidden rounded-b-2xl;
   width: 200px;
-  height: 140px;
+  height: 90px;
 
 }
 
@@ -58,7 +58,7 @@
 }
 
 .soundCardAudio {
-  @apply bg-transparent relative w-full;
+  @apply bg-transparent absolute bottom-0 w-full backdrop-blur;
   z-index: 1;
   align-self: center;
   height: 30px;

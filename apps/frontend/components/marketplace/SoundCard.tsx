@@ -79,47 +79,56 @@ function SoundCard({
               {nftType === NftType.Master ? 'Master' : 'License'}
             </div>
             <div className={styles.mplaceImage}>
+              {showAudioBar && (
+                  <div className={styles.soundCardAudio} onClick={handleMusicClick}>
+
+
+                    <Image
+                        src="/img/soundwave.svg"
+                        objectFit="contain"
+                        layout="fill"
+                    />
+                  </div>
+              )}
+
               <Image
                 src={nft.filePictureUrl}
                 layout="fill"
                 objectFit="cover"
                 className={'rounded-tl-2xl'}
               />
+
             </div>
           </a>
         </Link>
       ) : (
         <>
+
           <div className={styles.soundCardHeaderTop}>
             {nftType === NftType.Master ? 'Master' : 'License'}
           </div>
           <div className={styles.mplaceImage}>
+
             <Image
               src={nft.filePictureUrl}
               layout="fill"
               objectFit="cover"
               className={'rounded-tl-2xl'}
             />
+
           </div>
         </>
       )}
 
       <div className={styles.soundCardBody}>
+
         <div className={styles.imageOverlay}></div>
         <div className={styles.blur}>
           <Image src={nft.filePictureUrl} layout="fill" objectFit="cover" />
         </div>
 
+
         <div className={styles.soundCardInnerBody}>
-          {showAudioBar && (
-            <div className={styles.soundCardAudio} onClick={handleMusicClick}>
-              <Image
-                src="/img/soundwave.svg"
-                objectFit="contain"
-                layout="fill"
-              />
-            </div>
-          )}
 
           <div className={styles.soundCardText}>
             <div className={cn(styles.textOverflow, 'font-semibold text-xs')}>
