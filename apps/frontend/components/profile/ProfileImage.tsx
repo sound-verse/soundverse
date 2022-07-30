@@ -26,8 +26,8 @@ export const ProfileImage = ({
           width={width * 3}
           height={height * 3}
           quality={100}
-          className="rounded-full"     
-          objectFit='cover'     
+          className="rounded-full"
+          objectFit="cover"
         />
       ) : (
         <Blockies

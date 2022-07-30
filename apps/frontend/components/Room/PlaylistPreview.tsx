@@ -28,15 +28,15 @@ export const PlaylistPreview: FC<PlaylistPreviewProps> = ({
 
   return (
     <div className={className}>
-      <div className="relative w-[220px] h-[100px]">
-        <div className="relative">
+      <div className="relative w-[220px] h-[100px] bottom-6">
+        <div className="relative ">
           <SoundCard
             nft={playlistItems[previousTrackIndex].nft}
             nftType={playlistItems[previousTrackIndex].nftType}
             className="scale-[40%] absolute -top-20 -right-20"
             showAudioBar={false}
           />
-          <div className="bg-gradient-to-l from-white via-white absolute w-20 h-32 top-1 -right-5 z-10"></div>
+          <div className="bg-gradient-to-l from-white via-white absolute w-20 h-60 top-1 -right-5 z-10"></div>
         </div>
         <div className="relative">
           <SoundCard
@@ -53,7 +53,7 @@ export const PlaylistPreview: FC<PlaylistPreviewProps> = ({
             className="scale-[40%] absolute -top-20 -left-20"
             showAudioBar={false}
           />
-          <div className="bg-gradient-to-r from-white via-white absolute w-20 h-32 top-1 -left-5 z-10"></div>
+          <div className="bg-gradient-to-r from-white via-white absolute w-20 h-60 top-1 -left-5 z-10"></div>
         </div>
       </div>
     </div>

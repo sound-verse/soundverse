@@ -6,22 +6,23 @@
   height: 70px;
 }
 .headerWrapperToo {
-  @apply mx-auto sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl 2xl:max-w-screen-2xl flex justify-between items-center ;
+  @apply mx-auto sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl 2xl:max-w-screen-2xl flex justify-between items-center;
   width: 100%;
   background: white;
 }
 
 .linkWrapper {
-  @apply flex items-center
+  @apply flex items-center justify-center;
 }
 
 .logo {
-  width: 200px;
-  padding-left: 20px;
+  width: 110px;
+  margin-bottom: 8px;
+  margin-left: 10px;
 }
 
 .marketplaceLink {
-  @apply font-bold;
+  @apply font-semibold;
   position: relative;
   justify-self: center;
   cursor: pointer;
@@ -29,7 +30,7 @@
   color: black;
   font-size: 16px;
   line-height: 30px;
-  padding-left: 1rem;
+  padding-left: 0.5rem;
   padding-right: 1rem;
 }
 
@@ -39,12 +40,12 @@
 }
 
 .connectButtonWrapper {
-  @apply ml-10
+  @apply ml-10;
 }
 
 .connectButton {
   margin-right: 50px;
-  height: 40px;
+  height: 35px;
   width: 170px;
   padding: 0;
   background: #272727;

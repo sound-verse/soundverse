@@ -136,7 +136,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
                     height={40}
                     layout="fixed"
                     className="rounded-2xl"
-                    objectFit='cover'
+                    objectFit="cover"
                     quality={90}
                   />
                 </a>

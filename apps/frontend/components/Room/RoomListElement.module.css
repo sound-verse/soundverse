@@ -8,9 +8,7 @@
 }
 
 .enterButton {
-  @apply px-1 py-4;
   background: #303030;
-  border: 1.5px solid #7c4dff;
 }
 
 .connectButtonLabel {
