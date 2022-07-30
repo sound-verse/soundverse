@@ -88,7 +88,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
     }
     setCurrentTrack({ isLoading: true })
     create(currentTrack.url)
-  }, [currentTrack.url])
+  }, [currentTrack.url, currentTrack.nftType])
 
   const create = async (url: string) => {
     if (!WavesurferLibrary.current) {
@@ -136,7 +136,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
                     height={40}
                     layout="fixed"
                     className="rounded-2xl"
-                    objectFit='cover'
+                    objectFit="cover"
                     quality={90}
                   />
                 </a>

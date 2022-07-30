@@ -19,15 +19,15 @@ export const ProfileImage = ({
   className,
 }: ProfileImageProps) => {
   return (
-    <div className={cn('flex', className)}>
+    <div className={cn('flex z-0', className)}>
       {imageUrl ? (
         <Image
           src={imageUrl}
           width={width * 3}
           height={height * 3}
           quality={100}
-          className="rounded-full"     
-          objectFit='cover'     
+          className="rounded-full"
+          objectFit="cover"
         />
       ) : (
         <Blockies
