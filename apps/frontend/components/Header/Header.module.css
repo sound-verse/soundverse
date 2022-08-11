@@ -1,0 +1,115 @@
+.headerWrapper {
+  @apply sticky flex items-center justify-center bg-white w-full;
+  z-index: 2;
+  top: 0;
+  width: 100%;
+  height: 70px;
+}
+
+.headerWrapperToo {
+  @apply mx-auto sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl 2xl:max-w-screen-2xl flex justify-between items-center;
+  width: 100%;
+  background: white;
+}
+
+.linkWrapper {
+  @apply flex items-center justify-center;
+}
+
+.logo {
+  @apply w-[50px] md:w-[110px];
+  margin-bottom: 8px;
+  margin-left: 10px;
+}
+
+.marketplaceLink {
+  @apply font-semibold;
+  position: relative;
+  justify-self: center;
+  cursor: pointer;
+  font-family: Poppins;
+  color: black;
+  font-size: 16px;
+  line-height: 30px;
+  padding-left: 0.5rem;
+  padding-right: 1rem;
+}
+
+.marketplaceLink:hover {
+  @apply underline;
+  text-underline-offset: 2px;
+}
+
+.connectButtonWrapper {
+  @apply ml-10;
+}
+
+.connectButton {
+  margin-right: 50px;
+  height: 35px;
+  width: 170px;
+  padding: 0;
+  background: #272727;
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 30px;
+  letter-spacing: 0em;
+  text-align: center;
+  color: white;
+  border-radius: 50px;
+  background: linear-gradient(145deg, #272727, #4f4d4d);
+  box-shadow: 1px 1px 4px #0f0f0f, -0.5px -0.5px 1px #656262;
+}
+
+.profileButtonUserImage {
+  padding-left: 4px;
+}
+
+.connectButton:hover {
+  box-shadow: 1px 1px 4px #4b4848, -0.5px -0.5px 1px #656262;
+}
+
+.connectButtonLabel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 5px;
+  padding-right: 12px;
+}
+.blockie {
+  border-radius: 100px;
+}
+.chevronDown {
+  width: 25px;
+  height: 25px;
+}
+.connectButtonAddress {
+  @apply relative;
+  font-size: 12px;
+}
+.dropdownWrapper {
+  @apply absolute mt-2;
+  z-index: 999;
+}
+.dropdownRect {
+  width: 170px;
+  height: 70px;
+  border-radius: 10px;
+  padding: 10px;
+  background: linear-gradient(145deg, #272727, #4f4d4d);
+  box-shadow: 1px 1px 4px #0f0f0f, -0.5px -0.5px 1px #656262;
+}
+.dropdownText {
+  @apply mb-2;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 300;
+  letter-spacing: 0em;
+  color: white;
+}
+.ddhr {
+  border-bottom-width: 0.5px;
+  margin-bottom: 0.5rem;
+}

@@ -1,10 +1,24 @@
-import Header from '../components/Header'
+import Header from './Header/Header'
 import cn from 'classnames'
+import useWindowDimensions from '../hooks/useWindowDimensions'
+import MobileHeader from './MobileHeader/MobileHeader'
+import { useEffect, useState } from 'react'
 
 export default function Layout({ className = '', children }) {
+  const { isMobile } = useWindowDimensions()
+  const [showMobileMenu, setShowMobileMenu] = useState(false)
+
+  useEffect(() => {
+    if (isMobile) {
+      setShowMobileMenu(true)
+    } else {
+      setShowMobileMenu(false)
+    }
+  }, [isMobile])
+
   return (
-    <>
-      <Header />
+    <div>
+      {showMobileMenu ? <MobileHeader /> : <Header />}
       <div
         className={cn(
           'mx-auto sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl 2xl:max-w-screen-2xl',
@@ -13,6 +27,6 @@ export default function Layout({ className = '', children }) {
       >
         <div className="p-10">{children}</div>
       </div>
-    </>
+    </div>
   )
 }

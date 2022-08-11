@@ -1,39 +1,27 @@
-.profileImage {
-  width: 100px;
-  height: 100px;
-}
-
-.closeButton {
-  @apply px-2 py-3;
+.connectButton {
+  height: 35px;
+  width: 170px;
+  padding: 0;
   background: #272727;
   font-family: Poppins;
-  font-size: 12px;
+  font-size: 16px;
   font-style: normal;
   font-weight: 300;
+  line-height: 30px;
   letter-spacing: 0em;
   text-align: center;
   color: white;
-  border-width: 0px;
   border-radius: 50px;
   background: linear-gradient(145deg, #272727, #4f4d4d);
   box-shadow: 1px 1px 4px #0f0f0f, -0.5px -0.5px 1px #656262;
 }
 
-.closeButton:hover {
+.profileButtonUserImage {
+  padding-left: 4px;
+}
+
+.connectButton:hover {
   box-shadow: 1px 1px 4px #4b4848, -0.5px -0.5px 1px #656262;
-}
-
-.scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-.boxShadow {
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
 .connectButtonLabel {
@@ -44,30 +32,20 @@
   padding-right: 12px;
 }
 
-.profileButtonUserImage {
-  padding-left: 4px;
-}
-
-.blockie {
-  border-radius: 100px;
-}
 .chevronDown {
   width: 25px;
   height: 25px;
 }
 .connectButtonAddress {
+  @apply relative;
   font-size: 12px;
 }
 .dropdownWrapper {
-  position: absolute;
-  top: 100px;
-  right: 50px;
-
-  background-color: 'red';
-  z-index: 90;
+  @apply absolute mt-2;
+  z-index: 999;
 }
 .dropdownRect {
-  width: 240px;
+  width: 170px;
   height: 70px;
   border-radius: 10px;
   padding: 10px;
@@ -82,17 +60,9 @@
   letter-spacing: 0em;
   color: white;
 }
+
 .ddhr {
-  border-bottom-width: 0.5px;
-  margin-bottom: 0.5rem;
-}
-@media screen and (max-width: 768px) {
-  .headerWrapper {
-    display: none;
+    border-bottom-width: 0.5px;
+    margin-bottom: 0.5rem;
   }
-}
-@media screen and (max-width: 1000px) {
-  .soundverseText {
-    display: none;
-  }
-}
+  

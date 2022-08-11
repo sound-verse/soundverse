@@ -1,0 +1,41 @@
+.headerWrapper {
+  @apply sticky flex items-center justify-between bg-white p-3 top-0 left-0;
+}
+
+.logo {
+}
+
+.menu {
+  @apply relative h-7 w-5 cursor-pointer;
+}
+
+.mobileMenu {
+  @apply flex flex-col justify-start items-start h-full mt-10;
+}
+
+.link {
+  @apply flex items-center p-2;
+}
+
+.mobileMenuWrapper {
+  @apply fixed w-screen h-screen top-0 left-0 bg-white mt-10 overflow-hidden;
+  z-index: 999;
+}
+
+.marketplaceLink {
+  @apply font-semibold;
+  position: relative;
+  justify-self: center;
+  cursor: pointer;
+  font-family: Poppins;
+  color: black;
+  font-size: 16px;
+  line-height: 30px;
+  padding-left: 0.5rem;
+  padding-right: 1rem;
+}
+
+.connectButtonWrapper {
+  @apply mx-auto mt-10 z-50;
+}
+

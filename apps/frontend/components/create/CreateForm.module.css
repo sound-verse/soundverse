@@ -3,11 +3,11 @@
 }
 
 .stepWrapper {
-  @apply flex justify-center items-start;
+  @apply flex justify-center items-start flex-wrap;
 }
 
 .informationStepWrapper {
-  @apply flex flex-col p-8 border border-grey-medium rounded-xl w-[35rem] min-h-[4rem] mt-[2rem] ml-20 text-black;
+  @apply flex flex-shrink flex-col p-8 border border-grey-medium rounded-xl w-full lg:w-[350px] lg:mt-9 lg:ml-10 text-black;
 }
 
 .informationStepHeader {
@@ -21,7 +21,6 @@
 .wrapperStyle {
   border-radius: 1.5rem;
   background: white;
-  width: 35rem;
   padding: 3rem;
   margin-top: 2rem;
   margin-bottom: 9rem;
@@ -33,8 +32,6 @@
   text-align: center;
   width: 100%;
   white-space: nowrap;
-  padding-left: 7rem;
-  padding-right: 7rem;
   margin-top: 1.25rem;
   display: inline-block;
   padding-bottom: 0.5rem;
@@ -53,7 +50,7 @@
 }
 
 .mintButton {
-  @apply px-5 py-2 mt-5 w-52 text-center mx-auto text-white bg-grey-medium;
+  @apply px-5 py-2 mt-5 text-center mx-auto text-white bg-grey-medium w-full;
   border-radius: 36.6927px;
 }
 

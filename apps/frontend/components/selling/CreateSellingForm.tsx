@@ -116,7 +116,7 @@ export const CreateSellingForm = ({
     <>
       <div className="flex items-center justify-center mt-5 w-full">
         <div
-          className={cn('bg-white rounded-3xl p-16 w-full', styles.boxShadow)}
+          className={cn('bg-white rounded-3xl p-5 md:p-16 w-full', styles.boxShadow)}
         >
           <Formik
             initialValues={initialValues}

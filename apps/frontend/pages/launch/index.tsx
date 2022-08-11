@@ -133,7 +133,7 @@ export default function Launch() {
             You have not collected any music NFTs.
           </div>
         ) : (
-          <main className="mx-auto flex items-start justify-center  text-black">
+          <main className="mx-auto flex flex-wrap items-start justify-center  text-black">
             <div className="flex flex-col mr-10">
               <Button
                 className="flex mx-auto"
@@ -141,7 +141,7 @@ export default function Launch() {
                 type="normal"
                 onClick={handleCreateRoom}
               />
-              <ModuleBg className="mt-10">
+              <ModuleBg className="mt-10 mb-10">
                 <div className="mb-12 text-black text-center text-xl font-bold">
                   Song Queue
                 </div>

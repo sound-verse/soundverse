@@ -10,6 +10,7 @@ import { Bars } from 'react-loader-spinner'
 import styles from './CreateForm.module.css'
 import cn from 'classnames'
 import { useLogin } from '../../hooks/useLogin'
+import useWindowDimensions from '../../hooks/useWindowDimensions'
 
 const FILE_SIZE = 100000000
 
@@ -49,6 +50,7 @@ export const CreateForm = () => {
   const { authenticated } = useLogin()
   const WavesurferLibrary = useRef(null)
   const waveformRef = useRef(null)
+  const { isMobile } = useWindowDimensions()
 
   const initialValuesFirstStep: FirstStepValues = {
     name: '',
@@ -234,7 +236,7 @@ export const CreateForm = () => {
             <label htmlFor="nftFile" className={styles.buttonStyle}>
               Choose Music File
             </label>
-            <Field
+            <input
               type="file"
               id="nftFile"
               name="nftFile"
@@ -248,7 +250,7 @@ export const CreateForm = () => {
                   'nft'
                 )
               }
-            ></Field>
+            ></input>
             <div className="text-grey-dark mt-3 text-xs">
               MP3, WAVE - Max 100Mb
             </div>
@@ -388,9 +390,10 @@ export const CreateForm = () => {
             Secondary sales distribution
           </div>
           <div className="text-grey-dark leading-6">
-            You as the Master NFT creator will receive this % income from secondary
-            sales of your License NFTs. By default you are the Master NFT creator and owner -
-            you can either sell it or keep it for yourself.
+            You as the Master NFT creator will receive this % income from
+            secondary sales of your License NFTs. By default you are the Master
+            NFT creator and owner - you can either sell it or keep it for
+            yourself.
           </div>
           <div className="mt-6 w-full">
             <Field
@@ -451,15 +454,26 @@ export const CreateForm = () => {
     </div>
   )
 
+  const renderInformation = () => {
+    return !showSecondStep
+      ? renderInformationFirstStep()
+      : renderInformationSecondStep()
+  }
+
+  const renderStep = () => {
+    return (
+      <div className={styles.wrapperStyle}>
+        {!showSecondStep ? renderFirstStep() : renderSecondStep()}
+      </div>
+    )
+  }
+
   return (
     <>
       <div className={styles.stepWrapper}>
-        <div className={styles.wrapperStyle}>
-          {!showSecondStep ? renderFirstStep() : renderSecondStep()}
-        </div>
-        {!showSecondStep
-          ? renderInformationFirstStep()
-          : renderInformationSecondStep()}
+        {isMobile && renderInformation()}
+        {renderStep()}
+        {!isMobile && renderInformation()}
         <div ref={waveformRef} />
       </div>
       <Modal

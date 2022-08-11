@@ -128,7 +128,7 @@ export const EditProfileForm = ({
                 <div>
                   <label
                     htmlFor="profileImage"
-                    className="text-white border-2 bg-grey-medium border-white rounded-full p-2 mt-5 inline-block cursor-pointer px-36 whitespace-nowrap text-sm"
+                    className="text-white border-2 bg-grey-medium border-white rounded-full p-2 mt-5 inline-block cursor-pointer w-full text-center whitespace-nowrap text-sm"
                   >
                     Choose Profile Picture
                   </label>

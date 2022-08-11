@@ -255,7 +255,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
             <div className="col-span-3">
               {showCreateListing && isListable ? (
                 <div className="flex flex-col items-center justify-center mt-12">
-                  <div className="w-[36rem]">
+                  <div className="w-full lg:w-[36rem]">
                     <div className="flex items-center">
                       <div className="mr-5">
                         <div className="font-xl hover:text-purple cursor-pointer">
@@ -326,7 +326,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                 </div>
               ) : showBuyLicense ? (
                 <div className="flex flex-col items-center justify-center mt-12">
-                  <div className="w-[50rem]">
+                  <div className="w-full lg:w-[50rem]">
                     <div
                       onClick={() => {
                         setSelectedSelling(undefined)
@@ -348,7 +348,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                 </div>
               ) : showUnlistLicense ? (
                 <div className="flex flex-col items-center justify-center mt-12">
-                  <div className="w-[50rem]">
+                  <div className="w-full lg:w-[50rem]">
                     <div
                       onClick={() => {
                         setSelectedSelling(undefined)

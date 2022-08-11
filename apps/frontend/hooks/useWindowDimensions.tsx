@@ -18,6 +18,9 @@ export default function useWindowDimensions() {
   const [windowDimensions, setWindowDimensions] = useState(
     getWindowDimensions()
   )
+
+  const isMobile = windowDimensions.width < 768
+
   useEffect(() => {
     function handleResize() {
       setWindowDimensions(getWindowDimensions())
@@ -27,5 +30,5 @@ export default function useWindowDimensions() {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  return windowDimensions
+  return {windowDimensions, isMobile}
 }
