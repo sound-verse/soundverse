@@ -1,5 +1,5 @@
 .headerWrapper {
-  @apply sticky flex items-center justify-between bg-white p-3 top-0 left-0;
+  @apply sticky flex items-center justify-between bg-white p-3 top-0 left-0 z-50;
 }
 
 .logo {

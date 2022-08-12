@@ -78,7 +78,7 @@ export default function Marketplace({ initialNfts }: ProfileProps) {
         ) : (
           <div className="big-wrapper">
             <div className="marketplace-wrapper">
-              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-10">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-10">
                 {initialNfts.map((nft, key) => {
                   if (!nft.filePictureUrl) {
                     return
