@@ -23,12 +23,13 @@
   @apply text-black font-bold border-b border-grey-light pb-2 mb-2;
 }
 
-.nftResult, .artistResult {
+.nftResult,
+.artistResult {
   @apply w-full h-20 flex justify-start items-center  hover:bg-grey-light rounded-xl p-3 whitespace-nowrap overflow-hidden;
 }
 
 .artistResult {
-  @apply h-12
+  @apply h-12;
 }
 
 .nftResultCard {
@@ -36,13 +37,14 @@
 }
 
 .artistResultImage {
-  @apply mr-3
+  @apply mr-3;
 }
 
-.nftResultText, .artistResultText {
+.nftResultText,
+.artistResultText {
   @apply flex flex-col justify-start;
 }
 
-.artistsResultWrapper {
-  @apply mt-5 
+.resultPadding {
+  @apply mt-5;
 }

@@ -90,6 +90,9 @@ export const SearchBar: FC<SearchBarProps> = ({ className }) => {
                   ))}
                 </div>
               )}
+              {artistsResult.length > 0 && nftsResult.length > 0 && (
+                <div className={styles.resultPadding}></div>
+              )}
               {artistsResult.length > 0 && (
                 <div className={styles.artistsResultWrapper}>
                   <div className={styles.resultHeading}>Artists</div>
