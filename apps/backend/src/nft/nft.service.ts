@@ -487,11 +487,11 @@ export class NftService {
         break;
       }
       case SortOption.OLDEST: {
-        sortValue = { _id: -1 };
+        sortValue = { _id: 1 };
         break;
       }
       default: {
-        sortValue = { _id: 1 };
+        sortValue = { _id: -1 };
         break;
       }
     }
