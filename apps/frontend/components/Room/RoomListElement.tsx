@@ -62,7 +62,7 @@ export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
               />
             </div>
           </div>
-          <div className="flex overflow-hidden mt-3 flex-nowrap">
+          <div className="flex overflow-hidden mt-3 flex-wrap lg:flex-nowrap">
             <div className="flex justify-between w-full md:w-auto">
               <div
                 className={cn(
@@ -103,10 +103,10 @@ export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
               </div>
             </div>
 
-            <div className="mt-20 ml-auto w-full md:w-auto pt-6 p-2 ">
+            <div className="mt-20 ml-auto md:w-auto pt-6 p-2 ">
               <div
                 className={
-                  'bg-black text-sm rounded-md text-white px-2 py-2 shadow-lg cursor-pointer drop-shadow mb-2 p-2 ...'
+                  'bg-black text-sm rounded-md text-white px-2 py-2 shadow-lg cursor-pointer drop-shadow mb-2 p-2'
                 }
                 onClick={handleEnterSoundverse}
               >

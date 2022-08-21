@@ -29,7 +29,7 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
     router.push('/soundverses')
   }
   return (
-    <div className="flex justify-center relative overflow-hidden h-[85vh]">
+    <div className="flex justify-center relative overflow-hidden h-[85vh] flex-wrap lg:flex-nowrap">
       <div className="flex flex-col items-center justify-start">
         <div className="mb-5">
           <Button
@@ -42,7 +42,7 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
         <Playlist
           playlistItems={room.playlistItems}
           currentTrack={room.currentTrack}
-          className="mt-5"
+          className="mt-5 hidden lg:block"
         />
       </div>
       <div className="flex flex-col ml-10 w-full xl:mr-[360px] text-sm h-screen">
@@ -67,7 +67,12 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
                   <div className="mr-2 text-base">
                     {room.activeUsers.length}
                   </div>
-                  <Image src={'/img/speaker.svg'} height={20} width={20} alt="Speaker symbol" />
+                  <Image
+                    src={'/img/speaker.svg'}
+                    height={20}
+                    width={20}
+                    alt="Speaker symbol"
+                  />
                 </div>
               </div>
               <div className="text-white">

@@ -120,8 +120,8 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
         currentTrack.visible || currentTrack.isLoading ? 'visible' : 'invisible'
       )}
     >
-      <div className="grid grid-cols-1 lg:grid-cols-3 w-full relative text-center items-center align-center">
-        <div className="hidden lg:flex items-center justify-end mr-2">
+      <div className="grid grid-cols-2 lg:grid-cols-3 w-full relative text-center items-center align-center">
+        <div className="flex items-center justify-end mr-2">
           <div className="mr-2">
             {currentTrack.trackPictureUrl && (
               <Link
@@ -199,7 +199,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
             <div ref={waveformRef} />
           </div>
         </div>
-        <div className="hidden lg:flex justify-start">
+        <div className="flex justify-start">
           <div
             className="cursor-pointer flex items-center"
             onClick={() => setCurrentTrack({ mute: !currentTrack.mute })}

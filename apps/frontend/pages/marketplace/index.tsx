@@ -94,11 +94,11 @@ export default function Marketplace() {
       <Layout>
         <div className="big-wrapper">
           <div className="marketplace-wrapper w-full">
-            <div
-              className="cursor-pointer mb-5 select-none text-sm flex flex-start w-full"
-              onClick={() => setShowSort(!showSort)}
-            >
-              <div className="rounded-full border select-none border-grey-light bg-white p-2 w-40  flex justify-start ">
+            <div className=" mb-5 select-none text-sm flex flex-start w-full">
+              <div
+                className="rounded-full border select-none cursor-pointer border-grey-light bg-white p-2 w-40  flex justify-start "
+                onClick={() => setShowSort(!showSort)}
+              >
                 <div className="mr-2 flex ">
                   <Image
                     src={'/img/sort.svg'}
