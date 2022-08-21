@@ -79,7 +79,7 @@ export default function Marketplace() {
     setSortBy(sortOption)
     setShowSort(false)
     setAllNfts([])
-    setCurrentSkip(SKIP)
+    setCurrentSkip(0)
   }
 
   useBottomScrollListener(() => {
