@@ -6,7 +6,7 @@ import React, {
   useContext,
   createContext,
 } from 'react'
-import { NftType, UpdateCurrentSongInput } from '../common/graphql/schema.d'
+import { NftType } from '../common/graphql/schema.d'
 
 export enum PLAYER_STATUS {
   PLAYING = 'playing',
@@ -18,7 +18,7 @@ export type Track = {
   contractAddress?: string
   trackName?: string
   url?: string
-  waveForm?: number[],
+  waveForm?: number[]
   currentPosition?: number
   creatorName?: string
   trackPictureUrl?: string
