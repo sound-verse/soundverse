@@ -120,7 +120,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
         currentTrack.visible || currentTrack.isLoading ? 'visible' : 'invisible'
       )}
     >
-      <div className="grid grid-cols-2 lg:grid-cols-3 w-full relative text-center items-center align-center">
+      <div className="grid grid-cols-3 w-full relative text-center items-center align-center">
         <div className="flex items-center justify-end mr-2">
           <div className="mr-2">
             {currentTrack.trackPictureUrl && (
@@ -195,13 +195,13 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
           ) : (
             <div className="col-span-1"></div>
           )}
-          <div className={cn('col-span-2 lg:col-span-3', styles.noOverflow)}>
+          <div className={cn('col-span-3', styles.noOverflow)}>
             <div ref={waveformRef} />
           </div>
         </div>
-        <div className="hidden lg:flex justify-start">
+        <div className="flex justify-start">
           <div
-            className="cursor-pointer flex items-center"
+            className="cursor-pointer hidden lg:flex items-center"
             onClick={() => setCurrentTrack({ mute: !currentTrack.mute })}
           >
             {!currentTrack.mute ? (
@@ -220,7 +220,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
               />
             )}
           </div>
-          <div className="flex items-center">
+          <div className="hidden lg:flex items-center">
             <input
               type="range"
               min={0}
@@ -238,7 +238,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
           </div>
           {!currentTrack.isRoomPlayer && (
             <div
-              className="cursor-pointer ml-5 flex items-center"
+              className="cursor-pointer lg:ml-5 flex items-center"
               onClick={() => {
                 setCurrentTrack({
                   url: '',
