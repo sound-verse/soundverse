@@ -4,6 +4,7 @@ import styles from './Header.module.css'
 import Image from 'next/image'
 import cn from 'classnames'
 import { ConnectButton } from '../ConnectButton/ConnectButton'
+import { SearchBar } from '../SearchBar/SearchBar'
 
 const Header = ({ className = '' }) => {
   return (
@@ -13,7 +14,7 @@ const Header = ({ className = '' }) => {
         <div className={styles.logo}>
           <Link href="/soundverses" passHref>
             <a>
-              <div className="relative w-20 lg:w-40 h-5 lg:h-12">
+              <div className="relative w-16 mr-5 lg:w-32 2xl:60 h-5 lg:h-12">
                 <Image src="/logo-black.svg" alt="next" layout="fill" />
               </div>
             </a>
@@ -77,10 +78,13 @@ const Header = ({ className = '' }) => {
               </Link>
             </div>
           </div>
+          <div>
+            <SearchBar />
+          </div>
         </div>
         <div>
           <div className={styles.connectButtonWrapper}>
-           <ConnectButton />
+            <ConnectButton />
           </div>
         </div>
       </div>

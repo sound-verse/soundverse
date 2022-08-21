@@ -5,6 +5,7 @@ import Image from 'next/image'
 import cn from 'classnames'
 import { ConnectButton } from '../ConnectButton/ConnectButton'
 import { useState } from 'react'
+import { SearchBar } from '../SearchBar/SearchBar'
 
 const Header = ({ className = '' }) => {
   const [showMobileMenu, setShowMobileMenu] = useState(false)
@@ -21,6 +22,9 @@ const Header = ({ className = '' }) => {
               </div>
             </a>
           </Link>
+        </div>
+        <div className={styles.searchBar}>
+          <SearchBar />
         </div>
         <div
           className={styles.menu}

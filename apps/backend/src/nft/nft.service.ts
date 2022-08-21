@@ -15,6 +15,8 @@ import { UserNfts } from './dto/output/user-nfts.output';
 import { NftHistoryService } from '../nft-history/nft-history.service';
 import { EventType } from '@soundverse/shared-rpc-listener-service';
 import { truncateSync } from 'fs';
+import { NftSearch } from './dto/output/nft-search.output';
+import { NftSearchInput } from './dto/input/nft-search.input';
 
 export interface CreateNftMetadata {
   name: string;
@@ -129,6 +131,25 @@ export class NftService {
       ...(id && { _id: id }),
     };
     return await this.nftModel.findOne(searchObject);
+  }
+
+  async search(searchInput: NftSearchInput): Promise<NftSearch> {
+    if (searchInput.search.length < 3) {
+      return;
+    }
+    const nfts = await this.nftModel
+      .find({ active: true, 'metadata.name': { $regex: `${searchInput.search}`, $options: 'i' } })
+      .sort({ createdAt: -1 })
+      .limit(5);
+    const artists = await this.userModel
+      .find({ name: { $regex: `${searchInput.search}`, $options: 'i' } })
+      .sort({ createdAt: -1 })
+      .limit(5);
+
+    return {
+      nfts,
+      artists,
+    };
   }
 
   async setTokenId(

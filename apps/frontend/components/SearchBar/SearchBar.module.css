@@ -1,0 +1,48 @@
+.root {
+  @apply border border-grey-light p-2 rounded-full text-xs;
+}
+
+.searchInputWrapper {
+  @apply flex justify-start;
+}
+
+.searchInput {
+  @apply w-52;
+  outline: none !important;
+}
+
+.searchInputIcon {
+  @apply relative w-5;
+}
+
+.searchResultWrapper {
+  @apply absolute bg-white rounded-2xl p-3 w-[246px] mt-3 border border-grey-light -ml-2 overflow-y-auto;
+}
+
+.resultHeading {
+  @apply text-black font-bold border-b border-grey-light pb-2 mb-2;
+}
+
+.nftResult, .artistResult {
+  @apply w-full h-20 flex justify-start items-center  hover:bg-grey-light rounded-xl p-3 whitespace-nowrap overflow-hidden;
+}
+
+.artistResult {
+  @apply h-12
+}
+
+.nftResultCard {
+  @apply w-10 h-20 relative scale-[20%] -ml-5 -mt-12 mr-10;
+}
+
+.artistResultImage {
+  @apply mr-3
+}
+
+.nftResultText, .artistResultText {
+  @apply flex flex-col justify-start;
+}
+
+.artistsResultWrapper {
+  @apply mt-5 
+}

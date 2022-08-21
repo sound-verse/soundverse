@@ -58,7 +58,7 @@ export class Nft extends BaseDBObject {
   active: boolean;
 
   @Prop()
-  supply?: number;
+  supply: number;
 
   @Prop({ default: false })
   verified?: boolean;
@@ -67,7 +67,7 @@ export class Nft extends BaseDBObject {
   transactionHash?: string;
 
   @Prop()
-  chainId?: number;
+  chainId: number;
 
   @Prop()
   ipfsUrl: string;
@@ -104,3 +104,4 @@ export const NftSchema = SchemaFactory.createForClass(Nft);
 
 NftSchema.index({ tokenId: -1 });
 NftSchema.index({ tokenId: 1, contractAddress: 1 });
+NftSchema.index({ 'metadata.name': 1 });

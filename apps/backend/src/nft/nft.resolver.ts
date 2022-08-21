@@ -20,6 +20,8 @@ import { NftSelling, SellingService } from '../selling/selling.service';
 import { UserNfts } from './dto/output/user-nfts.output';
 import { GqlAuthGuardContinue } from '../auth/gql-auth-continue.guard';
 import { Types } from 'mongoose';
+import { NftSearch } from './dto/output/nft-search.output';
+import { NftSearchInput } from './dto/input/nft-search.input';
 
 @Resolver(() => Nft)
 export class NftResolver {
@@ -99,6 +101,11 @@ export class NftResolver {
   @Query(() => Nft, { nullable: true })
   async nft(@Args('filter') filter: NftFilter): Promise<NftSchema> {
     return await this.nftService.findNft(filter);
+  }
+
+  @Query(() => NftSearch, { nullable: true })
+  async search(@Args('searchInput') searchInput: NftSearchInput): Promise<NftSearch> {
+    return await this.nftService.search(searchInput);
   }
 
   @UseGuards(GqlAuthGuardContinue)

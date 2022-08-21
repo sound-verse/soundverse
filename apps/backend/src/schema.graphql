@@ -148,6 +148,11 @@ type UserNfts {
   ownedLicenseNfts: [Nft!]
 }
 
+type NftSearch {
+  nfts: [Nft!]
+  artists: [User!]
+}
+
 type Rooms {
   rooms: [Room!]
 }
@@ -157,6 +162,7 @@ type Query {
   me: User!
   nfts(skip: Int!, limit: Int!, filter: NftsFilter): [Nft!]
   nft(filter: NftFilter!): Nft
+  search(searchInput: NftSearchInput!): NftSearch
   userNfts(ethAddress: String): UserNfts!
   room(roomFilter: RoomFilter!): Room!
   rooms: Rooms!
@@ -170,6 +176,10 @@ input NftFilter {
   tokenId: Float
   id: String
   ipfsUrl: String
+}
+
+input NftSearchInput {
+  search: String
 }
 
 input RoomFilter {

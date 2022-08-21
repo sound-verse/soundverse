@@ -93,11 +93,7 @@ type Mutation {
   joinRoom(joinRoomInput: JoinRoomInput!): Room!
   leaveRoom(leaveRoomInput: LeaveRoomInput!): Room!
   login(data: LoginInput!): Auth!
-  nextSong: Room!
-  prevSong: Room!
   reviveRoom: Room!
-  unpinAll: Boolean!
-  updateCurrentSong(updateCurrentSongInput: UpdateCurrentSongInput!): Room!
   updateUser(data: UpdateUserInput!): User!
   uploadProfilePicture(file: Upload!): User!
 }
@@ -159,6 +155,15 @@ type NftOwner {
   user: User!
 }
 
+type NftSearch {
+  artists: [User!]
+  nfts: [Nft!]
+}
+
+input NftSearchInput {
+  search: String
+}
+
 type NftSelling {
   licenseSellings: [Selling!]
   masterSelling: Selling
@@ -190,6 +195,7 @@ type Query {
   nfts(filter: NftsFilter, limit: Int!, skip: Int!): [Nft!]
   room(roomFilter: RoomFilter!): Room!
   rooms: Rooms!
+  search(searchInput: NftSearchInput!): NftSearch
   user(ethAddress: String!): User
   userNfts(ethAddress: String): UserNfts!
 }
@@ -256,10 +262,6 @@ type Subscription {
 `Date` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
 """
 scalar Timestamp
-
-input UpdateCurrentSongInput {
-  currentPosition: Float!
-}
 
 input UpdateUserInput {
   description: String
