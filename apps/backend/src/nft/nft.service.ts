@@ -498,6 +498,7 @@ export class NftService {
 
     const findQuery = this.nftModel
       .find({ verified: true, active: true })
+      .collation({ locale: 'en' })
       .sort(sortValue)
       .skip(documentsToSkip)
       .limit(limitOfDocuments);
