@@ -15,8 +15,8 @@ import { useBottomScrollListener } from 'react-bottom-scroll-listener'
 import { Bars } from 'react-loader-spinner'
 import Image from 'next/image'
 
-const LIMIT = 10
-const SKIP = 10
+const LIMIT = 100
+const SKIP = 100
 
 export default function Marketplace() {
   //TODO: load nfts with hasSellings filter!
