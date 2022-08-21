@@ -195,11 +195,11 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
           ) : (
             <div className="col-span-1"></div>
           )}
-          <div className={cn('col-span-3', styles.noOverflow)}>
+          <div className={cn('col-span-2 lg:col-span-3', styles.noOverflow)}>
             <div ref={waveformRef} />
           </div>
         </div>
-        <div className="flex justify-start">
+        <div className="hidden lg:flex justify-start">
           <div
             className="cursor-pointer flex items-center"
             onClick={() => setCurrentTrack({ mute: !currentTrack.mute })}
