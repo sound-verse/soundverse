@@ -17,6 +17,7 @@ import { EventType } from '@soundverse/shared-rpc-listener-service';
 import { truncateSync } from 'fs';
 import { NftSearch } from './dto/output/nft-search.output';
 import { NftSearchInput } from './dto/input/nft-search.input';
+import { SortOption } from '../common/enums/sortOption.enum';
 
 export interface CreateNftMetadata {
   name: string;
@@ -478,9 +479,26 @@ export class NftService {
   }
 
   async getNfts(limitOfDocuments = 100, documentsToSkip = 0, filter?: NftsFilter): Promise<Nft[]> {
+    let sortValue = {};
+
+    switch (filter?.sortOption) {
+      case SortOption.NAME: {
+        sortValue = { 'metadata.name': 1 };
+        break;
+      }
+      case SortOption.OLDEST: {
+        sortValue = { _id: -1 };
+        break;
+      }
+      default: {
+        sortValue = { _id: 1 };
+        break;
+      }
+    }
+
     const findQuery = this.nftModel
       .find({ verified: true, active: true })
-      .sort({ _id: 1 })
+      .sort(sortValue)
       .skip(documentsToSkip)
       .limit(limitOfDocuments);
 

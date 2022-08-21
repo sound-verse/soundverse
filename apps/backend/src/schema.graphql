@@ -170,6 +170,13 @@ type Query {
 
 input NftsFilter {
   hasSelling: Boolean
+  sortOption: SortOption
+}
+
+enum SortOption {
+  NAME
+  OLDEST
+  NEWEST
 }
 
 input NftFilter {

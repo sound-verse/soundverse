@@ -176,6 +176,7 @@ enum NftType {
 
 input NftsFilter {
   hasSelling: Boolean
+  sortOption: SortOption
 }
 
 type PlaylistItem {
@@ -251,6 +252,12 @@ type Selling {
   seller: User!
   sellingStatus: String!
   transactionHash: String
+}
+
+enum SortOption {
+  NAME
+  NEWEST
+  OLDEST
 }
 
 type Subscription {

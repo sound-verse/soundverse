@@ -254,6 +254,7 @@ export enum NftType {
 
 export type NftsFilter = {
   hasSelling?: InputMaybe<Scalars['Boolean']>
+  sortOption?: InputMaybe<SortOption>
 }
 
 export type PlaylistItem = {
@@ -361,6 +362,12 @@ export type Selling = {
   seller: User
   sellingStatus: Scalars['String']
   transactionHash?: Maybe<Scalars['String']>
+}
+
+export enum SortOption {
+  Name = 'NAME',
+  Newest = 'NEWEST',
+  Oldest = 'OLDEST',
 }
 
 export type Subscription = {
