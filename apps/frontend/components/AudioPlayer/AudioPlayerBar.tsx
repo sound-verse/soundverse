@@ -129,7 +129,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
         <div
           className={cn(
             'flex items-center justify-center lg:justify-end mr-2',
-            !currentTrack.isRoomPlayer && 'col-span-4 lg:col-span-1'
+            !currentTrack.isRoomPlayer && 'col-span-5 lg:col-span-1'
           )}
         >
           <div className="mr-2">
@@ -179,12 +179,12 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
         <div
           className={cn(
             'grid grid-cols-5 align-center items-center',
-            !currentTrack.isRoomPlayer && 'col-span-5 lg:col-span-1'
+            !currentTrack.isRoomPlayer && 'col-span-3 lg:col-span-1'
           )}
         >
           {!currentTrack.isRoomPlayer ? (
             <div
-              className="col-span-1 cursor-pointer text-right mr-3 -mb-1"
+              className="col-span-2 lg:col-span-1 cursor-pointer text-right mr-3 -mb-1"
               onClick={() => {
                 setCurrentTrack({
                   isPlaying: !wavesurfer.current?.isPlaying(),
@@ -214,7 +214,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
             <div ref={waveformRef} />
           </div>
         </div>
-        <div className="flex justify-center lg:justify-start">
+        <div className="flex justify-center lg:justify-start col-span-2 lg:col-span-1">
           <div
             className="cursor-pointer hidden lg:flex items-center"
             onClick={() => setCurrentTrack({ mute: !currentTrack.mute })}
@@ -253,7 +253,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
           </div>
           {!currentTrack.isRoomPlayer && (
             <div
-              className="cursor-pointer lg:ml-5 flex items-end justify-end lg:justify-start lg:items-center"
+              className="cursor-pointer lg:ml-5 flex justify-around lg:justify-start items-center"
               onClick={() => {
                 setCurrentTrack({
                   url: '',
