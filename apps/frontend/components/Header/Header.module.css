@@ -1,6 +1,6 @@
 .headerWrapper {
   @apply sticky flex items-center justify-center bg-white w-full;
-  z-index: 2;
+  z-index: 100;
   top: 0;
   width: 100%;
   height: 70px;
