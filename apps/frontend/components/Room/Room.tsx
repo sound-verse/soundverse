@@ -61,7 +61,7 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
             <div className="flex justify-between w-full">
               <div className="flex justify-between w-full">
                 <div className="text-black text-xl font-semibold flex">
-                  Soundverse #{room.id.substring(room.id.length - 4)}
+                {room.name} #{room.id.substring(room.id.length - 4)}
                 </div>
                 <div className="flex justify-center items-center">
                   <div className="mr-2 text-base">

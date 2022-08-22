@@ -39,6 +39,7 @@ input CreateMintSellingInput {
 }
 
 input CreateRoomInput {
+  name: String!
   playlistItems: [PlaylistItemInput!]!
 }
 
@@ -208,6 +209,7 @@ type Room {
   creator: User
   currentTrack: PlaylistItem
   id: String!
+  name: String!
   playlistItems: [PlaylistItem!]
 }
 

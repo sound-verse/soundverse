@@ -64,6 +64,7 @@ export type CreateMintSellingInput = {
 }
 
 export type CreateRoomInput = {
+  name: Scalars['String']
   playlistItems: Array<PlaylistItemInput>
 }
 
@@ -315,6 +316,7 @@ export type Room = {
   creator?: Maybe<User>
   currentTrack?: Maybe<PlaylistItem>
   id: Scalars['String']
+  name: Scalars['String']
   playlistItems?: Maybe<Array<PlaylistItem>>
 }
 
@@ -654,6 +656,7 @@ export type RoomFragmentFragment = {
   __typename?: 'Room'
   id: string
   active: boolean
+  name: string
   creator?: {
     __typename?: 'User'
     id: string
@@ -1235,6 +1238,7 @@ export type CreateChatMessageMutation = {
     __typename?: 'Room'
     id: string
     active: boolean
+    name: string
     creator?: {
       __typename?: 'User'
       id: string
@@ -1808,6 +1812,7 @@ export type CreateRoomMutation = {
     __typename?: 'Room'
     id: string
     active: boolean
+    name: string
     creator?: {
       __typename?: 'User'
       id: string
@@ -2390,6 +2395,7 @@ export type JoinRoomMutation = {
     __typename?: 'Room'
     id: string
     active: boolean
+    name: string
     creator?: {
       __typename?: 'User'
       id: string
@@ -2888,6 +2894,7 @@ export type LeaveRoomMutation = {
     __typename?: 'Room'
     id: string
     active: boolean
+    name: string
     creator?: {
       __typename?: 'User'
       id: string
@@ -3831,6 +3838,7 @@ export type GetRoomQuery = {
     __typename?: 'Room'
     id: string
     active: boolean
+    name: string
     creator?: {
       __typename?: 'User'
       id: string
@@ -4329,6 +4337,7 @@ export type GetRoomsQuery = {
       __typename?: 'Room'
       id: string
       active: boolean
+      name: string
       creator?: {
         __typename?: 'User'
         id: string
@@ -5951,6 +5960,7 @@ export type RoomUpdatedSubscription = {
     __typename?: 'Room'
     id: string
     active: boolean
+    name: string
     creator?: {
       __typename?: 'User'
       id: string
@@ -6447,6 +6457,7 @@ export type RoomsUpdatedSubscription = {
     __typename?: 'Room'
     id: string
     active: boolean
+    name: string
     creator?: {
       __typename?: 'User'
       id: string

@@ -14,4 +14,7 @@ class PlaylistItemInput {
 export class CreateRoomInput {
   @Field(() => [PlaylistItemInput])
   playlistItems: PlaylistItemInput[];
+
+  @Field()
+  name: string;
 }

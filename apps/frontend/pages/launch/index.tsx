@@ -21,6 +21,8 @@ import { Bars } from 'react-loader-spinner'
 import { useRouter } from 'next/router'
 import SoundCard from '../../components/marketplace/SoundCard'
 import cn from 'classnames'
+import { Formik, Form, Field, ErrorMessage } from 'formik'
+import styles from './Index.module.css'
 
 export default function Launch() {
   const { authUser } = useAuthContext()
@@ -76,14 +78,17 @@ export default function Launch() {
     }
   }
 
-  const handleCreateRoom = async () => {
+  const handleCreateRoom = async (roomName) => {
     const playlistItems = selectedNfts.map((selectedNft) => ({
       nftId: selectedNft.nft.id,
       nftType: selectedNft.nftType,
     }))
     try {
       setModalLoading(true)
-      await createRoom({ playlistItems: playlistItems })
+      await createRoom({ 
+        playlistItems: playlistItems,
+        name: roomName,
+       })
       setModalLoading(false)
       setSelectedNfts([])
     } catch {
@@ -118,6 +123,10 @@ export default function Launch() {
     setMasterNfts(userMasterNfts)
   }, [data])
 
+  const initialValues = {
+    name: "Soundverse"
+  }
+
   return (
     <div>
       <Head>
@@ -135,12 +144,45 @@ export default function Launch() {
         ) : (
           <main className="mx-auto flex flex-wrap items-start justify-center  text-black">
             <div className="flex flex-col mr-10">
-              <Button
-                className="flex mx-auto"
-                text="Launch your room now"
-                type="normal"
-                onClick={handleCreateRoom}
-              />
+
+              <Formik
+                initialValues={initialValues}
+                onSubmit={handleCreateRoom}
+              >
+                <Form>
+                  <div className="text-black font-bold mt-10 text-sm">
+                    Soundverse Name
+                  </div>
+                  <div className="mt-3">
+                      <Field
+                        id="name"
+                        name="name"
+                        placeholder="Soundverse"
+                        className="outline-none bg-white text-black text-sm"
+                      />
+                      <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
+                      <div className="text-grey-light mt-2 text-xs">
+                        max. 30 characters
+                      </div>
+                      <div className={styles.error}>
+                        <ErrorMessage name="name" />
+                      </div>
+                      <button
+                        className="text-white cursor-pointer rounded-full bg-grey-medium px-24 py-3 ml-auto mt-10 font-bold text-sm"
+                        type="submit"
+                      >
+                        Launch your room now
+                      </button>
+                      <Button
+                        className="flex mx-auto"
+                        text="Launch your room now"
+                        type="normal"
+                        onClick={handleCreateRoom}
+                      />
+                    </div>
+                </Form>
+              </Formik>
+              
               <ModuleBg className="mt-10 mb-10">
                 <div className="mb-12 text-black text-center text-xl font-bold">
                   Song Queue

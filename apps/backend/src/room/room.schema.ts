@@ -66,6 +66,9 @@ export class Room extends BaseDBObject {
 
   @Prop({ default: false })
   isMasterRoom: boolean;
+
+  @Prop({ default: "Soundverse" })
+  name: string;
 }
 
 export const RoomSchema = SchemaFactory.createForClass(Room);
