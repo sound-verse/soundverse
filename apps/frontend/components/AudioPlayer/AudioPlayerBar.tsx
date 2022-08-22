@@ -120,8 +120,18 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
         currentTrack.visible || currentTrack.isLoading ? 'visible' : 'invisible'
       )}
     >
-      <div className="grid grid-cols-2 lg:grid-cols-3 w-full relative text-center items-center align-center">
-        <div className="flex items-center justify-center lg:justify-end mr-2">
+      <div
+        className={cn(
+          'grid lg:grid-cols-3 w-full relative text-center items-center align-center',
+          !currentTrack.isRoomPlayer ? 'grid-cols-10' : 'grid-cols-2'
+        )}
+      >
+        <div
+          className={cn(
+            'flex items-center justify-center lg:justify-end mr-2',
+            !currentTrack.isRoomPlayer && 'col-span-5 lg:col-span-1'
+          )}
+        >
           <div className="mr-2">
             {currentTrack.trackPictureUrl && (
               <Link
@@ -144,12 +154,12 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
             )}
           </div>
           <div className="flex-col text-left justify-start">
-            <div className="text-black font-bold text-sm">
+            <div className="text-black font-bold text-xs lg:text-sm">
               {currentTrack.trackName.length > 30
                 ? `${currentTrack.trackName.substring(0, 25)}...`
                 : currentTrack.trackName}
             </div>
-            <div className="text-grey-light text-sm">
+            <div className="text-grey-light text-xs lg:text-sm">
               by{' '}
               <span className="text-purple inline-block">
                 <Link href={`/profile/${currentTrack.creatorEthAddress}`}>
@@ -166,7 +176,12 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-5 algin-center items-center">
+        <div
+          className={cn(
+            'grid grid-cols-5 algin-center items-center',
+            !currentTrack.isRoomPlayer && 'col-span-4 lg:col-span-1'
+          )}
+        >
           {!currentTrack.isRoomPlayer ? (
             <div
               className="col-span-1 cursor-pointer text-right mr-3"
@@ -199,7 +214,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
             <div ref={waveformRef} />
           </div>
         </div>
-        <div className="flex justify-start">
+        <div className="flex justify-center lg:justify-start">
           <div
             className="cursor-pointer hidden lg:flex items-center"
             onClick={() => setCurrentTrack({ mute: !currentTrack.mute })}
@@ -238,7 +253,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
           </div>
           {!currentTrack.isRoomPlayer && (
             <div
-              className="cursor-pointer lg:ml-5 flex items-center"
+              className="cursor-pointer lg:ml-5 flex items-end justify-end lg:justify-start lg:items-center"
               onClick={() => {
                 setCurrentTrack({
                   url: '',
