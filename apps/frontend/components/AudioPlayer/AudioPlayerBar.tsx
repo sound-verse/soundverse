@@ -129,7 +129,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
         <div
           className={cn(
             'flex items-center justify-center lg:justify-end mr-2',
-            !currentTrack.isRoomPlayer && 'col-span-5 lg:col-span-1'
+            !currentTrack.isRoomPlayer && 'col-span-4 lg:col-span-1'
           )}
         >
           <div className="mr-2">
@@ -155,8 +155,8 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
           </div>
           <div className="flex-col text-left justify-start">
             <div className="text-black font-bold text-xs lg:text-sm">
-              {currentTrack.trackName.length > 30
-                ? `${currentTrack.trackName.substring(0, 25)}...`
+              {currentTrack.trackName.length > 15
+                ? `${currentTrack.trackName.substring(0, 15)}...`
                 : currentTrack.trackName}
             </div>
             <div className="text-grey-light text-xs lg:text-sm">
@@ -178,13 +178,13 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
         </div>
         <div
           className={cn(
-            'grid grid-cols-5 algin-center items-center',
-            !currentTrack.isRoomPlayer && 'col-span-4 lg:col-span-1'
+            'grid grid-cols-5 align-center items-center',
+            !currentTrack.isRoomPlayer && 'col-span-5 lg:col-span-1'
           )}
         >
           {!currentTrack.isRoomPlayer ? (
             <div
-              className="col-span-1 cursor-pointer text-right mr-3"
+              className="col-span-1 cursor-pointer text-right mr-3 -mb-1"
               onClick={() => {
                 setCurrentTrack({
                   isPlaying: !wavesurfer.current?.isPlaying(),
