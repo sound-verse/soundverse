@@ -7,7 +7,7 @@
 }
 
 .searchInput {
-  @apply w-52;
+  @apply w-44;
   outline: none !important;
 }
 

@@ -18,7 +18,7 @@
 }
 
 .mobileMenuWrapper {
-  @apply fixed w-screen h-screen top-0 left-0 bg-white mt-10 overflow-hidden;
+  @apply fixed w-screen h-screen top-0 left-0 bg-white mt-12 overflow-hidden;
   z-index: 999;
 }
 

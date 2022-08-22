@@ -53,7 +53,7 @@ export const SearchBar: FC<SearchBarProps> = ({ className }) => {
         <input
           className={styles.searchInput}
           type={'text'}
-          placeholder="Search by Nft name or Artist name"
+          placeholder="Search by Nft or Artist name"
           onChange={(event) => setSearch(event.target.value.toString())}
         />
       </div>
