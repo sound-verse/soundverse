@@ -62,40 +62,37 @@ export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
               />
             </div>
           </div>
-          <div className="flex overflow-hidden mt-3 flex-wrap lg:flex-nowrap">
-            <div className="flex justify-between w-full md:w-auto">
+          <div className="flex overflow-hidden mt-3 flex-col lg:flex-row lg:justify-between">
+            <div className="flex flex-col items-center lg:flex-row justify-between w-full md:w-auto">
               <div
                 className={cn(
-                  'flex flex-col items-center justify-start min-w-[60px] overflow-x-auto h-36 pt-2',
+                  'flex flex-col items-baseline justify-start min-w-[60px] overflow-x-auto h-36 pt-2 mt-5 lg:mt-0',
                   styles.scrollbar
                 )}
               >
                 {room.activeUsers.map((user) => (
-                  <>
-                    <div
-                      className="flex items-center justify-center -mt-2"
-                      key={user.id}
-                    >
-                      <ProfileImage
+                  <div
+                    className="flex items-center justify-center -mt-2"
+                    key={user.id}
+                  >
+                    <ProfileImage
+                      ethAddress={user.ethAddress}
+                      imageUrl={user.profileImage}
+                      height={10}
+                      width={10}
+                    />
+                    <div className="text-black mt-1 ml-1">
+                      <ProfileName
                         ethAddress={user.ethAddress}
-                        imageUrl={user.profileImage}
-                        height={10}
-                        width={10}
-                        className={!user.profileImage ? '-ml-1' : ''}
+                        name={user.name}
+                        short={true}
+                        className="text-xs"
                       />
-                      <div className="text-black mt-1 ml-1">
-                        <ProfileName
-                          ethAddress={user.ethAddress}
-                          name={user.name}
-                          short={true}
-                          className="text-xs"
-                        />
-                      </div>
                     </div>
-                  </>
+                  </div>
                 ))}
               </div>
-              <div className="ml-24">
+              <div className="lg:ml-12 lg:-mt-8">
                 <PlaylistPreview
                   currentTrack={room.currentTrack}
                   playlistItems={room.playlistItems}
@@ -103,7 +100,7 @@ export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
               </div>
             </div>
 
-            <div className="mt-20 ml-auto md:w-auto pt-6 p-2 ">
+            <div className="mt-28 lg:mt-20 p-2 flex items-center justify-center lg:justify-end">
               <div
                 className={
                   'bg-black text-sm rounded-md text-white px-2 py-2 shadow-lg cursor-pointer drop-shadow mb-2 p-2'
