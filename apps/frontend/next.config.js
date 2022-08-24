@@ -6,12 +6,12 @@ module.exports = {
     return [
       {
         source: '/',
-        destination: '/marketplace',
+        destination: '/soundverses',
         permanent: true,
       },
       {
         source: '/landing',
-        destination: '/marketplace',
+        destination: '/soundverses',
         permanent: true,
       },
     ]

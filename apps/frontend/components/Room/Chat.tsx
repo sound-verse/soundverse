@@ -7,6 +7,7 @@ import { ProfileName } from '../profile'
 import cn from 'classnames'
 import s from './Chat.module.css'
 import { useAudioContext } from '../../context/AudioContext'
+import Link from 'next/link'
 
 type ChatProps = {
   className?: string
@@ -80,32 +81,36 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
 
   return (
     <div className={cn(s.root, className)}>
-      <div
-        className={cn('flex flex-col w-[350px] h-screen mt-7')}
-      >
+      <div className={cn('flex flex-col w-[350px] h-screen mt-7')}>
         <div
           className={cn(
-            'text-black font-bold text-xl text-left pl-6 py-2 bg-white pt-6 rounded-t-2xl', s.boxShadow
+            'text-black font-bold text-xl text-left pl-6 py-2 bg-white pt-6 rounded-t-2xl',
+            s.boxShadow
           )}
         >
           {roomId === '' ? 'Community' : 'Room'} Chat
         </div>
         <div
           className={cn(
-            'text-black px-6 py-2 overflow-y-auto bg-white h-full text-xs',s.boxShadow
+            'text-black px-6 py-2 overflow-y-auto bg-white h-full text-xs',
+            s.boxShadow
           )}
         >
           {userChat.map((chatMessage, key) => {
             return (
               <div key={key} className="mb-2">
-                <ProfileName
-                  ethAddress={chatMessage.sender.ethAddress}
-                  name={chatMessage.sender.name}
-                  short={true}
-                  className="inline-block font-bold"
-                  color={generateUserColor(chatMessage.sender.ethAddress)}
-                  fullName={true}
-                />
+                <Link href={`/profile/${chatMessage.sender.ethAddress}`}>
+                  <a>
+                    <ProfileName
+                      ethAddress={chatMessage.sender.ethAddress}
+                      name={chatMessage.sender.name}
+                      short={true}
+                      className="inline-block font-bold"
+                      color={generateUserColor(chatMessage.sender.ethAddress)}
+                      fullName={true}
+                    />
+                  </a>
+                </Link>
                 : <span className="break-words">{chatMessage.message}</span>
               </div>
             )
@@ -114,7 +119,8 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
         </div>
         <div
           className={cn(
-            'py-4 w-full mt-auto bg-white rounded-b-xl',s.boxShadow,
+            'py-4 w-full mt-auto bg-white rounded-b-xl',
+            s.boxShadow,
             marginBottom
           )}
         >
