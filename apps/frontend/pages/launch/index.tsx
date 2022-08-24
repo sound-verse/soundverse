@@ -10,10 +10,8 @@ import {
 } from '../../common/graphql/schema.d'
 import { useLazyQuery, useQuery } from '@apollo/client'
 import { GET_USER_NFTS } from '../../common/graphql/queries/get-user-nfts.query'
-import { Heading } from '../../components/common/Heading'
 import { ModuleBg } from '../../components/common/ModuleBg'
 import { MiniNft } from '../../components/common/MiniNft'
-import Button from '../../components/common/Button'
 import { useCreateRoom } from '../../hooks/rooms/useCreateRoom'
 import toast from 'react-hot-toast'
 import Modal from 'react-modal'
@@ -21,6 +19,8 @@ import { Bars } from 'react-loader-spinner'
 import { useRouter } from 'next/router'
 import SoundCard from '../../components/marketplace/SoundCard'
 import cn from 'classnames'
+import { ErrorMessage, Field, Form, Formik } from 'formik'
+import * as Yup from 'yup'
 
 export default function Launch() {
   const { authUser } = useAuthContext()
@@ -76,14 +76,17 @@ export default function Launch() {
     }
   }
 
-  const handleCreateRoom = async () => {
+  const handleCreateRoom = async (handleCreateRoomValues: { name: string }) => {
     const playlistItems = selectedNfts.map((selectedNft) => ({
       nftId: selectedNft.nft.id,
       nftType: selectedNft.nftType,
     }))
     try {
       setModalLoading(true)
-      await createRoom({ playlistItems: playlistItems })
+      await createRoom({
+        playlistItems: playlistItems,
+        name: handleCreateRoomValues.name,
+      })
       setModalLoading(false)
       setSelectedNfts([])
     } catch {
@@ -135,13 +138,43 @@ export default function Launch() {
         ) : (
           <main className="mx-auto flex flex-wrap items-start justify-center  text-black">
             <div className="flex flex-col mr-10">
-              <Button
-                className="flex mx-auto"
-                text="Launch your room now"
-                type="normal"
-                onClick={handleCreateRoom}
-              />
-              <ModuleBg className="mt-10 mb-10">
+              <Formik
+                initialValues={{ name: '' }}
+                onSubmit={handleCreateRoom}
+                validationSchema={Yup.object().shape({
+                  name: Yup.string()
+                    .max(30, 'The room name can only be 30 characters long.')
+                    .required('Please enter a name'),
+                })}
+              >
+                <Form>
+                  <div className="text-black font-bold mt-10 text-sm">
+                    Soundverse Name
+                  </div>
+                  <div className="mt-3">
+                    <Field
+                      id="name"
+                      name="name"
+                      placeholder="Soundverse"
+                      className="outline-none bg-transparent w-full text-black text-sm"
+                    />
+                    <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
+                    <div className="text-grey-light mt-2 text-xs">
+                      max. 30 characters
+                    </div>
+                    <div className={'text-red-500 mt-2 text-xs'}>
+                      <ErrorMessage name="name" />
+                    </div>
+                    <button
+                      className="text-white cursor-pointer rounded-full bg-grey-medium px-24 py-3 ml-auto mt-10 font-bold text-sm"
+                      type="submit"
+                    >
+                      Launch your room now
+                    </button>
+                  </div>
+                </Form>
+              </Formik>
+              <ModuleBg className="mt-10 mb-10 w-full">
                 <div className="mb-12 text-black text-center text-xl font-bold">
                   Song Queue
                 </div>
@@ -166,7 +199,7 @@ export default function Launch() {
                 </div>
               </ModuleBg>
             </div>
-            <div className="">
+            <div className="ml-10">
               <div className="flex mb-10 select-none">
                 <div
                   className={cn(

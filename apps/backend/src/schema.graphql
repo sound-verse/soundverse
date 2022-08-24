@@ -116,6 +116,7 @@ type Room {
   active: Boolean!
   creator: User
   chat: [ChatMessage!]
+  name: String!
 }
 
 type AuthUser {
@@ -288,6 +289,7 @@ input SaleVoucherInput {
 
 input CreateRoomInput {
   playlistItems: [PlaylistItemInput!]!
+  name: String!
 }
 
 input PlaylistItemInput {

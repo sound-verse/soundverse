@@ -64,6 +64,7 @@ export type CreateMintSellingInput = {
 }
 
 export type CreateRoomInput = {
+  name: Scalars['String']
   playlistItems: Array<PlaylistItemInput>
 }
 
@@ -315,6 +316,7 @@ export type Room = {
   creator?: Maybe<User>
   currentTrack?: Maybe<PlaylistItem>
   id: Scalars['String']
+  name: Scalars['String']
   playlistItems?: Maybe<Array<PlaylistItem>>
 }
 
@@ -653,6 +655,7 @@ export type NftFragmentFragment = {
 export type RoomFragmentFragment = {
   __typename?: 'Room'
   id: string
+  name: string
   active: boolean
   creator?: {
     __typename?: 'User'
@@ -1234,6 +1237,7 @@ export type CreateChatMessageMutation = {
   createChatMessage: {
     __typename?: 'Room'
     id: string
+    name: string
     active: boolean
     creator?: {
       __typename?: 'User'
@@ -1807,6 +1811,7 @@ export type CreateRoomMutation = {
   createRoom: {
     __typename?: 'Room'
     id: string
+    name: string
     active: boolean
     creator?: {
       __typename?: 'User'
@@ -2389,6 +2394,7 @@ export type JoinRoomMutation = {
   joinRoom: {
     __typename?: 'Room'
     id: string
+    name: string
     active: boolean
     creator?: {
       __typename?: 'User'
@@ -2887,6 +2893,7 @@ export type LeaveRoomMutation = {
   leaveRoom: {
     __typename?: 'Room'
     id: string
+    name: string
     active: boolean
     creator?: {
       __typename?: 'User'
@@ -3830,6 +3837,7 @@ export type GetRoomQuery = {
   room: {
     __typename?: 'Room'
     id: string
+    name: string
     active: boolean
     creator?: {
       __typename?: 'User'
@@ -4328,6 +4336,7 @@ export type GetRoomsQuery = {
     rooms?: Array<{
       __typename?: 'Room'
       id: string
+      name: string
       active: boolean
       creator?: {
         __typename?: 'User'
@@ -5950,6 +5959,7 @@ export type RoomUpdatedSubscription = {
   roomUpdated: {
     __typename?: 'Room'
     id: string
+    name: string
     active: boolean
     creator?: {
       __typename?: 'User'
@@ -6446,6 +6456,7 @@ export type RoomsUpdatedSubscription = {
   roomsUpdated: Array<{
     __typename?: 'Room'
     id: string
+    name: string
     active: boolean
     creator?: {
       __typename?: 'User'

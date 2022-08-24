@@ -44,4 +44,7 @@ export class Room extends BaseModel {
 
   @Field(() => [ChatMessage], { nullable: true })
   chat?: ChatMessage[];
+
+  @Field({ defaultValue: '' })
+  name: string;
 }

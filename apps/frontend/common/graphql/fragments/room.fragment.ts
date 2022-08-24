@@ -7,6 +7,7 @@ export const ROOM_FRAGMENT = gql`
   ${NFT_FRAGMENT}
   fragment RoomFragment on Room {
     id
+    name
     creator {
       ...UserFragment
     }

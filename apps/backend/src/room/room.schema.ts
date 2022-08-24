@@ -41,6 +41,9 @@ export class Room extends BaseDBObject {
   }
 
   @Prop()
+  name: string;
+
+  @Prop()
   creator?: User;
 
   @Prop(() => [PlaylistItem])

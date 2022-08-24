@@ -52,6 +52,7 @@ export class RoomService {
     const room = await this.roomModel.create({
       creator: user,
       playlistItems,
+      name: createRoomInput.name,
       active: true,
     });
 

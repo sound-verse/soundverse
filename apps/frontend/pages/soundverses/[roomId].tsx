@@ -182,9 +182,11 @@ export default function Soundverse() {
             <div className="h-full w-full justify-center items-center flex flex-col">
               <div className="text-white text-xl font-bold mb-10">
                 {!isHost
-                  ? `Welcome to the room #${room?.id?.substring(
-                      room?.id?.length - 4
-                    )}`
+                  ? `Welcome to the room ${
+                      room?.name?.length > 0
+                        ? room.name
+                        : `#${room?.id?.substring(room?.id?.length - 4)}`
+                    }`
                   : 'Welcome back host.'}
               </div>
               <Button

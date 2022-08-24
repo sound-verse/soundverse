@@ -30,7 +30,9 @@ export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <div className="font-bold text-lg text-black">
-                Soundverse #{room.id.substring(room.id.length - 4)}
+                {room.name.length > 0
+                  ? room.name
+                  : `Soundverse #${room.id.substring(room.id.length - 4)}`}
               </div>
               {/* <div className="flex text-sm">
                 <div className="mx-2">hosted by</div>
