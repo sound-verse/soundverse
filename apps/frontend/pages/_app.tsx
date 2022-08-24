@@ -14,6 +14,7 @@ import { ApolloClientProvider } from '../context/ApolloClientProvider'
 import { AudioProvider } from '../context/AudioContext'
 import NextNProgress from 'nextjs-progressbar'
 import { AudioPlayerBar } from '../components/AudioPlayer/AudioPlayerBar'
+import Script from 'next/script'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const supportedNetworks = {
@@ -32,17 +33,35 @@ function MyApp({ Component, pageProps }: AppProps) {
   }
 
   return (
-    <AuthProvider>
-      <ApolloClientProvider initialApolloState={pageProps.initialApolloState}>
-        <DAppProvider config={config}>
-          <AudioProvider>
-            <NextNProgress color="#7A64FF" height={2} />
-            <Component {...pageProps} />
-            <AudioPlayerBar />
-          </AudioProvider>
-        </DAppProvider>
-      </ApolloClientProvider>
-    </AuthProvider>
+    <>
+      <Script
+        strategy="lazyOnload"
+        src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
+      />
+
+      <Script strategy="lazyOnload" id="googleanalytics_">
+        {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}', {
+            page_path: window.location.pathname,
+            });
+        `}
+      </Script>
+
+      <AuthProvider>
+        <ApolloClientProvider initialApolloState={pageProps.initialApolloState}>
+          <DAppProvider config={config}>
+            <AudioProvider>
+              <NextNProgress color="#7A64FF" height={2} />
+              <Component {...pageProps} />
+              <AudioPlayerBar />
+            </AudioProvider>
+          </DAppProvider>
+        </ApolloClientProvider>
+      </AuthProvider>
+    </>
   )
 }
 export default MyApp
