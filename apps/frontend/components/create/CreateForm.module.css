@@ -3,7 +3,7 @@
 }
 
 .stepWrapper {
-  @apply flex justify-center items-start flex-wrap;
+  @apply flex justify-center items-start flex-wrap lg:flex-nowrap;
 }
 
 .informationStepWrapper {
@@ -19,6 +19,7 @@
 }
 
 .wrapperStyle {
+  @apply max-w-xl;
   border-radius: 1.5rem;
   background: white;
   padding: 3rem;
