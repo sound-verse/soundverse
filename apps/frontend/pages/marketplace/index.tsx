@@ -22,6 +22,7 @@ export default function Marketplace() {
   //TODO: load nfts with hasSellings filter!
   const [sortBy, setSortBy] = useState<SortOption>(SortOption.Newest)
   const [showSort, setShowSort] = useState(false)
+  const [allLoaded, setAllLoaded] = useState(false)
 
   let sortByString = ''
   switch (sortBy) {
@@ -68,6 +69,9 @@ export default function Marketplace() {
     if (!data) {
       return
     }
+    if (data.nfts.length === 0) {
+      setAllLoaded(true)
+    }
     setAllNfts([...allNfts, ...data.nfts])
   }, [data])
 
@@ -83,6 +87,9 @@ export default function Marketplace() {
   }
 
   useBottomScrollListener(() => {
+    if (allLoaded) {
+      return
+    }
     setCurrentSkip(currentSkip + SKIP)
   })
   return (
