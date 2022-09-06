@@ -57,15 +57,9 @@ export const RoomList: FC<RoomListProps> = ({ rooms }) => {
           ))}
         </div>
       )}
-      {masterRoom?.room?.chat && (
-        <div className="absolute right-[310px]">
-          <Chat
-            roomId={''}
-            chat={masterRoom.room.chat}
-            className="fixed -mt-9"
-          />
-        </div>
-      )}
+      <div className="absolute right-[310px]">
+        <Chat roomId={''} chat={masterRoom?.room?.chat} className="fixed -mt-9" />
+      </div>
     </div>
   )
 }

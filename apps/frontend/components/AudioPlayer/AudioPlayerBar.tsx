@@ -145,7 +145,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
                     width={40}
                     height={40}
                     layout="fixed"
-                    className="rounded-2xl"
+                    className="rounded-lg"
                     objectFit="cover"
                     quality={90}
                   />
@@ -154,7 +154,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
             )}
           </div>
           <div className="flex-col text-left justify-start">
-            <div className="text-black font-bold text-xs lg:text-sm">
+            <div className="text-black font-bold text-xs lg:text-sm -mt-1">
               {currentTrack.trackName.length > 15
                 ? `${currentTrack.trackName.substring(0, 15)}...`
                 : currentTrack.trackName}

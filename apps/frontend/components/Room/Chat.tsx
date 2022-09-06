@@ -11,7 +11,7 @@ import Link from 'next/link'
 
 type ChatProps = {
   className?: string
-  chat: ChatMessage[]
+  chat?: ChatMessage[]
   roomId: string
 }
 
@@ -96,7 +96,7 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
             s.boxShadow
           )}
         >
-          {userChat.map((chatMessage, key) => {
+          {userChat?.map((chatMessage, key) => {
             return (
               <div key={key} className="mb-2">
                 <Link href={`/profile/${chatMessage.sender.ethAddress}`}>
