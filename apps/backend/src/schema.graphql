@@ -245,6 +245,7 @@ input NftInput {
   transactionHash: String
   chainId: Float
   trackDuration: Float!
+  trackBPM: Float!
   soundWave: [Float!]!
 }
 

@@ -211,6 +211,7 @@ export type NftInput = {
   soundWave: Array<Scalars['Float']>
   supply: Scalars['Float']
   tags: Array<Scalars['String']>
+  trackBPM: Scalars['Float']
   trackDuration: Scalars['Float']
   transactionHash?: InputMaybe<Scalars['String']>
 }

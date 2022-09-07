@@ -38,30 +38,32 @@ export class NftResolver {
   @UseGuards(GqlAuthGuard)
   @Mutation(() => Nft)
   async createNft(
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     @Args({ name: 'NFTFile', type: () => GraphQLUpload })
-    { createReadStream: createReadStreamNFT }: FileUpload,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    { createReadStream: createReadStreamAudio }: FileUpload,
     @Args({ name: 'pictureFile', type: () => GraphQLUpload })
-    { createReadStream: createReadStreamPicture }: FileUpload,
+    { createReadStream: createReadStreamImage }: FileUpload,
     @Args('data') nftData: NftInput,
     @CurrentUser() user: LoggedinUser,
   ): Promise<NftSchema> {
-    createReadStreamPicture;
     const bucket = 'soundverse-nft';
-    const rndFileName: string = crypto.randomBytes(32).toString('hex');
-    const fileNFTUrl = await this.fileService.uploadFileToBucket(rndFileName, bucket, createReadStreamNFT);
+    const rndFileNameAudio = crypto.randomBytes(32).toString('hex');
+    const rndFileNameImage =  `cover/${rndFileNameAudio}`
+
+    const fileAudioUrl = await this.fileService.uploadFileToBucket(rndFileNameAudio, bucket, createReadStreamAudio);
     const filePictureUrl = await this.fileService.uploadFileToBucket(
-      `cover/${rndFileName}`,
+      rndFileNameImage,
       bucket,
-      createReadStreamPicture,
+      createReadStreamImage,
     );
-    const awsReadStream = this.fileService.getAWSReadStream(bucket, rndFileName);
+    const awsReadStreamAudio = this.fileService.getAWSReadStream(bucket, rndFileNameAudio);
+    const awsReadStreamImage = this.fileService.getAWSReadStream(bucket, rndFileNameImage);
 
     const { ipfsMetadata, ipfsMetadataUrl, metadata } = await this.ipfsService.storeNFTonIPFS(
-      awsReadStream,
-      rndFileName,
-      nftData,
+      awsReadStreamImage,
+      awsReadStreamAudio,
+      rndFileNameImage,
+      rndFileNameAudio,
+      nftData
     );
 
     const isDuplicate = await this.nftService.isDuplicate(ipfsMetadataUrl);
@@ -72,7 +74,7 @@ export class NftResolver {
       return await this.nftService.createNft({
         metadata,
         ipfsUrl: ipfsMetadataUrl,
-        fileUrl: fileNFTUrl,
+        fileUrl: fileAudioUrl,
         filePictureUrl,
         user,
         supply: nftData.supply,
@@ -84,6 +86,7 @@ export class NftResolver {
         creatorOwnerSplit: nftData.creatorOwnerSplit,
         soundWave: nftData.soundWave,
         trackDuration: nftData.trackDuration,
+        trackBpm: nftData.trackBPM,
       });
     }
   }

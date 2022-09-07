@@ -11,6 +11,7 @@ import styles from './CreateForm.module.css'
 import cn from 'classnames'
 import { useLogin } from '../../hooks/useLogin'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
+import detect from 'bpm-detective'
 
 const FILE_SIZE = 100000000
 
@@ -39,6 +40,7 @@ export const CreateForm = () => {
   const [nftFile, setNftFile] = useState<File>(undefined)
   const [nftWaveForm, setNftWaveForm] = useState<[number]>([0])
   const [nftDuration, setNftDuration] = useState<number>(0)
+  const [bpm, setBpm] = useState<number>(0)
   const [pictureFile, setPictureFile] = useState<File>(undefined)
   const [showing, setShowing] = useState<Boolean>(false)
   const router = useRouter()
@@ -105,6 +107,13 @@ export const CreateForm = () => {
         function (buffer) {
           const duration = buffer.duration
           setNftDuration(duration)
+          try {
+            const bpm = detect(buffer)
+            setBpm(bpm)
+          } catch {
+            setBpm(0)
+            console.log('BPM could not be analysed')
+          }
           processWaveForm(file)
           setFile(file)
           setFileError('')
@@ -204,6 +213,7 @@ export const CreateForm = () => {
         creatorOwnerSplit: values.creatorOwnerSplit,
         trackDuration: nftDuration,
         soundWave: nftWaveForm,
+        bpm,
       })
       if (id) {
         router.push(`/license/${id}`)

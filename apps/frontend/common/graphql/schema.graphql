@@ -137,6 +137,7 @@ input NftInput {
   soundWave: [Float!]!
   supply: Float!
   tags: [String!]!
+  trackBPM: Float!
   trackDuration: Float!
   transactionHash: String
 }

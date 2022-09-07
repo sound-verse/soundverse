@@ -33,7 +33,6 @@ export const RoomList: FC<RoomListProps> = ({ rooms }) => {
       document: ROOM_UPDATED,
       variables: { roomId: masterRoom.room.id },
       updateQuery: (prev, { subscriptionData }: { subscriptionData: any }) => {
-        console.log('updateuqery')
         if (subscriptionData.data.roomUpdated) {
           return { room: subscriptionData.data.roomUpdated }
         }
@@ -58,7 +57,11 @@ export const RoomList: FC<RoomListProps> = ({ rooms }) => {
         </div>
       )}
       <div className="absolute right-[310px]">
-        <Chat roomId={''} chat={masterRoom?.room?.chat} className="fixed -mt-9" />
+        <Chat
+          roomId={''}
+          chat={masterRoom?.room?.chat}
+          className="fixed -mt-9"
+        />
       </div>
     </div>
   )

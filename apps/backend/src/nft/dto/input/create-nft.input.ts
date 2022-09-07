@@ -49,6 +49,9 @@ export class NftInput {
   @Field(() => Float)
   trackDuration: number;
 
+  @Field(() => Float)
+  trackBPM: number;
+
   @Field(()=>[Float])
   soundWave: [number];
 }

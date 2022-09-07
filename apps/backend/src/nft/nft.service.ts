@@ -41,6 +41,7 @@ export interface CreateNftInput {
   creatorOwnerSplit: number;
   trackDuration: number;
   soundWave: [number];
+  trackBpm: number;
 }
 
 @Injectable()
@@ -87,6 +88,7 @@ export class NftService {
         creatorOwnerSplit: createNftInput.creatorOwnerSplit,
         trackDuration: createNftInput.trackDuration,
         soundWave: createNftInput.soundWave,
+        trackBpm: createNftInput.trackBpm,
         masterOwner: {
           user: createNftInput.user._id,
           supply: 1,

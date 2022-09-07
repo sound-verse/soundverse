@@ -37,8 +37,14 @@ export const Chat: FC<ChatProps> = ({ chat, className, roomId }) => {
   }
 
   useEffect(() => {
-    setUserChat(chat)
     scrollToBottom()
+  }, [userChat])
+
+  useEffect(() => {
+    if(!chat){
+      return;
+    }
+    setUserChat(chat)
   }, [chat])
 
   const handleCreateChatMessage = (e: React.ChangeEvent<HTMLInputElement>) => {
