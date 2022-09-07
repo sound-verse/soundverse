@@ -67,7 +67,7 @@ export class IPFSService {
     return await ipfsHasher.of(content);
   }
 
-  async storeNFTonIPFS(awsReadStreamImage, awsReadStreamAudio, rndFileNameImage, rndFileNameAudio, nftData) {
+  async storeNFTonIPFS(awsReadStreamImage, awsReadStreamAudio, rndFileNameAudio, nftData) {
     //For local development, we dont actually create an IPFS file for now
     if (this.configService.get('ENVIRONMENT') === 'local') {
       const ipfsMetadata = { isDuplicate: false, IpfsHash: '' };
@@ -81,20 +81,20 @@ export class IPFSService {
     const ipfsFileAudio = await this.uploadFile(awsReadStreamAudio, rndFileNameAudio);
     const ipfsFileUrlAudio = `ipfs://${ipfsFileAudio.cid}`;
 
-    const ipfsFileImage = await this.uploadFile(awsReadStreamImage, rndFileNameImage);
+    const ipfsFileImage = await this.uploadFile(awsReadStreamImage, rndFileNameAudio);
     const ipfsFileUrlImage = `ipfs://${ipfsFileImage.cid}`;
 
     const preMetadata = {
       ...nftData.metadata,
       duration: nftData.trackDuration,
-      bpm: nftData.trackBpm,
+      ...(nftData.trackBpm > 0 && { bpm: nftData.trackBpm }),
       image: ipfsFileUrlImage,
       audio: ipfsFileUrlAudio,
-    }
+    };
     //There will be two ways to access the NFT, either with the pre hash or the metadata hash
     const metadataPreHash = await this.getHashFromString(
       JSON.stringify({
-        preMetadata
+        preMetadata,
       }),
     );
 

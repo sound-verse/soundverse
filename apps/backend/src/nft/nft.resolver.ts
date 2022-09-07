@@ -61,7 +61,6 @@ export class NftResolver {
     const { ipfsMetadata, ipfsMetadataUrl, metadata } = await this.ipfsService.storeNFTonIPFS(
       awsReadStreamImage,
       awsReadStreamAudio,
-      rndFileNameImage,
       rndFileNameAudio,
       nftData
     );
