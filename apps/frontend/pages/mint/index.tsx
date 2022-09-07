@@ -15,11 +15,14 @@ export default function Mint() {
 
       <Layout>
         <main className="mx-auto">
-          {authUser ? (
+          {(process.env.NEXT_PUBLIC_ENVIRONMENT !== 'main' && authUser) ||
+          authUser?.verified ? (
             <CreateForm />
           ) : (
             <div className="flex items-center justify-center h-screen -mt-24 text-black text-1xl">
-              Connect your wallet to create NFTs.
+              {process.env.NEXT_PUBLIC_ENVIRONMENT !== 'main'
+                ? 'Connect your wallet to mint a NFT.'
+                : 'Only verified users can mint on this page.'}
             </div>
           )}
         </main>

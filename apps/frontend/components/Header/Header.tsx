@@ -5,8 +5,10 @@ import Image from 'next/image'
 import cn from 'classnames'
 import { ConnectButton } from '../ConnectButton/ConnectButton'
 import { SearchBar } from '../SearchBar/SearchBar'
+import { useAuthContext } from '../../context/AuthContext'
 
 const Header = ({ className = '' }) => {
+  const { authUser } = useAuthContext()
   return (
     <div className={cn(styles.headerWrapper, className)}>
       <Toaster position="top-right" />
@@ -50,19 +52,22 @@ const Header = ({ className = '' }) => {
               </Link>
             </div>
 
-            <div className="flex items-center">
-              <div className=" w-[20px]  h-[20px] relative">
-                <Image
-                  className=""
-                  src="/img/sparkling.svg"
-                  alt="next"
-                  layout="fill"
-                />
+            {(process.env.NEXT_PUBLIC_ENVIRONMENT !== 'main' ||
+              authUser?.verified) && (
+              <div className="flex items-center">
+                <div className=" w-[20px]  h-[20px] relative">
+                  <Image
+                    className=""
+                    src="/img/sparkling.svg"
+                    alt="next"
+                    layout="fill"
+                  />
+                </div>
+                <Link href="/mint" passHref>
+                  <p className={styles.marketplaceLink}>Mint</p>
+                </Link>
               </div>
-              <Link href="/mint" passHref>
-                <p className={styles.marketplaceLink}>Mint</p>
-              </Link>
-            </div>
+            )}
 
             <div className="flex items-center">
               <div className="w-[25px]  h-[25px] relative">

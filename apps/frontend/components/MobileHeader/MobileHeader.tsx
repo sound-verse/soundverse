@@ -6,9 +6,11 @@ import cn from 'classnames'
 import { ConnectButton } from '../ConnectButton/ConnectButton'
 import { useState } from 'react'
 import { SearchBar } from '../SearchBar/SearchBar'
+import { useAuthContext } from '../../context/AuthContext'
 
 const Header = ({ className = '' }) => {
   const [showMobileMenu, setShowMobileMenu] = useState(false)
+  const { authUser } = useAuthContext()
 
   return (
     <>
@@ -70,19 +72,22 @@ const Header = ({ className = '' }) => {
               </Link>
             </div>
 
-            <div className={styles.link}>
-              <div className=" w-[30px]  h-[20px] relative">
-                <Image
-                  className=""
-                  src="/img/sparkling.svg"
-                  alt="next"
-                  layout="fill"
-                />
+            {(process.env.NEXT_PUBLIC_ENVIRONMENT !== 'main' ||
+              authUser?.verified) && (
+              <div className={styles.link}>
+                <div className=" w-[30px]  h-[20px] relative">
+                  <Image
+                    className=""
+                    src="/img/sparkling.svg"
+                    alt="next"
+                    layout="fill"
+                  />
+                </div>
+                <Link href="/mint" passHref>
+                  <p className={styles.marketplaceLink}>Mint</p>
+                </Link>
               </div>
-              <Link href="/mint" passHref>
-                <p className={styles.marketplaceLink}>Mint</p>
-              </Link>
-            </div>
+            )}
 
             <div className={styles.link}>
               <div className="w-[30px]  h-[25px] relative">

@@ -45,6 +45,12 @@ export class NftResolver {
     @Args('data') nftData: NftInput,
     @CurrentUser() user: LoggedinUser,
   ): Promise<NftSchema> {
+    if (!user.verified) {
+      if (this.configService.get('ENVIRONMENT') === 'main') {
+        throw new ForbiddenException('User is not verfied');
+      }
+    }
+
     const bucket = 'soundverse-nft';
     const rndFileNameAudio = crypto.randomBytes(32).toString('hex');
     const rndFileNameImage = `cover/${rndFileNameAudio}`;
