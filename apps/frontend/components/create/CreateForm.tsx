@@ -11,7 +11,6 @@ import styles from './CreateForm.module.css'
 import cn from 'classnames'
 import { useLogin } from '../../hooks/useLogin'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
-import detect from 'bpm-detective'
 
 const FILE_SIZE = 100000000
 
@@ -53,6 +52,7 @@ export const CreateForm = () => {
   const WavesurferLibrary = useRef(null)
   const waveformRef = useRef(null)
   const { isMobile } = useWindowDimensions()
+  const DetectLibrary = useRef(null)
 
   const initialValuesFirstStep: FirstStepValues = {
     name: '',
@@ -104,12 +104,19 @@ export const CreateForm = () => {
 
       audioContext.decodeAudioData(
         event.target.result as any,
-        function (buffer) {
+        async function (buffer) {
           const duration = buffer.duration
           setNftDuration(duration)
           try {
-            const bpm = detect(buffer)
-            setBpm(bpm)
+            if (typeof window !== 'undefined') {
+              if (!DetectLibrary.current) {
+                DetectLibrary.current = await (
+                  await import('bpm-detective')
+                ).default
+              }
+              const bpm = DetectLibrary.current(buffer)
+              setBpm(bpm)
+            }
           } catch {
             setBpm(0)
             console.log('BPM could not be analysed')
