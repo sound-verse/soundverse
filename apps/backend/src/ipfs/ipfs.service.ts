@@ -5,6 +5,7 @@ import { create } from 'ipfs-http-client';
 import { ReadStream } from 'fs';
 import { AddResult } from 'ipfs-core-types/src/root';
 import crypto from 'crypto';
+import { NftInput } from '../nft/dto/input/create-nft.input';
 
 @Injectable()
 export class IPFSService {
@@ -67,7 +68,12 @@ export class IPFSService {
     return await ipfsHasher.of(content);
   }
 
-  async storeNFTonIPFS(awsReadStreamImage, awsReadStreamAudio, rndFileNameAudio, nftData) {
+  async storeNFTonIPFS(
+    awsReadStreamImage: ReadStream,
+    awsReadStreamAudio: ReadStream,
+    rndFileNameAudio: string,
+    nftData: NftInput,
+  ) {
     //For local development, we dont actually create an IPFS file for now
     if (this.configService.get('ENVIRONMENT') === 'local') {
       const ipfsMetadata = { isDuplicate: false, IpfsHash: '' };
@@ -87,7 +93,7 @@ export class IPFSService {
     const preMetadata = {
       ...nftData.metadata,
       duration: nftData.trackDuration,
-      ...(nftData.trackBpm > 0 && { bpm: nftData.trackBpm }),
+      ...(nftData.trackBPM > 0 && { bpm: nftData.trackBPM }),
       image: ipfsFileUrlImage,
       audio: ipfsFileUrlAudio,
     };

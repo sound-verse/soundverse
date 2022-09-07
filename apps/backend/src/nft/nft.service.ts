@@ -22,8 +22,6 @@ import { SortOption } from '../common/enums/sortOption.enum';
 export interface CreateNftMetadata {
   name: string;
   description: string;
-  image: string;
-  external_url: string;
 }
 
 export interface CreateNftInput {

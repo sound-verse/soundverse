@@ -47,9 +47,13 @@ export class NftResolver {
   ): Promise<NftSchema> {
     const bucket = 'soundverse-nft';
     const rndFileNameAudio = crypto.randomBytes(32).toString('hex');
-    const rndFileNameImage =  `cover/${rndFileNameAudio}`
+    const rndFileNameImage = `cover/${rndFileNameAudio}`;
 
-    const fileAudioUrl = await this.fileService.uploadFileToBucket(rndFileNameAudio, bucket, createReadStreamAudio);
+    const fileAudioUrl = await this.fileService.uploadFileToBucket(
+      rndFileNameAudio,
+      bucket,
+      createReadStreamAudio,
+    );
     const filePictureUrl = await this.fileService.uploadFileToBucket(
       rndFileNameImage,
       bucket,
@@ -62,7 +66,7 @@ export class NftResolver {
       awsReadStreamImage,
       awsReadStreamAudio,
       rndFileNameAudio,
-      nftData
+      nftData,
     );
 
     const isDuplicate = await this.nftService.isDuplicate(ipfsMetadataUrl);
@@ -71,7 +75,7 @@ export class NftResolver {
       throw new ForbiddenException('This NFT was already created.');
     } else {
       return await this.nftService.createNft({
-        metadata,
+        metadata: { name: nftData.metadata.name, description: nftData.metadata.description },
         ipfsUrl: ipfsMetadataUrl,
         fileUrl: fileAudioUrl,
         filePictureUrl,
