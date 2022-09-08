@@ -23,6 +23,10 @@ export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
       pathname: `/soundverses/${room.id}`,
     })
   }
+
+  const anonArray = new Array(room?.currentAnonymousUsers)
+  anonArray.fill('')
+
   return (
     <div className={styles.roomWrapper}>
       <div className="h-full w-full">
@@ -91,6 +95,17 @@ export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
                         className="text-xs"
                       />
                     </div>
+                  </div>
+                ))}
+                {anonArray.map((value, key) => (
+                  <div
+                    className="flex -mt-2 justify-center items-center"
+                    key={key}
+                  >
+                    <div className="relative rounded-full border-black border w-[30px] bg-black h-[30px] flex items-center justify-center">
+                      <div className="text-white text-xl">?</div>
+                    </div>
+                    <div className="text-black mt-1 ml-1 text-xs">Anon User</div>
                   </div>
                 ))}
               </div>
