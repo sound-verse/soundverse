@@ -18,6 +18,7 @@ import { PUB_SUB } from '../core/pubSub.module';
 import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { valueFromAST } from 'graphql';
 import { CreateChatMessageInput } from './dto/input/create-chat-message.input';
+import { withCancel } from '../lib/withCancel';
 
 export const ROOM_UPDATED_EVENT = 'roomUpdated';
 export const ROOMS_UPDATED_EVENT = 'roomsUpdated';
@@ -104,7 +105,10 @@ export class RoomResolver {
     },
   })
   roomUpdated(@Args('roomId') roomId: string) {
-    return this.pubSub.asyncIterator(ROOM_UPDATED_EVENT);
+    void this.roomService.addAnonymousUser(roomId)
+    return withCancel(this.pubSub.asyncIterator(ROOM_UPDATED_EVENT), () => {
+      void this.roomService.removeAnonymousUser(roomId)
+    });
   }
 
   @ResolveField(() => [ChatMessage])

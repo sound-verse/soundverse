@@ -282,6 +282,20 @@ export class RoomService {
     } as any;
   }
 
+  async addAnonymousUser(roomId: string) {
+    await this.roomModel.updateOne(
+      { _id: new Types.ObjectId(roomId) },
+      { $inc: { currentAnonymousUsers: 1, maxAnonymousUsers: 1 } },
+    );
+  }
+
+  async removeAnonymousUser(roomId: string) {
+    await this.roomModel.updateOne(
+      { _id: new Types.ObjectId(roomId) },
+      { $inc: { currentAnonymousUsers: -1 } },
+    );
+  }
+
   @Interval(60 * 60 * 1000)
   async removeExpiredRooms(): Promise<void> {
     const expirationTime = 24 * 60 * 60 * 1000;

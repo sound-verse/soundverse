@@ -55,6 +55,12 @@ export class Room extends BaseDBObject {
   @Prop()
   activeUsers?: User[];
 
+  @Prop()
+  currentAnonymousUsers?: number;
+
+  @Prop()
+  maxAnonymousUsers?: number;
+
   @Prop({ default: true })
   active: boolean;
 

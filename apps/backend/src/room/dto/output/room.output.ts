@@ -36,6 +36,9 @@ export class Room extends BaseModel {
   @Field(() => [User], { nullable: true })
   activeUsers?: User[];
 
+  @Field({nullable: true})
+  currentAnonymousUsers?: number
+
   @Field()
   active: boolean;
 

@@ -10,6 +10,7 @@ import { RoomUser } from './RoomUser'
 import styles from './Room.module.css'
 import cn from 'classnames'
 import Image from 'next/image'
+import { AnonUser } from './AnonUser'
 
 type RoomProps = {
   room: Room
@@ -28,6 +29,10 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
     }
     router.push('/soundverses')
   }
+
+  const anonArray = new Array(room?.currentAnonymousUsers)
+  anonArray.fill('')
+
   return (
     <div className="flex justify-center relative overflow-hidden h-[85vh] flex-wrap lg:flex-nowrap">
       <div className="flex flex-col items-center justify-start">
@@ -67,7 +72,7 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
                 </div>
                 <div className="flex justify-center items-center">
                   <div className="mr-2 text-base">
-                    {room.activeUsers.length}
+                    {room.activeUsers.length + room?.currentAnonymousUsers ?? 0}
                   </div>
                   <Image
                     src={'/img/speaker.svg'}
@@ -83,10 +88,16 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
             </div>
             <div className="text-xl">Listeners</div>
             <div className="flex flex-wrap justify-start mt-10">
-              {room.activeUsers &&
-                room.activeUsers.map((user) => (
-                  <RoomUser key={user.id} user={user} className="mr-2 mb-2" />
-                ))}
+              <>
+                {room.activeUsers &&
+                  room.activeUsers.map((user) => (
+                    <RoomUser key={user.id} user={user} className="mr-2 mb-2" />
+                  ))}
+                {room?.currentAnonymousUsers &&
+                  anonArray.map((array, key) => (
+                    <AnonUser key={`anon-user-${key}`} className="mr-2 mb-2" />
+                  ))}
+              </>
             </div>
           </div>
         </div>

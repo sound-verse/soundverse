@@ -212,6 +212,7 @@ type Room {
   activeUsers: [User!]
   chat: [ChatMessage!]
   creator: User
+  currentAnonymousUsers: Float
   currentTrack: PlaylistItem
   id: String!
   name: String!

@@ -115,6 +115,7 @@ type Room {
   currentTrack: PlaylistItem
   playlistItems: [PlaylistItem!]
   activeUsers: [User!]
+  currentAnonymousUsers: Float
   active: Boolean!
   creator: User
   chat: [ChatMessage!]

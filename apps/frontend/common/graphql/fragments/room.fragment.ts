@@ -35,5 +35,6 @@ export const ROOM_FRAGMENT = gql`
       }
       message
     }
+    currentAnonymousUsers
   }
 `
