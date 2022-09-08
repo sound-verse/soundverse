@@ -105,7 +105,9 @@ export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
                     <div className="relative rounded-full border-black border w-[30px] bg-black h-[30px] flex items-center justify-center">
                       <div className="text-white text-xl">?</div>
                     </div>
-                    <div className="text-black mt-1 ml-1 text-xs">Anon User</div>
+                    <div className="text-black mt-1 ml-1 text-xs">
+                      Anon User
+                    </div>
                   </div>
                 ))}
               </div>
@@ -124,7 +126,7 @@ export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
                 }
                 onClick={handleEnterSoundverse}
               >
-                Enter the Soundverse
+                Enter Soundverse
               </div>
             </div>
           </div>
