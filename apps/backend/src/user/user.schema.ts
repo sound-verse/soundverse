@@ -55,6 +55,12 @@ export class User extends BaseDBObject {
   @Prop({ required: true, default: false })
   verified?: boolean;
 
+  @Prop({ type: [Types.ObjectId], ref: 'User', default: [] })
+  following: [Types.ObjectId];
+
+  @Prop({ type: [Types.ObjectId], ref: 'User', default: [] })
+  followers: [Types.ObjectId];
+
   @Prop()
   active?: boolean;
 

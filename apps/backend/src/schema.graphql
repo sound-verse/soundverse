@@ -14,6 +14,8 @@ type User {
   spotify: String
   website: String
   profileImage: String
+  followers: [User!]
+  following: [User!]
   verified: Boolean
 }
 
@@ -131,6 +133,8 @@ type AuthUser {
   spotify: String
   website: String
   profileImage: String
+  followers: [User!]
+  following: [User!]
   verified: Boolean
   email: String
   joinedRoomId: String
@@ -199,6 +203,8 @@ input RoomFilter {
 type Mutation {
   updateUser(data: UpdateUserInput!): User!
   uploadProfilePicture(file: Upload!): User!
+  follow(userId: String!): User!
+  unfollow(userId: String!): User!
   generateVerificationToken(data: VerificationTokenInput!): Int!
   login(data: LoginInput!): Auth!
   createNft(NFTFile: Upload!, pictureFile: Upload!, data: NftInput!): Nft!

@@ -14,5 +14,11 @@ export const USER_FRAGMENT = gql`
     website
     profileImage
     verified
+    followers {
+      id
+    }
+    following {
+      id
+    }
   }
 `

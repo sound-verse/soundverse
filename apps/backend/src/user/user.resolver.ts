@@ -17,7 +17,9 @@ export class UserResolver {
 
   @Query(() => User, { nullable: true })
   async user(@Args('ethAddress') ethAddress: string): Promise<User> {
-    return this.userService.findByETHAddress(ethAddress);
+    const user = await this.userService.findByETHAddress(ethAddress);
+    await (await user.populate({ path: 'followers' })).populate({ path: 'following' });
+    return user;
   }
 
   @UseGuards(GqlAuthGuard)
@@ -49,5 +51,17 @@ export class UserResolver {
 
     await this.userService.update(user._id, { profileImage: fileUrl });
     return await this.userService.findByETHAddress(user.ethAddress);
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Mutation(() => User)
+  async follow(@CurrentUser() user: LoggedinUser, @Args('userId') userId: string) {
+    return await this.userService.follow(user, userId);
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Mutation(() => User)
+  async unfollow(@CurrentUser() user: LoggedinUser, @Args('userId') userId: string) {
+    return await this.userService.unfollow(user, userId);
   }
 }

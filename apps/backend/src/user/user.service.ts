@@ -60,4 +60,48 @@ export class UserService {
       },
     );
   }
+
+  async follow(user: User, userId: string): Promise<User> {
+    const userToFollow = await this.findUserById(userId);
+
+    if (!userToFollow) {
+      return user;
+    }
+
+    const userToFollowAlreadyFollowed = await this.userModel.findOne({ _id: userToFollow._id, followers: user._id });
+
+    if (userToFollowAlreadyFollowed) {
+      return user;
+    }
+
+    const updatedUser = await this.userModel.findByIdAndUpdate(user._id, {
+      $addToSet: { following: userToFollow._id },
+    });
+
+    await this.userModel.updateOne({ _id: userToFollow._id }, { $addToSet: { followers: updatedUser._id } });
+
+    return updatedUser;
+  }
+
+  async unfollow(user: User, userId: string): Promise<User> {
+    const userToUnfollow = await this.findUserById(userId);
+
+    if (!userToUnfollow) {
+      return user;
+    }
+
+    const userToUnfollowAlreadyUnfollowed = await this.userModel.findOne({ _id: userToUnfollow._id, followers: user._id });
+
+    if (!userToUnfollowAlreadyUnfollowed) {
+      return user;
+    }
+
+    const updatedUser = await this.userModel.findByIdAndUpdate(user._id, {
+      $pull: { following: userToUnfollow._id },
+    });
+
+    await this.userModel.updateOne({ _id: userToUnfollow._id }, { $pull: { followers: updatedUser._id } });
+
+    return updatedUser;
+  }
 }

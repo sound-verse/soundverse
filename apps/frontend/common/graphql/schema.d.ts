@@ -35,6 +35,8 @@ export type AuthUser = {
   discord?: Maybe<Scalars['String']>
   email?: Maybe<Scalars['String']>
   ethAddress?: Maybe<Scalars['String']>
+  followers?: Maybe<Array<User>>
+  following?: Maybe<Array<User>>
   id: Scalars['String']
   instagram?: Maybe<Scalars['String']>
   joinedRoomId?: Maybe<Scalars['String']>
@@ -117,11 +119,13 @@ export type Mutation = {
   createNft: Nft
   createRoom: Room
   createSelling: Selling
+  follow: User
   generateVerificationToken: Scalars['Int']
   joinRoom: Room
   leaveRoom: Room
   login: Auth
   reviveRoom: Room
+  unfollow: User
   updateUser: User
   uploadProfilePicture: User
 }
@@ -148,6 +152,10 @@ export type MutationCreateSellingArgs = {
   createSellingInput: CreateSellingInput
 }
 
+export type MutationFollowArgs = {
+  userId: Scalars['String']
+}
+
 export type MutationGenerateVerificationTokenArgs = {
   data: VerificationTokenInput
 }
@@ -162,6 +170,10 @@ export type MutationLeaveRoomArgs = {
 
 export type MutationLoginArgs = {
   data: LoginInput
+}
+
+export type MutationUnfollowArgs = {
+  userId: Scalars['String']
 }
 
 export type MutationUpdateUserArgs = {
@@ -400,6 +412,8 @@ export type User = {
   description?: Maybe<Scalars['String']>
   discord?: Maybe<Scalars['String']>
   ethAddress?: Maybe<Scalars['String']>
+  followers?: Maybe<Array<User>>
+  following?: Maybe<Array<User>>
   id: Scalars['String']
   instagram?: Maybe<Scalars['String']>
   name?: Maybe<Scalars['String']>
@@ -440,6 +454,8 @@ export type NftOwnerFragmentFragment = {
     website?: string | null
     profileImage?: string | null
     verified?: boolean | null
+    followers?: Array<{ __typename?: 'User'; id: string }> | null
+    following?: Array<{ __typename?: 'User'; id: string }> | null
   }
 }
 
@@ -477,6 +493,8 @@ export type NftFragmentFragment = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
+      followers?: Array<{ __typename?: 'User'; id: string }> | null
+      following?: Array<{ __typename?: 'User'; id: string }> | null
     }
   }
   metadata: { __typename?: 'NftMetadata'; name: string; description: string }
@@ -494,6 +512,8 @@ export type NftFragmentFragment = {
     website?: string | null
     profileImage?: string | null
     verified?: boolean | null
+    followers?: Array<{ __typename?: 'User'; id: string }> | null
+    following?: Array<{ __typename?: 'User'; id: string }> | null
   } | null
   licenseOwners?: Array<{
     __typename?: 'NftOwner'
@@ -512,6 +532,8 @@ export type NftFragmentFragment = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
+      followers?: Array<{ __typename?: 'User'; id: string }> | null
+      following?: Array<{ __typename?: 'User'; id: string }> | null
     }
   }> | null
   sellings?: {
@@ -537,6 +559,8 @@ export type NftFragmentFragment = {
         website?: string | null
         profileImage?: string | null
         verified?: boolean | null
+        followers?: Array<{ __typename?: 'User'; id: string }> | null
+        following?: Array<{ __typename?: 'User'; id: string }> | null
       }
       buyers: Array<{
         __typename?: 'NftOwner'
@@ -555,6 +579,8 @@ export type NftFragmentFragment = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         }
       }>
       saleVoucher?: {
@@ -604,6 +630,8 @@ export type NftFragmentFragment = {
         website?: string | null
         profileImage?: string | null
         verified?: boolean | null
+        followers?: Array<{ __typename?: 'User'; id: string }> | null
+        following?: Array<{ __typename?: 'User'; id: string }> | null
       }
       buyers: Array<{
         __typename?: 'NftOwner'
@@ -622,6 +650,8 @@ export type NftFragmentFragment = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         }
       }>
       saleVoucher?: {
@@ -672,6 +702,8 @@ export type RoomFragmentFragment = {
     website?: string | null
     profileImage?: string | null
     verified?: boolean | null
+    followers?: Array<{ __typename?: 'User'; id: string }> | null
+    following?: Array<{ __typename?: 'User'; id: string }> | null
   } | null
   playlistItems?: Array<{
     __typename?: 'PlaylistItem'
@@ -711,6 +743,8 @@ export type RoomFragmentFragment = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         }
       }
       metadata: {
@@ -732,6 +766,8 @@ export type RoomFragmentFragment = {
         website?: string | null
         profileImage?: string | null
         verified?: boolean | null
+        followers?: Array<{ __typename?: 'User'; id: string }> | null
+        following?: Array<{ __typename?: 'User'; id: string }> | null
       } | null
       licenseOwners?: Array<{
         __typename?: 'NftOwner'
@@ -750,6 +786,8 @@ export type RoomFragmentFragment = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         }
       }> | null
       sellings?: {
@@ -775,6 +813,8 @@ export type RoomFragmentFragment = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
           buyers: Array<{
             __typename?: 'NftOwner'
@@ -793,6 +833,8 @@ export type RoomFragmentFragment = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
           }>
           saleVoucher?: {
@@ -842,6 +884,8 @@ export type RoomFragmentFragment = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
           buyers: Array<{
             __typename?: 'NftOwner'
@@ -860,6 +904,8 @@ export type RoomFragmentFragment = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
           }>
           saleVoucher?: {
@@ -929,6 +975,8 @@ export type RoomFragmentFragment = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         }
       }
       metadata: {
@@ -950,6 +998,8 @@ export type RoomFragmentFragment = {
         website?: string | null
         profileImage?: string | null
         verified?: boolean | null
+        followers?: Array<{ __typename?: 'User'; id: string }> | null
+        following?: Array<{ __typename?: 'User'; id: string }> | null
       } | null
       licenseOwners?: Array<{
         __typename?: 'NftOwner'
@@ -968,6 +1018,8 @@ export type RoomFragmentFragment = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         }
       }> | null
       sellings?: {
@@ -993,6 +1045,8 @@ export type RoomFragmentFragment = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
           buyers: Array<{
             __typename?: 'NftOwner'
@@ -1011,6 +1065,8 @@ export type RoomFragmentFragment = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
           }>
           saleVoucher?: {
@@ -1060,6 +1116,8 @@ export type RoomFragmentFragment = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
           buyers: Array<{
             __typename?: 'NftOwner'
@@ -1078,6 +1136,8 @@ export type RoomFragmentFragment = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
           }>
           saleVoucher?: {
@@ -1123,6 +1183,8 @@ export type RoomFragmentFragment = {
     website?: string | null
     profileImage?: string | null
     verified?: boolean | null
+    followers?: Array<{ __typename?: 'User'; id: string }> | null
+    following?: Array<{ __typename?: 'User'; id: string }> | null
   }> | null
   chat?: Array<{
     __typename?: 'ChatMessage'
@@ -1141,6 +1203,8 @@ export type RoomFragmentFragment = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
+      followers?: Array<{ __typename?: 'User'; id: string }> | null
+      following?: Array<{ __typename?: 'User'; id: string }> | null
     }
   }> | null
 }
@@ -1166,6 +1230,8 @@ export type SellingFragmentFragment = {
     website?: string | null
     profileImage?: string | null
     verified?: boolean | null
+    followers?: Array<{ __typename?: 'User'; id: string }> | null
+    following?: Array<{ __typename?: 'User'; id: string }> | null
   }
   buyers: Array<{
     __typename?: 'NftOwner'
@@ -1184,6 +1250,8 @@ export type SellingFragmentFragment = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
+      followers?: Array<{ __typename?: 'User'; id: string }> | null
+      following?: Array<{ __typename?: 'User'; id: string }> | null
     }
   }>
   saleVoucher?: {
@@ -1227,6 +1295,8 @@ export type UserFragmentFragment = {
   website?: string | null
   profileImage?: string | null
   verified?: boolean | null
+  followers?: Array<{ __typename?: 'User'; id: string }> | null
+  following?: Array<{ __typename?: 'User'; id: string }> | null
 }
 
 export type CreateChatMessageMutationVariables = Exact<{
@@ -1254,6 +1324,8 @@ export type CreateChatMessageMutation = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
+      followers?: Array<{ __typename?: 'User'; id: string }> | null
+      following?: Array<{ __typename?: 'User'; id: string }> | null
     } | null
     playlistItems?: Array<{
       __typename?: 'PlaylistItem'
@@ -1293,6 +1365,8 @@ export type CreateChatMessageMutation = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
         }
         metadata: {
@@ -1314,6 +1388,8 @@ export type CreateChatMessageMutation = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         } | null
         licenseOwners?: Array<{
           __typename?: 'NftOwner'
@@ -1332,6 +1408,8 @@ export type CreateChatMessageMutation = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
         }> | null
         sellings?: {
@@ -1357,6 +1435,8 @@ export type CreateChatMessageMutation = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
             buyers: Array<{
               __typename?: 'NftOwner'
@@ -1375,6 +1455,8 @@ export type CreateChatMessageMutation = {
                 website?: string | null
                 profileImage?: string | null
                 verified?: boolean | null
+                followers?: Array<{ __typename?: 'User'; id: string }> | null
+                following?: Array<{ __typename?: 'User'; id: string }> | null
               }
             }>
             saleVoucher?: {
@@ -1424,6 +1506,8 @@ export type CreateChatMessageMutation = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
             buyers: Array<{
               __typename?: 'NftOwner'
@@ -1442,6 +1526,8 @@ export type CreateChatMessageMutation = {
                 website?: string | null
                 profileImage?: string | null
                 verified?: boolean | null
+                followers?: Array<{ __typename?: 'User'; id: string }> | null
+                following?: Array<{ __typename?: 'User'; id: string }> | null
               }
             }>
             saleVoucher?: {
@@ -1511,6 +1597,8 @@ export type CreateChatMessageMutation = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
         }
         metadata: {
@@ -1532,6 +1620,8 @@ export type CreateChatMessageMutation = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         } | null
         licenseOwners?: Array<{
           __typename?: 'NftOwner'
@@ -1550,6 +1640,8 @@ export type CreateChatMessageMutation = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
         }> | null
         sellings?: {
@@ -1575,6 +1667,8 @@ export type CreateChatMessageMutation = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
             buyers: Array<{
               __typename?: 'NftOwner'
@@ -1593,6 +1687,8 @@ export type CreateChatMessageMutation = {
                 website?: string | null
                 profileImage?: string | null
                 verified?: boolean | null
+                followers?: Array<{ __typename?: 'User'; id: string }> | null
+                following?: Array<{ __typename?: 'User'; id: string }> | null
               }
             }>
             saleVoucher?: {
@@ -1642,6 +1738,8 @@ export type CreateChatMessageMutation = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
             buyers: Array<{
               __typename?: 'NftOwner'
@@ -1660,6 +1758,8 @@ export type CreateChatMessageMutation = {
                 website?: string | null
                 profileImage?: string | null
                 verified?: boolean | null
+                followers?: Array<{ __typename?: 'User'; id: string }> | null
+                following?: Array<{ __typename?: 'User'; id: string }> | null
               }
             }>
             saleVoucher?: {
@@ -1705,6 +1805,8 @@ export type CreateChatMessageMutation = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
+      followers?: Array<{ __typename?: 'User'; id: string }> | null
+      following?: Array<{ __typename?: 'User'; id: string }> | null
     }> | null
     chat?: Array<{
       __typename?: 'ChatMessage'
@@ -1723,6 +1825,8 @@ export type CreateChatMessageMutation = {
         website?: string | null
         profileImage?: string | null
         verified?: boolean | null
+        followers?: Array<{ __typename?: 'User'; id: string }> | null
+        following?: Array<{ __typename?: 'User'; id: string }> | null
       }
     }> | null
   }
@@ -1755,6 +1859,8 @@ export type CreateMintSellingMutation = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
+      followers?: Array<{ __typename?: 'User'; id: string }> | null
+      following?: Array<{ __typename?: 'User'; id: string }> | null
     }
     buyers: Array<{
       __typename?: 'NftOwner'
@@ -1773,6 +1879,8 @@ export type CreateMintSellingMutation = {
         website?: string | null
         profileImage?: string | null
         verified?: boolean | null
+        followers?: Array<{ __typename?: 'User'; id: string }> | null
+        following?: Array<{ __typename?: 'User'; id: string }> | null
       }
     }>
     saleVoucher?: {
@@ -1828,6 +1936,8 @@ export type CreateRoomMutation = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
+      followers?: Array<{ __typename?: 'User'; id: string }> | null
+      following?: Array<{ __typename?: 'User'; id: string }> | null
     } | null
     playlistItems?: Array<{
       __typename?: 'PlaylistItem'
@@ -1867,6 +1977,8 @@ export type CreateRoomMutation = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
         }
         metadata: {
@@ -1888,6 +2000,8 @@ export type CreateRoomMutation = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         } | null
         licenseOwners?: Array<{
           __typename?: 'NftOwner'
@@ -1906,6 +2020,8 @@ export type CreateRoomMutation = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
         }> | null
         sellings?: {
@@ -1931,6 +2047,8 @@ export type CreateRoomMutation = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
             buyers: Array<{
               __typename?: 'NftOwner'
@@ -1949,6 +2067,8 @@ export type CreateRoomMutation = {
                 website?: string | null
                 profileImage?: string | null
                 verified?: boolean | null
+                followers?: Array<{ __typename?: 'User'; id: string }> | null
+                following?: Array<{ __typename?: 'User'; id: string }> | null
               }
             }>
             saleVoucher?: {
@@ -1998,6 +2118,8 @@ export type CreateRoomMutation = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
             buyers: Array<{
               __typename?: 'NftOwner'
@@ -2016,6 +2138,8 @@ export type CreateRoomMutation = {
                 website?: string | null
                 profileImage?: string | null
                 verified?: boolean | null
+                followers?: Array<{ __typename?: 'User'; id: string }> | null
+                following?: Array<{ __typename?: 'User'; id: string }> | null
               }
             }>
             saleVoucher?: {
@@ -2085,6 +2209,8 @@ export type CreateRoomMutation = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
         }
         metadata: {
@@ -2106,6 +2232,8 @@ export type CreateRoomMutation = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         } | null
         licenseOwners?: Array<{
           __typename?: 'NftOwner'
@@ -2124,6 +2252,8 @@ export type CreateRoomMutation = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
         }> | null
         sellings?: {
@@ -2149,6 +2279,8 @@ export type CreateRoomMutation = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
             buyers: Array<{
               __typename?: 'NftOwner'
@@ -2167,6 +2299,8 @@ export type CreateRoomMutation = {
                 website?: string | null
                 profileImage?: string | null
                 verified?: boolean | null
+                followers?: Array<{ __typename?: 'User'; id: string }> | null
+                following?: Array<{ __typename?: 'User'; id: string }> | null
               }
             }>
             saleVoucher?: {
@@ -2216,6 +2350,8 @@ export type CreateRoomMutation = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
             buyers: Array<{
               __typename?: 'NftOwner'
@@ -2234,6 +2370,8 @@ export type CreateRoomMutation = {
                 website?: string | null
                 profileImage?: string | null
                 verified?: boolean | null
+                followers?: Array<{ __typename?: 'User'; id: string }> | null
+                following?: Array<{ __typename?: 'User'; id: string }> | null
               }
             }>
             saleVoucher?: {
@@ -2279,6 +2417,8 @@ export type CreateRoomMutation = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
+      followers?: Array<{ __typename?: 'User'; id: string }> | null
+      following?: Array<{ __typename?: 'User'; id: string }> | null
     }> | null
     chat?: Array<{
       __typename?: 'ChatMessage'
@@ -2297,6 +2437,8 @@ export type CreateRoomMutation = {
         website?: string | null
         profileImage?: string | null
         verified?: boolean | null
+        followers?: Array<{ __typename?: 'User'; id: string }> | null
+        following?: Array<{ __typename?: 'User'; id: string }> | null
       }
     }> | null
   }
@@ -2329,6 +2471,8 @@ export type CreateSellingMutation = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
+      followers?: Array<{ __typename?: 'User'; id: string }> | null
+      following?: Array<{ __typename?: 'User'; id: string }> | null
     }
     buyers: Array<{
       __typename?: 'NftOwner'
@@ -2347,6 +2491,8 @@ export type CreateSellingMutation = {
         website?: string | null
         profileImage?: string | null
         verified?: boolean | null
+        followers?: Array<{ __typename?: 'User'; id: string }> | null
+        following?: Array<{ __typename?: 'User'; id: string }> | null
       }
     }>
     saleVoucher?: {
@@ -2374,6 +2520,31 @@ export type CreateSellingMutation = {
       creatorOwnerSplit: number
       validUntil: number
     } | null
+  }
+}
+
+export type FollowMutationVariables = Exact<{
+  userId: Scalars['String']
+}>
+
+export type FollowMutation = {
+  __typename?: 'Mutation'
+  follow: {
+    __typename?: 'User'
+    id: string
+    name?: string | null
+    description?: string | null
+    ethAddress?: string | null
+    twitter?: string | null
+    instagram?: string | null
+    soundcloud?: string | null
+    discord?: string | null
+    spotify?: string | null
+    website?: string | null
+    profileImage?: string | null
+    verified?: boolean | null
+    followers?: Array<{ __typename?: 'User'; id: string }> | null
+    following?: Array<{ __typename?: 'User'; id: string }> | null
   }
 }
 
@@ -2411,6 +2582,8 @@ export type JoinRoomMutation = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
+      followers?: Array<{ __typename?: 'User'; id: string }> | null
+      following?: Array<{ __typename?: 'User'; id: string }> | null
     } | null
     playlistItems?: Array<{
       __typename?: 'PlaylistItem'
@@ -2450,6 +2623,8 @@ export type JoinRoomMutation = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
         }
         metadata: {
@@ -2471,6 +2646,8 @@ export type JoinRoomMutation = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         } | null
         licenseOwners?: Array<{
           __typename?: 'NftOwner'
@@ -2489,6 +2666,8 @@ export type JoinRoomMutation = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
         }> | null
         sellings?: {
@@ -2514,6 +2693,8 @@ export type JoinRoomMutation = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
             buyers: Array<{
               __typename?: 'NftOwner'
@@ -2532,6 +2713,8 @@ export type JoinRoomMutation = {
                 website?: string | null
                 profileImage?: string | null
                 verified?: boolean | null
+                followers?: Array<{ __typename?: 'User'; id: string }> | null
+                following?: Array<{ __typename?: 'User'; id: string }> | null
               }
             }>
             saleVoucher?: {
@@ -2581,6 +2764,8 @@ export type JoinRoomMutation = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
             buyers: Array<{
               __typename?: 'NftOwner'
@@ -2599,6 +2784,8 @@ export type JoinRoomMutation = {
                 website?: string | null
                 profileImage?: string | null
                 verified?: boolean | null
+                followers?: Array<{ __typename?: 'User'; id: string }> | null
+                following?: Array<{ __typename?: 'User'; id: string }> | null
               }
             }>
             saleVoucher?: {
@@ -2668,6 +2855,8 @@ export type JoinRoomMutation = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
         }
         metadata: {
@@ -2689,6 +2878,8 @@ export type JoinRoomMutation = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         } | null
         licenseOwners?: Array<{
           __typename?: 'NftOwner'
@@ -2707,6 +2898,8 @@ export type JoinRoomMutation = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
         }> | null
         sellings?: {
@@ -2732,6 +2925,8 @@ export type JoinRoomMutation = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
             buyers: Array<{
               __typename?: 'NftOwner'
@@ -2750,6 +2945,8 @@ export type JoinRoomMutation = {
                 website?: string | null
                 profileImage?: string | null
                 verified?: boolean | null
+                followers?: Array<{ __typename?: 'User'; id: string }> | null
+                following?: Array<{ __typename?: 'User'; id: string }> | null
               }
             }>
             saleVoucher?: {
@@ -2799,6 +2996,8 @@ export type JoinRoomMutation = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
             buyers: Array<{
               __typename?: 'NftOwner'
@@ -2817,6 +3016,8 @@ export type JoinRoomMutation = {
                 website?: string | null
                 profileImage?: string | null
                 verified?: boolean | null
+                followers?: Array<{ __typename?: 'User'; id: string }> | null
+                following?: Array<{ __typename?: 'User'; id: string }> | null
               }
             }>
             saleVoucher?: {
@@ -2862,6 +3063,8 @@ export type JoinRoomMutation = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
+      followers?: Array<{ __typename?: 'User'; id: string }> | null
+      following?: Array<{ __typename?: 'User'; id: string }> | null
     }> | null
     chat?: Array<{
       __typename?: 'ChatMessage'
@@ -2880,6 +3083,8 @@ export type JoinRoomMutation = {
         website?: string | null
         profileImage?: string | null
         verified?: boolean | null
+        followers?: Array<{ __typename?: 'User'; id: string }> | null
+        following?: Array<{ __typename?: 'User'; id: string }> | null
       }
     }> | null
   }
@@ -2910,6 +3115,8 @@ export type LeaveRoomMutation = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
+      followers?: Array<{ __typename?: 'User'; id: string }> | null
+      following?: Array<{ __typename?: 'User'; id: string }> | null
     } | null
     playlistItems?: Array<{
       __typename?: 'PlaylistItem'
@@ -2949,6 +3156,8 @@ export type LeaveRoomMutation = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
         }
         metadata: {
@@ -2970,6 +3179,8 @@ export type LeaveRoomMutation = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         } | null
         licenseOwners?: Array<{
           __typename?: 'NftOwner'
@@ -2988,6 +3199,8 @@ export type LeaveRoomMutation = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
         }> | null
         sellings?: {
@@ -3013,6 +3226,8 @@ export type LeaveRoomMutation = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
             buyers: Array<{
               __typename?: 'NftOwner'
@@ -3031,6 +3246,8 @@ export type LeaveRoomMutation = {
                 website?: string | null
                 profileImage?: string | null
                 verified?: boolean | null
+                followers?: Array<{ __typename?: 'User'; id: string }> | null
+                following?: Array<{ __typename?: 'User'; id: string }> | null
               }
             }>
             saleVoucher?: {
@@ -3080,6 +3297,8 @@ export type LeaveRoomMutation = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
             buyers: Array<{
               __typename?: 'NftOwner'
@@ -3098,6 +3317,8 @@ export type LeaveRoomMutation = {
                 website?: string | null
                 profileImage?: string | null
                 verified?: boolean | null
+                followers?: Array<{ __typename?: 'User'; id: string }> | null
+                following?: Array<{ __typename?: 'User'; id: string }> | null
               }
             }>
             saleVoucher?: {
@@ -3167,6 +3388,8 @@ export type LeaveRoomMutation = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
         }
         metadata: {
@@ -3188,6 +3411,8 @@ export type LeaveRoomMutation = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         } | null
         licenseOwners?: Array<{
           __typename?: 'NftOwner'
@@ -3206,6 +3431,8 @@ export type LeaveRoomMutation = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
         }> | null
         sellings?: {
@@ -3231,6 +3458,8 @@ export type LeaveRoomMutation = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
             buyers: Array<{
               __typename?: 'NftOwner'
@@ -3249,6 +3478,8 @@ export type LeaveRoomMutation = {
                 website?: string | null
                 profileImage?: string | null
                 verified?: boolean | null
+                followers?: Array<{ __typename?: 'User'; id: string }> | null
+                following?: Array<{ __typename?: 'User'; id: string }> | null
               }
             }>
             saleVoucher?: {
@@ -3298,6 +3529,8 @@ export type LeaveRoomMutation = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
             buyers: Array<{
               __typename?: 'NftOwner'
@@ -3316,6 +3549,8 @@ export type LeaveRoomMutation = {
                 website?: string | null
                 profileImage?: string | null
                 verified?: boolean | null
+                followers?: Array<{ __typename?: 'User'; id: string }> | null
+                following?: Array<{ __typename?: 'User'; id: string }> | null
               }
             }>
             saleVoucher?: {
@@ -3361,6 +3596,8 @@ export type LeaveRoomMutation = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
+      followers?: Array<{ __typename?: 'User'; id: string }> | null
+      following?: Array<{ __typename?: 'User'; id: string }> | null
     }> | null
     chat?: Array<{
       __typename?: 'ChatMessage'
@@ -3379,6 +3616,8 @@ export type LeaveRoomMutation = {
         website?: string | null
         profileImage?: string | null
         verified?: boolean | null
+        followers?: Array<{ __typename?: 'User'; id: string }> | null
+        following?: Array<{ __typename?: 'User'; id: string }> | null
       }
     }> | null
   }
@@ -3391,6 +3630,31 @@ export type LoginMutationVariables = Exact<{
 export type LoginMutation = {
   __typename?: 'Mutation'
   login: { __typename?: 'Auth'; token: string }
+}
+
+export type UnfollowMutationVariables = Exact<{
+  userId: Scalars['String']
+}>
+
+export type UnfollowMutation = {
+  __typename?: 'Mutation'
+  unfollow: {
+    __typename?: 'User'
+    id: string
+    name?: string | null
+    description?: string | null
+    ethAddress?: string | null
+    twitter?: string | null
+    instagram?: string | null
+    soundcloud?: string | null
+    discord?: string | null
+    spotify?: string | null
+    website?: string | null
+    profileImage?: string | null
+    verified?: boolean | null
+    followers?: Array<{ __typename?: 'User'; id: string }> | null
+    following?: Array<{ __typename?: 'User'; id: string }> | null
+  }
 }
 
 export type GetNftQueryVariables = Exact<{
@@ -3433,6 +3697,8 @@ export type GetNftQuery = {
         website?: string | null
         profileImage?: string | null
         verified?: boolean | null
+        followers?: Array<{ __typename?: 'User'; id: string }> | null
+        following?: Array<{ __typename?: 'User'; id: string }> | null
       }
     }
     metadata: { __typename?: 'NftMetadata'; name: string; description: string }
@@ -3450,6 +3716,8 @@ export type GetNftQuery = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
+      followers?: Array<{ __typename?: 'User'; id: string }> | null
+      following?: Array<{ __typename?: 'User'; id: string }> | null
     } | null
     licenseOwners?: Array<{
       __typename?: 'NftOwner'
@@ -3468,6 +3736,8 @@ export type GetNftQuery = {
         website?: string | null
         profileImage?: string | null
         verified?: boolean | null
+        followers?: Array<{ __typename?: 'User'; id: string }> | null
+        following?: Array<{ __typename?: 'User'; id: string }> | null
       }
     }> | null
     sellings?: {
@@ -3493,6 +3763,8 @@ export type GetNftQuery = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         }
         buyers: Array<{
           __typename?: 'NftOwner'
@@ -3511,6 +3783,8 @@ export type GetNftQuery = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
         }>
         saleVoucher?: {
@@ -3560,6 +3834,8 @@ export type GetNftQuery = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         }
         buyers: Array<{
           __typename?: 'NftOwner'
@@ -3578,6 +3854,8 @@ export type GetNftQuery = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
         }>
         saleVoucher?: {
@@ -3652,6 +3930,8 @@ export type GetNftsQuery = {
         website?: string | null
         profileImage?: string | null
         verified?: boolean | null
+        followers?: Array<{ __typename?: 'User'; id: string }> | null
+        following?: Array<{ __typename?: 'User'; id: string }> | null
       }
     }
     metadata: { __typename?: 'NftMetadata'; name: string; description: string }
@@ -3669,6 +3949,8 @@ export type GetNftsQuery = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
+      followers?: Array<{ __typename?: 'User'; id: string }> | null
+      following?: Array<{ __typename?: 'User'; id: string }> | null
     } | null
     licenseOwners?: Array<{
       __typename?: 'NftOwner'
@@ -3687,6 +3969,8 @@ export type GetNftsQuery = {
         website?: string | null
         profileImage?: string | null
         verified?: boolean | null
+        followers?: Array<{ __typename?: 'User'; id: string }> | null
+        following?: Array<{ __typename?: 'User'; id: string }> | null
       }
     }> | null
     sellings?: {
@@ -3712,6 +3996,8 @@ export type GetNftsQuery = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         }
         buyers: Array<{
           __typename?: 'NftOwner'
@@ -3730,6 +4016,8 @@ export type GetNftsQuery = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
         }>
         saleVoucher?: {
@@ -3779,6 +4067,8 @@ export type GetNftsQuery = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         }
         buyers: Array<{
           __typename?: 'NftOwner'
@@ -3797,6 +4087,8 @@ export type GetNftsQuery = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
         }>
         saleVoucher?: {
@@ -3854,6 +4146,8 @@ export type GetRoomQuery = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
+      followers?: Array<{ __typename?: 'User'; id: string }> | null
+      following?: Array<{ __typename?: 'User'; id: string }> | null
     } | null
     playlistItems?: Array<{
       __typename?: 'PlaylistItem'
@@ -3893,6 +4187,8 @@ export type GetRoomQuery = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
         }
         metadata: {
@@ -3914,6 +4210,8 @@ export type GetRoomQuery = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         } | null
         licenseOwners?: Array<{
           __typename?: 'NftOwner'
@@ -3932,6 +4230,8 @@ export type GetRoomQuery = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
         }> | null
         sellings?: {
@@ -3957,6 +4257,8 @@ export type GetRoomQuery = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
             buyers: Array<{
               __typename?: 'NftOwner'
@@ -3975,6 +4277,8 @@ export type GetRoomQuery = {
                 website?: string | null
                 profileImage?: string | null
                 verified?: boolean | null
+                followers?: Array<{ __typename?: 'User'; id: string }> | null
+                following?: Array<{ __typename?: 'User'; id: string }> | null
               }
             }>
             saleVoucher?: {
@@ -4024,6 +4328,8 @@ export type GetRoomQuery = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
             buyers: Array<{
               __typename?: 'NftOwner'
@@ -4042,6 +4348,8 @@ export type GetRoomQuery = {
                 website?: string | null
                 profileImage?: string | null
                 verified?: boolean | null
+                followers?: Array<{ __typename?: 'User'; id: string }> | null
+                following?: Array<{ __typename?: 'User'; id: string }> | null
               }
             }>
             saleVoucher?: {
@@ -4111,6 +4419,8 @@ export type GetRoomQuery = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
         }
         metadata: {
@@ -4132,6 +4442,8 @@ export type GetRoomQuery = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         } | null
         licenseOwners?: Array<{
           __typename?: 'NftOwner'
@@ -4150,6 +4462,8 @@ export type GetRoomQuery = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
         }> | null
         sellings?: {
@@ -4175,6 +4489,8 @@ export type GetRoomQuery = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
             buyers: Array<{
               __typename?: 'NftOwner'
@@ -4193,6 +4509,8 @@ export type GetRoomQuery = {
                 website?: string | null
                 profileImage?: string | null
                 verified?: boolean | null
+                followers?: Array<{ __typename?: 'User'; id: string }> | null
+                following?: Array<{ __typename?: 'User'; id: string }> | null
               }
             }>
             saleVoucher?: {
@@ -4242,6 +4560,8 @@ export type GetRoomQuery = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
             buyers: Array<{
               __typename?: 'NftOwner'
@@ -4260,6 +4580,8 @@ export type GetRoomQuery = {
                 website?: string | null
                 profileImage?: string | null
                 verified?: boolean | null
+                followers?: Array<{ __typename?: 'User'; id: string }> | null
+                following?: Array<{ __typename?: 'User'; id: string }> | null
               }
             }>
             saleVoucher?: {
@@ -4305,6 +4627,8 @@ export type GetRoomQuery = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
+      followers?: Array<{ __typename?: 'User'; id: string }> | null
+      following?: Array<{ __typename?: 'User'; id: string }> | null
     }> | null
     chat?: Array<{
       __typename?: 'ChatMessage'
@@ -4323,6 +4647,8 @@ export type GetRoomQuery = {
         website?: string | null
         profileImage?: string | null
         verified?: boolean | null
+        followers?: Array<{ __typename?: 'User'; id: string }> | null
+        following?: Array<{ __typename?: 'User'; id: string }> | null
       }
     }> | null
   }
@@ -4353,6 +4679,8 @@ export type GetRoomsQuery = {
         website?: string | null
         profileImage?: string | null
         verified?: boolean | null
+        followers?: Array<{ __typename?: 'User'; id: string }> | null
+        following?: Array<{ __typename?: 'User'; id: string }> | null
       } | null
       playlistItems?: Array<{
         __typename?: 'PlaylistItem'
@@ -4392,6 +4720,8 @@ export type GetRoomsQuery = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
           }
           metadata: {
@@ -4413,6 +4743,8 @@ export type GetRoomsQuery = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           } | null
           licenseOwners?: Array<{
             __typename?: 'NftOwner'
@@ -4431,6 +4763,8 @@ export type GetRoomsQuery = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
           }> | null
           sellings?: {
@@ -4456,6 +4790,8 @@ export type GetRoomsQuery = {
                 website?: string | null
                 profileImage?: string | null
                 verified?: boolean | null
+                followers?: Array<{ __typename?: 'User'; id: string }> | null
+                following?: Array<{ __typename?: 'User'; id: string }> | null
               }
               buyers: Array<{
                 __typename?: 'NftOwner'
@@ -4474,6 +4810,8 @@ export type GetRoomsQuery = {
                   website?: string | null
                   profileImage?: string | null
                   verified?: boolean | null
+                  followers?: Array<{ __typename?: 'User'; id: string }> | null
+                  following?: Array<{ __typename?: 'User'; id: string }> | null
                 }
               }>
               saleVoucher?: {
@@ -4523,6 +4861,8 @@ export type GetRoomsQuery = {
                 website?: string | null
                 profileImage?: string | null
                 verified?: boolean | null
+                followers?: Array<{ __typename?: 'User'; id: string }> | null
+                following?: Array<{ __typename?: 'User'; id: string }> | null
               }
               buyers: Array<{
                 __typename?: 'NftOwner'
@@ -4541,6 +4881,8 @@ export type GetRoomsQuery = {
                   website?: string | null
                   profileImage?: string | null
                   verified?: boolean | null
+                  followers?: Array<{ __typename?: 'User'; id: string }> | null
+                  following?: Array<{ __typename?: 'User'; id: string }> | null
                 }
               }>
               saleVoucher?: {
@@ -4610,6 +4952,8 @@ export type GetRoomsQuery = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
           }
           metadata: {
@@ -4631,6 +4975,8 @@ export type GetRoomsQuery = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           } | null
           licenseOwners?: Array<{
             __typename?: 'NftOwner'
@@ -4649,6 +4995,8 @@ export type GetRoomsQuery = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
           }> | null
           sellings?: {
@@ -4674,6 +5022,8 @@ export type GetRoomsQuery = {
                 website?: string | null
                 profileImage?: string | null
                 verified?: boolean | null
+                followers?: Array<{ __typename?: 'User'; id: string }> | null
+                following?: Array<{ __typename?: 'User'; id: string }> | null
               }
               buyers: Array<{
                 __typename?: 'NftOwner'
@@ -4692,6 +5042,8 @@ export type GetRoomsQuery = {
                   website?: string | null
                   profileImage?: string | null
                   verified?: boolean | null
+                  followers?: Array<{ __typename?: 'User'; id: string }> | null
+                  following?: Array<{ __typename?: 'User'; id: string }> | null
                 }
               }>
               saleVoucher?: {
@@ -4741,6 +5093,8 @@ export type GetRoomsQuery = {
                 website?: string | null
                 profileImage?: string | null
                 verified?: boolean | null
+                followers?: Array<{ __typename?: 'User'; id: string }> | null
+                following?: Array<{ __typename?: 'User'; id: string }> | null
               }
               buyers: Array<{
                 __typename?: 'NftOwner'
@@ -4759,6 +5113,8 @@ export type GetRoomsQuery = {
                   website?: string | null
                   profileImage?: string | null
                   verified?: boolean | null
+                  followers?: Array<{ __typename?: 'User'; id: string }> | null
+                  following?: Array<{ __typename?: 'User'; id: string }> | null
                 }
               }>
               saleVoucher?: {
@@ -4804,6 +5160,8 @@ export type GetRoomsQuery = {
         website?: string | null
         profileImage?: string | null
         verified?: boolean | null
+        followers?: Array<{ __typename?: 'User'; id: string }> | null
+        following?: Array<{ __typename?: 'User'; id: string }> | null
       }> | null
       chat?: Array<{
         __typename?: 'ChatMessage'
@@ -4822,6 +5180,8 @@ export type GetRoomsQuery = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         }
       }> | null
     }> | null
@@ -4870,6 +5230,8 @@ export type GetUserNftsQuery = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         }
       }
       metadata: {
@@ -4891,6 +5253,8 @@ export type GetUserNftsQuery = {
         website?: string | null
         profileImage?: string | null
         verified?: boolean | null
+        followers?: Array<{ __typename?: 'User'; id: string }> | null
+        following?: Array<{ __typename?: 'User'; id: string }> | null
       } | null
       licenseOwners?: Array<{
         __typename?: 'NftOwner'
@@ -4909,6 +5273,8 @@ export type GetUserNftsQuery = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         }
       }> | null
       sellings?: {
@@ -4934,6 +5300,8 @@ export type GetUserNftsQuery = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
           buyers: Array<{
             __typename?: 'NftOwner'
@@ -4952,6 +5320,8 @@ export type GetUserNftsQuery = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
           }>
           saleVoucher?: {
@@ -5001,6 +5371,8 @@ export type GetUserNftsQuery = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
           buyers: Array<{
             __typename?: 'NftOwner'
@@ -5019,6 +5391,8 @@ export type GetUserNftsQuery = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
           }>
           saleVoucher?: {
@@ -5083,6 +5457,8 @@ export type GetUserNftsQuery = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         }
       }
       metadata: {
@@ -5104,6 +5480,8 @@ export type GetUserNftsQuery = {
         website?: string | null
         profileImage?: string | null
         verified?: boolean | null
+        followers?: Array<{ __typename?: 'User'; id: string }> | null
+        following?: Array<{ __typename?: 'User'; id: string }> | null
       } | null
       licenseOwners?: Array<{
         __typename?: 'NftOwner'
@@ -5122,6 +5500,8 @@ export type GetUserNftsQuery = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         }
       }> | null
       sellings?: {
@@ -5147,6 +5527,8 @@ export type GetUserNftsQuery = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
           buyers: Array<{
             __typename?: 'NftOwner'
@@ -5165,6 +5547,8 @@ export type GetUserNftsQuery = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
           }>
           saleVoucher?: {
@@ -5214,6 +5598,8 @@ export type GetUserNftsQuery = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
           buyers: Array<{
             __typename?: 'NftOwner'
@@ -5232,6 +5618,8 @@ export type GetUserNftsQuery = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
           }>
           saleVoucher?: {
@@ -5296,6 +5684,8 @@ export type GetUserNftsQuery = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         }
       }
       metadata: {
@@ -5317,6 +5707,8 @@ export type GetUserNftsQuery = {
         website?: string | null
         profileImage?: string | null
         verified?: boolean | null
+        followers?: Array<{ __typename?: 'User'; id: string }> | null
+        following?: Array<{ __typename?: 'User'; id: string }> | null
       } | null
       licenseOwners?: Array<{
         __typename?: 'NftOwner'
@@ -5335,6 +5727,8 @@ export type GetUserNftsQuery = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         }
       }> | null
       sellings?: {
@@ -5360,6 +5754,8 @@ export type GetUserNftsQuery = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
           buyers: Array<{
             __typename?: 'NftOwner'
@@ -5378,6 +5774,8 @@ export type GetUserNftsQuery = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
           }>
           saleVoucher?: {
@@ -5427,6 +5825,8 @@ export type GetUserNftsQuery = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
           buyers: Array<{
             __typename?: 'NftOwner'
@@ -5445,6 +5845,8 @@ export type GetUserNftsQuery = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
           }>
           saleVoucher?: {
@@ -5509,6 +5911,8 @@ export type GetUserNftsQuery = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         }
       }
       metadata: {
@@ -5530,6 +5934,8 @@ export type GetUserNftsQuery = {
         website?: string | null
         profileImage?: string | null
         verified?: boolean | null
+        followers?: Array<{ __typename?: 'User'; id: string }> | null
+        following?: Array<{ __typename?: 'User'; id: string }> | null
       } | null
       licenseOwners?: Array<{
         __typename?: 'NftOwner'
@@ -5548,6 +5954,8 @@ export type GetUserNftsQuery = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         }
       }> | null
       sellings?: {
@@ -5573,6 +5981,8 @@ export type GetUserNftsQuery = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
           buyers: Array<{
             __typename?: 'NftOwner'
@@ -5591,6 +6001,8 @@ export type GetUserNftsQuery = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
           }>
           saleVoucher?: {
@@ -5640,6 +6052,8 @@ export type GetUserNftsQuery = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
           buyers: Array<{
             __typename?: 'NftOwner'
@@ -5658,6 +6072,8 @@ export type GetUserNftsQuery = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
           }>
           saleVoucher?: {
@@ -5709,6 +6125,8 @@ export type MeQuery = {
     website?: string | null
     profileImage?: string | null
     verified?: boolean | null
+    followers?: Array<{ __typename?: 'User'; id: string }> | null
+    following?: Array<{ __typename?: 'User'; id: string }> | null
   }
 }
 
@@ -5754,6 +6172,8 @@ export type SearchQuery = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         }
       }
       metadata: {
@@ -5775,6 +6195,8 @@ export type SearchQuery = {
         website?: string | null
         profileImage?: string | null
         verified?: boolean | null
+        followers?: Array<{ __typename?: 'User'; id: string }> | null
+        following?: Array<{ __typename?: 'User'; id: string }> | null
       } | null
       licenseOwners?: Array<{
         __typename?: 'NftOwner'
@@ -5793,6 +6215,8 @@ export type SearchQuery = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         }
       }> | null
       sellings?: {
@@ -5818,6 +6242,8 @@ export type SearchQuery = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
           buyers: Array<{
             __typename?: 'NftOwner'
@@ -5836,6 +6262,8 @@ export type SearchQuery = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
           }>
           saleVoucher?: {
@@ -5885,6 +6313,8 @@ export type SearchQuery = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
           buyers: Array<{
             __typename?: 'NftOwner'
@@ -5903,6 +6333,8 @@ export type SearchQuery = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
           }>
           saleVoucher?: {
@@ -5947,6 +6379,8 @@ export type SearchQuery = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
+      followers?: Array<{ __typename?: 'User'; id: string }> | null
+      following?: Array<{ __typename?: 'User'; id: string }> | null
     }> | null
   } | null
 }
@@ -5976,6 +6410,8 @@ export type RoomUpdatedSubscription = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
+      followers?: Array<{ __typename?: 'User'; id: string }> | null
+      following?: Array<{ __typename?: 'User'; id: string }> | null
     } | null
     playlistItems?: Array<{
       __typename?: 'PlaylistItem'
@@ -6015,6 +6451,8 @@ export type RoomUpdatedSubscription = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
         }
         metadata: {
@@ -6036,6 +6474,8 @@ export type RoomUpdatedSubscription = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         } | null
         licenseOwners?: Array<{
           __typename?: 'NftOwner'
@@ -6054,6 +6494,8 @@ export type RoomUpdatedSubscription = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
         }> | null
         sellings?: {
@@ -6079,6 +6521,8 @@ export type RoomUpdatedSubscription = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
             buyers: Array<{
               __typename?: 'NftOwner'
@@ -6097,6 +6541,8 @@ export type RoomUpdatedSubscription = {
                 website?: string | null
                 profileImage?: string | null
                 verified?: boolean | null
+                followers?: Array<{ __typename?: 'User'; id: string }> | null
+                following?: Array<{ __typename?: 'User'; id: string }> | null
               }
             }>
             saleVoucher?: {
@@ -6146,6 +6592,8 @@ export type RoomUpdatedSubscription = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
             buyers: Array<{
               __typename?: 'NftOwner'
@@ -6164,6 +6612,8 @@ export type RoomUpdatedSubscription = {
                 website?: string | null
                 profileImage?: string | null
                 verified?: boolean | null
+                followers?: Array<{ __typename?: 'User'; id: string }> | null
+                following?: Array<{ __typename?: 'User'; id: string }> | null
               }
             }>
             saleVoucher?: {
@@ -6233,6 +6683,8 @@ export type RoomUpdatedSubscription = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
         }
         metadata: {
@@ -6254,6 +6706,8 @@ export type RoomUpdatedSubscription = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         } | null
         licenseOwners?: Array<{
           __typename?: 'NftOwner'
@@ -6272,6 +6726,8 @@ export type RoomUpdatedSubscription = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
         }> | null
         sellings?: {
@@ -6297,6 +6753,8 @@ export type RoomUpdatedSubscription = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
             buyers: Array<{
               __typename?: 'NftOwner'
@@ -6315,6 +6773,8 @@ export type RoomUpdatedSubscription = {
                 website?: string | null
                 profileImage?: string | null
                 verified?: boolean | null
+                followers?: Array<{ __typename?: 'User'; id: string }> | null
+                following?: Array<{ __typename?: 'User'; id: string }> | null
               }
             }>
             saleVoucher?: {
@@ -6364,6 +6824,8 @@ export type RoomUpdatedSubscription = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
             buyers: Array<{
               __typename?: 'NftOwner'
@@ -6382,6 +6844,8 @@ export type RoomUpdatedSubscription = {
                 website?: string | null
                 profileImage?: string | null
                 verified?: boolean | null
+                followers?: Array<{ __typename?: 'User'; id: string }> | null
+                following?: Array<{ __typename?: 'User'; id: string }> | null
               }
             }>
             saleVoucher?: {
@@ -6427,6 +6891,8 @@ export type RoomUpdatedSubscription = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
+      followers?: Array<{ __typename?: 'User'; id: string }> | null
+      following?: Array<{ __typename?: 'User'; id: string }> | null
     }> | null
     chat?: Array<{
       __typename?: 'ChatMessage'
@@ -6445,6 +6911,8 @@ export type RoomUpdatedSubscription = {
         website?: string | null
         profileImage?: string | null
         verified?: boolean | null
+        followers?: Array<{ __typename?: 'User'; id: string }> | null
+        following?: Array<{ __typename?: 'User'; id: string }> | null
       }
     }> | null
   }
@@ -6473,6 +6941,8 @@ export type RoomsUpdatedSubscription = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
+      followers?: Array<{ __typename?: 'User'; id: string }> | null
+      following?: Array<{ __typename?: 'User'; id: string }> | null
     } | null
     playlistItems?: Array<{
       __typename?: 'PlaylistItem'
@@ -6512,6 +6982,8 @@ export type RoomsUpdatedSubscription = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
         }
         metadata: {
@@ -6533,6 +7005,8 @@ export type RoomsUpdatedSubscription = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         } | null
         licenseOwners?: Array<{
           __typename?: 'NftOwner'
@@ -6551,6 +7025,8 @@ export type RoomsUpdatedSubscription = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
         }> | null
         sellings?: {
@@ -6576,6 +7052,8 @@ export type RoomsUpdatedSubscription = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
             buyers: Array<{
               __typename?: 'NftOwner'
@@ -6594,6 +7072,8 @@ export type RoomsUpdatedSubscription = {
                 website?: string | null
                 profileImage?: string | null
                 verified?: boolean | null
+                followers?: Array<{ __typename?: 'User'; id: string }> | null
+                following?: Array<{ __typename?: 'User'; id: string }> | null
               }
             }>
             saleVoucher?: {
@@ -6643,6 +7123,8 @@ export type RoomsUpdatedSubscription = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
             buyers: Array<{
               __typename?: 'NftOwner'
@@ -6661,6 +7143,8 @@ export type RoomsUpdatedSubscription = {
                 website?: string | null
                 profileImage?: string | null
                 verified?: boolean | null
+                followers?: Array<{ __typename?: 'User'; id: string }> | null
+                following?: Array<{ __typename?: 'User'; id: string }> | null
               }
             }>
             saleVoucher?: {
@@ -6730,6 +7214,8 @@ export type RoomsUpdatedSubscription = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
         }
         metadata: {
@@ -6751,6 +7237,8 @@ export type RoomsUpdatedSubscription = {
           website?: string | null
           profileImage?: string | null
           verified?: boolean | null
+          followers?: Array<{ __typename?: 'User'; id: string }> | null
+          following?: Array<{ __typename?: 'User'; id: string }> | null
         } | null
         licenseOwners?: Array<{
           __typename?: 'NftOwner'
@@ -6769,6 +7257,8 @@ export type RoomsUpdatedSubscription = {
             website?: string | null
             profileImage?: string | null
             verified?: boolean | null
+            followers?: Array<{ __typename?: 'User'; id: string }> | null
+            following?: Array<{ __typename?: 'User'; id: string }> | null
           }
         }> | null
         sellings?: {
@@ -6794,6 +7284,8 @@ export type RoomsUpdatedSubscription = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
             buyers: Array<{
               __typename?: 'NftOwner'
@@ -6812,6 +7304,8 @@ export type RoomsUpdatedSubscription = {
                 website?: string | null
                 profileImage?: string | null
                 verified?: boolean | null
+                followers?: Array<{ __typename?: 'User'; id: string }> | null
+                following?: Array<{ __typename?: 'User'; id: string }> | null
               }
             }>
             saleVoucher?: {
@@ -6861,6 +7355,8 @@ export type RoomsUpdatedSubscription = {
               website?: string | null
               profileImage?: string | null
               verified?: boolean | null
+              followers?: Array<{ __typename?: 'User'; id: string }> | null
+              following?: Array<{ __typename?: 'User'; id: string }> | null
             }
             buyers: Array<{
               __typename?: 'NftOwner'
@@ -6879,6 +7375,8 @@ export type RoomsUpdatedSubscription = {
                 website?: string | null
                 profileImage?: string | null
                 verified?: boolean | null
+                followers?: Array<{ __typename?: 'User'; id: string }> | null
+                following?: Array<{ __typename?: 'User'; id: string }> | null
               }
             }>
             saleVoucher?: {
@@ -6924,6 +7422,8 @@ export type RoomsUpdatedSubscription = {
       website?: string | null
       profileImage?: string | null
       verified?: boolean | null
+      followers?: Array<{ __typename?: 'User'; id: string }> | null
+      following?: Array<{ __typename?: 'User'; id: string }> | null
     }> | null
     chat?: Array<{
       __typename?: 'ChatMessage'
@@ -6942,6 +7442,8 @@ export type RoomsUpdatedSubscription = {
         website?: string | null
         profileImage?: string | null
         verified?: boolean | null
+        followers?: Array<{ __typename?: 'User'; id: string }> | null
+        following?: Array<{ __typename?: 'User'; id: string }> | null
       }
     }> | null
   }>

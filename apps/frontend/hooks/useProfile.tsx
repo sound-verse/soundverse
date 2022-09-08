@@ -3,6 +3,15 @@ import { gql, useLazyQuery, useMutation } from '@apollo/client'
 import { print } from 'graphql'
 import axios from 'axios'
 import Cookies from 'js-cookie'
+import { FOLLOW_USER } from '../common/graphql/mutations/follow-user.mutation'
+import {
+  FollowMutation,
+  FollowMutationVariables,
+  MutationUnfollowArgs,
+  UnfollowMutation,
+  UnfollowMutationVariables,
+} from '../common/graphql/schema'
+import { UNFOLLOW_USER } from '../common/graphql/mutations/unfollow-user.mutation'
 
 export type User = {
   id: string
@@ -17,6 +26,20 @@ export type User = {
   website: string
   profileImage: string
   verified: Boolean
+  followers: [
+    {
+      id: string
+      name: string
+      profileImage: string
+    }
+  ]
+  following: [
+    {
+      id: string
+      name: string
+      profileImage: string
+    }
+  ]
 }
 
 export type UpdateProfileInput = {
@@ -46,6 +69,18 @@ export const USER = gql`
       website
       profileImage
       verified
+      followers {
+        id
+        ethAddress
+        name
+        profileImage
+      }
+      following {
+        id
+        ethAddress
+        name
+        profileImage
+      }
     }
   }
 `
@@ -92,12 +127,31 @@ export const useProfile = () => {
   const [getUser, { data: user, loading: userLoading }] =
     useLazyQuery<User>(USER)
   const [updateUser, { data, loading, error }] = useMutation(UPDATE_USER)
+  const [followUserMutation] = useMutation<
+    FollowMutation,
+    FollowMutationVariables
+  >(FOLLOW_USER)
+  const [unfollowUserMutation] = useMutation<
+    UnfollowMutation,
+    UnfollowMutationVariables
+  >(UNFOLLOW_USER)
 
   const getProfile = useCallback(
     async (ethAddress: String) => {
       getUser({ variables: { ethAddress } })
     },
     [getUser]
+  )
+
+  const followUser = useCallback(async (follow: UnfollowMutationVariables) => {
+    return await followUserMutation({ variables: follow })
+  }, [])
+
+  const unfollowUser = useCallback(
+    async (unfollowVariables: UnfollowMutationVariables) => {
+      return await unfollowUserMutation({ variables: unfollowVariables })
+    },
+    []
   )
 
   const updateProfile = useCallback(
@@ -150,7 +204,14 @@ export const useProfile = () => {
   )
 
   return useMemo(
-    () => ({ user, userLoading, getProfile, updateProfile }),
-    [user, userLoading, getProfile, updateProfile]
+    () => ({
+      user,
+      userLoading,
+      getProfile,
+      updateProfile,
+      followUser,
+      unfollowUser,
+    }),
+    [user, userLoading, getProfile, updateProfile, followUser, unfollowUser]
   )
 }

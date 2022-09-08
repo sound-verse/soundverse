@@ -33,6 +33,12 @@ export class User extends BaseModel {
   @Field({ nullable: true })
   profileImage?: string;
 
+  @Field(()=> [User], {nullable: true})
+  followers?: User[]
+
+  @Field(()=>[User], {nullable: true})
+  following?: User[]
+
   @Field(() => Boolean, { nullable: true })
   verified?: boolean;
 }

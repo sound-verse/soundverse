@@ -11,6 +11,8 @@ type AuthUser {
   discord: String
   email: String
   ethAddress: String
+  followers: [User!]
+  following: [User!]
   id: String!
   instagram: String
   joinedRoomId: String
@@ -90,11 +92,13 @@ type Mutation {
   createNft(NFTFile: Upload!, data: NftInput!, pictureFile: Upload!): Nft!
   createRoom(createRoomInput: CreateRoomInput!): Room!
   createSelling(createSellingInput: CreateSellingInput!): Selling!
+  follow(userId: String!): User!
   generateVerificationToken(data: VerificationTokenInput!): Int!
   joinRoom(joinRoomInput: JoinRoomInput!): Room!
   leaveRoom(leaveRoomInput: LeaveRoomInput!): Room!
   login(data: LoginInput!): Auth!
   reviveRoom: Room!
+  unfollow(userId: String!): User!
   updateUser(data: UpdateUserInput!): User!
   uploadProfilePicture(file: Upload!): User!
 }
@@ -294,6 +298,8 @@ type User {
   description: String
   discord: String
   ethAddress: String
+  followers: [User!]
+  following: [User!]
   id: String!
   instagram: String
   name: String

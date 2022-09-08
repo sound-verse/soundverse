@@ -8,7 +8,7 @@ import {
   ProfileNftTabs,
 } from '../../components/profile'
 import { createApolloClient } from '../../lib/createApolloClient'
-import { USER, User } from '../../hooks/useProfile'
+import { useProfile, USER, User } from '../../hooks/useProfile'
 import { generateShortEthAddress } from '../../utils/common'
 import Button from '../../components/common/Button'
 import { PorfileSocialBar } from '../../components/profile/ProfileSocialBar'
@@ -37,9 +37,46 @@ export default function Profile({
 }: ProfileProps) {
   const { authUser } = useAuthContext()
   const [showEditProfile, setShowEditProfile] = useState<boolean>(false)
+  const { followUser, unfollowUser } = useProfile()
+  const [loading, setLoading] = useState(false)
+  const [isFollowing, setIsFollowing] = useState(false)
+  const [followers, setFollowers] = useState<number>()
+  
+  useEffect(() => {
+    setIsFollowing(
+      !!user.followers.find((follower) => follower.id === authUser?.id)
+    )
+    setFollowers(user.followers.length)
+  }, [user.followers, authUser?.id])
 
   if (!user) {
     return <Custom404 />
+  }
+
+  const handleFollow = async (userId: string) => {
+    setLoading(true)
+    try {
+      followUser({ userId })
+      setIsFollowing(true)
+      setFollowers(followers + 1)
+    } catch {
+      console.log('Could not follow user.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleUnfollow = async (userId: string) => {
+    setLoading(true)
+    try {
+      unfollowUser({ userId })
+      setIsFollowing(false)
+      setFollowers(followers - 1)
+    } catch {
+      console.log('Could not unfollow user.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const isMe =
@@ -77,9 +114,43 @@ export default function Profile({
                     type="normal"
                     text={`${showEditProfile ? 'Cancel' : 'Edit Profile'}`}
                     onClick={() => setShowEditProfile(!showEditProfile)}
-                    className="mt-10 !px-8"
+                    className="mt-10 !px-8 w-36"
                   />
                 )}
+                {!isMe && (
+                  <>
+                    {!isFollowing && (
+                      <Button
+                        type="normal"
+                        text={'Follow'}
+                        onClick={() => handleFollow(user.id)}
+                        className="mt-10 !px-8 w-36"
+                      />
+                    )}
+                    {isFollowing && (
+                      <Button
+                        type="normal"
+                        text={'Unfollow'}
+                        onClick={() => handleUnfollow(user.id)}
+                        className="mt-10 !px-8 w-36"
+                      />
+                    )}
+                  </>
+                )}
+                <div className="text-black bg-grey-light rounded-full py-2 px-4 w-36 mt-3">
+                  <div className="flex justify-between items-center">
+                    <div>Followers</div>
+                    <div className="font-bold text-xl">{followers}</div>
+                  </div>
+                </div>
+                <div className="text-black bg-grey-light rounded-full py-2 px-4 w-36 mt-3">
+                  <div className="flex justify-between items-center">
+                    <div>Following</div>
+                    <div className="font-bold text-xl">
+                      {user.following.length}
+                    </div>
+                  </div>
+                </div>
                 <PorfileSocialBar
                   twitter={activeUser.twitter}
                   instagram={activeUser.instagram}
