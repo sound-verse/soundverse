@@ -32,11 +32,10 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
   }
 
   useEffect(() => {
-    const newAnonArray = new Array(room?.currentAnonymousUsers)
+    const newAnonArray = new Array(room?.currentAnonymousUsers ?? 0)
     newAnonArray.fill('')
     setAnonArry(newAnonArray)
   }, [room?.currentAnonymousUsers])
-
 
   return (
     <div className="flex justify-center relative overflow-hidden h-[85vh] flex-wrap lg:flex-nowrap">

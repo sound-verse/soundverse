@@ -20,7 +20,7 @@ export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
   const [anonArray, setAnonArry] = useState([])
 
   useEffect(() => {
-    const newAnonArray = new Array(room?.currentAnonymousUsers)
+    const newAnonArray = new Array(room?.currentAnonymousUsers ?? 0)
     newAnonArray.fill('')
     setAnonArry(newAnonArray)
   }, [room?.currentAnonymousUsers])
