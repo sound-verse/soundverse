@@ -97,7 +97,7 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
                   room.activeUsers.map((user) => (
                     <RoomUser key={user.id} user={user} className="mr-2 mb-2" />
                   ))}
-                {room?.currentAnonymousUsers &&
+                {room?.currentAnonymousUsers > 0 &&
                   anonArray.map((array, key) => (
                     <AnonUser key={`anon-user-${key}`} className="mr-2 mb-2" />
                   ))}
