@@ -11,7 +11,7 @@ type RoomUserProps = {
 export const RoomUser: FC<RoomUserProps> = ({ user, className }) => {
   return (
     <div className={className}>
-      <div className="flex flex-col justify-center items-center w-16">
+      <div className="flex flex-col justify-center items-center w-[80px]">
         <ProfileImage
           ethAddress={user.ethAddress}
           imageUrl={user.profileImage}
