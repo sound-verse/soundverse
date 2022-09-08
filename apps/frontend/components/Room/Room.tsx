@@ -104,7 +104,7 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
         </div>
       </div>
       <div className="absolute right-[310px]">
-        <Chat roomId={room.id} chat={room.chat} className="fixed -mt-9" />
+        <Chat roomId={room.id} chat={room.chat} className="fixed -mt-6" />
       </div>
     </div>
   )
