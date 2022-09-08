@@ -76,7 +76,7 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
                 </div>
                 <div className="flex justify-center items-center">
                   <div className="mr-2 text-base">
-                    {room.activeUsers.length + room?.currentAnonymousUsers ?? 0}
+                    {room.activeUsers.length + anonArray.length}
                   </div>
                   <Image
                     src={'/img/speaker.svg'}

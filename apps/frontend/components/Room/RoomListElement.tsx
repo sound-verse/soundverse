@@ -62,7 +62,7 @@ export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
             </div>
             <div className="flex items-center">
               <div className="mx-2 text-xs text-grey-light">
-                {room.activeUsers.length + room?.currentAnonymousUsers ?? 0}
+                {room.activeUsers.length + anonArray.length}
               </div>
               <Image
                 src={'/img/speaker.svg'}
