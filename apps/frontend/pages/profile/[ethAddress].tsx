@@ -41,7 +41,7 @@ export default function Profile({
   const [loading, setLoading] = useState(false)
   const [isFollowing, setIsFollowing] = useState(false)
   const [followers, setFollowers] = useState<number>()
-  
+
   useEffect(() => {
     setIsFollowing(
       !!user.followers.find((follower) => follower.id === authUser?.id)
@@ -117,7 +117,7 @@ export default function Profile({
                     className="mt-10 !px-8 w-36"
                   />
                 )}
-                {!isMe && (
+                {!isMe && authUser && (
                   <>
                     {!isFollowing && (
                       <Button
