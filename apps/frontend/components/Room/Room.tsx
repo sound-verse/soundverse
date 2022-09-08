@@ -77,9 +77,6 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
                   />
                 </div>
               </div>
-              <div className="text-white">
-                Listeners: {room.activeUsers.length}
-              </div>
             </div>
             <div className="flex items-start mt-10 pb-10">
               <RoomUser user={room.creator} />
