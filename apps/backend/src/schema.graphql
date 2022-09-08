@@ -320,5 +320,5 @@ input CreateChatMessageInput {
 
 type Subscription {
   roomsUpdated: [Room!]!
-  roomUpdated(roomId: String!): Room!
+  roomUpdated(roomId: String!, userId: String): Room!
 }

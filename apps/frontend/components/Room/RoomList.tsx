@@ -8,6 +8,7 @@ import {
   Room,
 } from '../../common/graphql/schema.d'
 import { ROOM_UPDATED } from '../../common/graphql/subscriptions/room-updated.subscription'
+import { useAuthContext } from '../../context/AuthContext'
 import { ModuleBg } from '../common/ModuleBg'
 import { Chat } from './Chat'
 import { RoomListElement } from './RoomListElement'
@@ -17,6 +18,7 @@ type RoomListProps = {
 }
 
 export const RoomList: FC<RoomListProps> = ({ rooms }) => {
+  const { authUser } = useAuthContext()
   const { data: masterRoom, subscribeToMore } = useQuery<
     GetRoomQuery,
     GetRoomQueryVariables
@@ -31,7 +33,7 @@ export const RoomList: FC<RoomListProps> = ({ rooms }) => {
     }
     subscribeToMore({
       document: ROOM_UPDATED,
-      variables: { roomId: masterRoom.room.id },
+      variables: { roomId: masterRoom.room.id, userId: authUser?.id },
       updateQuery: (prev, { subscriptionData }: { subscriptionData: any }) => {
         if (subscriptionData.data.roomUpdated) {
           return { room: subscriptionData.data.roomUpdated }
@@ -39,7 +41,7 @@ export const RoomList: FC<RoomListProps> = ({ rooms }) => {
         return prev
       },
     })
-  }, [masterRoom])
+  }, [masterRoom, authUser])
 
   return (
     <div className="flex justify-center items-start relative">

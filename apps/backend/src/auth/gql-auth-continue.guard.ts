@@ -5,7 +5,7 @@ import { GqlContext } from '../graphql/graphql.module';
 import { LoggedinUser } from '../user/decorators/user.decorator';
 
 @Injectable()
-export class GqlAuthGuardContinue extends AuthGuard('jwt') {
+export class GqlAuthGuardContinue extends AuthGuard(['jwt']) {
   handleRequest<U extends LoggedinUser>(err, user: U, info, context) {
     // You can throw an exception based on either "info" or "err" arguments
     if (err || !user) {

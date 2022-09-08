@@ -269,7 +269,7 @@ enum SortOption {
 }
 
 type Subscription {
-  roomUpdated(roomId: String!): Room!
+  roomUpdated(roomId: String!, userId: String): Room!
   roomsUpdated: [Room!]!
 }
 

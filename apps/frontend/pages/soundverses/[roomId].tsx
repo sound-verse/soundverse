@@ -117,7 +117,7 @@ export default function Soundverse() {
     setLoading(true)
     subscribeToMore({
       document: ROOM_UPDATED,
-      variables: { roomId: roomId.toString() },
+      variables: { roomId: roomId.toString(), userId: authUser?.id },
       updateQuery: (prev, { subscriptionData }: { subscriptionData: any }) => {
         if (subscriptionData.data.roomUpdated) {
           return { room: subscriptionData.data.roomUpdated }
@@ -125,7 +125,7 @@ export default function Soundverse() {
         return prev
       },
     })
-  }, [roomId])
+  }, [roomId, authUser])
 
   useEffect(() => {
     if (!roomData?.room) {

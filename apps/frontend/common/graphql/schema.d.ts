@@ -394,6 +394,7 @@ export type Subscription = {
 
 export type SubscriptionRoomUpdatedArgs = {
   roomId: Scalars['String']
+  userId?: InputMaybe<Scalars['String']>
 }
 
 export type UpdateUserInput = {
@@ -673,6 +674,7 @@ export type RoomFragmentFragment = {
   id: string
   name: string
   active: boolean
+  currentAnonymousUsers?: number | null
   creator?: {
     __typename?: 'User'
     id: string
@@ -1255,6 +1257,7 @@ export type CreateChatMessageMutation = {
     id: string
     name: string
     active: boolean
+    currentAnonymousUsers?: number | null
     creator?: {
       __typename?: 'User'
       id: string
@@ -1829,6 +1832,7 @@ export type CreateRoomMutation = {
     id: string
     name: string
     active: boolean
+    currentAnonymousUsers?: number | null
     creator?: {
       __typename?: 'User'
       id: string
@@ -2435,6 +2439,7 @@ export type JoinRoomMutation = {
     id: string
     name: string
     active: boolean
+    currentAnonymousUsers?: number | null
     creator?: {
       __typename?: 'User'
       id: string
@@ -2934,6 +2939,7 @@ export type LeaveRoomMutation = {
     id: string
     name: string
     active: boolean
+    currentAnonymousUsers?: number | null
     creator?: {
       __typename?: 'User'
       id: string
@@ -3901,6 +3907,7 @@ export type GetRoomQuery = {
     id: string
     name: string
     active: boolean
+    currentAnonymousUsers?: number | null
     creator?: {
       __typename?: 'User'
       id: string
@@ -4400,6 +4407,7 @@ export type GetRoomsQuery = {
       id: string
       name: string
       active: boolean
+      currentAnonymousUsers?: number | null
       creator?: {
         __typename?: 'User'
         id: string
@@ -6014,6 +6022,7 @@ export type SearchQuery = {
 
 export type RoomUpdatedSubscriptionVariables = Exact<{
   roomId: Scalars['String']
+  userId?: InputMaybe<Scalars['String']>
 }>
 
 export type RoomUpdatedSubscription = {
@@ -6023,6 +6032,7 @@ export type RoomUpdatedSubscription = {
     id: string
     name: string
     active: boolean
+    currentAnonymousUsers?: number | null
     creator?: {
       __typename?: 'User'
       id: string
@@ -6520,6 +6530,7 @@ export type RoomsUpdatedSubscription = {
     id: string
     name: string
     active: boolean
+    currentAnonymousUsers?: number | null
     creator?: {
       __typename?: 'User'
       id: string

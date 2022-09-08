@@ -19,6 +19,7 @@ import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { valueFromAST } from 'graphql';
 import { CreateChatMessageInput } from './dto/input/create-chat-message.input';
 import { withCancel } from '../lib/withCancel';
+import { GqlAuthGuardContinue } from '../auth/gql-auth-continue.guard';
 
 export const ROOM_UPDATED_EVENT = 'roomUpdated';
 export const ROOMS_UPDATED_EVENT = 'roomsUpdated';
@@ -104,10 +105,14 @@ export class RoomResolver {
       return payload?.roomUpdated?._id.toString() === variables?.roomId;
     },
   })
-  roomUpdated(@Args('roomId') roomId: string) {
-    void this.roomService.addAnonymousUser(roomId)
+  roomUpdated(@Args('roomId') roomId: string, @Args('userId', { nullable: true }) userId?: string) {
+    if (!userId) {
+      void this.roomService.addAnonymousUser(roomId);
+    }
     return withCancel(this.pubSub.asyncIterator(ROOM_UPDATED_EVENT), () => {
-      void this.roomService.removeAnonymousUser(roomId)
+      if (!userId) {
+        void this.roomService.removeAnonymousUser(roomId);
+      }
     });
   }
 
