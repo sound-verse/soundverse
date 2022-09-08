@@ -28,6 +28,7 @@ interface FirstStepValues {
 }
 
 interface SecondStepValues {
+  acceptTerms: boolean
   licenses: number
   royaltyFeeMaster: number
   creatorOwnerSplit: number
@@ -61,6 +62,7 @@ export const CreateForm = () => {
   }
 
   const initialValuesSecondStep: SecondStepValues = {
+    acceptTerms: false,
     licenses: undefined,
     royaltyFeeMaster: undefined,
     creatorOwnerSplit: undefined,
@@ -172,6 +174,10 @@ export const CreateForm = () => {
   })
 
   const validationSchemaSecondStep = Yup.object().shape({
+    acceptTerms: Yup.bool().oneOf(
+      [true],
+      'Accept Terms and Conditions is required'
+    ),
     licenses: Yup.number()
       .typeError('Please enter a number')
       .min(2, 'You have to set a minium of 2 licenses')
@@ -426,6 +432,31 @@ export const CreateForm = () => {
               <div className={styles.error}>
                 <ErrorMessage name="creatorOwnerSplit" />
               </div>
+            </div>
+          </div>
+          <div className="mt-8 w-full ">
+            <div className="flex items-baseline">
+              <div className="mr-2 my-auto">
+                <Field
+                  type="checkbox"
+                  id="acceptTerms"
+                  name="acceptTerms"
+                  className="cursor-pointer scale-125"
+                />
+              </div>
+              <div className="text-grey-dark text-xs">
+                I hereby accept the{' '}
+                <a
+                  href="/terms-conditions"
+                  className="font-bold hover:underline cursor-pointer"
+                  target={'_blank'}
+                >
+                  Terms and Conditions
+                </a>
+              </div>
+            </div>
+            <div className={styles.error}>
+              <ErrorMessage name="acceptTerms" />
             </div>
           </div>
           <button className={styles.mintButton} type="submit">
