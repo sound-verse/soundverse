@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import React, { FC } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { Room } from '../../common/graphql/schema'
 import { useJoinRoom } from '../../hooks/rooms/useJoinRoom'
 import Button from '../common/Button'
@@ -17,15 +17,19 @@ type RoomListElementProps = {
 export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
   const { joinRoom } = useJoinRoom()
   const router = useRouter()
+  const [anonArray, setAnonArry] = useState([])
+
+  useEffect(() => {
+    const newAnonArray = new Array(room?.currentAnonymousUsers)
+    newAnonArray.fill('')
+    setAnonArry(newAnonArray)
+  }, [room?.currentAnonymousUsers])
 
   const handleEnterSoundverse = async () => {
     router.push({
       pathname: `/soundverses/${room.id}`,
     })
   }
-
-  const anonArray = new Array(room?.currentAnonymousUsers)
-  anonArray.fill('')
 
   return (
     <div className={styles.roomWrapper}>

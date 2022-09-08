@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { FC } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { Nft, Room } from '../../common/graphql/schema.d'
 import { useAuthContext } from '../../context/AuthContext'
 import { useLeaveRoom } from '../../hooks/rooms/useLeaveRoom'
@@ -20,6 +20,7 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
   const { leaveRoom } = useLeaveRoom()
   const router = useRouter()
   const { authUser } = useAuthContext()
+  const [anonArray, setAnonArry] = useState([])
 
   const isHost = room.creator.id === authUser?.id
 
@@ -30,8 +31,12 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
     router.push('/soundverses')
   }
 
-  const anonArray = new Array(room?.currentAnonymousUsers ?? 0)
-  anonArray.fill('')
+  useEffect(() => {
+    const newAnonArray = new Array(room?.currentAnonymousUsers)
+    newAnonArray.fill('')
+    setAnonArry(newAnonArray)
+  }, [room?.currentAnonymousUsers])
+
 
   return (
     <div className="flex justify-center relative overflow-hidden h-[85vh] flex-wrap lg:flex-nowrap">
