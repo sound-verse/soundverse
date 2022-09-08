@@ -30,7 +30,7 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
     router.push('/soundverses')
   }
 
-  const anonArray = new Array(room?.currentAnonymousUsers)
+  const anonArray = new Array(room?.currentAnonymousUsers ?? 0)
   anonArray.fill('')
 
   return (
@@ -94,7 +94,6 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
                     <RoomUser key={user.id} user={user} className="mr-2 mb-2" />
                   ))}
                 {room?.currentAnonymousUsers &&
-                  anonArray.length > 0 &&
                   anonArray.map((array, key) => (
                     <AnonUser key={`anon-user-${key}`} className="mr-2 mb-2" />
                   ))}
