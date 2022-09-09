@@ -7,6 +7,9 @@ import xss from 'xss';
 export class NftMetadataInput {
   @Field()
   @Transform(({ value }) => xss(value))
+  @MaxLength(100, {
+    message: 'Name is too long',
+  })
   name: string;
 
   @Field()
@@ -51,6 +54,13 @@ export class NftInput {
 
   @Field(() => Float)
   trackBPM: number;
+
+  @Field()
+  @Transform(({ value }) => xss(value))
+  @MaxLength(100, {
+    message: 'Genre is too long',
+  })
+  genre: string;
 
   @Field(()=>[Float])
   soundWave: [number];

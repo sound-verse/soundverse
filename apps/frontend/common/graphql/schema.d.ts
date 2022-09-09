@@ -217,6 +217,7 @@ export type NftFilter = {
 export type NftInput = {
   chainId?: InputMaybe<Scalars['Float']>
   creatorOwnerSplit: Scalars['Int']
+  genre: Scalars['String']
   metadata: NftMetadataInput
   royaltyFeeLicense: Scalars['Int']
   royaltyFeeMaster: Scalars['Int']

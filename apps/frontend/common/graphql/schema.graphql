@@ -135,6 +135,7 @@ input NftFilter {
 input NftInput {
   chainId: Float
   creatorOwnerSplit: Int!
+  genre: String!
   metadata: NftMetadataInput!
   royaltyFeeLicense: Int!
   royaltyFeeMaster: Int!

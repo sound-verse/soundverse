@@ -25,6 +25,8 @@ interface FirstStepValues {
   name: string
   description: string
   tags: string[]
+  bpm: number
+  genre: string
 }
 
 interface SecondStepValues {
@@ -59,6 +61,8 @@ export const CreateForm = () => {
     name: '',
     description: '',
     tags: [],
+    bpm: bpm,
+    genre: '',
   }
 
   const initialValuesSecondStep: SecondStepValues = {
@@ -167,10 +171,15 @@ export const CreateForm = () => {
   }
 
   const validationSchemaFirstStep = Yup.object().shape({
-    name: Yup.string().required('Please enter a title'),
+    name: Yup.string().required('Enter a title'),
     description: Yup.string()
-      .required('Please enter a description')
+      .required('Enter a description')
       .max(1000, 'Maximum number of characters of 1000 exceeded'),
+    bpm: Yup.number()
+      .min(40, 'Only BPM above 40 is allowed')
+      .max(200, 'Only BPM below 200 is allowed')
+      .required('Provide the correct BPM if not self detected'),
+    genre: Yup.string().required('Provide a genre'),
   })
 
   const validationSchemaSecondStep = Yup.object().shape({
@@ -179,18 +188,18 @@ export const CreateForm = () => {
       'Accept Terms and Conditions is required'
     ),
     licenses: Yup.number()
-      .typeError('Please enter a number')
+      .typeError('Enter a number')
       .min(2, 'You have to set a minium of 2 licenses')
       .max(100000, 'You can only set a maximum of 100.000 licenses')
-      .required('Please enter a number'),
+      .required('Enter a number'),
     royaltyFeeMaster: Yup.number()
-      .typeError('Please enter a number')
+      .typeError('Enter a number')
       .max(50, 'You can enter a number up to 50')
-      .required('Please enter a number'),
+      .required('Enter a number'),
     creatorOwnerSplit: Yup.number()
-      .typeError('Please enter a number')
+      .typeError('Enter a number')
       .max(100, 'You can enter a number up to 100')
-      .required('Please enter a number'),
+      .required('Enter a number'),
   })
 
   const submitFirstStep = (values) => {
@@ -227,6 +236,7 @@ export const CreateForm = () => {
         trackDuration: nftDuration,
         soundWave: nftWaveForm,
         bpm,
+        genre: firstStepValues.genre,
       })
       if (id) {
         router.push(`/license/${id}`)
@@ -310,7 +320,7 @@ export const CreateForm = () => {
           </div>
           <div className={styles.error}>{pictureFileError}</div>
           <div className="text-black font-bold text-sm mt-10">Track Name</div>
-          <div className="mt-3 w-full">
+          <div className="mt-3 w-full mb-5">
             <Field
               id="name"
               name="name"
@@ -325,7 +335,42 @@ export const CreateForm = () => {
               <ErrorMessage name="name" />
             </div>
           </div>
-          <div className="text-black font-bold text-sm mt-10">Description</div>
+          <div className="text-black font-bold text-sm">Track BPM</div>
+          <div className="mt-3 mb-5 w-full">
+            <Field
+              id="bpm"
+              name="bpm"
+              placeholder={bpm}
+              className="outline-none text-black w-full text-sm"
+            />
+            <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
+            {bpm > 0 && (
+              <div className="text-xs text-green-600 mt-2">
+                We detected a BPM of <b>{bpm}</b> in your music file
+              </div>
+            )}
+            <div className="text-grey-dark mt-2 text-xs">
+              Allowed range 40-200 BPM
+            </div>
+            <div className={styles.error}>
+              <ErrorMessage name="bpm" />
+            </div>
+          </div>
+          <div className="text-black font-bold text-sm">Genre</div>
+          <div className="mt-3 mb-5 w-full">
+            <Field
+              id="genre"
+              name="genre"
+              placeholder="House"
+              className="outline-none text-black w-full text-sm"
+            />
+            <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
+            <div className="text-grey-dark mt-2 text-xs">Music genre</div>
+            <div className={styles.error}>
+              <ErrorMessage name="genre" />
+            </div>
+          </div>
+          <div className="text-black font-bold text-sm mt-5">Description</div>
           <div className="mt-3 text-sm text-black">
             <Field
               type="input"
@@ -364,7 +409,25 @@ export const CreateForm = () => {
           {'<-'} Back
         </div>
         <div className="flex flex-col text-sm text-black">
-          <div className="font-bold mb-2">
+          <div className="text-black font-bold text-sm">
+            Number of Licenses
+          </div>
+          <div className="mt-3 w-full">
+            <Field
+              id="licenses"
+              name="licenses"
+              placeholder="10000"
+              className="outline-none text-black w-full"
+            />
+            <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
+            <div className="text-grey-dark mt-2 text-xs">
+              min. 2 - max. 100.000
+            </div>
+            <div className={styles.error}>
+              <ErrorMessage name="licenses" />
+            </div>
+          </div>
+          <div className="font-bold mb-2 mt-10">
             Royalty Settings for secondary sales of Master and Licenses
           </div>
           <div className="text-grey-dark leading-6">
@@ -393,24 +456,8 @@ export const CreateForm = () => {
               </div>
             </div>
           </div>
-          <div className="text-black font-bold text-sm mt-10">Licenses</div>
-          <div className="mt-3 w-full">
-            <Field
-              id="licenses"
-              name="licenses"
-              placeholder="10000"
-              className="outline-none text-black w-full"
-            />
-            <div className="border-t-2 w-full mt-2 border-grey-medium opacity-50"></div>
-            <div className="text-grey-dark mt-2 text-xs">
-              min. 2 - max. 100.000
-            </div>
-            <div className={styles.error}>
-              <ErrorMessage name="licenses" />
-            </div>
-          </div>
           <div className="text-black font-bold text-sm mt-10 mb-2">
-            Secondary sales distribution
+            Master NFT Royalties Split
           </div>
           <div className="text-grey-dark leading-6">
             You as the Master NFT creator will receive this % income from
@@ -485,18 +532,20 @@ export const CreateForm = () => {
       <div className={styles.informationStepContent}>
         <div className={styles.informationStepHeader}>Master NFT</div>
         <div className={styles.informationStepBody}>
-          Your Master is a unique 1/1 valuable NFT. The owner of your Master
-          will initially own all the unsold Licenses and get royalties on every
-          trade on each License.
+          Your Master is a unique 1 / 1 valuable NFT. The Master Holder and the
+          Original Artist will split royalties from the sale of each License NFT
+          in perpetuity. The holder of the Master will also own all the unsold
+          Licenses.
         </div>
       </div>
       <div className={cn(styles.informationStepContent, 'mt-10')}>
         <div className={styles.informationStepHeader}>License NFT</div>
         <div className={styles.informationStepBody}>
-          All your License NFTs belong to the owner of the Master NFT initially.
-          Your fans can use, buy, trade, collect or monetize your Licenses and
-          everytime they earn money with them, the creator and Master owner will
-          also earn money with them automatically.
+          All License NFTs are linked to the Master NFT. Whenever someone buys a
+          Master they will also own all the unsold Licenses. Your fans can use,
+          buy, trade, collect or monetize your Licenses. Every time money is
+          earned, the creator and Master owner will receive and split the money
+          automatically.
         </div>
       </div>
     </div>

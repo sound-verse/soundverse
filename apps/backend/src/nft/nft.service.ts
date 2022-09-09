@@ -40,6 +40,7 @@ export interface CreateNftInput {
   trackDuration: number;
   soundWave: [number];
   trackBpm: number;
+  genre: string;
 }
 
 @Injectable()
@@ -87,6 +88,7 @@ export class NftService {
         trackDuration: createNftInput.trackDuration,
         soundWave: createNftInput.soundWave,
         trackBpm: createNftInput.trackBpm,
+        genre: createNftInput.genre,
         masterOwner: {
           user: createNftInput.user._id,
           supply: 1,

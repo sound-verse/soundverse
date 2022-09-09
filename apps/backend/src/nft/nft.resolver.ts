@@ -88,6 +88,7 @@ export class NftResolver {
         user,
         supply: nftData.supply,
         tags: nftData.tags,
+        genre: nftData.genre,
         transactionHash: nftData.transactionHash ? nftData.transactionHash : '',
         chainId: nftData.chainId ? nftData.chainId : 0,
         royaltyFeeMaster: nftData.royaltyFeeMaster,

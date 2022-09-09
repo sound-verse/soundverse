@@ -96,6 +96,7 @@ export class IPFSService {
       ...(nftData.trackBPM > 0 && { bpm: nftData.trackBPM }),
       image: ipfsFileUrlImage,
       audio: ipfsFileUrlAudio,
+      genre: nftData.genre,
     };
     //There will be two ways to access the NFT, either with the pre hash or the metadata hash
     const metadataPreHash = await this.getHashFromString(

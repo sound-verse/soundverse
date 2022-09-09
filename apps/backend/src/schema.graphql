@@ -253,6 +253,7 @@ input NftInput {
   chainId: Float
   trackDuration: Float!
   trackBPM: Float!
+  genre: String!
   soundWave: [Float!]!
 }
 
