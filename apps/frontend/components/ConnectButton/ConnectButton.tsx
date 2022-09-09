@@ -16,12 +16,14 @@ interface ConnectButtonProps {
 declare const window: any
 
 const ETHEREUM_MAINNET_PARAMS = {
-  chainId: '1', 
+  chainId: '1',
+  rpcUrls: ['https://cloudflare-eth.com'],
   blockExplorerUrls: ['https://etherscan.io/'],
 }
 
 const ETHEREUM_TESTNET_PARAMS = {
   chainId: '5',
+  rpcUrls: ['https://eth-goerli.public.blastapi.io/'],
   blockExplorerUrls: ['https://goerli.etherscan.io/'],
 }
 
