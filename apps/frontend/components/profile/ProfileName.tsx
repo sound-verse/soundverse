@@ -6,7 +6,7 @@ import cn from 'classnames'
 
 export type ProfileNameProps = {
   ethAddress: string
-  name: string
+  name?: string
   short?: boolean
   className?: string
   customEthLength?: number
