@@ -78,16 +78,16 @@ export const ConnectButton: FC<ConnectButtonProps> = ({ className }) => {
       return
     }
     if (MetaMaskOnboarding.isMetaMaskInstalled()) {
-      try {
-        if (window) {
-          await window.ethereum.request({
-            method: 'eth_requestAccounts',
-          })
-          // addEthereumNetwork()
-        }
-      } catch (e) {
-        console.log(e)
-      }
+      // try {
+      //   if (window) {
+      //     await window.ethereum.request({
+      //       method: 'eth_requestAccounts',
+      //     })
+      //     // addEthereumNetwork()
+      //   }
+      // } catch (e) {
+      //   console.log(e)
+      // }
     } else {
       // opens a new tab to the <chrome | firefox> store for user to install the MetaMask browser extension
       onboarding.current?.startOnboarding()
