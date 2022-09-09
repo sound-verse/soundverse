@@ -16,27 +16,12 @@ interface ConnectButtonProps {
 declare const window: any
 
 const ETHEREUM_MAINNET_PARAMS = {
-  chainId: '0x001', // 137
-  chainName: 'Ethereum Mainnet',
-  nativeCurrency: {
-    name: 'ETH',
-    symbol: 'ETH',
-    decimals: 18,
-  },
-  rpcUrls: ['https://cloudflare-eth.com'],
+  chainId: '1', 
   blockExplorerUrls: ['https://etherscan.io/'],
 }
 
-// Polygon Testnet params
 const ETHEREUM_TESTNET_PARAMS = {
-  chainId: '0x005',
-  chainName: 'Görli',
-  nativeCurrency: {
-    name: 'ETH',
-    symbol: 'ETH',
-    decimals: 18,
-  },
-  rpcUrls: ['https://eth-goerli.public.blastapi.io/'],
+  chainId: '5',
   blockExplorerUrls: ['https://goerli.etherscan.io/'],
 }
 
