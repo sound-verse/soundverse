@@ -133,7 +133,7 @@ export const ConnectButton: FC<ConnectButtonProps> = ({ className }) => {
             {authUser ? (
               <ProfileName
                 ethAddress={authUser?.ethAddress}
-                // name={authUser?.name}
+                name={authUser?.name}
                 short={true}
               />
             ) : (

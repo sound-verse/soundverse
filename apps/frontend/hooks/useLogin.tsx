@@ -48,10 +48,10 @@ export const useLogin = () => {
 
   const supportedNetworks = {
     local: {
-      chainIds: [31337, 80001],
+      chainIds: [31337, 5],
     },
     testflight: {
-      chanIds: [80001],
+      chanIds: [5],
     },
   }
 
