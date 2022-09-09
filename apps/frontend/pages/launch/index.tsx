@@ -166,7 +166,7 @@ export default function Launch() {
                       <ErrorMessage name="name" />
                     </div>
                     <button
-                      className="text-white cursor-pointer rounded-full bg-grey-medium px-24 py-3 ml-auto mt-10 font-bold text-sm"
+                      className="text-white cursor-pointer rounded-full bg-gradient-to-l from-[#1400FF] to-[#0089FF] px-24 py-3 ml-auto mt-10 font-bold text-sm"
                       type="submit"
                     >
                       Launch your room now
@@ -204,7 +204,7 @@ export default function Launch() {
                 <div
                   className={cn(
                     'bg-white rounded text-black px-8 py-1 shadow-lg cursor-pointer',
-                    selectedMasterSlider ? ' !bg-grey-medium !text-white ' : ''
+                    selectedMasterSlider ? ' !bg-gradient-to-l from-[#1400FF] to-[#0089FF] !text-white ' : ''
                   )}
                   onClick={() => setSelectedMasterSlider(!selectedMasterSlider)}
                 >
@@ -214,7 +214,7 @@ export default function Launch() {
                 <div
                   className={cn(
                     'bg-white rounded text-black px-8 py-1 shadow-lg cursor-pointer',
-                    !selectedMasterSlider ? ' !bg-grey-medium !text-white ' : ''
+                    !selectedMasterSlider ? ' !bg-gradient-to-l from-[#1400FF] to-[#0089FF] !text-white ' : ''
                   )}
                   onClick={() => setSelectedMasterSlider(!selectedMasterSlider)}
                 >

@@ -34,13 +34,17 @@ export const ProfileNftTabs = ({
       !createdNfts.find((cratedNft) => cratedNft.id === ownedLicenseNft.id)
   )
 
+  if(ownedLicenseNfts.length === 0 && createdNfts.length === 0 && ownedMasterNfts.length === 0){
+    return null;
+  }
+
   return (
     <div className={className}>
       <div className="flex mb-10 select-none">
         <div
           className={cn(
             'bg-white rounded text-black px-8 py-1 shadow-lg cursor-pointer',
-            ownedActive ? ' !bg-grey-medium !text-white ' : ''
+            ownedActive ? ' !bg-gradient-to-l from-[#1400FF] to-[#0089FF] !text-white ' : ''
           )}
           onClick={() => setOwnedActive(!ownedActive)}
         >
@@ -50,7 +54,7 @@ export const ProfileNftTabs = ({
         <div
           className={cn(
             'bg-white rounded text-black px-8 py-1 shadow-lg cursor-pointer',
-            !ownedActive ? ' !bg-grey-medium !text-white ' : ''
+            !ownedActive ? ' !bg-gradient-to-l from-[#1400FF] to-[#0089FF] !text-white ' : ''
           )}
           onClick={() => setOwnedActive(!ownedActive)}
         >

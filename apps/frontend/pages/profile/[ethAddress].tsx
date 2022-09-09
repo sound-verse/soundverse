@@ -114,7 +114,7 @@ export default function Profile({
                     type="normal"
                     text={`${showEditProfile ? 'Cancel' : 'Edit Profile'}`}
                     onClick={() => setShowEditProfile(!showEditProfile)}
-                    className="mt-10 !px-8 w-36"
+                    className="mt-10 !px-8 w-36 bg-gradient-to-l from-[#1400FF] to-[#0089FF]"
                   />
                 )}
                 {!isMe && authUser && (
@@ -124,7 +124,7 @@ export default function Profile({
                         type="normal"
                         text={'Follow'}
                         onClick={() => handleFollow(user.id)}
-                        className="mt-10 !px-8 w-36"
+                        className="mt-10 !px-8 w-36 bg-gradient-to-l from-[#1400FF] to-[#0089FF]"
                       />
                     )}
                     {isFollowing && (
@@ -132,18 +132,18 @@ export default function Profile({
                         type="normal"
                         text={'Unfollow'}
                         onClick={() => handleUnfollow(user.id)}
-                        className="mt-10 !px-8 w-36"
+                        className="mt-10 !px-8 w-36 bg-gradient-to-l from-[#1400FF] to-[#0089FF]"
                       />
                     )}
                   </>
                 )}
-                <div className="text-black bg-grey-light rounded-full py-2 px-4 w-36 mt-3">
+                <div className="text-white bg-[#1400FF] rounded-full py-2 px-4 w-36 mt-3">
                   <div className="flex justify-between items-center">
                     <div>Followers</div>
                     <div className="font-bold text-xl">{followers}</div>
                   </div>
                 </div>
-                <div className="text-black bg-grey-light rounded-full py-2 px-4 w-36 mt-3">
+                <div className="text-white bg-[#1400FF] rounded-full py-2 px-4 w-36 mt-3">
                   <div className="flex justify-between items-center">
                     <div>Following</div>
                     <div className="font-bold text-xl">

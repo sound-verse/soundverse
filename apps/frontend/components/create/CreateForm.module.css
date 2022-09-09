@@ -51,12 +51,12 @@
 }
 
 .mintButton {
-  @apply px-5 py-2 mt-5 text-center mx-auto text-white bg-grey-medium w-full;
+  @apply px-5 py-2 mt-5 text-center mx-auto text-white bg-gradient-to-l from-[#1400FF] to-[#0089FF] w-full;
   border-radius: 36.6927px;
 }
 
 .mintButton:hover {
-  box-shadow: 1px 1px 4px #7665f6, -0.5px -0.5px 1px #f6d765;
+  box-shadow: 1px 1px 4px grey, -0.5px -0.5px 1px grey;
 }
 
 .descriptionField {
