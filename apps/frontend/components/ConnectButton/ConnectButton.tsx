@@ -56,21 +56,22 @@ export const ConnectButton: FC<ConnectButtonProps> = ({ className }) => {
   }, [])
 
   // Custom networks for Ethereum compatible chains can be added to Metamask
-  async function addEthereumNetwork() {
-    try {
-      const provider = await injected.getProvider()
-      // rpc request to switch chain to an ethereum compatible chain
-      await provider.request({
-        method: 'wallet_addEthereumChain',
-        params: [ETHEREUM_TESTNET_PARAMS],
-      })
-    } catch (e) {
-      setFlashMsg(
-        'Failed to switch to Ethereum chain, Please check your internet connect reconnect again'
-      )
-      console.log(e)
-    }
-  }
+  // Not needed for standard chains
+  // async function addEthereumNetwork() {
+  //   try {
+  //     const provider = await injected.getProvider()
+  //     // rpc request to switch chain to an ethereum compatible chain
+  //     await provider.request({
+  //       method: 'wallet_addEthereumChain',
+  //       params: [ETHEREUM_TESTNET_PARAMS],
+  //     })
+  //   } catch (e) {
+  //     setFlashMsg(
+  //       'Failed to switch to Ethereum chain, Please check your internet connect reconnect again'
+  //     )
+  //     console.log(e)
+  //   }
+  // }
 
   const onboard = async () => {
     if (process.env.NEXT_PUBLIC_ENVIRONMENT === 'local') {
@@ -82,7 +83,7 @@ export const ConnectButton: FC<ConnectButtonProps> = ({ className }) => {
           await window.ethereum.request({
             method: 'eth_requestAccounts',
           })
-          addEthereumNetwork()
+          // addEthereumNetwork()
         }
       } catch (e) {
         console.log(e)
