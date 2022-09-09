@@ -568,16 +568,16 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
         isOpen={showBoughtSuccess || showUnlistedSuccess}
         className="flex justify-center items-center h-full"
       >
-        <div className="w-1/2 h-1/2 rounded-3xl p-10 bg-grey-dark flex flex-col justify-between items-center">
+        <div className="w-5/6 md:w-2/3 lg:w-1/2 h-1/2 rounded-3xl p-10 bg-white drop-shadow-2xl flex flex-col justify-between items-center">
           <div className="h-full w-full justify-center items-center flex flex-col">
-            <div className="text-white text-2xl font-bold mb-10 text-center">
+            <div className="text-black text-2xl font-bold mb-10 text-center">
               {showBoughtSuccess && 'You successfully bought your NFT!'}
               {showUnlistedSuccess && 'You successfully unlisted your NFT!'}
             </div>
             <Button
               type="normal"
               text="Got it!"
-              className="!px-16 !py-4 text-lg"
+              className="!px-16 !py-4 text-lg bg-gradient-to-l from-[#1400FF] to-[#0089FF]"
               onClick={() => {
                 setShowBoughtSuccess(false)
                 setShowUnlistedSuccess(false)
@@ -595,12 +595,12 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
         isOpen={showing || showIsUnlisting}
         className="flex justify-center items-center h-full"
       >
-        <div className="w-1/2 h-1/2 rounded-3xl p-10 bg-grey-dark flex flex-col justify-between items-center">
+        <div className="w-5/6 md:w-2/3 lg:w-1/2 h-1/2 rounded-3xl p-10 bg-white drop-shadow-2xl flex flex-col justify-between items-center">
           <div className="h-full w-full justify-center items-center flex flex-col">
-            <div className="text-white text-2xl font-bold mb-10">
+            <div className="text-black text-2xl font-bold mb-10">
               {showIsUnlisting ? 'Unlisting' : 'Buying'} NFT
             </div>
-            <Bars color="#7A64FF" height={80} width={80} />
+            <Bars color="black" height={80} width={80} />
           </div>
         </div>
       </Modal>

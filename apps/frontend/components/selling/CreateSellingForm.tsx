@@ -186,7 +186,7 @@ export const CreateSellingForm = ({
                 Service fee: 3.5%
               </div>
               <button
-                className="text-white cursor-pointer rounded-full bg-grey-medium px-24 py-3 ml-auto mt-10 font-bold text-sm"
+                className="text-white cursor-pointer rounded-full bg-gradient-to-l from-[#1400FF] to-[#0089FF] px-24 py-3 ml-auto mt-10 font-bold text-sm"
                 type="submit"
               >
                 Complete Listing
@@ -197,13 +197,12 @@ export const CreateSellingForm = ({
       </div>
       <Modal
         isOpen={loading}
-        contentLabel="onRequestClose Example"
         className="flex justify-center  items-center h-full z-50"
       >
-        <div className="w-1/2 h-1/2 rounded-3xl p-10  flex flex-col justify-between items-center bg-grey-dark text-white">
+        <div className="w-5/6 md:w-2/3 lg:w-1/2 h-1/2 rounded-3xl p-10 bg-white drop-shadow-2xl flex flex-col justify-between items-center">
           <div className="h-full w-full justify-center items-center flex flex-col">
-            <div className=" text-3xl font-bold mb-10">Listing</div>
-            <Bars color="#7A64FF" height={80} width={80} />
+            <div className="text-black text-3xl font-bold mb-10">Listing</div>
+            <Bars color="black" height={80} width={80} />
           </div>
         </div>
       </Modal>

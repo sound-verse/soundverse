@@ -575,13 +575,12 @@ export const CreateForm = () => {
       </div>
       <Modal
         isOpen={showing}
-        contentLabel="onRequestClose Example"
         className="flex justify-center items-center h-full"
       >
-        <div className="w-1/2 h-1/2 rounded-3xl p-10 bg-grey-dark flex flex-col justify-between items-center">
+        <div className="w-5/6 md:w-2/3 lg:w-1/2 h-1/2 rounded-3xl p-10 bg-white drop-shadow-2xl flex flex-col justify-between items-center">
           <div className="h-full w-full justify-center items-center flex flex-col">
-            <div className="text-white text-3xl font-bold mb-10">Minting</div>
-            <Bars color="#7A64FF" height={80} width={80} />
+            <div className="text-black text-3xl font-bold mb-10">Minting</div>
+            <Bars color="black" height={80} width={80} />
           </div>
         </div>
       </Modal>
