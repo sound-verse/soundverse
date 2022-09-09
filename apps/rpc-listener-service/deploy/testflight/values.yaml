@@ -122,7 +122,7 @@ env:
   - name: PORT
     value: '80'
   - name: RPC_URL
-    value: 'wss://bold-lively-wave.matic-testnet.quiknode.pro/a44093358d2164fa6f0e82d6c06fe808ed6e8854/'
+    value: 'wss://sparkling-thrilling-arm.ethereum-goerli.quiknode.pro/b87b45fcb096c06b5b5a52fe45873ec489d42556/'
   - name: RABBITMQ_USER
     value: 'rezmtgjt'
   - name: RABBITMQ_PASSWORD

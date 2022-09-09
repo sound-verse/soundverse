@@ -15,34 +15,34 @@ interface ConnectButtonProps {
 
 declare const window: any
 
-const POLYGON_MAINNET_PARAMS = {
-  chainId: '0x89', // 137
-  chainName: 'Polygon Mainnet',
+const ETHEREUM_MAINNET_PARAMS = {
+  chainId: '0x1', // 137
+  chainName: 'Ethereum Mainnet',
   nativeCurrency: {
-    name: 'MATIC Token',
-    symbol: 'MATIC',
+    name: 'ETH',
+    symbol: 'ETH',
     decimals: 18,
   },
-  rpcUrls: ['https://rpc-mainnet.matic.quiknode.pro'],
-  blockExplorerUrls: ['https://polygonscan.com/'],
+  rpcUrls: ['https://cloudflare-eth.com'],
+  blockExplorerUrls: ['https://etherscan.io/'],
 }
 
 // Polygon Testnet params
-const POLYGON_TESTNET_PARAMS = {
-  chainId: '0x13881', // 8001
-  chainName: 'Mumbai',
+const ETHEREUM_TESTNET_PARAMS = {
+  chainId: '0x5',
+  chainName: 'Görli',
   nativeCurrency: {
-    name: 'MATIC Token',
-    symbol: 'MATIC',
+    name: 'ETH',
+    symbol: 'ETH',
     decimals: 18,
   },
-  rpcUrls: ['https://matic-mumbai.chainstacklabs.com/'],
-  blockExplorerUrls: ['https://mumbai.polygonscan.com/'],
+  rpcUrls: ['https://eth-goerli.public.blastapi.io/'],
+  blockExplorerUrls: ['https://goerli.etherscan.io/'],
 }
 
 export const ConnectButton: FC<ConnectButtonProps> = ({ className }) => {
   const abstractConnectorArgs = {
-    supportedChainIds: [137, 80001],
+    supportedChainIds: [1, 5],
   }
   const injected: InjectedConnector = new InjectedConnector(
     abstractConnectorArgs
@@ -69,17 +69,17 @@ export const ConnectButton: FC<ConnectButtonProps> = ({ className }) => {
   }, [])
 
   // Custom networks for Ethereum compatible chains can be added to Metamask
-  async function addPolygonNetwork() {
+  async function addEthereumNetwork() {
     try {
       const provider = await injected.getProvider()
       // rpc request to switch chain to an ethereum compatible chain
       await provider.request({
         method: 'wallet_addEthereumChain',
-        params: [POLYGON_TESTNET_PARAMS],
+        params: [ETHEREUM_TESTNET_PARAMS],
       })
     } catch (e) {
       setFlashMsg(
-        'Failed to switch to Polygon chain, Please check your internet connect reconnect again'
+        'Failed to switch to Ethereum chain, Please check your internet connect reconnect again'
       )
       console.log(e)
     }
@@ -95,7 +95,7 @@ export const ConnectButton: FC<ConnectButtonProps> = ({ className }) => {
           await window.ethereum.request({
             method: 'eth_requestAccounts',
           })
-          addPolygonNetwork()
+          addEthereumNetwork()
         }
       } catch (e) {
         console.log(e)

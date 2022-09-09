@@ -4,8 +4,7 @@ import {
   DAppProvider,
   FullConfig,
   Localhost,
-  Mumbai,
-  Polygon,
+  Goerli
 } from '@usedapp/core'
 import { AuthProvider } from '../context/AuthContext'
 import '../css/index.css'
@@ -18,8 +17,8 @@ import Script from 'next/script'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const supportedNetworks = {
-    local: [Localhost, Mumbai],
-    testflight: [Mumbai],
+    local: [Localhost, Goerli],
+    testflight: [Goerli],
   }
 
   const config: Partial<FullConfig> = {

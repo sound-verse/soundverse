@@ -59,8 +59,8 @@ export const useLogin = () => {
     31337: {
       name: 'Localhost',
     },
-    80001: {
-      name: 'Polygon Mumbai',
+    5: {
+      name: 'Görli',
     },
   }
 
