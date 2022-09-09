@@ -11,12 +11,16 @@ import {
 } from '../../common/graphql/schema'
 import { RoomList } from '../../components/Room/RoomList'
 import { ROOMS_UPDATED } from '../../common/graphql/subscriptions/rooms-updated.subscription'
+import { Bars } from 'react-loader-spinner'
 
 export default function Soudnverses() {
-  const { data: roomsData, subscribeToMore } = useQuery<
-    GetRoomsQuery,
-    GetRoomsQueryVariables
-  >(GET_ROOMS, { fetchPolicy: 'network-only' })
+  const {
+    data: roomsData,
+    subscribeToMore,
+    loading,
+  } = useQuery<GetRoomsQuery, GetRoomsQueryVariables>(GET_ROOMS, {
+    fetchPolicy: 'network-only',
+  })
 
   useEffect(() => {
     subscribeToMore({
@@ -38,7 +42,13 @@ export default function Soudnverses() {
       </Head>
 
       <Layout>
-        <RoomList rooms={rooms} />
+        {loading ? (
+          <div className="flex justify-center items-center">
+            <Bars color="grey" />
+          </div>
+        ) : (
+          <RoomList rooms={rooms} />
+        )}
       </Layout>
     </div>
   )
