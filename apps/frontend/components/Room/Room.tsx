@@ -32,7 +32,7 @@ export const SoundverseRoom: FC<RoomProps> = ({ room }) => {
   }
 
   useEffect(() => {
-    const newAnonArray = new Array(room?.currentAnonymousUsers ?? 0)
+    const newAnonArray = new Array(room?.currentAnonymousUsers > 0 ? room.currentAnonymousUsers : 0)
     newAnonArray.fill(0)
     setAnonArry(newAnonArray)
   }, [room?.currentAnonymousUsers])
