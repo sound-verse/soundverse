@@ -128,7 +128,7 @@ export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
             <div className="mt-28 lg:mt-20 p-2 flex items-center justify-center lg:justify-end">
               <div
                 className={
-                  'bg-black text-sm rounded-md text-white px-2 py-2 shadow-lg cursor-pointer drop-shadow mb-2 p-2'
+                  'bg-gradient-to-l from-[#1400FF] to-[#0089FF] text-sm rounded-md text-white px-2 py-2 shadow-lg cursor-pointer drop-shadow mb-2 p-2'
                 }
                 onClick={handleEnterSoundverse}
               >
