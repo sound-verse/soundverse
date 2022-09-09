@@ -16,7 +16,7 @@ interface ConnectButtonProps {
 declare const window: any
 
 const ETHEREUM_MAINNET_PARAMS = {
-  chainId: '0x1', // 137
+  chainId: '0x001', // 137
   chainName: 'Ethereum Mainnet',
   nativeCurrency: {
     name: 'ETH',
@@ -29,7 +29,7 @@ const ETHEREUM_MAINNET_PARAMS = {
 
 // Polygon Testnet params
 const ETHEREUM_TESTNET_PARAMS = {
-  chainId: '0x5',
+  chainId: '0x005',
   chainName: 'Görli',
   nativeCurrency: {
     name: 'ETH',
