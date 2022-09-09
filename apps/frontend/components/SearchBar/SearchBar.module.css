@@ -16,7 +16,7 @@
 }
 
 .searchResultWrapper {
-  @apply absolute bg-white rounded-2xl p-3 w-[246px] mt-3 border border-grey-light -ml-2 overflow-y-auto;
+  @apply absolute bg-white rounded-2xl p-3 w-[214px] mt-3 border border-grey-light -ml-2 overflow-y-auto;
 }
 
 .resultHeading {

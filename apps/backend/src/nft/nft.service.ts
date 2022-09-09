@@ -137,7 +137,7 @@ export class NftService {
   }
 
   async search(searchInput: NftSearchInput): Promise<NftSearch> {
-    if (searchInput.search.length < 3) {
+    if (searchInput.search.length < 2) {
       return;
     }
     const nfts = await this.nftModel

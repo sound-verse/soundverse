@@ -57,6 +57,9 @@ export const SearchBar: FC<SearchBarProps> = ({ className }) => {
           onChange={(event) => setSearch(event.target.value.toString())}
         />
       </div>
+      {nftsResult.length === 0 && artistsResult.length === 0 && search.length > 2 && (
+        <div className={styles.searchResultWrapper}>No search results</div>
+      )}
       {(nftsResult.length > 0 || artistsResult.length > 0) && (
         <div ref={ref}>
           {isComponentVisible && (
