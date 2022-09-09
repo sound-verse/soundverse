@@ -8,13 +8,6 @@ import { IsOptional, IsUrl, MaxLength, ValidateIf } from 'class-validator';
 export class UpdateUserInput {
   @Transform(({ value }) => xss(value))
   @MaxLength(250, {
-    message: 'Email is too long',
-  })
-  @Field({ nullable: true })
-  email?: string;
-
-  @Transform(({ value }) => xss(value))
-  @MaxLength(250, {
     message: 'Twitter is too long',
   })
   @Field({ nullable: true })

@@ -219,7 +219,6 @@ type Mutation {
 }
 
 input UpdateUserInput {
-  email: String
   twitter: String
   instagram: String
   soundcloud: String
