@@ -18,7 +18,7 @@ export default function Layout({ className = '', children }) {
 
   return (
     <div className="flex items-center justify-center w-full h-screen">
-      We are currently deplyoing new stuff :)
+      We are currently deploying new stuff :)
     </div>
     // <div>
     //   {showMobileMenu ? <MobileHeader /> : <Header />}
