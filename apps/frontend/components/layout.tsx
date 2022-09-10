@@ -17,16 +17,19 @@ export default function Layout({ className = '', children }) {
   }, [isMobile])
 
   return (
-    <div>
-      {showMobileMenu ? <MobileHeader /> : <Header />}
-      <div
-        className={cn(
-          'mx-auto sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl 2xl:max-w-screen-2xl',
-          className
-        )}
-      >
-        <div className="p-4 sm:p-10">{children}</div>
-      </div>
+    <div className="flex items-center justify-center w-full h-screen">
+      We are currently deplyoing new stuff :)
     </div>
+    // <div>
+    //   {showMobileMenu ? <MobileHeader /> : <Header />}
+    //   <div
+    //     className={cn(
+    //       'mx-auto sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl 2xl:max-w-screen-2xl',
+    //       className
+    //     )}
+    //   >
+    //     <div className="p-4 sm:p-10">{children}</div>
+    //   </div>
+    // </div>
   )
 }
