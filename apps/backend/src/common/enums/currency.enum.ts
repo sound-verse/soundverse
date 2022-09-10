@@ -1,7 +1,7 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum Currency {
-  MATIC,
+  ETH = "ETH",
 }
 
 registerEnumType(Currency, {
