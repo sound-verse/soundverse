@@ -78,7 +78,7 @@ jobs:
             testflight:main-api-testflight
             !default: 'Unsupported branch'
           CLUSTER_NAME: |
-            testflight:soundverse-cluster
+            testflight:soundverse-testflight-cluster
             !default: 'Unsupported branch'
           DEPLOY_NAME: |
             testflight:main-api-testflight

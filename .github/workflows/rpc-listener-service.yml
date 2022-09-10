@@ -86,7 +86,7 @@ jobs:
             testflight:rpc-listener-service-testflight
             !default: 'Unsupported branch'
           CLUSTER_NAME: |
-            testflight:soundverse-cluster
+            testflight:soundverse-testflight-cluster
             !default: 'Unsupported branch'
           DEPLOY_NAME: |
             testflight:rpc-listener-service-testflight
