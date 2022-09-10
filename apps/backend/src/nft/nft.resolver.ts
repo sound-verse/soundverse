@@ -51,7 +51,7 @@ export class NftResolver {
       }
     }
 
-    const bucket = 'soundverse-nft';
+    const bucket = this.configService.get('BUCKET_NAME_NFT');
     const rndFileNameAudio = crypto.randomBytes(32).toString('hex');
     const rndFileNameImage = `cover/${rndFileNameAudio}`;
 

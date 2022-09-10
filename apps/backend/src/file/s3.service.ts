@@ -45,11 +45,11 @@ export class S3Service {
   resolveBucketUrl(bucket: string, fileName: string): string {
     let bucketName;
     switch (bucket) {
-      case 'soundverse-user': {
+      case 'soundverse-testflight-user' ||  'soundverse-user': {
         bucketName = this.configService.get('ENVIRONMENT') === 'local' ? 'soundverse-user' : 'user';
         break;
       }
-      case 'soundverse-nft': {
+      case 'soundverse-testflight-nft' || 'soundverse-nft': {
         bucketName = this.configService.get('ENVIRONMENT') === 'local' ? 'soundverse-nft' : 'nft';
         break;
       }

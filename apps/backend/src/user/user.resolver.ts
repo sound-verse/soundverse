@@ -9,11 +9,16 @@ import { MongooseClassSerializerInterceptor } from '../MongooseClassSerializerIn
 import { GraphQLUpload, FileUpload } from 'graphql-upload';
 import { FileService } from '../file/file.service';
 import crypto from 'crypto';
+import { ConfigService } from '@nestjs/config';
 
 @Resolver(() => User)
 @UseInterceptors(MongooseClassSerializerInterceptor)
 export class UserResolver {
-  constructor(private userService: UserService, private fileService: FileService) {}
+  constructor(
+    private userService: UserService,
+    private fileService: FileService,
+    private configService: ConfigService,
+  ) {}
 
   @Query(() => User, { nullable: true })
   async user(@Args('ethAddress') ethAddress: string): Promise<User> {
@@ -45,7 +50,7 @@ export class UserResolver {
     { createReadStream }: FileUpload,
     @CurrentUser() user: LoggedinUser,
   ) {
-    const bucket = 'soundverse-user';
+    const bucket = this.configService.get('BUCKET_NAME_USER');
     const rndFileName = crypto.randomBytes(32).toString('hex');
     const fileUrl = await this.fileService.uploadFileToBucket(rndFileName, bucket, createReadStream, 'image');
 

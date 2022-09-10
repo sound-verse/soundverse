@@ -114,11 +114,6 @@ env:
       secretKeyRef:
         name: mongodb-uri-soundverse-testflight
         key: mongodb-uri
-  - name: MONGODB_CA
-    valueFrom:
-      secretKeyRef:
-        name: mongodb-ca-soundverse-testflight
-        key: mongodb-ca
   - name: PORT
     value: '80'
   - name: JWT_SECRET
@@ -130,16 +125,6 @@ env:
     value: 'true'
   - name: PLAYGROUND_ENABLE
     value: 'true'
-  - name: PINATA_API_Key
-    valueFrom:
-      secretKeyRef:
-        name: pinata-api-key-soundverse-testflight
-        key: pinata-api-key
-  - name: PINATA_API_Secret
-    valueFrom:
-      secretKeyRef:
-        name: pinata-api-secret-soundverse-testflight
-        key: pinata-api-secret
   - name: DO_ACCESS_KEY_ID
     valueFrom:
       secretKeyRef:
@@ -173,7 +158,7 @@ env:
   - name: METADATA_EXTERNAL_URL_BASE
     value: 'https://app.soundverse.io'
   - name: INTERNAL_FILE_URL_BASE
-    value: 'https://cdn-{bucket}.soundverse.io'
+    value: 'https://cdn-testflight-{bucket}.soundverse.io'
   - name: RABBITMQ_USER
     value: 'rezmtgjt'
   - name: RABBITMQ_PASSWORD
@@ -188,7 +173,7 @@ env:
   - name: RABBITMQ_RECOVERY_QUEUE_NAME
     value: 'sc-blockchain-events-testflight-recovery'
   - name: REDIS_HOST
-    value: 'private-soundverse-main-redis-do-user-10385872-0.b.db.ondigitalocean.com'
+    value: 'private-soundverse-testflight-redis-do-user-10385872-0.b.db.ondigitalocean.com'
   - name: REDIS_PORT
     value: '25061'
   - name: REDIS_USERNAME
@@ -203,3 +188,7 @@ env:
       secretKeyRef:
         name: redis-ca-soundverse-testflight
         key: redis-ca
+  - name: BUCKET_NAME_NFT
+    value: 'soundverse-testflight-nft'
+  - name: BUCKET_NAME_USER
+    value: 'soundverse-testflight-user'
