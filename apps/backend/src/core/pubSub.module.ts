@@ -28,9 +28,9 @@ export const PUB_SUB = 'PUB_SUB';
             port: configService.get('REDIS_PORT'),
             username: configService.get('REDIS_USERNAME'),
             password: configService.get('REDIS_PASSWORD'),
-            // tls: {
-            //   cert: configService.get<string>('REDIS_CA').replace("'", '').replace(/\\n/gm, '\n'),
-            // },
+            tls: {
+              cert: configService.get<string>('REDIS_CA').replace("'", '').replace(/\\n/gm, '\n'),
+            },
           },
         });
       },
