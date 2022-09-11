@@ -46,6 +46,7 @@ export default function Marketplace() {
     GetNftsQueryVariables
   >(GET_NFTS, {
     variables: { limit: LIMIT, skip: 0 },
+    fetchPolicy: 'network-only'
   })
 
   const [playingCardId, setPlayingCardId] = useState<string>('')
