@@ -21,7 +21,6 @@ export const PUB_SUB = 'PUB_SUB';
           });
         }
 
-        console.log(configService.get<string>('REDIS_CA'));
         return new RedisPubSub({
           connection: {
             host: configService.get('REDIS_HOST'),
@@ -29,7 +28,7 @@ export const PUB_SUB = 'PUB_SUB';
             username: configService.get('REDIS_USERNAME'),
             password: configService.get('REDIS_PASSWORD'),
             tls: {
-              cert: configService.get<string>('REDIS_CA').replace("'", '').replace(/\\n/gm, '\n'),
+              cert: configService.get<string>('REDIS_CA'),
             },
           },
         });
