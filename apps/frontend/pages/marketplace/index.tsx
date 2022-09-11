@@ -73,6 +73,9 @@ export default function Marketplace() {
       setAllLoaded(true)
     }
     setAllNfts([...allNfts, ...data.nfts])
+    return () => {
+      setAllNfts([])
+    }
   }, [data])
 
   const handleSortClick = (sortOption: SortOption) => {
