@@ -12,7 +12,7 @@ const createVoucherSignature = async (voucher, signer) => {
 const main = async () => {
   // Config
 
-  const DUMMY_AMOUNT = 1000;
+  const DUMMY_AMOUNT = 100;
 
   const client = await MongoClient.connect(
     'mongodb://root:root@localhost:27017/soundverse?authSource=admin&retryWrites=false',
@@ -115,12 +115,12 @@ const main = async () => {
 
       const mintVoucherMasterSignature = await createVoucherSignature(mintVoucherMaster, signer);
 
-      const mintVocherMasterWithSignature = {...mintVoucherMaster, signature: mintVoucherMasterSignature};
+      const mintVocherMasterWithSignature = { ...mintVoucherMaster, signature: mintVoucherMasterSignature };
 
       await db.collection('sellings').insertOne({
         nft: nft._id,
         seller,
-        nftType: "MASTER",
+        nftType: 'MASTER',
         mintVoucher: mintVocherMasterWithSignature,
         marketplaceContractAddress,
         sellingStatus,
@@ -142,18 +142,20 @@ const main = async () => {
 
       const mintVoucherLicenseSignature = await createVoucherSignature(mintVoucherLicense, signer);
 
-      const mintVocherLicenseWithSignature = {...mintVoucherLicense, signature: mintVoucherLicenseSignature};
+      const mintVocherLicenseWithSignature = {
+        ...mintVoucherLicense,
+        signature: mintVoucherLicenseSignature,
+      };
 
       await db.collection('sellings').insertOne({
         nft: nft._id,
         seller,
-        nftType: "LICENSE",
+        nftType: 'LICENSE',
         mintVoucher: mintVocherLicenseWithSignature,
         marketplaceContractAddress,
         sellingStatus,
         createdAt,
       });
-
     }),
   );
 
