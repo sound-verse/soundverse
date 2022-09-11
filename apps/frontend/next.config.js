@@ -1,6 +1,12 @@
 module.exports = {
   images: {
-    domains: ['localhost', 'cdn-nft.soundverse.io', 'cdn-user.soundverse.io'],
+    domains: [
+      'localhost',
+      'cdn-nft-testflight.soundverse.io',
+      'cdn-user-testflight.soundverse.io',
+      'cdn-nft.soundverse.io',
+      'cdn-user.soundverse.io',
+    ],
   },
   async redirects() {
     return [
