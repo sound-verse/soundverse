@@ -158,7 +158,7 @@ env:
   - name: METADATA_EXTERNAL_URL_BASE
     value: 'https://app.soundverse.io'
   - name: INTERNAL_FILE_URL_BASE
-    value: 'https://cdn-testflight-{bucket}.soundverse.io'
+    value: 'https://cdn-{bucket}-testflight.soundverse.io'
   - name: RABBITMQ_USER
     value: 'rezmtgjt'
   - name: RABBITMQ_PASSWORD
