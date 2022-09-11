@@ -114,11 +114,6 @@ env:
       secretKeyRef:
         name: mongodb-uri-soundverse-testflight
         key: mongodb-uri
-  - name: MONGODB_CA
-    valueFrom:
-      secretKeyRef:
-        name: mongodb-ca-soundverse-testflight
-        key: mongodb-ca
   - name: PORT
     value: '80'
   - name: RPC_URL

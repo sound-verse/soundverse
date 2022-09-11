@@ -9,18 +9,7 @@ import fs from 'fs';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        if (configService.get<string>('ENVIRONMENT') === 'local') {
-          return { uri: configService.get<string>('MONGODB_URI') };
-        }
-
-        const caPath = './ca.crt';
-        fs.writeFileSync(caPath, Buffer.from(configService.get<string>('MONGODB_CA'), 'base64'));
-
-        return {
-          uri: configService.get<string>('MONGODB_URI'),
-          sslValidate: true,
-          tlsCAFile: caPath,
-        };
+        return { uri: configService.get<string>('MONGODB_URI') };
       },
     }),
   ],
