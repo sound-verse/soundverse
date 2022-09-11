@@ -135,7 +135,7 @@ export const CreateSellingForm = ({
               <div className="text-black font-bold text-sm mt-10">Price</div>
               <div className="flex justify-start items-baseline mt-5">
                 <div className="border border-white font-bold rounded-full px-5 py-2 mr-8 text-sm ">
-                  MATIC
+                  ETH
                 </div>
                 <div className="">
                   <Field
