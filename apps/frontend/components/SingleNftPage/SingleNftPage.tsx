@@ -258,7 +258,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                   <div className="w-full lg:w-[36rem]">
                     <div className="flex items-center">
                       <div className="mr-5">
-                        <div className="font-xl hover:text-purple cursor-pointer">
+                        <div className="font-xl hover:text-[#1400FF] cursor-pointer">
                           <div onClick={() => setShowCreateListing(false)}>
                             {'<- '}Back
                           </div>
@@ -298,9 +298,9 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                           <Link
                             href={`/profile/${nft.masterOwner.user.ethAddress}`}
                           >
-                            <div className="font-xl hover:text-purple cursor-pointer">
+                            <div className="font-xl hover:text-[#1400FF] cursor-pointer">
                               <a>
-                                <div className="text-purple font-xl ml-2">
+                                <div className="text-[#1400FF] font-xl ml-2">
                                   <ProfileName
                                     name={nft.masterOwner.user.name}
                                     ethAddress={nft.masterOwner.user.ethAddress}
@@ -332,7 +332,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                         setSelectedSelling(undefined)
                         setShowBuyLicense(false)
                       }}
-                      className="hover:text-purple cursor-pointer text-lg mb-10"
+                      className="hover:text-[#1400FF] cursor-pointer text-lg mb-10"
                     >
                       {'<- Back'}
                     </div>
@@ -354,7 +354,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                         setSelectedSelling(undefined)
                         setShowUnlistLicense(false)
                       }}
-                      className="hover:text-purple cursor-pointer text-lg mb-10"
+                      className="hover:text-[#1400FF] cursor-pointer text-lg mb-10"
                     >
                       {'<- Back'}
                     </div>
@@ -377,7 +377,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                           <ProfileName
                             ethAddress={nft.creator.ethAddress}
                             name={nft.creator.name}
-                            className="inline-block font-bold text-purple"
+                            className="inline-block font-bold text-[#1400FF]"
                             short={true}
                             fullName={true}
                           />
@@ -401,7 +401,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                                     <ProfileName
                                       ethAddress={licenseOwner.user.ethAddress}
                                       name={licenseOwner.user.name}
-                                      className="inline-block font-bold text-purple"
+                                      className="inline-block font-bold text-[#1400FF]"
                                       short={true}
                                       fullName={true}
                                     />
@@ -422,7 +422,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                               <ProfileName
                                 ethAddress={nft.masterOwner.user.ethAddress}
                                 name={nft.masterOwner.user.name}
-                                className="inline-block font-bold text-purple"
+                                className="inline-block font-bold text-[#1400FF]"
                                 short={true}
                                 fullName={true}
                               />

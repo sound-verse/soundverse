@@ -77,7 +77,7 @@ export const BuyLicense = ({
                 {selling.saleVoucher?.currency ?? selling.mintVoucher?.currency}
               </span>
             </div>
-            <div className="text-purple col-span-4">
+            <div className="text-[#1400FF] col-span-4">
               <Link href={`/profile/${selling.seller.ethAddress}`}>
                 <a>
                   <ProfileName

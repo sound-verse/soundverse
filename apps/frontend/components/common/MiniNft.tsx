@@ -35,7 +35,7 @@ export const MiniNft: FC<MiniNftProps> = ({ className, nft, nftType }) => {
           </div>
           <div className="flex">
             <div className="text-xs text-grey-dark mr-2">by</div>
-            <div className="text-purple inline-block">
+            <div className="text-[#1400FF] inline-block">
               <ProfileName
                 ethAddress={nft.creator.ethAddress}
                 name={nft.creator.name}

@@ -433,7 +433,7 @@ export const CreateForm = () => {
           <div className="text-grey-dark leading-6">
             Set the royalty percentage you would like to receive on every
             secondary trade of your Master and Licences.{' '}
-            <span className="text-purple underline">
+            <span className="text-[#1400FF] underline">
               Caution: You {"won't"} be able to change this royalty percentage
               after minting your NFT!
             </span>
