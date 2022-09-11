@@ -2,8 +2,8 @@ module.exports = {
   images: {
     domains: [
       'localhost',
-      'cdn-nft-testflight.soundverse.io',
-      'cdn-user-testflight.soundverse.io',
+      'cdn-testflight-nft.soundverse.io',
+      'cdn-testflight-user.soundverse.io',
       'cdn-nft.soundverse.io',
       'cdn-user.soundverse.io',
     ],
