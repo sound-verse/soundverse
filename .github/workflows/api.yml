@@ -7,7 +7,7 @@ on:
         required: false
   push:
     branches:
-      # - main
+      - main
       - testflight
     paths:
       - "apps/backend/**"
@@ -73,18 +73,23 @@ jobs:
         with:
           CR_URL: |
             testflight:${{ secrets.CR_URL }}
+            main:${{ secrets.CR_URL }}
             !default: 'Unsupported branch'
           IMAGE_NAME: |
             testflight:main-api-testflight
+            main:main-api
             !default: 'Unsupported branch'
           CLUSTER_NAME: |
             testflight:soundverse-testflight-cluster
+            main:soundverse-main-cluster
             !default: 'Unsupported branch'
           DEPLOY_NAME: |
             testflight:main-api-testflight
+            main:main-api
             !default: 'Unsupported branch'
           ENV_NAME: |
             testflight:testflight
+            main:main
             !default: 'Unsupported branch'
 
       - name: Install doctl
