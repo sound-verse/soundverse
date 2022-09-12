@@ -74,19 +74,19 @@ export const useLogin = () => {
 
   switch (process.env.NEXT_PUBLIC_ENVIRONMENT) {
     case 'local': {
-      supportedNetworks.local.chainIds
+      correctChainIds = supportedNetworks.local.chainIds
       break
     }
     case 'testflight': {
-      supportedNetworks.testflight.chanIds
+      correctChainIds = supportedNetworks.testflight.chanIds
       break
     }
     case 'main': {
-      supportedNetworks.main.chanIds
+      correctChainIds = supportedNetworks.main.chanIds
       break
     }
     default: {
-      supportedNetworks.main.chanIds
+      correctChainIds = supportedNetworks.main.chanIds
       break
     }
   }
