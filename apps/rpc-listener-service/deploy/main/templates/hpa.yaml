@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "rpc-listener-service-soundverse.fullname" . }}
+  name: {{ include "rpc-listener-service.fullname" . }}
   labels:
-    {{- include "rpc-listener-service-soundverse.labels" . | nindent 4 }}
+    {{- include "rpc-listener-service.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "rpc-listener-service-soundverse.fullname" . }}
+    name: {{ include "rpc-listener-service.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:
