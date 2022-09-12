@@ -53,6 +53,9 @@ export const useLogin = () => {
     testflight: {
       chanIds: [5],
     },
+    main: {
+      chanIds: [1],
+    },
   }
 
   const networks = {
@@ -62,12 +65,27 @@ export const useLogin = () => {
     5: {
       name: 'Görli',
     },
+    1: {
+      name: 'Ethereum',
+    },
   }
 
-  const correctChainIds =
-    process.env.NEXT_PUBLIC_ENVIRONMENT === 'local'
-      ? supportedNetworks.local.chainIds
-      : supportedNetworks.testflight.chanIds
+  let correctChainIds
+
+  switch (process.env.NEXT_PUBLIC_ENVIRONMENT) {
+    case 'local': {
+      supportedNetworks.local.chainIds
+      break
+    }
+    case 'testflight': {
+      supportedNetworks.testflight.chanIds
+      break
+    }
+    case 'main': {
+      supportedNetworks.main.chanIds
+      break
+    }
+  }
 
   const correctNetworkName = chainId && networks[correctChainIds[0]].name
 
