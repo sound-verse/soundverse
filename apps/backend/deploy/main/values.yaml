@@ -190,6 +190,6 @@ env:
         name: redis-ca-soundverse
         key: redis-ca
   - name: BUCKET_NAME_NFT
-    value: 'soundverse-nft'
+    value: 'soundverse-main-nft'
   - name: BUCKET_NAME_USER
-    value: 'soundverse-user'
+    value: 'soundverse-main-user'
