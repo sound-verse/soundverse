@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "rpc-listener-service-soundverse.name" -}}
+{{- define "rpc-listener-service.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "rpc-listener-service-soundverse.fullname" -}}
+{{- define "rpc-listener-service.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "rpc-listener-service-soundverse.chart" -}}
+{{- define "rpc-listener-service.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "rpc-listener-service-soundverse.labels" -}}
-helm.sh/chart: {{ include "rpc-listener-service-soundverse.chart" . }}
-{{ include "rpc-listener-service-soundverse.selectorLabels" . }}
+{{- define "rpc-listener-service.labels" -}}
+helm.sh/chart: {{ include "rpc-listener-service.chart" . }}
+{{ include "rpc-listener-service.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,17 +45,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "rpc-listener-service-soundverse.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "rpc-listener-service-soundverse.name" . }}
+{{- define "rpc-listener-service.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "rpc-listener-service.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "rpc-listener-service-soundverse.serviceAccountName" -}}
+{{- define "rpc-listener-service.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "rpc-listener-service-soundverse.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "rpc-listener-service.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}

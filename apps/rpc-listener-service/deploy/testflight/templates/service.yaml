@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "rpc-listener-service-soundverse-testflight.fullname" . }}
+  name: {{ include "rpc-listener-service-testflight.fullname" . }}
   labels:
-    {{- include "rpc-listener-service-soundverse-testflight.labels" . | nindent 4 }}
+    {{- include "rpc-listener-service-testflight.labels" . | nindent 4 }}
   
   {{- with .Values.ingress.annotations }}
   annotations:
@@ -17,4 +17,4 @@ spec:
       protocol: TCP
       name: http
   selector:
-    {{- include "rpc-listener-service-soundverse-testflight.selectorLabels" . | nindent 4 }}
+    {{- include "rpc-listener-service-testflight.selectorLabels" . | nindent 4 }}

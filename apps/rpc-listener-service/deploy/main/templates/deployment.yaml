@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "rpc-listener-service-soundverse.fullname" . }}
+  name: {{ include "rpc-listener-service.fullname" . }}
   labels:
-    {{- include "rpc-listener-service-soundverse.labels" . | nindent 4 }}
+    {{- include "rpc-listener-service.labels" . | nindent 4 }}
 spec:
 {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
 {{- end }}
   selector:
     matchLabels:
-      {{- include "rpc-listener-service-soundverse.selectorLabels" . | nindent 6 }}
+      {{- include "rpc-listener-service.selectorLabels" . | nindent 6 }}
   template:
     metadata:
     {{- with .Values.podAnnotations }}
@@ -18,13 +18,13 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       labels:
-        {{- include "rpc-listener-service-soundverse.selectorLabels" . | nindent 8 }}
+        {{- include "rpc-listener-service.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "rpc-listener-service-soundverse.serviceAccountName" . }}
+      serviceAccountName: {{ include "rpc-listener-service.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
