@@ -119,14 +119,14 @@ env:
   - name: RPC_URL
     value: 'wss://small-soft-arm.quiknode.pro/0b4ed6ba1fc4f4392f3b85698536d064348397d7/'
   - name: RABBITMQ_USER
-    value: 'rezmtgjt'
+    value: 'erlernxh'
   - name: RABBITMQ_PASSWORD
     valueFrom:
       secretKeyRef:
         name: rabbitmq-password-soundverse
         key: rabbitmq-password
   - name: RABBITMQ_HOST
-    value: 'roedeer.rmq.cloudamqp.com/rezmtgjt'
+    value: 'sparrow.rmq.cloudamqp.com/erlernxh'
   - name: RABBITMQ_QUEUE_NAME
     value: 'sc-blockchain-events'
   - name: RABBITMQ_RECOVERY_QUEUE_NAME
