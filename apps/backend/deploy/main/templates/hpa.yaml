@@ -1,15 +1,15 @@
 {{- if .Values.autoscaling.enabled }}
-apiVersion: autoscaling/v2beta1
+apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "main-api-soundverse-testflight.fullname" . }}
+  name: {{ include "main-api-soundverse.fullname" . }}
   labels:
-    {{- include "main-api-soundverse-testflight.labels" . | nindent 4 }}
+    {{- include "main-api-soundverse.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "main-api-soundverse-testflight.fullname" . }}
+    name: {{ include "main-api-soundverse.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:
