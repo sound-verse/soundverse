@@ -85,6 +85,10 @@ export const useLogin = () => {
       supportedNetworks.main.chanIds
       break
     }
+    default: {
+      supportedNetworks.main.chanIds
+      break
+    }
   }
 
   const correctNetworkName = chainId && networks[correctChainIds[0]].name
