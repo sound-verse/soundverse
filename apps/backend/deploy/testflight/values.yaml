@@ -22,7 +22,7 @@ serviceAccount:
   annotations:
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name: 'main-api-testflight'
+  name: 'main-api'
 
 podAnnotations: {}
 
@@ -43,7 +43,7 @@ service:
   port: 80
 
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: api-testflight.soundverse.io
+    external-dns.alpha.kubernetes.io/hostname: api.soundverse.io
     external-dns.alpha.kubernetes.io/cloudflare-proxied: 'true'
 
 ingress:
@@ -55,12 +55,12 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-send-timeout: '3600'
     nginx.ingress.kubernetes.io/proxy-read-timeout: '3600'
   hosts:
-    - host: api-testflight.soundverse.io
+    - host: api.soundverse.io
       paths: ['/', '/*']
   tls:
-    - secretName: api-soundverse-testflight-tls
+    - secretName: api-soundverse-tls
       hosts:
-        - api-testflight.soundverse.io
+        - api.soundverse.io
 
 resources:
   {}
@@ -104,7 +104,7 @@ affinity:
 # env -- Environment variables for the application.
 env:
   - name: ENVIRONMENT
-    value: testflight
+    value: main
   - name: SERVICE_NAME
     value: backend
   - name: NODE_OPTIONS
@@ -112,14 +112,14 @@ env:
   - name: MONGODB_URI
     valueFrom:
       secretKeyRef:
-        name: mongodb-uri-soundverse-testflight
+        name: mongodb-uri-soundverse
         key: mongodb-uri
   - name: PORT
     value: '80'
   - name: JWT_SECRET
     valueFrom:
       secretKeyRef:
-        name: jwt-secret-soundverse-testflight
+        name: jwt-secret-soundverse
         key: jwt-secret
   - name: GRAPHQL_DEBUG
     value: 'true'
@@ -128,22 +128,22 @@ env:
   - name: DO_ACCESS_KEY_ID
     valueFrom:
       secretKeyRef:
-        name: do-access-key-id-soundverse-testflight
+        name: do-access-key-id-soundverse
         key: do-access-key-id
   - name: DO_SECRET_ACCESS_KEY
     valueFrom:
       secretKeyRef:
-        name: do-secret-access-key-soundverse-testflight
+        name: do-secret-access-key-soundverse
         key: do-secret-access-key
   - name: INFURA_PROJECT_ID
     valueFrom:
       secretKeyRef:
-        name: infura-project-id-soundverse-testflight
+        name: infura-project-id-soundverse
         key: infura-project-id
   - name: INFURA_PROJECT_SECRET
     valueFrom:
       secretKeyRef:
-        name: infura-project-secret-soundverse-testflight
+        name: infura-project-secret-soundverse
         key: infura-project-secret
   - name: DO_SPACES_ENDPOINT
     value: ams3.digitaloceanspaces.com
@@ -158,22 +158,22 @@ env:
   - name: METADATA_EXTERNAL_URL_BASE
     value: 'https://app.soundverse.io'
   - name: INTERNAL_FILE_URL_BASE
-    value: 'https://cdn-{bucket}-testflight.soundverse.io'
+    value: 'https://cdn-{bucket}.soundverse.io'
   - name: RABBITMQ_USER
     value: 'rezmtgjt'
   - name: RABBITMQ_PASSWORD
     valueFrom:
       secretKeyRef:
-        name: rabbitmq-password-soundverse-testflight
+        name: rabbitmq-password-soundverse
         key: rabbitmq-password
   - name: RABBITMQ_HOST
     value: 'roedeer.rmq.cloudamqp.com/rezmtgjt'
   - name: RABBITMQ_QUEUE_NAME
-    value: 'sc-blockchain-events-testflight'
+    value: 'sc-blockchain-events'
   - name: RABBITMQ_RECOVERY_QUEUE_NAME
-    value: 'sc-blockchain-events-testflight-recovery'
+    value: 'sc-blockchain-events-recovery'
   - name: REDIS_HOST
-    value: 'private-soundverse-testflight-redis-do-user-10385872-0.b.db.ondigitalocean.com'
+    value: 'soundverse-main-redis-do-user-10385872-0.b.db.ondigitalocean.com'
   - name: REDIS_PORT
     value: '25061'
   - name: REDIS_USERNAME
@@ -181,14 +181,14 @@ env:
   - name: REDIS_PASSWORD
     valueFrom:
       secretKeyRef:
-        name: redis-password-soundverse-testflight
+        name: redis-password-soundverse
         key: redis-password
   - name: REDIS_CA
     valueFrom:
       secretKeyRef:
-        name: redis-ca-soundverse-testflight
+        name: redis-ca-soundverse
         key: redis-ca
   - name: BUCKET_NAME_NFT
-    value: 'soundverse-testflight-nft'
+    value: 'soundverse-nft'
   - name: BUCKET_NAME_USER
-    value: 'soundverse-testflight-user'
+    value: 'soundverse-user'
