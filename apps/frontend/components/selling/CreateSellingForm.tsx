@@ -11,6 +11,7 @@ import { useCreateSelling } from '../../hooks/contracts/useCreateSelling'
 import { AuthUser, Nft, NftType } from '../../common/graphql/schema.d'
 import { useAuthContext } from '../../context/AuthContext'
 import cn from 'classnames'
+import Image from 'next/image'
 
 export type CreateSellingFormProps = {
   user: AuthUser
@@ -116,7 +117,10 @@ export const CreateSellingForm = ({
     <>
       <div className="flex items-center justify-center mt-5 w-full">
         <div
-          className={cn('bg-white rounded-3xl p-5 md:p-16 w-full', styles.boxShadow)}
+          className={cn(
+            'bg-white rounded-3xl p-5 md:p-16 w-full',
+            styles.boxShadow
+          )}
         >
           <Formik
             initialValues={initialValues}
@@ -129,24 +133,29 @@ export const CreateSellingForm = ({
                 Type
               </div>
               <div className="flex flex-col bg-grey-medium text-white border border-white p-6 w-32 text-sm rounded-2xl justify-center items-center cursor-pointer">
-                <div>$</div>
                 <div>Fixed Price</div>
               </div>
               <div className="text-black font-bold text-sm mt-10">Price</div>
               <div className="flex justify-start items-baseline mt-5">
-                <div className="border border-white font-bold rounded-full px-5 py-2 mr-8 text-sm ">
-                  ETH
-                </div>
-                <div className="">
-                  <Field
-                    id="price"
-                    name="price"
-                    placeholder="Amount"
-                    className="outline-none  text-black w-full"
-                  />
-                  <div className="border-t-2 w-full border-grey-medium opacity-50"></div>
-                  <div className={styles.error}>
-                    <ErrorMessage name="price" />
+                <div className="flex items-center">
+                  <div className="relative w-5 h-8 flex justify-center items-center mr-5">
+                    <Image
+                      src="/img/ethIcon.svg"
+                      layout="fill"
+                      alt="Ethereum Logo"
+                    />
+                  </div>
+                  <div>
+                    <Field
+                      id="price"
+                      name="price"
+                      placeholder="Amount"
+                      className="outline-none  text-black w-full"
+                    />
+                    <div className="border-t-2 w-full border-grey-medium opacity-50"></div>
+                    <div className={styles.error}>
+                      <ErrorMessage name="price" />
+                    </div>
                   </div>
                 </div>
               </div>
