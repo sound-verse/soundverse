@@ -24,7 +24,7 @@ export default function Marketplace() {
   const [sortBy, setSortBy] = useState<SortOption>(SortOption.Newest)
   const [allLoaded, setAllLoaded] = useState(false)
   const { ref, isComponentVisible, setIsComponentVisible } =
-    useComponentVisible(true)
+    useComponentVisible(false)
 
   let sortByString = ''
   switch (sortBy) {
