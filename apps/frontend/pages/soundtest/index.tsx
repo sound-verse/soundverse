@@ -67,6 +67,11 @@ export default function Soundtest() {
       ...options,
     })
     wavesurfer.current.load(url, currentTrack.waveForm)
+
+    wavesurfer.current.on('ready', () => {
+      console.log('READY')
+      wavesurfer.current.play()
+    })
   }
 
   useEffect(() => {
