@@ -197,6 +197,14 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
                 setCurrentTrack({
                   isPlaying: !currentTrack.isPlaying,
                 })
+                //Direkt calling play/pause for mobile 
+                if (isMobile) {
+                  if (currentTrack.isPlaying) {
+                    wavesurfer.current.pause()
+                  } else {
+                    wavesurfer.current.play()
+                  }
+                }
               }}
             >
               {currentTrack.isPlaying ? (
