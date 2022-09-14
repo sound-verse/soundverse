@@ -195,7 +195,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
               className="col-span-2 lg:col-span-1 cursor-pointer text-right mr-3 -mb-1"
               onClick={() => {
                 setCurrentTrack({
-                  isPlaying: !wavesurfer.current?.isPlaying(),
+                  isPlaying: !currentTrack.isPlaying,
                 })
               }}
             >
