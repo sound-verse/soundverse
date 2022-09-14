@@ -83,7 +83,7 @@ function SoundCard({
                 <div
                   className={styles.soundCardAudio}
                   onClick={(event) => {
-                    // event.preventDefault()
+                    event.preventDefault()
                     handleMusicClick()
                   }}
                 >

@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { ProfileName } from '../profile'
 import Link from 'next/link'
 import { NftType } from '../../common/graphql/schema.d'
+import useWindowDimensions from '../../hooks/useWindowDimensions'
 
 export type AudioPlayerBarProps = {}
 
@@ -28,6 +29,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
   const WavesurferLibrary = useRef(null)
   const { setCurrentTrack, currentTrack } = useAudioContext()
   const [playerIsReady, setPlayerIsReady] = useState(false)
+  const { isMobile } = useWindowDimensions()
 
   const gotoTrackPosition = (trackPosition: number) => {
     if (!wavesurfer.current || trackPosition === 0) {
@@ -102,12 +104,19 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
 
     wavesurfer.current.on('ready', () => {
       if (currentTrack.play) {
-        setCurrentTrack({
-          isLoading: false,
-          isPlaying: true,
-        })
+        if (isMobile) {
+          setCurrentTrack({
+            isLoading: false,
+            visible: true,
+          })
+        } else {
+          setCurrentTrack({
+            isLoading: false,
+            isPlaying: true,
+          })
+          wavesurfer.current.play()
+        }
         setPlayerIsReady(true)
-        wavesurfer.current.play()
       }
     })
   }
