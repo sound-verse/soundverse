@@ -29,7 +29,7 @@ export default function Soundtest() {
   const wavesurfer = useRef(null)
   const WavesurferLibrary = useRef(null)
 
-  const handlePlay = () => {
+  const handleCreate = () => {
     setCurrentTrack({
       url: '/dummy/dummy.mp3',
       waveForm: [
@@ -44,12 +44,19 @@ export default function Soundtest() {
     })
   }
 
-  //   useEffect(() => {
-  //     if (!wavesurfer.current) {
-  //       return
-  //     }
-  //     wavesurfer.current.playPause()
-  //   }, [currentTrack])
+  const handlePlay = () => {
+    if (!wavesurfer.current) {
+      return
+    }
+    wavesurfer.current.play()
+  }
+
+  const handlePause = () => {
+    if (!wavesurfer.current) {
+      return
+    }
+    wavesurfer.current.pause()
+  }
 
   const create = async (url: string) => {
     if (!WavesurferLibrary.current) {
@@ -60,12 +67,6 @@ export default function Soundtest() {
       ...options,
     })
     wavesurfer.current.load(url, currentTrack.waveForm)
-
-    wavesurfer.current.on('ready', () => {
-      setTimeout(() => {
-        wavesurfer.current.play()
-      }, 5000)
-    })
   }
 
   useEffect(() => {
@@ -88,11 +89,23 @@ export default function Soundtest() {
       <Layout>
         <div
           className="flex h-full w-full items-center justify-center"
+          onClick={handleCreate}
+        >
+          <button>CREATE</button>
+        </div>
+        <div ref={waveformRef} />
+        <div
+          className="flex h-full w-full items-center justify-center"
           onClick={handlePlay}
         >
           <button>PLAY</button>
         </div>
-        <div ref={waveformRef} />
+        <div
+          className="flex h-full w-full items-center justify-center"
+          onClick={handlePause}
+        >
+          <button>PAUSE</button>
+        </div>
       </Layout>
     </div>
   )
