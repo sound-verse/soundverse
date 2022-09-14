@@ -41,30 +41,15 @@ export default function Soundtest() {
         -0.11238270998001099, 0.09637515246868134, -0.04308032989501953,
         0.03724837675690651, -0.05804464593529701,
       ],
-      trackName: 'test',
-      currentPosition: 0,
-      creatorName: 'me',
-      trackPictureUrl: '/dummy/dummy.jpg',
-      creatorEthAddress: '0x0',
-      id: '1',
-      contractAddress: '0x0',
-      play: !currentTrack.play,
-      nftType: NftType.Master,
-      restart: true,
-      isRoomPlayer: false,
     })
   }
 
-  useEffect(() => {
-    if (!wavesurfer.current) {
-      return
-    }
-    if (currentTrack.play) {
-      wavesurfer.current.play()
-    } else {
-      wavesurfer.current.pause()
-    }
-  }, [currentTrack.play])
+//   useEffect(() => {
+//     if (!wavesurfer.current) {
+//       return
+//     }
+//     wavesurfer.current.playPause()
+//   }, [currentTrack])
 
   const create = async (url: string) => {
     if (!WavesurferLibrary.current) {
@@ -73,19 +58,11 @@ export default function Soundtest() {
     const options = formWaveSurferOptions(waveformRef.current)
     wavesurfer.current = await WavesurferLibrary.current.create({
       ...options,
-      ...(currentTrack.isRoomPlayer && { interact: false }),
     })
     wavesurfer.current.load(url, currentTrack.waveForm)
 
     wavesurfer.current.on('ready', () => {
-      if (currentTrack.play) {
-        setCurrentTrack({
-          ...currentTrack,
-          isLoading: false,
-          isPlaying: true,
-        })
-        wavesurfer.current.play()
-      }
+      wavesurfer.current.play()
     })
   }
 
@@ -111,7 +88,7 @@ export default function Soundtest() {
           className="flex h-full w-full items-center justify-center"
           onClick={handlePlay}
         >
-          <button>PLAY/PAUSE</button>
+          <button>PLAY</button>
         </div>
         <div ref={waveformRef} />
       </Layout>
