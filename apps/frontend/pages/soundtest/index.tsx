@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { createApolloClient } from '../../lib/createApolloClient'
 import { User } from '../../hooks/useProfile'
 import Custom404 from '../404'
@@ -9,10 +9,27 @@ import Head from 'next/head'
 import Layout from '../../components/layout'
 import { useAudioContext } from '../../context/AudioContext'
 
-export default function Soundtest() {
-  const { setCurrentTrack, currentTrack } = useAudioContext()
+const formWaveSurferOptions = (ref) => ({
+  container: ref,
+  waveColor: 'grey',
+  progressColor: 'black',
+  cursorColor: 'black',
+  height: 50,
+  pixelRatio: 1,
+  normalize: true,
+  barWidth: 1,
+  barGap: 1,
+  backend: 'MediaElement',
+})
 
-  const handlePlay = useCallback(() => {
+export default function Soundtest() {
+  //   const { setCurrentTrack, currentTrack } = useAudioContext()
+  const [currentTrack, setCurrentTrack] = useState<any>({})
+  const waveformRef = useRef(null)
+  const wavesurfer = useRef(null)
+  const WavesurferLibrary = useRef(null)
+
+  const handlePlay = () => {
     setCurrentTrack({
       url: '/dummy/dummy.mp3',
       waveForm: [
@@ -32,12 +49,56 @@ export default function Soundtest() {
       id: '1',
       contractAddress: '0x0',
       play: !currentTrack.play,
-      isPlaying: !currentTrack.isPlaying,
       nftType: NftType.Master,
       restart: true,
       isRoomPlayer: false,
     })
-  }, [currentTrack])
+  }
+
+  useEffect(() => {
+    if (!wavesurfer.current) {
+      return
+    }
+    if (currentTrack.play) {
+      wavesurfer.current.play()
+    } else {
+      wavesurfer.current.pause()
+    }
+  }, [currentTrack.play])
+
+  const create = async (url: string) => {
+    if (!WavesurferLibrary.current) {
+      WavesurferLibrary.current = await (await import('wavesurfer.js')).default
+    }
+    const options = formWaveSurferOptions(waveformRef.current)
+    wavesurfer.current = await WavesurferLibrary.current.create({
+      ...options,
+      ...(currentTrack.isRoomPlayer && { interact: false }),
+    })
+    wavesurfer.current.load(url, currentTrack.waveForm)
+
+    wavesurfer.current.on('ready', () => {
+      if (currentTrack.play) {
+        setCurrentTrack({
+          ...currentTrack,
+          isLoading: false,
+          isPlaying: true,
+        })
+        wavesurfer.current.play()
+      }
+    })
+  }
+
+  useEffect(() => {
+    if (!currentTrack.url) {
+      return
+    }
+    if (wavesurfer.current) {
+      wavesurfer.current.destroy()
+    }
+    setCurrentTrack({ ...currentTrack, isLoading: true })
+    create(currentTrack.url)
+  }, [currentTrack.url, currentTrack.nftType])
 
   return (
     <div>
@@ -52,6 +113,7 @@ export default function Soundtest() {
         >
           <button>PLAY/PAUSE</button>
         </div>
+        <div ref={waveformRef} />
       </Layout>
     </div>
   )
