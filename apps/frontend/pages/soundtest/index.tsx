@@ -44,12 +44,12 @@ export default function Soundtest() {
     })
   }
 
-//   useEffect(() => {
-//     if (!wavesurfer.current) {
-//       return
-//     }
-//     wavesurfer.current.playPause()
-//   }, [currentTrack])
+  //   useEffect(() => {
+  //     if (!wavesurfer.current) {
+  //       return
+  //     }
+  //     wavesurfer.current.playPause()
+  //   }, [currentTrack])
 
   const create = async (url: string) => {
     if (!WavesurferLibrary.current) {
@@ -62,7 +62,9 @@ export default function Soundtest() {
     wavesurfer.current.load(url, currentTrack.waveForm)
 
     wavesurfer.current.on('ready', () => {
-      wavesurfer.current.play()
+      setTimeout(() => {
+        wavesurfer.current.play()
+      }, 5000)
     })
   }
 
