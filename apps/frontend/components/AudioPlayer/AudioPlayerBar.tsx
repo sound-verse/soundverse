@@ -187,10 +187,10 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
         <div
           className={cn(
             'grid grid-cols-5 align-center items-center',
-            !currentTrack.isRoomPlayer && 'col-span-3 lg:col-span-1'
+            (!currentTrack.isRoomPlayer ) && 'col-span-3 lg:col-span-1'
           )}
         >
-          {!currentTrack.isRoomPlayer ? (
+          {(!currentTrack.isRoomPlayer || isMobile) ? (
             <div
               className="col-span-2 lg:col-span-1 cursor-pointer text-right mr-3 -mb-1"
               onClick={() => {
