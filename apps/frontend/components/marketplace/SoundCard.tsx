@@ -166,7 +166,7 @@ function SoundCard({
                       </div>
                       {/* {nft.sellings.masterSelling.saleVoucher?.currency ??
                         nft.sellings.masterSelling.mintVoucher.currency} */}
-                      <div className="relative w-3 h-4">
+                      <div className="relative w-4 h-5">
                         <Image
                           src="/img/maticLogo.svg"
                           layout="fill"
