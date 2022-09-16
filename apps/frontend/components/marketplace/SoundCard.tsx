@@ -198,7 +198,7 @@ function SoundCard({
                       )
                     ).toFixed(2)}
                   </div>
-                  <div className="relative w-3 h-4">
+                  <div className="relative w-4 h-5">
                     <Image
                       src="/img/maticLogo.svg"
                       layout="fill"
