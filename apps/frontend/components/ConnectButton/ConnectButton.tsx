@@ -82,12 +82,12 @@ export const ConnectButton: FC<ConnectButtonProps> = ({ className }) => {
         if (window) {
           // TODO: better wallet connect
 
-          await window.ethereum.request({
-            method: 'eth_requestAccounts',
-          })
-          if (chainId !== 80001) {
-            addEthereumNetwork()
-          }
+          // await window.ethereum.request({
+          //   method: 'eth_requestAccounts',
+          // })
+          // if (chainId !== 80001) {
+          //   addEthereumNetwork()
+          // }
         }
       } catch (e) {
         console.log(e)
