@@ -168,7 +168,7 @@ function SoundCard({
                         nft.sellings.masterSelling.mintVoucher.currency} */}
                       <div className="relative w-3 h-4">
                         <Image
-                          src="/img/ethIconWhite.svg"
+                          src="/img/maticLogo.svg"
                           layout="fill"
                           alt="Ethereum Logo"
                         />
@@ -200,7 +200,7 @@ function SoundCard({
                   </div>
                   <div className="relative w-3 h-4">
                     <Image
-                      src="/img/ethIconWhite.svg"
+                      src="/img/maticLogo.svg"
                       layout="fill"
                       alt="Ethereum Logo"
                     />
