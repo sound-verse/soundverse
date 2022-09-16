@@ -31,19 +31,19 @@ export default () => ({
     testflight: {
       contractEvents: [
         {
-          contractAddress: '0x52e49020DB71625ddE3450C793907e3fD701DFAA',
+          contractAddress: '0x46392Cb3745a4CAa39eC2c771820AD2636ac9E2d',
           listensTo: [EventType.MASTER_MINT_EVENT, EventType.TRANSFER],
           contractType: ContractType.MASTER,
           version: '0.1',
         },
         {
-          contractAddress: '0x18861B0609eEE284e711e6a5d637456D4941E918',
+          contractAddress: '0x997308E9563F5D8EE56E6129657fb2b5c5C7015C',
           listensTo: [EventType.TRANSFER_SINGLE],
           contractType: ContractType.LICENSE,
           version: '0.1',
         },
         {
-          contractAddress: '0xd945184A2F8e8eA039b1397c3F0758d29215Ff3a',
+          contractAddress: '0x3F4e06072BF91A7c65c6e561a7c26AC48EE1A918',
           listensTo: [
             EventType.REDEEMED_MINT_VOUCHER,
             EventType.REDEEMED_SALE_VOUCHER,
