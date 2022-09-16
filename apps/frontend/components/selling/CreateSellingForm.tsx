@@ -140,9 +140,9 @@ export const CreateSellingForm = ({
                 <div className="flex items-center">
                   <div className="relative w-5 h-8 flex justify-center items-center mr-5">
                     <Image
-                      src="/img/ethIcon.svg"
+                      src="/img/maticLogo.svg"
                       layout="fill"
-                      alt="Ethereum Logo"
+                      alt="Matic Logo"
                     />
                   </div>
                   <div>
