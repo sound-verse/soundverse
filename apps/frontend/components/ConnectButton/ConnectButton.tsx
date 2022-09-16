@@ -16,7 +16,7 @@ interface ConnectButtonProps {
 declare const window: any
 
 const POLYGON_TESTNET_PARAMS = {
-  chainId: '0x13881', 
+  chainId: '0x13881',
   chainName: 'Mumbai',
   nativeCurrency: {
     name: 'MATIC Token',
@@ -36,7 +36,7 @@ export const ConnectButton: FC<ConnectButtonProps> = ({ className }) => {
   )
 
   const { loginUser, logout } = useLogin()
-  const { authUser } = useAuthContext()
+  const { authUser, chainId } = useAuthContext()
   const [showDropdown, setShowDropdown] = useState<boolean>(false)
 
   const onboarding = useRef<MetaMaskOnboarding>()
@@ -80,10 +80,14 @@ export const ConnectButton: FC<ConnectButtonProps> = ({ className }) => {
     if (MetaMaskOnboarding.isMetaMaskInstalled()) {
       try {
         if (window) {
+          // TODO: better wallet connect
+
           await window.ethereum.request({
             method: 'eth_requestAccounts',
           })
-          addEthereumNetwork()
+          if (chainId !== 8001) {
+            addEthereumNetwork()
+          }
         }
       } catch (e) {
         console.log(e)
