@@ -85,7 +85,7 @@ export const ConnectButton: FC<ConnectButtonProps> = ({ className }) => {
           await window.ethereum.request({
             method: 'eth_requestAccounts',
           })
-          if (chainId !== 8001) {
+          if (chainId !== 80001) {
             addEthereumNetwork()
           }
         }
