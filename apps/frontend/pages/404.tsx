@@ -7,6 +7,11 @@ export default function Custom404() {
     <div>
       <Head>
         <title>Page not found</title>
+        <meta name="description" content="This page was not found" />
+        <meta property="og:title" content="Page not found" />
+        <meta property="og:description" content="This page was not found" />
+        <meta property="og:url" content="https://soundverse.io/404" />
+        <meta property="og:type" content="website" />
       </Head>
 
       <Layout>

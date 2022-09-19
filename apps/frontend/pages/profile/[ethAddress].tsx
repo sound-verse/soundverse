@@ -23,6 +23,7 @@ import {
 } from '../../common/graphql/schema.d'
 import { GET_USER_NFTS } from '../../common/graphql/queries/get-user-nfts.query'
 import styles from './Profile.module.css'
+import {useRouter} from 'next/router';
 
 type ProfileProps = {
   user: User
@@ -84,10 +85,17 @@ export default function Profile({
 
   const activeUser = isMe ? authUser : user
 
+  const router = useRouter()
+
   return (
     <div>
       <Head>
         <title>Profile</title>
+        <meta name="description" content="Short description of this page" />
+        <meta property="og:title" content="Profile" />
+        <meta property="og:description" content="Short description of this page" />
+        <meta property="og:url" content={`https://soundverse.io${router.asPath}`} />
+        <meta property="og:type" content="website" />
       </Head>
 
       <Layout>

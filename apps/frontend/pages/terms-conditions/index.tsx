@@ -2,12 +2,19 @@ import React from 'react'
 import Head from 'next/head'
 import Layout from '../../components/layout'
 import gs from '../../css/global.module.css'
+import {useRouter} from 'next/router';
 
 export default function TermsConditions() {
+  const router = useRouter()
   return (
     <div>
       <Head>
         <title>Terms and Conditions</title>
+        <meta name="description" content="Short description of this page" />
+        <meta property="og:title" content="Terms and Conditions" />
+        <meta property="og:description" content="Short description of this page" />
+        <meta property="og:url" content={`https://soundverse.io${router.asPath}`} />
+        <meta property="og:type" content="website" />
       </Head>
 
       <Layout>

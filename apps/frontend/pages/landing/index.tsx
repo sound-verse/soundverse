@@ -5,6 +5,7 @@ import TopDropperItem from '../../components/landing/TopDropperItem'
 import DropItem from '../../components/landing/DropItem'
 import JoinDiscord from '../../components/landing/JoinDiscord'
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai'
+import {useRouter} from 'next/router';
 
 export default function Landing() {
   const [listDroppers, setListDroppers] = useState([])
@@ -14,10 +15,17 @@ export default function Landing() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const router = useRouter()
+
   return (
     <div>
       <Head>
         <title>Linifty App</title>
+        <meta name="description" content="Short description of this page" />
+        <meta property="og:title" content="Linifty App" />
+        <meta property="og:description" content="Short description of this page" />
+        <meta property="og:url" content={`https://soundverse.io${router.asPath}`} />
+        <meta property="og:type" content="website" />
       </Head>
 
       <Layout>

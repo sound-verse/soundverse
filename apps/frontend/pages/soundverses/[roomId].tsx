@@ -155,6 +155,11 @@ export default function Soundverse() {
     <div>
       <Head>
         <title>Soundverse </title>
+        <meta name="description" content="Short description of this page" />
+        <meta property="og:title" content="Soundverse" />
+        <meta property="og:description" content="Short description of this page" />
+        <meta property="og:url" content={`https://soundverse.io${router.asPath}`} />
+        <meta property="og:type" content="website" />
       </Head>
 
       <Layout>

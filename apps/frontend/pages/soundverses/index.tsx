@@ -12,6 +12,7 @@ import {
 import { RoomList } from '../../components/Room/RoomList'
 import { ROOMS_UPDATED } from '../../common/graphql/subscriptions/rooms-updated.subscription'
 import { Bars } from 'react-loader-spinner'
+import {useRouter} from 'next/router';
 
 export default function Soudnverses() {
   const {
@@ -35,10 +36,16 @@ export default function Soudnverses() {
   }, [])
 
   const rooms = roomsData?.rooms?.rooms ?? []
+  const router = useRouter()
   return (
     <div>
       <Head>
         <title>Soundverses</title>
+        <meta name="description" content="Short description of this page" />
+        <meta property="og:title" content="Soundverses" />
+        <meta property="og:description" content="Short description of this page" />
+        <meta property="og:url" content={`https://soundverse.io${router.asPath}`} />
+        <meta property="og:type" content="website" />
       </Head>
 
       <Layout>

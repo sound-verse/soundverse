@@ -3,14 +3,21 @@ import Head from 'next/head'
 import Layout from '../../components/layout'
 import { CreateForm } from '../../components/create/CreateForm'
 import { useAuthContext } from '../../context/AuthContext'
+import {useRouter} from 'next/router';
 
 export default function Mint() {
   const { authUser } = useAuthContext()
+  const router = useRouter()
 
   return (
     <div>
       <Head>
         <title>Create Nft</title>
+        <meta name="description" content="Short description of this page" />
+        <meta property="og:title" content="Create Nft" />
+        <meta property="og:description" content="Short description of this page" />
+        <meta property="og:url" content={`https://soundverse.io${router.asPath}`} />
+        <meta property="og:type" content="website" />
       </Head>
 
       <Layout>

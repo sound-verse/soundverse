@@ -125,6 +125,11 @@ export default function Launch() {
     <div>
       <Head>
         <title>Launch your Soundverse</title>
+        <meta name="description" content="Short description of this page" />
+        <meta property="og:title" content="Launch your Soundverse" />
+        <meta property="og:description" content="Short description of this page" />
+        <meta property="og:url" content={`https://soundverse.io${router.asPath}`} />
+        <meta property="og:type" content="website" />
       </Head>
       <Layout>
         {!authUser && !libraryLoading ? (

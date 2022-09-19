@@ -15,6 +15,7 @@ import { useBottomScrollListener } from 'react-bottom-scroll-listener'
 import { Bars } from 'react-loader-spinner'
 import Image from 'next/image'
 import useComponentVisible from '../../hooks/useComponentVisible'
+import {useRouter} from 'next/router';
 
 const LIMIT = 100
 const SKIP = 100
@@ -95,10 +96,17 @@ export default function Marketplace() {
     }
     setCurrentSkip(currentSkip + SKIP)
   })
+
+  const router = useRouter()
   return (
     <div className="">
       <Head>
         <title>Soundverse App</title>
+        <meta name="description" content="Short description of this page" />
+        <meta property="og:title" content="Soundverse App" />
+        <meta property="og:description" content="Short description of this page" />
+        <meta property="og:url" content={`https://soundverse.io${router.asPath}`} />
+        <meta property="og:type" content="website" />
       </Head>
 
       <Layout>
