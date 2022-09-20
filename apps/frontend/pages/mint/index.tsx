@@ -12,12 +12,13 @@ export default function Mint() {
   return (
     <div>
       <Head>
-        <title>Create Nft</title>
-        <meta name="description" content="Short description of this page" />
-        <meta property="og:title" content="Create Nft" />
-        <meta property="og:description" content="Short description of this page" />
+        <title>Mint on Soundverse</title>
+        <meta name="description" content="Use our protocol to get Master and License NFTs for every song you mint!" />
+        <meta property="og:title" content="Mint on Soundverse" />
+        <meta property="og:description" content="Use our protocol to get Master and License NFTs for every song you mint!" />
         <meta property="og:url" content={`https://soundverse.io${router.asPath}`} />
         <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://soundverse.io/img/metadata/mint.png" />
       </Head>
 
       <Layout>

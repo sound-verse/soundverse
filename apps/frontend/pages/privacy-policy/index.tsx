@@ -10,9 +10,9 @@ export default function PrivacyPolicy() {
     <div>
       <Head>
         <title>Privacy Policy</title>
-        <meta name="description" content="Short description of this page" />
+        <meta name="description" content="Read how we handle user data here" />
         <meta property="og:title" content="Privacy Policy" />
-        <meta property="og:description" content="Short description of this page" />
+        <meta property="og:description" content="Read how we handle user data here" />
         <meta property="og:url" content={`https://soundverse.io${router.asPath}`} />
         <meta property="og:type" content="website" />
       </Head>

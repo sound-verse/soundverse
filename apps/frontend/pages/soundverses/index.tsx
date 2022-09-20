@@ -40,12 +40,13 @@ export default function Soudnverses() {
   return (
     <div>
       <Head>
-        <title>Soundverses</title>
-        <meta name="description" content="Short description of this page" />
-        <meta property="og:title" content="Soundverses" />
-        <meta property="og:description" content="Short description of this page" />
+        <title>Soundverse</title>
+        <meta name="description" content="Customized NFT communities to discover WEB3.0 art, music, and culture!" />
+        <meta property="og:title" content="Soundverse" />
+        <meta property="og:description" content="Customized NFT communities to discover WEB3.0 art, music, and culture!" />
         <meta property="og:url" content={`https://soundverse.io${router.asPath}`} />
         <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://soundverse.io/img/metadata/home.png" />
       </Head>
 
       <Layout>

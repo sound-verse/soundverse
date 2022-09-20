@@ -6,12 +6,13 @@ export default function Home() {
     <div className="container">
       <Head>
         <title>Soundverse</title>
-        <meta name="description" content="Short description of this page" />
+        <meta name="description" content="Customized NFT communities to discover WEB3.0 art, music, and culture!" />
         <meta property="og:title" content="Soundverse" />
-        <meta property="og:description" content="Short description of this page" />
+        <meta property="og:description" content="Customized NFT communities to discover WEB3.0 art, music, and culture!" />
         <meta property="og:url" content="https://soundverse.io" />
         <meta property="og:type" content="website" />
         <link rel="icon" href="/favicon.ico" />
+        <meta property="og:image" content="https://soundverse.io/img/metadata/home.png" />
       </Head>
 
       <Layout>

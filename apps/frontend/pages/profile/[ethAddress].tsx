@@ -90,12 +90,13 @@ export default function Profile({
   return (
     <div>
       <Head>
-        <title>Profile</title>
-        <meta name="description" content="Short description of this page" />
-        <meta property="og:title" content="Profile" />
-        <meta property="og:description" content="Short description of this page" />
+        <title>Soundverse Profile</title>
+        <meta name="description" content="Build up your Soundverse profile and become a verified member to collect rewards!" />
+        <meta property="og:title" content="Soundverse Profile" />
+        <meta property="og:description" content="Build up your Soundverse profile and become a verified member to collect rewards!" />
         <meta property="og:url" content={`https://soundverse.io${router.asPath}`} />
         <meta property="og:type" content="website" />
+        <meta property="og:image" content={activeUser.profileImage ? activeUser.profileImage : "https://soundverse.io/img/metadata/my_profile.png"} />
       </Head>
 
       <Layout>

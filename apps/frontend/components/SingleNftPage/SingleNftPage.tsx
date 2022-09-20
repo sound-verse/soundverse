@@ -211,12 +211,13 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
   return (
     <div>
       <Head>
-        <title>Nft</title>
-        <meta name="description" content="Short description of this page" />
-        <meta property="og:title" content="Nft" />
-        <meta property="og:description" content="Short description of this page" />
+        <title>NFT Details</title>
+        <meta name="description" content="Every NFT has a story to share. Read all about it here!" />
+        <meta property="og:title" content="NFT Details" />
+        <meta property="og:description" content="Every NFT has a story to share. Read all about it here!" />
         <meta property="og:url" content={`https://soundverse.io${router.asPath}`} />
         <meta property="og:type" content="website" />
+        <meta property="og:image" content={nft.filePictureUrl} />
       </Head>
 
       <Layout>

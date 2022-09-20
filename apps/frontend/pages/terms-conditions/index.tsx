@@ -9,10 +9,10 @@ export default function TermsConditions() {
   return (
     <div>
       <Head>
-        <title>Terms and Conditions</title>
-        <meta name="description" content="Short description of this page" />
-        <meta property="og:title" content="Terms and Conditions" />
-        <meta property="og:description" content="Short description of this page" />
+        <title>Terms of Service</title>
+        <meta name="description" content="Read our terms of service here." />
+        <meta property="og:title" content="Terms of Service" />
+        <meta property="og:description" content="Read our terms of service here." />
         <meta property="og:url" content={`https://soundverse.io${router.asPath}`} />
         <meta property="og:type" content="website" />
       </Head>

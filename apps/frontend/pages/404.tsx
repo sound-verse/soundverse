@@ -6,10 +6,10 @@ export default function Custom404() {
   return (
     <div>
       <Head>
-        <title>Page not found</title>
-        <meta name="description" content="This page was not found" />
+        <title>404 Page</title>
+        <meta name="description" content="Seems like you got lost in the space. Get back to the Soundverse planet here!" />
         <meta property="og:title" content="Page not found" />
-        <meta property="og:description" content="This page was not found" />
+        <meta property="og:description" content="Seems like you got lost in the space. Get back to the Soundverse planet here!" />
         <meta property="og:url" content="https://soundverse.io/404" />
         <meta property="og:type" content="website" />
       </Head>
@@ -18,7 +18,7 @@ export default function Custom404() {
         <main className="mx-auto">
           <div className="flex justify-center items-center h-screen -m-36">
             <div className="text-white text-3xl text-bold">
-              Sorry, we couldnt find, what you were looking for :/
+              Sorry, we couldn't find what you were looking for :/
             </div>
           </div>
         </main>

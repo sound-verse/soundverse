@@ -8,10 +8,10 @@ export default function RoomClosed() {
   return (
     <div>
       <Head>
-        <title>Soundverse Closed</title>
-        <meta name="description" content="The Soudverse was closed." />
-        <meta property="og:title" content="Soundverse Closed" />
-        <meta property="og:description" content="The Soudverse was closed" />
+        <title>Soundverse Room Closed</title>
+        <meta name="description" content="This Soudverse Room was closed." />
+        <meta property="og:title" content="Soundverse Room Closed" />
+        <meta property="og:description" content="This Soudverse Room was closed" />
         <meta property="og:url" content={`https://soundverse.io${router.asPath}`} />
         <meta property="og:type" content="website" />
       </Head>

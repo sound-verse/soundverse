@@ -101,12 +101,13 @@ export default function Marketplace() {
   return (
     <div className="">
       <Head>
-        <title>Soundverse App</title>
-        <meta name="description" content="Short description of this page" />
-        <meta property="og:title" content="Soundverse App" />
-        <meta property="og:description" content="Short description of this page" />
+        <title>Soundverse Marketplace</title>
+        <meta name="description" content="Discover, play, and collect the hottest music License or Master NFTs!" />
+        <meta property="og:title" content="Soundverse Marketplace" />
+        <meta property="og:description" content="Discover, play, and collect the hottest music License or Master NFTs!" />
         <meta property="og:url" content={`https://soundverse.io${router.asPath}`} />
         <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://soundverse.io/img/metadata/marketplace.png" />
       </Head>
 
       <Layout>
