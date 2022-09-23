@@ -23,6 +23,7 @@ import {
 } from '../../common/graphql/schema.d'
 import { GET_USER_NFTS } from '../../common/graphql/queries/get-user-nfts.query'
 import styles from './Profile.module.css'
+import {useRouter} from 'next/router';
 
 type ProfileProps = {
   user: User
@@ -84,10 +85,19 @@ export default function Profile({
 
   const activeUser = isMe ? authUser : user
 
+  const router = useRouter()
+  const baseUrl = process.env.NEXT_PUBLIC_ENVIRONMENT === 'main' ? 'https://main.soundverse.io' : 'https://testflight.soundverse.io';
+
   return (
     <div>
       <Head>
-        <title>Profile</title>
+        <title>Soundverse Profile</title>
+        <meta name="description" content="Build up your Soundverse profile and become a verified member to collect rewards!" />
+        <meta property="og:title" content="Soundverse Profile" />
+        <meta property="og:description" content="Build up your Soundverse profile and become a verified member to collect rewards!" />
+        <meta property="og:url" content={`${baseUrl}${router.asPath}`} />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content={activeUser.profileImage ? activeUser.profileImage : `${baseUrl}/img/metadata/my_profile.png`} />
       </Head>
 
       <Layout>

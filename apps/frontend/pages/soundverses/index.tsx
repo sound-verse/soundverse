@@ -12,6 +12,7 @@ import {
 import { RoomList } from '../../components/Room/RoomList'
 import { ROOMS_UPDATED } from '../../common/graphql/subscriptions/rooms-updated.subscription'
 import { Bars } from 'react-loader-spinner'
+import {useRouter} from 'next/router';
 
 export default function Soudnverses() {
   const {
@@ -35,10 +36,19 @@ export default function Soudnverses() {
   }, [])
 
   const rooms = roomsData?.rooms?.rooms ?? []
+  const router = useRouter()
+  const baseUrl = process.env.NEXT_PUBLIC_ENVIRONMENT === 'main' ? 'https://main.soundverse.io' : 'https://testflight.soundverse.io';
+
   return (
     <div>
       <Head>
-        <title>Soundverses</title>
+        <title>Soundverse</title>
+        <meta name="description" content="Customized NFT communities to discover WEB3.0 art, music, and culture!" />
+        <meta property="og:title" content="Soundverse" />
+        <meta property="og:description" content="Customized NFT communities to discover WEB3.0 art, music, and culture!" />
+        <meta property="og:url" content={`${baseUrl}${router.asPath}`} />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content={`${baseUrl}/img/metadata/home.png`} />
       </Head>
 
       <Layout>
