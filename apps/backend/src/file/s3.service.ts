@@ -58,6 +58,7 @@ export class S3Service {
         break;
       }
     }
+
     return `${this.configService
       .get<string>('INTERNAL_FILE_URL_BASE')
       .replace('{bucket}', bucketName)}/${fileName}`;
