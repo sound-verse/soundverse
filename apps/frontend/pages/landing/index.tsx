@@ -16,6 +16,7 @@ export default function Landing() {
   }, [])
 
   const router = useRouter()
+  const baseUrl = process.env.NEXT_PUBLIC_ENVIRONMENT === 'main' ? 'https://main.soundverse.io' : 'https://testflight.soundverse.io';
 
   return (
     <div>
@@ -24,7 +25,7 @@ export default function Landing() {
         <meta name="description" content="Short description of this page" />
         <meta property="og:title" content="Linifty App" />
         <meta property="og:description" content="Short description of this page" />
-        <meta property="og:url" content={`https://soundverse.io${router.asPath}`} />
+        <meta property="og:url" content={`${baseUrl}${router.asPath}`} />
         <meta property="og:type" content="website" />
       </Head>
 

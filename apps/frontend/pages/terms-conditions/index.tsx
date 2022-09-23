@@ -6,6 +6,8 @@ import {useRouter} from 'next/router';
 
 export default function TermsConditions() {
   const router = useRouter()
+  const baseUrl = process.env.NEXT_PUBLIC_ENVIRONMENT === 'main' ? 'https://main.soundverse.io' : 'https://testflight.soundverse.io';
+
   return (
     <div>
       <Head>
@@ -13,7 +15,7 @@ export default function TermsConditions() {
         <meta name="description" content="Read our terms of service here." />
         <meta property="og:title" content="Terms of Service" />
         <meta property="og:description" content="Read our terms of service here." />
-        <meta property="og:url" content={`https://soundverse.io${router.asPath}`} />
+        <meta property="og:url" content={`${baseUrl}${router.asPath}`} />
         <meta property="og:type" content="website" />
       </Head>
 

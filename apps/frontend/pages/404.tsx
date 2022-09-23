@@ -3,6 +3,9 @@ import Head from 'next/head'
 import Layout from '../components/layout'
 
 export default function Custom404() {
+
+  const baseUrl = process.env.NEXT_PUBLIC_ENVIRONMENT === 'main' ? 'https://main.soundverse.io' : 'https://testflight.soundverse.io';
+
   return (
     <div>
       <Head>
@@ -10,7 +13,7 @@ export default function Custom404() {
         <meta name="description" content="Seems like you got lost in the space. Get back to the Soundverse planet here!" />
         <meta property="og:title" content="Page not found" />
         <meta property="og:description" content="Seems like you got lost in the space. Get back to the Soundverse planet here!" />
-        <meta property="og:url" content="https://soundverse.io/404" />
+        <meta property="og:url" content={`${baseUrl}/404`} />
         <meta property="og:type" content="website" />
       </Head>
 

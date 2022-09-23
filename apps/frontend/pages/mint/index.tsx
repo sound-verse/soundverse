@@ -8,6 +8,7 @@ import {useRouter} from 'next/router';
 export default function Mint() {
   const { authUser } = useAuthContext()
   const router = useRouter()
+  const baseUrl = process.env.NEXT_PUBLIC_ENVIRONMENT === 'main' ? 'https://main.soundverse.io' : 'https://testflight.soundverse.io';
 
   return (
     <div>
@@ -16,9 +17,9 @@ export default function Mint() {
         <meta name="description" content="Use our protocol to get Master and License NFTs for every song you mint!" />
         <meta property="og:title" content="Mint on Soundverse" />
         <meta property="og:description" content="Use our protocol to get Master and License NFTs for every song you mint!" />
-        <meta property="og:url" content={`https://soundverse.io${router.asPath}`} />
+        <meta property="og:url" content={`${baseUrl}${router.asPath}`} />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://soundverse.io/img/metadata/mint.png" />
+        <meta property="og:image" content={`${baseUrl}/img/metadata/mint.png`} />
       </Head>
 
       <Layout>

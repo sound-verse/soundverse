@@ -86,6 +86,7 @@ export default function Profile({
   const activeUser = isMe ? authUser : user
 
   const router = useRouter()
+  const baseUrl = process.env.NEXT_PUBLIC_ENVIRONMENT === 'main' ? 'https://main.soundverse.io' : 'https://testflight.soundverse.io';
 
   return (
     <div>
@@ -94,9 +95,9 @@ export default function Profile({
         <meta name="description" content="Build up your Soundverse profile and become a verified member to collect rewards!" />
         <meta property="og:title" content="Soundverse Profile" />
         <meta property="og:description" content="Build up your Soundverse profile and become a verified member to collect rewards!" />
-        <meta property="og:url" content={`https://soundverse.io${router.asPath}`} />
+        <meta property="og:url" content={`${baseUrl}${router.asPath}`} />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content={activeUser.profileImage ? activeUser.profileImage : "https://soundverse.io/img/metadata/my_profile.png"} />
+        <meta property="og:image" content={activeUser.profileImage ? activeUser.profileImage : `${baseUrl}/img/metadata/my_profile.png`} />
       </Head>
 
       <Layout>

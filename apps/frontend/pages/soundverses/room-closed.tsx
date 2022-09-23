@@ -5,6 +5,8 @@ import {useRouter} from 'next/router';
 
 export default function RoomClosed() {
   const router = useRouter()
+  const baseUrl = process.env.NEXT_PUBLIC_ENVIRONMENT === 'main' ? 'https://main.soundverse.io' : 'https://testflight.soundverse.io';
+  
   return (
     <div>
       <Head>
@@ -12,7 +14,7 @@ export default function RoomClosed() {
         <meta name="description" content="This Soudverse Room was closed." />
         <meta property="og:title" content="Soundverse Room Closed" />
         <meta property="og:description" content="This Soudverse Room was closed" />
-        <meta property="og:url" content={`https://soundverse.io${router.asPath}`} />
+        <meta property="og:url" content={`${baseUrl}${router.asPath}`} />
         <meta property="og:type" content="website" />
       </Head>
 

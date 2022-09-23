@@ -6,14 +6,16 @@ import {useRouter} from 'next/router';
 
 export default function PrivacyPolicy() {
   const router = useRouter()
+  const baseUrl = process.env.NEXT_PUBLIC_ENVIRONMENT === 'main' ? 'https://main.soundverse.io' : 'https://testflight.soundverse.io';
+
   return (
     <div>
       <Head>
         <title>Privacy Policy</title>
-        <meta name="description" content="Read how we handle user data here" />
+        <meta name="description" content="Read how we handle user data here." />
         <meta property="og:title" content="Privacy Policy" />
-        <meta property="og:description" content="Read how we handle user data here" />
-        <meta property="og:url" content={`https://soundverse.io${router.asPath}`} />
+        <meta property="og:description" content="Read how we handle user data here." />
+        <meta property="og:url" content={`${baseUrl}${router.asPath}`} />
         <meta property="og:type" content="website" />
       </Head>
 

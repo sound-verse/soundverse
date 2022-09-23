@@ -121,6 +121,8 @@ export default function Launch() {
     setMasterNfts(userMasterNfts)
   }, [data])
 
+  const baseUrl = process.env.NEXT_PUBLIC_ENVIRONMENT === 'main' ? 'https://main.soundverse.io' : 'https://testflight.soundverse.io';
+
   return (
     <div>
       <Head>
@@ -128,9 +130,9 @@ export default function Launch() {
         <meta name="description" content="Launch your Soundverse room, showcase your music NFTs and earn rewards!" />
         <meta property="og:title" content="Launch a Soundverse" />
         <meta property="og:description" content="Launch your Soundverse room, showcase your music NFTs and earn rewards!" />
-        <meta property="og:url" content={`https://soundverse.io${router.asPath}`} />
+        <meta property="og:url" content={`${baseUrl}${router.asPath}`} />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://soundverse.io/img/metadata/soundverse_room.png" />
+        <meta property="og:image" content={`${baseUrl}/img/metadata/soundverse_room.png`} />
       </Head>
       <Layout>
         {!authUser && !libraryLoading ? (

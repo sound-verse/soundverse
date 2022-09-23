@@ -2,6 +2,9 @@ import Head from 'next/head'
 import Layout from '../components/layout'
 
 export default function Home() {
+
+  const baseUrl = process.env.NEXT_PUBLIC_ENVIRONMENT === 'main' ? 'https://main.soundverse.io' : 'https://testflight.soundverse.io';
+
   return (
     <div className="container">
       <Head>
@@ -9,10 +12,10 @@ export default function Home() {
         <meta name="description" content="Customized NFT communities to discover WEB3.0 art, music, and culture!" />
         <meta property="og:title" content="Soundverse" />
         <meta property="og:description" content="Customized NFT communities to discover WEB3.0 art, music, and culture!" />
-        <meta property="og:url" content="https://soundverse.io" />
+        <meta property="og:url" content={baseUrl} />
         <meta property="og:type" content="website" />
         <link rel="icon" href="/favicon.ico" />
-        <meta property="og:image" content="https://soundverse.io/img/metadata/home.png" />
+        <meta property="og:image" content={`${baseUrl}/img/metadata/home.png`} />
       </Head>
 
       <Layout>
