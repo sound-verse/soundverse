@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { ProfileName } from '../profile'
 import Link from 'next/link'
 import { NftType } from '../../common/graphql/schema.d'
+import useWindowDimensions from '../../hooks/useWindowDimensions'
 
 export type AudioPlayerBarProps = {}
 
@@ -28,6 +29,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
   const WavesurferLibrary = useRef(null)
   const { setCurrentTrack, currentTrack } = useAudioContext()
   const [playerIsReady, setPlayerIsReady] = useState(false)
+  const { isMobile } = useWindowDimensions()
 
   const gotoTrackPosition = (trackPosition: number) => {
     if (!wavesurfer.current || trackPosition === 0) {
@@ -85,7 +87,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
     if (wavesurfer.current) {
       wavesurfer.current.destroy()
     }
-    setCurrentTrack({ isLoading: true })
+    setCurrentTrack({ isLoading: true, isPlaying: false })
     create(currentTrack.url)
   }, [currentTrack.url, currentTrack.nftType])
 
@@ -102,12 +104,19 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
 
     wavesurfer.current.on('ready', () => {
       if (currentTrack.play) {
-        setCurrentTrack({
-          isLoading: false,
-          isPlaying: true,
-        })
+        if (isMobile) {
+          setCurrentTrack({
+            isLoading: false,
+            visible: true,
+          })
+        } else {
+          setCurrentTrack({
+            isLoading: false,
+            isPlaying: true,
+          })
+          wavesurfer.current.play()
+        }
         setPlayerIsReady(true)
-        wavesurfer.current.play()
       }
     })
   }
@@ -178,16 +187,24 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
         <div
           className={cn(
             'grid grid-cols-5 align-center items-center',
-            !currentTrack.isRoomPlayer && 'col-span-3 lg:col-span-1'
+            (!currentTrack.isRoomPlayer ) && 'col-span-3 lg:col-span-1'
           )}
         >
-          {!currentTrack.isRoomPlayer ? (
+          {(!currentTrack.isRoomPlayer || isMobile) ? (
             <div
               className="col-span-2 lg:col-span-1 cursor-pointer text-right mr-3 -mb-1"
               onClick={() => {
                 setCurrentTrack({
-                  isPlaying: !wavesurfer.current?.isPlaying(),
+                  isPlaying: !currentTrack.isPlaying,
                 })
+                //Direkt calling play/pause for mobile 
+                if (isMobile) {
+                  if (currentTrack.isPlaying) {
+                    wavesurfer.current.pause()
+                  } else {
+                    wavesurfer.current.play()
+                  }
+                }
               }}
             >
               {currentTrack.isPlaying ? (

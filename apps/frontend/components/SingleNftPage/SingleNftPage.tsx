@@ -208,10 +208,18 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
 
   Modal.setAppElement('#__next')
 
+  const baseUrl = process.env.NEXT_PUBLIC_ENVIRONMENT === 'main' ? 'https://main.soundverse.io' : 'https://testflight.soundverse.io';
+
   return (
     <div>
       <Head>
-        <title>Nft</title>
+        <title>NFT Details</title>
+        <meta name="description" content="Every NFT has a story to share. Read all about it here!" />
+        <meta property="og:title" content="NFT Details" />
+        <meta property="og:description" content="Every NFT has a story to share. Read all about it here!" />
+        <meta property="og:url" content={`${baseUrl}${router.asPath}`} />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content={nft.filePictureUrl} />
       </Head>
 
       <Layout>

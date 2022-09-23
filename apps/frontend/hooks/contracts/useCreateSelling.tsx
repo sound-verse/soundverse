@@ -107,7 +107,7 @@ export const useCreateSelling = () => {
         maxSupply: createSellingInputProps.nft.supply,
         isMaster:
           createSellingInputProps.nftType === NftType.Master ? true : false,
-        currency: 'ETH',
+        currency: 'MATIC',
         royaltyFeeMaster: createSellingInputProps.nft.royaltyFeeMaster,
         royaltyFeeLicense: createSellingInputProps.nft.royaltyFeeLicense,
         creatorOwnerSplit: createSellingInputProps.nft.creatorOwnerSplit,
@@ -123,7 +123,7 @@ export const useCreateSelling = () => {
         supply: createSellingInputProps.amount,
         isMaster:
           createSellingInputProps.nftType === NftType.Master ? true : false,
-        currency: 'ETH',
+        currency: 'MATIC',
         validUntil: +add(new Date(), { years: 1 }),
       }
     }

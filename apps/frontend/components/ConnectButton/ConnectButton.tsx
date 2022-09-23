@@ -15,28 +15,28 @@ interface ConnectButtonProps {
 
 declare const window: any
 
-const ETHEREUM_MAINNET_PARAMS = {
-  chainId: '0x1',
-  rpcUrls: ['https://cloudflare-eth.com'],
-  blockExplorerUrls: ['https://etherscan.io/'],
-}
-
-const ETHEREUM_TESTNET_PARAMS = {
-  chainId: '0x5',
-  rpcUrls: ['https://eth-goerli.public.blastapi.io/'],
-  blockExplorerUrls: ['https://goerli.etherscan.io/'],
+const POLYGON_TESTNET_PARAMS = {
+  chainId: '0x13881',
+  chainName: 'Mumbai',
+  nativeCurrency: {
+    name: 'MATIC Token',
+    symbol: 'MATIC',
+    decimals: 18,
+  },
+  rpcUrls: ['https://matic-mumbai.chainstacklabs.com/'],
+  blockExplorerUrls: ['https://mumbai.polygonscan.com/'],
 }
 
 export const ConnectButton: FC<ConnectButtonProps> = ({ className }) => {
   const abstractConnectorArgs = {
-    supportedChainIds: [1, 5],
+    supportedChainIds: [80001],
   }
   const injected: InjectedConnector = new InjectedConnector(
     abstractConnectorArgs
   )
 
   const { loginUser, logout } = useLogin()
-  const { authUser } = useAuthContext()
+  const { authUser, chainId } = useAuthContext()
   const [showDropdown, setShowDropdown] = useState<boolean>(false)
 
   const onboarding = useRef<MetaMaskOnboarding>()
@@ -57,37 +57,41 @@ export const ConnectButton: FC<ConnectButtonProps> = ({ className }) => {
 
   // Custom networks for Ethereum compatible chains can be added to Metamask
   // Not needed for standard chains
-  // async function addEthereumNetwork() {
-  //   try {
-  //     const provider = await injected.getProvider()
-  //     // rpc request to switch chain to an ethereum compatible chain
-  //     await provider.request({
-  //       method: 'wallet_addEthereumChain',
-  //       params: [ETHEREUM_TESTNET_PARAMS],
-  //     })
-  //   } catch (e) {
-  //     setFlashMsg(
-  //       'Failed to switch to Ethereum chain, Please check your internet connect reconnect again'
-  //     )
-  //     console.log(e)
-  //   }
-  // }
+  async function addEthereumNetwork() {
+    try {
+      const provider = await injected.getProvider()
+      // rpc request to switch chain to an ethereum compatible chain
+      await provider.request({
+        method: 'wallet_addEthereumChain',
+        params: [POLYGON_TESTNET_PARAMS],
+      })
+    } catch (e) {
+      setFlashMsg(
+        'Failed to switch to Polygon chain, please check your MetaMask and reconnect again'
+      )
+      console.log(e)
+    }
+  }
 
   const onboard = async () => {
     if (process.env.NEXT_PUBLIC_ENVIRONMENT === 'local') {
       return
     }
     if (MetaMaskOnboarding.isMetaMaskInstalled()) {
-      // try {
-      //   if (window) {
-      //     await window.ethereum.request({
-      //       method: 'eth_requestAccounts',
-      //     })
-      //     // addEthereumNetwork()
-      //   }
-      // } catch (e) {
-      //   console.log(e)
-      // }
+      try {
+        if (window) {
+          // TODO: better wallet connect
+
+          // await window.ethereum.request({
+          //   method: 'eth_requestAccounts',
+          // })
+          // if (chainId !== 80001) {
+          //   addEthereumNetwork()
+          // }
+        }
+      } catch (e) {
+        console.log(e)
+      }
     } else {
       // opens a new tab to the <chrome | firefox> store for user to install the MetaMask browser extension
       onboarding.current?.startOnboarding()

@@ -74,11 +74,11 @@ export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
               />
             </div>
           </div>
-          <div className="flex overflow-hidden mt-3 flex-col lg:flex-row lg:justify-between">
+          <div className="flex overflow-hidden mt-3 flex-col lg:flex-row">
             <div className="flex flex-col items-center lg:flex-row justify-between w-full md:w-auto">
               <div
                 className={cn(
-                  'flex flex-col items-baseline justify-start min-w-[60px] overflow-x-auto h-36 pt-2 mt-5 lg:mt-0',
+                  'flex flex-col items-baseline justify-start min-w-[60px] overflow-x-auto h-16 mb-5 lg:h-36 pt-2 mt-5 lg:mt-0',
                   styles.scrollbar
                 )}
               >
@@ -117,18 +117,19 @@ export const RoomListElement: FC<RoomListElementProps> = ({ room }) => {
                   </div>
                 ))}
               </div>
-              <div className="lg:ml-12 lg:-mt-8">
-                <PlaylistPreview
-                  currentTrack={room.currentTrack}
-                  playlistItems={room.playlistItems}
-                />
-              </div>
+            </div>
+            <div className="flex-grow flex justify-center max-h-10 lg:max-h-full">
+              <PlaylistPreview
+                currentTrack={room.currentTrack}
+                playlistItems={room.playlistItems}
+                className=""
+              />
             </div>
 
             <div className="mt-28 lg:mt-20 p-2 flex items-center justify-center lg:justify-end">
               <div
                 className={
-                  'bg-gradient-to-l from-[#1400FF] to-[#0089FF] text-sm rounded-md text-white px-2 py-2 shadow-lg cursor-pointer drop-shadow mb-2 p-2'
+                  'bg-gradient-to-l from-[#1400FF] to-[#0089FF] text-sm rounded-md text-white px-2 py-2 shadow-lg cursor-pointer drop-shadow mb-2 p-2 lg:ml-auto lg:w-full'
                 }
                 onClick={handleEnterSoundverse}
               >

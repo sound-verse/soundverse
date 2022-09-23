@@ -14,6 +14,8 @@ import { GET_NFTS } from '../../common/graphql/queries/get-nfts.query'
 import { useBottomScrollListener } from 'react-bottom-scroll-listener'
 import { Bars } from 'react-loader-spinner'
 import Image from 'next/image'
+import useComponentVisible from '../../hooks/useComponentVisible'
+import {useRouter} from 'next/router';
 
 const LIMIT = 100
 const SKIP = 100
@@ -21,8 +23,9 @@ const SKIP = 100
 export default function Marketplace() {
   //TODO: load nfts with hasSellings filter!
   const [sortBy, setSortBy] = useState<SortOption>(SortOption.Newest)
-  const [showSort, setShowSort] = useState(false)
   const [allLoaded, setAllLoaded] = useState(false)
+  const { ref, isComponentVisible, setIsComponentVisible } =
+    useComponentVisible(false)
 
   let sortByString = ''
   switch (sortBy) {
@@ -46,7 +49,7 @@ export default function Marketplace() {
     GetNftsQueryVariables
   >(GET_NFTS, {
     variables: { limit: LIMIT, skip: 0 },
-    fetchPolicy: 'network-only'
+    fetchPolicy: 'network-only',
   })
 
   const [playingCardId, setPlayingCardId] = useState<string>('')
@@ -78,11 +81,11 @@ export default function Marketplace() {
 
   const handleSortClick = (sortOption: SortOption) => {
     if (sortBy === sortOption) {
-      setShowSort(false)
+      setIsComponentVisible(false)
       return
     }
     setSortBy(sortOption)
-    setShowSort(false)
+    setIsComponentVisible(false)
     setAllNfts([])
     setCurrentSkip(0)
   }
@@ -93,10 +96,20 @@ export default function Marketplace() {
     }
     setCurrentSkip(currentSkip + SKIP)
   })
+
+  const router = useRouter()
+  const baseUrl = process.env.NEXT_PUBLIC_ENVIRONMENT === 'main' ? 'https://main.soundverse.io' : 'https://testflight.soundverse.io';
+
   return (
     <div className="">
       <Head>
-        <title>Soundverse App</title>
+        <title>Soundverse Marketplace</title>
+        <meta name="description" content="Discover, play, and collect the hottest music License or Master NFTs!" />
+        <meta property="og:title" content="Soundverse Marketplace" />
+        <meta property="og:description" content="Discover, play, and collect the hottest music License or Master NFTs!" />
+        <meta property="og:url" content={`${baseUrl}${router.asPath}`} />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content={`${baseUrl}/img/metadata/marketplace.png`} />
       </Head>
 
       <Layout>
@@ -105,7 +118,7 @@ export default function Marketplace() {
             <div className=" mb-5 select-none text-sm flex flex-start w-full">
               <div
                 className="rounded-full border select-none cursor-pointer border-grey-light bg-white p-2 w-40  flex justify-start "
-                onClick={() => setShowSort(!showSort)}
+                onClick={() => setIsComponentVisible(!isComponentVisible)}
               >
                 <div className="mr-2 flex ">
                   <Image
@@ -119,28 +132,30 @@ export default function Marketplace() {
                 <div className="font-bold">{sortByString}</div>
               </div>
             </div>
-            {showSort && (
-              <div className="flex flex-col bg-white rounded-2xl border border-grey-light p-1 w-40 mb-5 -mt-2 absolute z-50">
-                <div
-                  className="hover:bg-grey-light cursor-pointer select-none rounded-xl p-1"
-                  onClick={() => handleSortClick(SortOption.Newest)}
-                >
-                  Newest first
+            <div ref={ref}>
+              {isComponentVisible  && (
+                <div className="flex flex-col bg-white rounded-2xl border border-grey-light p-1 w-40 mb-5 -mt-2 absolute z-50">
+                  <div
+                    className="hover:bg-grey-light cursor-pointer select-none rounded-xl p-1"
+                    onClick={() => handleSortClick(SortOption.Newest)}
+                  >
+                    Newest first
+                  </div>
+                  <div
+                    className="hover:bg-grey-light cursor-pointer select-none rounded-xl p-1"
+                    onClick={() => handleSortClick(SortOption.Oldest)}
+                  >
+                    Oldest first
+                  </div>
+                  <div
+                    className="hover:bg-grey-light cursor-pointer select-none rounded-xl p-1"
+                    onClick={() => handleSortClick(SortOption.Name)}
+                  >
+                    Name
+                  </div>
                 </div>
-                <div
-                  className="hover:bg-grey-light cursor-pointer select-none rounded-xl p-1"
-                  onClick={() => handleSortClick(SortOption.Oldest)}
-                >
-                  Oldest first
-                </div>
-                <div
-                  className="hover:bg-grey-light cursor-pointer select-none rounded-xl p-1"
-                  onClick={() => handleSortClick(SortOption.Name)}
-                >
-                  Name
-                </div>
-              </div>
-            )}
+              )}
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-10">
               {allNfts.map((nft) => {
                 if (!nft.filePictureUrl) {

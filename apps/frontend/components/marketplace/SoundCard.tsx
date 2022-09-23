@@ -155,15 +155,24 @@ function SoundCard({
               nft.sellings.masterSelling ? (
                 <div className="flex justify-between items-baseline text-xs">
                   <div className="text-grey-light">
-                    <span className="font-bold text-white">
-                      {parseFloat(
-                        Web3.utils.fromWei(
-                          nft.sellings.masterSelling.saleVoucher?.price ??
-                            nft.sellings.masterSelling.mintVoucher?.price
-                        )
-                      ).toFixed(2)}{' '}
-                      {nft.sellings.masterSelling.saleVoucher?.currency ??
-                        nft.sellings.masterSelling.mintVoucher.currency}
+                    <span className="font-bold text-white flex items-center">
+                      <div className="mr-2">
+                        {parseFloat(
+                          Web3.utils.fromWei(
+                            nft.sellings.masterSelling.saleVoucher?.price ??
+                              nft.sellings.masterSelling.mintVoucher?.price
+                          )
+                        ).toFixed(2)}
+                      </div>
+                      {/* {nft.sellings.masterSelling.saleVoucher?.currency ??
+                        nft.sellings.masterSelling.mintVoucher.currency} */}
+                      <div className="relative w-4 h-5">
+                        <Image
+                          src="/img/maticLogo.svg"
+                          layout="fill"
+                          alt="Ethereum Logo"
+                        />
+                      </div>
                     </span>
                   </div>
                   <div className="rounded px-2 py-[2px] text-black bg-[#FFEA2F]">
@@ -180,15 +189,24 @@ function SoundCard({
               )
             ) : nft.sellings.licenseSellings[0] ? (
               <div className="flex justify-between items-baseline text-xs">
-                <span className="font-bold text-white">
-                  {parseFloat(
-                    Web3.utils.fromWei(
-                      nft.sellings.licenseSellings[0]?.saleVoucher?.price ??
-                        nft.sellings.licenseSellings[0]?.mintVoucher.price
-                    )
-                  ).toFixed(2)}{' '}
-                  {nft.sellings.licenseSellings[0]?.saleVoucher?.currency ??
-                    nft.sellings.licenseSellings[0]?.mintVoucher.currency}
+                <span className="font-bold text-white flex items-center">
+                  <div className="mr-2">
+                    {parseFloat(
+                      Web3.utils.fromWei(
+                        nft.sellings.licenseSellings[0]?.saleVoucher?.price ??
+                          nft.sellings.licenseSellings[0]?.mintVoucher.price
+                      )
+                    ).toFixed(2)}
+                  </div>
+                  <div className="relative w-4 h-5">
+                    <Image
+                      src="/img/maticLogo.svg"
+                      layout="fill"
+                      alt="Ethereum Logo"
+                    />
+                  </div>
+                  {/* {nft.sellings.licenseSellings[0]?.saleVoucher?.currency ??
+                    nft.sellings.licenseSellings[0]?.mintVoucher.currency} */}
                 </span>
                 <div className="bg-white rounded px-2 py-[2px] text-black">
                   # of {nft.supply}
