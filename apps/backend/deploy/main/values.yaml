@@ -192,4 +192,4 @@ env:
   - name: BUCKET_NAME_NFT
     value: 'soundverse-main-nft'
   - name: BUCKET_NAME_USER
-    value: 'soundverse-main-user'
+    value: 'soundverse-user-main'
