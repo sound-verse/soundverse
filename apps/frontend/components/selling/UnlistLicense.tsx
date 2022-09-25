@@ -72,7 +72,7 @@ export const UnlistLicense = ({
                 Web3.utils.fromWei(
                   selling.saleVoucher?.price ?? selling.mintVoucher?.price
                 )
-              ).toFixed(2)}
+              ).toFixed(3)}
               <span className="ml-2">
                 {selling.saleVoucher?.currency ?? selling.mintVoucher?.currency}
               </span>
