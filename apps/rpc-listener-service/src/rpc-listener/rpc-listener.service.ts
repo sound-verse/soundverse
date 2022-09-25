@@ -82,7 +82,7 @@ export class RPCListenerService implements OnApplicationBootstrap {
       const abi = this.parseAbi(contractType);
       const contract = new ethers.Contract(contractEvent.contractAddress as string, abi, this.wsProvider);
       contractEvent.listensTo.forEach((eventType: EventType) => {
-        void this.checkForMissedEvents(contract, eventType, contractType, 1000000);
+        // void this.checkForMissedEvents(contract, eventType, contractType, 1000000);
         this.subscribeToEvent(eventType, contract, contractType);
       });
     });
