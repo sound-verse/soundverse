@@ -41,12 +41,6 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
   }
 
   useEffect(() => {
-    return () => {
-
-    }
-  }, [])
-
-  useEffect(() => {
     if (!wavesurfer.current) {
       return
     }
@@ -92,7 +86,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
       WavesurferLibrary.current = await (await import('wavesurfer.js')).default
     }
     if(wavesurfer.current) {
-      wavesurfer.current.destroy()
+      await wavesurfer.current.destroy()
     }
     const options = formWaveSurferOptions(waveformRef.current)
     wavesurfer.current = await WavesurferLibrary.current.create({
