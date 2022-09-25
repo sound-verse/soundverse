@@ -88,15 +88,14 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
     if (!WavesurferLibrary.current) {
       WavesurferLibrary.current = await (await import('wavesurfer.js')).default
     }
-    if (wavesurfer.current) {
-      await wavesurfer.current.destroy()
-    }
-    const options = formWaveSurferOptions(waveformRef.current)
 
-    wavesurfer.current = await WavesurferLibrary.current.create({
-      ...options,
-      ...(currentTrack.isRoomPlayer && { interact: false }),
-    })
+    if (!wavesurfer.current) {
+      const options = formWaveSurferOptions(waveformRef.current)
+      wavesurfer.current = await WavesurferLibrary.current.create({
+        ...options,
+        ...(currentTrack.isRoomPlayer && { interact: false }),
+      })
+    }
 
     wavesurfer.current.load(url, currentTrack.waveForm)
 
