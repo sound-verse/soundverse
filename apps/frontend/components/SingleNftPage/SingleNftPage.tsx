@@ -455,7 +455,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                                     Web3.utils.fromWei(
                                       lowestAskSellingVoucher.price
                                     )
-                                  ).toFixed(2)}
+                                  ).toFixed(3)}
                                 </div>
                                 <div className="text-grey-medium text-xs">
                                   {lowestAskSellingVoucher.currency.toUpperCase()}
@@ -474,7 +474,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                                     Web3.utils.fromWei(
                                       lowestAskSellingVoucher.price
                                     )
-                                  ).toFixed(2)}
+                                  ).toFixed(3)}
                                 </div>
                                 <div className="text-grey-medium text-sm">
                                   {lowestAskSellingVoucher.currency.toUpperCase()}
