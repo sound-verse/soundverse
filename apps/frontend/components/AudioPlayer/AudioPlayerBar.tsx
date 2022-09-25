@@ -35,9 +35,9 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
     if (!wavesurfer.current || trackPosition === 0) {
       return
     }
-    const totalDuration = wavesurfer.current.getDuration()
-    const seekToValue = trackPosition / totalDuration
-    wavesurfer.current.seekTo(seekToValue)
+    // const totalDuration = wavesurfer.current.getDuration()
+    // const seekToValue = trackPosition / totalDuration
+    // wavesurfer.current.seekTo(seekToValue)
   }
 
   useEffect(() => {
