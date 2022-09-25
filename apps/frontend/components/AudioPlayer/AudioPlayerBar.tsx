@@ -7,6 +7,7 @@ import { ProfileName } from '../profile'
 import Link from 'next/link'
 import { NftType } from '../../common/graphql/schema.d'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
+import { is } from 'date-fns/locale'
 
 export type AudioPlayerBarProps = {}
 
@@ -35,11 +36,12 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
     if (!wavesurfer.current || trackPosition == 0) {
       return
     }
-    const totalDuration = wavesurfer.current.getDuration()
+    const totalDuration: number = wavesurfer.current.getDuration()
     let seekToValue = trackPosition / totalDuration
-    if (seekToValue > 1 || seekToValue < 0) {
+    if (seekToValue > 1 || seekToValue < 0 || isNaN(seekToValue)) {
       seekToValue = 0
     }
+
     wavesurfer.current.seekTo(seekToValue)
   }
 
@@ -89,13 +91,15 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
       WavesurferLibrary.current = await (await import('wavesurfer.js')).default
     }
 
-    if (!wavesurfer.current) {
-      const options = formWaveSurferOptions(waveformRef.current)
-      wavesurfer.current = await WavesurferLibrary.current.create({
-        ...options,
-        ...(currentTrack.isRoomPlayer && { interact: false }),
-      })
+    if (wavesurfer.current) {
+      await wavesurfer.current.destroy()
     }
+
+    const options = formWaveSurferOptions(waveformRef.current)
+    wavesurfer.current = await WavesurferLibrary.current.create({
+      ...options,
+      ...(currentTrack.isRoomPlayer && { interact: false }),
+    })
 
     wavesurfer.current.load(url, currentTrack.waveForm)
 
