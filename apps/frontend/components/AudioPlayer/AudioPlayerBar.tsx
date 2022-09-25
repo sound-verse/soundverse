@@ -32,11 +32,14 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
   const { isMobile } = useWindowDimensions()
 
   const gotoTrackPosition = (trackPosition: number) => {
-    if (!wavesurfer.current || trackPosition === 0) {
+    if (!wavesurfer.current || trackPosition == 0) {
       return
     }
     const totalDuration = wavesurfer.current.getDuration()
-    const seekToValue = trackPosition / totalDuration
+    let seekToValue = trackPosition / totalDuration
+    if (seekToValue > 1 || seekToValue < 0) {
+      seekToValue = 0
+    }
     wavesurfer.current.seekTo(seekToValue)
   }
 
@@ -87,13 +90,14 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
     }
     if (wavesurfer.current) {
       await wavesurfer.current.destroy()
-      wavesurfer.current = undefined
     }
     const options = formWaveSurferOptions(waveformRef.current)
+
     wavesurfer.current = await WavesurferLibrary.current.create({
       ...options,
       ...(currentTrack.isRoomPlayer && { interact: false }),
     })
+
     wavesurfer.current.load(url, currentTrack.waveForm)
 
     wavesurfer.current.on('ready', () => {
