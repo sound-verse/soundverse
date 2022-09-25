@@ -42,9 +42,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
 
   useEffect(() => {
     return () => {
-      if (wavesurfer.current) {
-        wavesurfer.current.destroy()
-      }
+
     }
   }, [])
 
@@ -84,10 +82,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
     if (!currentTrack.url || currentTrack.url === '') {
       return
     }
-    if (wavesurfer.current) {
-      wavesurfer.current.destroy()
-      wavesurfer.current = undefined
-    }
+
     setCurrentTrack({ isLoading: true, isPlaying: false })
     create(currentTrack.url)
   }, [currentTrack.url, currentTrack.nftType])
@@ -95,6 +90,9 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
   const create = async (url: string) => {
     if (!WavesurferLibrary.current) {
       WavesurferLibrary.current = await (await import('wavesurfer.js')).default
+    }
+    if(wavesurfer.current) {
+      wavesurfer.current.destroy()
     }
     const options = formWaveSurferOptions(waveformRef.current)
     wavesurfer.current = await WavesurferLibrary.current.create({

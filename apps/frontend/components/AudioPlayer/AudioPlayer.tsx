@@ -60,9 +60,7 @@ export const AudioPlayer = ({
     }
     create(url)
     return () => {
-      if (wavesurfer.current) {
-        wavesurfer.current.destroy()
-      }
+
     }
   }, [])
 
