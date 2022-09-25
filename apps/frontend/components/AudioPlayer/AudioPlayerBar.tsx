@@ -46,7 +46,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
       }
 
       const currentPosition = wavesurfer.current.getCurrentTime()
-      if (Math.abs(currentPosition - trackPosition) > 5) {
+      if (Math.abs(currentPosition - trackPosition) > 10) {
         wavesurfer.current.seekTo(seekToValue)
       }
     },
