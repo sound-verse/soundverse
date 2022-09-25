@@ -85,7 +85,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
     if (!WavesurferLibrary.current) {
       WavesurferLibrary.current = await (await import('wavesurfer.js')).default
     }
-    if(wavesurfer.current) {
+    if (wavesurfer.current) {
       await wavesurfer.current.destroy()
     }
     const options = formWaveSurferOptions(waveformRef.current)
@@ -107,7 +107,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
             isLoading: false,
             isPlaying: true,
           })
-          wavesurfer.current.play()
+          // wavesurfer.current.play()
         }
         setPlayerIsReady(true)
       }
@@ -180,20 +180,20 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
         <div
           className={cn(
             'grid grid-cols-5 align-center items-center',
-            (!currentTrack.isRoomPlayer ) && 'col-span-3 lg:col-span-1'
+            !currentTrack.isRoomPlayer && 'col-span-3 lg:col-span-1'
           )}
         >
-          {(!currentTrack.isRoomPlayer || isMobile) ? (
+          {!currentTrack.isRoomPlayer || isMobile ? (
             <div
               className="col-span-2 lg:col-span-1 cursor-pointer text-right mr-3 -mb-1"
               onClick={() => {
                 setCurrentTrack({
                   isPlaying: !currentTrack.isPlaying,
                 })
-                //Direkt calling play/pause for mobile 
+                //Direkt calling play/pause for mobile
                 if (isMobile) {
-                  if(!wavesurfer.current){
-                    return;
+                  if (!wavesurfer.current) {
+                    return
                   }
                   if (currentTrack.isPlaying) {
                     wavesurfer.current.pause()
