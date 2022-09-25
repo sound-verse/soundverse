@@ -81,7 +81,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
   }, [playerIsReady, currentTrack.isPlaying])
 
   useEffect(() => {
-    if (!currentTrack.url) {
+    if (!currentTrack.url || currentTrack.url === '') {
       return
     }
     if (wavesurfer.current) {
