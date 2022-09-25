@@ -208,7 +208,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
 
   Modal.setAppElement('#__next')
 
-  const baseUrl = process.env.NEXT_PUBLIC_ENVIRONMENT === 'main' ? 'https://main.soundverse.io' : 'https://testflight.soundverse.io';
+  const baseUrl = process.env.NEXT_PUBLIC_ENVIRONMENT === 'main' ? 'https://app.soundverse.io' : 'https://testflight.soundverse.io';
 
   return (
     <div>
