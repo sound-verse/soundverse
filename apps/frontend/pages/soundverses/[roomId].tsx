@@ -33,6 +33,7 @@ export default function Soundverse() {
     called: roomQueryCalled,
     error: roomError,
     subscribeToMore,
+    fetchMore,
   } = useQuery<GetRoomQuery, GetRoomQueryVariables>(GET_ROOM, {
     variables: {
       roomFilter: { id: roomId?.toString() ?? '' },
@@ -107,7 +108,7 @@ export default function Soundverse() {
     if (!showWelcomeModal) {
       playCurrentTrack()
     }
-  }, [room])
+  }, [room, showWelcomeModal])
 
   useEffect(() => {
     if (!roomId) {
@@ -121,6 +122,8 @@ export default function Soundverse() {
       updateQuery: (prev, { subscriptionData }: { subscriptionData: any }) => {
         if (subscriptionData.data.roomUpdated) {
           return { room: subscriptionData.data.roomUpdated }
+        } else {
+          fetchMore({ variables: { roomFilter: { id: roomId.toString() } } })
         }
         return prev
       },
@@ -151,18 +154,30 @@ export default function Soundverse() {
     return <Custom404 />
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_ENVIRONMENT === 'main' ? 'https://app.soundverse.io' : 'https://testflight.soundverse.io';
+  const baseUrl =
+    process.env.NEXT_PUBLIC_ENVIRONMENT === 'main'
+      ? 'https://app.soundverse.io'
+      : 'https://testflight.soundverse.io'
 
   return (
     <div>
       <Head>
         <title>Soundverse Room</title>
-        <meta name="description" content="Join rooms to socialize and discover the hottest music NFT collection!" />
+        <meta
+          name="description"
+          content="Join rooms to socialize and discover the hottest music NFT collection!"
+        />
         <meta property="og:title" content="Soundverse Room" />
-        <meta property="og:description" content="Join rooms to socialize and discover the hottest music NFT collection!" />
+        <meta
+          property="og:description"
+          content="Join rooms to socialize and discover the hottest music NFT collection!"
+        />
         <meta property="og:url" content={`${baseUrl}${router.asPath}`} />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content={`${baseUrl}/img/metadata/soundverse_room.png`} />
+        <meta
+          property="og:image"
+          content={`${baseUrl}/img/metadata/soundverse_room.png`}
+        />
       </Head>
 
       <Layout>
