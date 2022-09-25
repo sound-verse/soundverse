@@ -7,7 +7,6 @@ import { ProfileName } from '../profile'
 import Link from 'next/link'
 import { NftType } from '../../common/graphql/schema.d'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
-import { is } from 'date-fns/locale'
 
 export type AudioPlayerBarProps = {}
 
@@ -30,20 +29,29 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
   const WavesurferLibrary = useRef(null)
   const { setCurrentTrack, currentTrack } = useAudioContext()
   const [playerIsReady, setPlayerIsReady] = useState(false)
+  const [playerPositionIsSet, setPlayerPositionIsSet] = useState(false)
   const { isMobile } = useWindowDimensions()
 
-  const gotoTrackPosition = (trackPosition: number) => {
-    if (!wavesurfer.current || trackPosition == 0) {
-      return
-    }
-    const totalDuration: number = wavesurfer.current.getDuration()
-    let seekToValue = trackPosition / totalDuration
-    if (seekToValue > 1 || seekToValue < 0 || isNaN(seekToValue)) {
-      seekToValue = 0
-    }
+  const gotoTrackPosition = useCallback(
+    (trackPosition: number) => {
+      setPlayerPositionIsSet(true)
+      if (!wavesurfer.current || trackPosition == 0) {
+        return
+      }
 
-    wavesurfer.current.seekTo(seekToValue)
-  }
+      let seekToValue = trackPosition / currentTrack.playTime
+
+      if (seekToValue > 1 || seekToValue < 0 || isNaN(seekToValue)) {
+        seekToValue = 0
+      }
+
+      const currentPosition = wavesurfer.current.getCurrentTime()
+      if (Math.abs(currentPosition - trackPosition) > 5) {
+        wavesurfer.current.seekTo(seekToValue)
+      }
+    },
+    [currentTrack.playTime]
+  )
 
   useEffect(() => {
     if (!wavesurfer.current) {
@@ -71,18 +79,34 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
       return
     }
     if (currentTrack.isPlaying) {
-      wavesurfer.current.play()
-      wavesurfer.current.setMute(currentTrack.mute)
-      wavesurfer.current.setVolume(currentTrack.volume)
       gotoTrackPosition(currentTrack.currentPosition)
-      setCurrentTrack({ visible: true })
     } else {
       wavesurfer.current.pause()
     }
     if (playerIsReady) {
       setPlayerIsReady(false)
     }
-  }, [playerIsReady, currentTrack.isPlaying, currentTrack.currentPosition, currentTrack.mute, currentTrack.volume])
+  }, [playerIsReady, currentTrack.isPlaying])
+
+  useEffect(() => {
+    if (!playerPositionIsSet) {
+      return
+    }
+    if (wavesurfer.current.isPlaying()) {
+      return
+    }
+    wavesurfer.current.play()
+    wavesurfer.current.setMute(currentTrack.mute)
+    wavesurfer.current.setVolume(currentTrack.volume)
+    setCurrentTrack({ visible: true })
+  }, [playerPositionIsSet])
+
+  useEffect(() => {
+    if (!wavesurfer.current) {
+      return
+    }
+    gotoTrackPosition(currentTrack.currentPosition)
+  }, [currentTrack.currentPosition, gotoTrackPosition])
 
   useEffect(() => {
     if (!currentTrack.url || currentTrack.url === '') {
@@ -105,6 +129,8 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
       })
     }
 
+    setPlayerPositionIsSet(false)
+
     wavesurfer.current.load(url, currentTrack.waveForm)
 
     wavesurfer.current.on('ready', () => {
@@ -119,7 +145,6 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
             isLoading: false,
             isPlaying: true,
           })
-          wavesurfer.current.play()
         }
         setPlayerIsReady(true)
       }
