@@ -45,7 +45,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
         wavesurfer.current.seekTo(seekToValue)
       }
     },
-    [currentTrack.playTime, wavesurfer.current.getCurrentTime()]
+    [currentTrack.playTime, wavesurfer.current?.getCurrentTime()]
   )
 
   useEffect(() => {
