@@ -49,6 +49,13 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
     if (!wavesurfer.current) {
       return
     }
+    wavesurfer.current.toggleInteraction(!currentTrack.isRoomPlayer)
+  }, [currentTrack.isRoomPlayer])
+
+  useEffect(() => {
+    if (!wavesurfer.current) {
+      return
+    }
     wavesurfer.current.setMute(currentTrack.mute)
   }, [currentTrack.mute])
 
@@ -91,15 +98,12 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
       WavesurferLibrary.current = await (await import('wavesurfer.js')).default
     }
 
-    if (wavesurfer.current) {
-      await wavesurfer.current.destroy()
+    if (!wavesurfer.current) {
+      const options = formWaveSurferOptions(waveformRef.current)
+      wavesurfer.current = await WavesurferLibrary.current.create({
+        ...options,
+      })
     }
-
-    const options = formWaveSurferOptions(waveformRef.current)
-    wavesurfer.current = await WavesurferLibrary.current.create({
-      ...options,
-      ...(currentTrack.isRoomPlayer && { interact: false }),
-    })
 
     wavesurfer.current.load(url, currentTrack.waveForm)
 
