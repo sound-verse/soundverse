@@ -29,16 +29,11 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
   const WavesurferLibrary = useRef(null)
   const { setCurrentTrack, currentTrack } = useAudioContext()
   const [playerIsReady, setPlayerIsReady] = useState(false)
-  const [playerPositionIsSet, setPlayerPositionIsSet] = useState(false)
+  const playerIsInteractive = useRef(true)
   const { isMobile } = useWindowDimensions()
 
   const gotoTrackPosition = useCallback(
     (trackPosition: number) => {
-      setPlayerPositionIsSet(true)
-      if (!wavesurfer.current || trackPosition == 0) {
-        return
-      }
-
       let seekToValue = trackPosition / currentTrack.playTime
 
       if (seekToValue > 1 || seekToValue < 0 || isNaN(seekToValue)) {
@@ -46,19 +41,12 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
       }
 
       const currentPosition = wavesurfer.current.getCurrentTime()
-      if (Math.abs(currentPosition - trackPosition) > 10) {
+      if (Math.abs(currentPosition - trackPosition) > 5) {
         wavesurfer.current.seekTo(seekToValue)
       }
     },
-    [currentTrack.playTime]
+    [currentTrack.playTime, wavesurfer.current]
   )
-
-  useEffect(() => {
-    if (!wavesurfer.current) {
-      return
-    }
-    wavesurfer.current.toggleInteraction(!currentTrack.isRoomPlayer)
-  }, [currentTrack.isRoomPlayer])
 
   useEffect(() => {
     if (!wavesurfer.current) {
@@ -80,6 +68,8 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
     }
     if (currentTrack.isPlaying) {
       gotoTrackPosition(currentTrack.currentPosition)
+      setCurrentTrack({ visible: true })
+      wavesurfer.current.play()
     } else {
       wavesurfer.current.pause()
     }
@@ -89,17 +79,18 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
   }, [playerIsReady, currentTrack.isPlaying])
 
   useEffect(() => {
-    if (!playerPositionIsSet) {
+    if (!wavesurfer.current) {
       return
     }
-    if (wavesurfer.current.isPlaying()) {
-      return
-    }
-    wavesurfer.current.play()
-    wavesurfer.current.setMute(currentTrack.mute)
     wavesurfer.current.setVolume(currentTrack.volume)
-    setCurrentTrack({ visible: true })
-  }, [playerPositionIsSet])
+  }, [currentTrack.volume])
+
+  useEffect(() => {
+    if (!wavesurfer.current) {
+      return
+    }
+    wavesurfer.current.setMute(currentTrack.mute)
+  }, [currentTrack.mute])
 
   useEffect(() => {
     if (!wavesurfer.current) {
@@ -129,7 +120,10 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
       })
     }
 
-    setPlayerPositionIsSet(false)
+    if (playerIsInteractive.current === currentTrack.isRoomPlayer) {
+      wavesurfer.current.toggleInteraction()
+    }
+    playerIsInteractive.current = !currentTrack.isRoomPlayer
 
     wavesurfer.current.load(url, currentTrack.waveForm)
 

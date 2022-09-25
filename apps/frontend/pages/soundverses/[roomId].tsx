@@ -69,7 +69,7 @@ export default function Soundverse() {
         play: true,
         nftType,
         isRoomPlayer: true,
-        playTime: room.currentTrack?.nft.trackDuration
+        playTime: room.currentTrack?.nft.trackDuration,
       })
     }
   }

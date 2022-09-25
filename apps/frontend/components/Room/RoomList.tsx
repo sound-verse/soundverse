@@ -52,9 +52,7 @@ export const RoomList: FC<RoomListProps> = ({ rooms }) => {
       ) : (
         <div className="flex flex-col items-start xl:mr-24 w-full xl:w-[650px] -mt-7">
           {rooms.map((room) => (
-            <>
-              <RoomListElement room={room} key={room.id} />
-            </>
+            <RoomListElement room={room} key={room.id} />
           ))}
         </div>
       )}
