@@ -86,6 +86,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
     }
     if (wavesurfer.current) {
       wavesurfer.current.destroy()
+      wavesurfer.current = undefined
     }
     setCurrentTrack({ isLoading: true, isPlaying: false })
     create(currentTrack.url)
