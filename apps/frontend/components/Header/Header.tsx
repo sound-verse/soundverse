@@ -16,7 +16,7 @@ const Header = ({ className = '' }) => {
         <div className={styles.logo}>
           <Link href="/soundverses" passHref>
             <a>
-              <div className="relative w-16 mr-5 md:w-24 lg:32 xl:60 h-5 lg:h-12">
+              <div className="relative w-16 mr-5 md:w-24 lg:w-32 xl:w-60 h-5 lg:h-12">
                 <Image src="/logo-black.svg" alt="next" layout="fill" />
               </div>
             </a>
