@@ -107,7 +107,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
             isLoading: false,
             isPlaying: true,
           })
-          // wavesurfer.current.play()
+          wavesurfer.current.play()
         }
         setPlayerIsReady(true)
       }
