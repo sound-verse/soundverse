@@ -69,6 +69,13 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
         }
         setCurrentTrack({ visible: true })
       }
+
+      //hack for mobile, trying to kickstart
+      if (isMobile) {
+        setTimeout(() => {
+          setCurrentTrack({ isPlaying: true })
+        }, 1000)
+      }
       wavesurfer.current.play()
     }
     if (playerIsReady) {
