@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { ProfileName } from '../profile'
 import Link from 'next/link'
 import { NftType } from '../../common/graphql/schema.d'
+import useWindowDimensions from '../../hooks/useWindowDimensions'
 
 export type AudioPlayerBarProps = {}
 
@@ -28,6 +29,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
   const WavesurferLibrary = useRef(null)
   const { setCurrentTrack, currentTrack } = useAudioContext()
   const [playerIsReady, setPlayerIsReady] = useState(false)
+  const { isMobile } = useWindowDimensions()
 
   const gotoTrackPosition = useCallback(
     (trackPosition: number) => {
@@ -124,10 +126,17 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
 
     wavesurfer.current.on('ready', () => {
       if (currentTrack.play) {
-        setCurrentTrack({
-          isLoading: false,
-          isPlaying: true,
-        })
+        if (isMobile) {
+          setCurrentTrack({
+            isLoading: false,
+            visible: true,
+          })
+        } else {
+          setCurrentTrack({
+            isLoading: false,
+            isPlaying: true,
+          })
+        }
         setPlayerIsReady(true)
       }
     })
@@ -202,13 +211,27 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
             !currentTrack.isRoomPlayer && 'col-span-3 lg:col-span-1'
           )}
         >
-          {!currentTrack.isRoomPlayer ? (
+          {!currentTrack.isRoomPlayer || isMobile ? (
             <div
               className="col-span-2 lg:col-span-1 cursor-pointer text-right mr-3 -mb-1"
               onClick={() => {
                 setCurrentTrack({
                   isPlaying: !currentTrack.isPlaying,
                 })
+                //Direkt calling play/pause for mobile
+                if (isMobile) {
+                  if (!wavesurfer.current) {
+                    return
+                  }
+                  if (currentTrack.isPlaying) {
+                    wavesurfer.current.pause()
+                  } else {
+                    if (currentTrack.isRoomPlayer) {
+                      gotoTrackPosition(currentTrack.currentPosition)
+                    }
+                    wavesurfer.current.play()
+                  }
+                }
               }}
             >
               {currentTrack.isPlaying ? (
