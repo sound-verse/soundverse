@@ -70,15 +70,32 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
         setCurrentTrack({ visible: true })
       }
       wavesurfer.current.play()
-    } else {
-      if (!currentTrack.isRoomPlayer || (currentTrack.isRoomPlayer && !currentTrack.visible)) {
-        wavesurfer.current.pause()
-      }
     }
     if (playerIsReady) {
       setPlayerIsReady(false)
     }
   }, [playerIsReady, currentTrack.isPlaying])
+
+  useEffect(() => {
+    if (!wavesurfer.current) {
+      return
+    }
+
+    if (currentTrack.isPlaying) {
+      wavesurfer.current.play()
+    } else if (
+      !currentTrack.isPlaying ||
+      (currentTrack.isRoomPlayer &&
+        !currentTrack.isPlaying &&
+        !currentTrack.visible)
+    ) {
+      try {
+        wavesurfer.current.pause()
+      } catch {
+        console.log('Could not pause')
+      }
+    }
+  }, [currentTrack.isPlaying])
 
   useEffect(() => {
     if (!currentTrack.url) {
