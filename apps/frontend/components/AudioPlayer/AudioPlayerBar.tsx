@@ -84,7 +84,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
     if (currentTrack.isPlaying) {
       wavesurfer.current.play()
     } else if (
-      !currentTrack.isPlaying ||
+      (!currentTrack.isRoomPlayer && !currentTrack.isPlaying) ||
       (currentTrack.isRoomPlayer &&
         !currentTrack.isPlaying &&
         !currentTrack.visible)
