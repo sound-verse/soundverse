@@ -55,7 +55,6 @@ export default function Soundverse() {
         nftType === NftType.Master
           ? nft.masterContractAddress
           : nft.licenseContractAddress
-
       setCurrentTrack({
         url: nft.fileUrl,
         waveForm: nft.soundWave,

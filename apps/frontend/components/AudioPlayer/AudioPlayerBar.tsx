@@ -29,7 +29,6 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
   const WavesurferLibrary = useRef(null)
   const { setCurrentTrack, currentTrack } = useAudioContext()
   const [playerIsReady, setPlayerIsReady] = useState(false)
-  const playerIsInteractive = useRef(true)
   const { isMobile } = useWindowDimensions()
 
   const gotoTrackPosition = useCallback(
@@ -40,12 +39,9 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
         seekToValue = 0
       }
 
-      const currentPosition = wavesurfer.current.getCurrentTime()
-      if (Math.abs(currentPosition - trackPosition) > 10) {
-        wavesurfer.current.seekTo(seekToValue)
-      }
+      wavesurfer.current.seekTo(seekToValue)
     },
-    [currentTrack.playTime, wavesurfer.current?.getCurrentTime()]
+    [currentTrack.playTime]
   )
 
   useEffect(() => {
@@ -67,11 +63,17 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
       return
     }
     if (currentTrack.isPlaying) {
-      gotoTrackPosition(currentTrack.currentPosition)
-      setCurrentTrack({ visible: true })
+      if (playerIsReady) {
+        if (currentTrack.isRoomPlayer) {
+          gotoTrackPosition(currentTrack.currentPosition)
+        }
+        setCurrentTrack({ visible: true })
+      }
       wavesurfer.current.play()
     } else {
-      wavesurfer.current.pause()
+      if (!currentTrack.isRoomPlayer || (currentTrack.isRoomPlayer && !currentTrack.visible)) {
+        wavesurfer.current.pause()
+      }
     }
     if (playerIsReady) {
       setPlayerIsReady(false)
@@ -79,28 +81,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
   }, [playerIsReady, currentTrack.isPlaying])
 
   useEffect(() => {
-    if (!wavesurfer.current) {
-      return
-    }
-    wavesurfer.current.setVolume(currentTrack.volume)
-  }, [currentTrack.volume])
-
-  useEffect(() => {
-    if (!wavesurfer.current) {
-      return
-    }
-    wavesurfer.current.setMute(currentTrack.mute)
-  }, [currentTrack.mute])
-
-  useEffect(() => {
-    if (!wavesurfer.current) {
-      return
-    }
-    gotoTrackPosition(currentTrack.currentPosition)
-  }, [currentTrack.currentPosition, gotoTrackPosition])
-
-  useEffect(() => {
-    if (!currentTrack.url || currentTrack.url === '') {
+    if (!currentTrack.url) {
       return
     }
 
@@ -113,17 +94,16 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
       WavesurferLibrary.current = await (await import('wavesurfer.js')).default
     }
 
-    if (!wavesurfer.current) {
-      const options = formWaveSurferOptions(waveformRef.current)
-      wavesurfer.current = await WavesurferLibrary.current.create({
-        ...options,
-      })
+    if (wavesurfer.current) {
+      await wavesurfer.current.destroy()
     }
 
-    if (playerIsInteractive.current === currentTrack.isRoomPlayer) {
-      wavesurfer.current.toggleInteraction()
-    }
-    playerIsInteractive.current = !currentTrack.isRoomPlayer
+    const options = formWaveSurferOptions(waveformRef.current)
+
+    wavesurfer.current = await new WavesurferLibrary.current.create({
+      ...options,
+      ...(currentTrack.isRoomPlayer && { interact: false }),
+    })
 
     wavesurfer.current.load(url, currentTrack.waveForm)
 
