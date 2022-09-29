@@ -77,19 +77,6 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
         }, 1000)
       }
       wavesurfer.current.play()
-    }
-    if (playerIsReady) {
-      setPlayerIsReady(false)
-    }
-  }, [playerIsReady, currentTrack.isPlaying])
-
-  useEffect(() => {
-    if (!wavesurfer.current) {
-      return
-    }
-
-    if (currentTrack.isPlaying) {
-      wavesurfer.current.play()
     } else if (
       (!currentTrack.isRoomPlayer && !currentTrack.isPlaying) ||
       (currentTrack.isRoomPlayer &&
@@ -102,7 +89,10 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
         console.log('Could not pause')
       }
     }
-  }, [currentTrack.isPlaying])
+    if (playerIsReady) {
+      setPlayerIsReady(false)
+    }
+  }, [playerIsReady, currentTrack.isPlaying])
 
   useEffect(() => {
     if (!currentTrack.url) {
