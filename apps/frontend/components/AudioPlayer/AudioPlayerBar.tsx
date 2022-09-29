@@ -226,6 +226,9 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
                   if (currentTrack.isPlaying) {
                     wavesurfer.current.pause()
                   } else {
+                    if(currentTrack.isRoomPlayer){
+                      gotoTrackPosition(currentTrack.currentPosition)
+                    }
                     wavesurfer.current.play()
                   }
                 }
