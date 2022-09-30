@@ -69,20 +69,15 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
         }
         setCurrentTrack({ visible: true })
       }
-      wavesurfer.current.play()
-    }
-    if (playerIsReady) {
-      setPlayerIsReady(false)
-    }
-  }, [playerIsReady, currentTrack.isPlaying])
 
-  useEffect(() => {
-    if (!wavesurfer.current) {
-      return
-    }
+      wavesurfer.current.setMute(currentTrack.mute)
+      wavesurfer.current.setVolume(currentTrack.volume)
 
-    if (currentTrack.isPlaying) {
-      wavesurfer.current.play()
+      try {
+        wavesurfer.current.play()
+      } catch {
+        setCurrentTrack({ isPlaying: false })
+      }
     } else if (
       (!currentTrack.isRoomPlayer && !currentTrack.isPlaying) ||
       (currentTrack.isRoomPlayer &&
@@ -95,7 +90,10 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
         console.log('Could not pause')
       }
     }
-  }, [currentTrack.isPlaying])
+    if (playerIsReady) {
+      setPlayerIsReady(false)
+    }
+  }, [playerIsReady, currentTrack.isPlaying])
 
   useEffect(() => {
     if (!currentTrack.url) {
@@ -127,18 +125,15 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
     wavesurfer.current.on('ready', () => {
       if (currentTrack.play) {
         if (isMobile) {
-          setCurrentTrack({
-            isLoading: false,
-            visible: true,
-          })
+          setCurrentTrack({ visible: true, isPlaying: false })
         } else {
           setCurrentTrack({
             isLoading: false,
             isPlaying: true,
           })
         }
-        setPlayerIsReady(true)
       }
+      setPlayerIsReady(true)
     })
   }
 
@@ -226,6 +221,9 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
                   if (currentTrack.isPlaying) {
                     wavesurfer.current.pause()
                   } else {
+                    if (currentTrack.isRoomPlayer) {
+                      gotoTrackPosition(currentTrack.currentPosition)
+                    }
                     wavesurfer.current.play()
                   }
                 }
