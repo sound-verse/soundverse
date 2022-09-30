@@ -70,13 +70,6 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
         setCurrentTrack({ visible: true })
       }
 
-      //hack for mobile, trying to kickstart
-      if (isMobile) {
-        setTimeout(() => {
-          setCurrentTrack({ isPlaying: true })
-        }, 1000)
-      }
-
       wavesurfer.current.setMute(currentTrack.mute)
       wavesurfer.current.setVolume(currentTrack.volume)
 
@@ -137,6 +130,13 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
         })
       }
       setPlayerIsReady(true)
+
+      //mobile hack
+      if (isMobile) {
+        setTimeout(() => {
+          wavesurfer.current.play()
+        }, 1000)
+      }
     })
   }
 
