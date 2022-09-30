@@ -76,7 +76,15 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
           setCurrentTrack({ isPlaying: true })
         }, 1000)
       }
-      wavesurfer.current.play()
+
+      wavesurfer.current.setMute(currentTrack.mute)
+      wavesurfer.current.setVolume(currentTrack.volume)
+
+      try {
+        wavesurfer.current.play()
+      } catch {
+        setCurrentTrack({ isPlaying: false })
+      }
     } else if (
       (!currentTrack.isRoomPlayer && !currentTrack.isPlaying) ||
       (currentTrack.isRoomPlayer &&
@@ -123,19 +131,12 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
 
     wavesurfer.current.on('ready', () => {
       if (currentTrack.play) {
-        if (isMobile) {
-          setCurrentTrack({
-            isLoading: false,
-            visible: true,
-          })
-        } else {
-          setCurrentTrack({
-            isLoading: false,
-            isPlaying: true,
-          })
-        }
-        setPlayerIsReady(true)
+        setCurrentTrack({
+          isLoading: false,
+          isPlaying: true,
+        })
       }
+      setPlayerIsReady(true)
     })
   }
 
@@ -216,19 +217,19 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
                   isPlaying: !currentTrack.isPlaying,
                 })
                 //Direkt calling play/pause for mobile
-                if (isMobile) {
-                  if (!wavesurfer.current) {
-                    return
-                  }
-                  if (currentTrack.isPlaying) {
-                    wavesurfer.current.pause()
-                  } else {
-                    if (currentTrack.isRoomPlayer) {
-                      gotoTrackPosition(currentTrack.currentPosition)
-                    }
-                    wavesurfer.current.play()
-                  }
-                }
+                // if (isMobile) {
+                //   if (!wavesurfer.current) {
+                //     return
+                //   }
+                //   if (currentTrack.isPlaying) {
+                //     wavesurfer.current.pause()
+                //   } else {
+                //     if (currentTrack.isRoomPlayer) {
+                //       gotoTrackPosition(currentTrack.currentPosition)
+                //     }
+                //     wavesurfer.current.play()
+                //   }
+                // }
               }}
             >
               {currentTrack.isPlaying ? (
