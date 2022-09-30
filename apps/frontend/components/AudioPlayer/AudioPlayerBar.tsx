@@ -124,19 +124,16 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
 
     wavesurfer.current.on('ready', () => {
       if (currentTrack.play) {
-        setCurrentTrack({
-          isLoading: false,
-          isPlaying: true,
-        })
+        if (isMobile) {
+          setCurrentTrack({ visible: true, isPlaying: false })
+        } else {
+          setCurrentTrack({
+            isLoading: false,
+            isPlaying: true,
+          })
+        }
       }
       setPlayerIsReady(true)
-
-      //mobile hack
-      if (isMobile) {
-        setTimeout(() => {
-          wavesurfer.current.play()
-        }, 1000)
-      }
     })
   }
 
@@ -217,19 +214,19 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
                   isPlaying: !currentTrack.isPlaying,
                 })
                 //Direkt calling play/pause for mobile
-                // if (isMobile) {
-                //   if (!wavesurfer.current) {
-                //     return
-                //   }
-                //   if (currentTrack.isPlaying) {
-                //     wavesurfer.current.pause()
-                //   } else {
-                //     if (currentTrack.isRoomPlayer) {
-                //       gotoTrackPosition(currentTrack.currentPosition)
-                //     }
-                //     wavesurfer.current.play()
-                //   }
-                // }
+                if (isMobile) {
+                  if (!wavesurfer.current) {
+                    return
+                  }
+                  if (currentTrack.isPlaying) {
+                    wavesurfer.current.pause()
+                  } else {
+                    if (currentTrack.isRoomPlayer) {
+                      gotoTrackPosition(currentTrack.currentPosition)
+                    }
+                    wavesurfer.current.play()
+                  }
+                }
               }}
             >
               {currentTrack.isPlaying ? (
