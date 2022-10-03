@@ -12,12 +12,12 @@ export class NftMetadataInput {
   })
   name: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Transform(({ value }) => xss(value))
   @MaxLength(1000, {
     message: 'Description is too long',
   })
-  description: string;
+  description?: string;
 }
 
 @InputType()
