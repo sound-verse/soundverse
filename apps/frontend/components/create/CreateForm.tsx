@@ -173,7 +173,6 @@ export const CreateForm = () => {
   const validationSchemaFirstStep = Yup.object().shape({
     name: Yup.string().required('Enter a title'),
     description: Yup.string()
-      .required('Enter a description')
       .max(1000, 'Maximum number of characters of 1000 exceeded'),
     bpm: Yup.number()
       .min(40, 'Only BPM above 40 is allowed')
