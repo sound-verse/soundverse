@@ -31,22 +31,18 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
   const [playerIsReady, setPlayerIsReady] = useState(false)
   const { isMobile } = useWindowDimensions()
 
-  const gotoTrackPosition = (trackPosition: number) => {
-    if (!wavesurfer.current || trackPosition === 0) {
-      return
-    }
-    const totalDuration = wavesurfer.current.getDuration()
-    const seekToValue = trackPosition / totalDuration
-    wavesurfer.current.seekTo(seekToValue)
-  }
+  const gotoTrackPosition = useCallback(
+    (trackPosition: number) => {
+      let seekToValue = trackPosition / currentTrack.playTime
 
-  useEffect(() => {
-    return () => {
-      if (wavesurfer.current) {
-        wavesurfer.current.destroy()
+      if (seekToValue > 1 || seekToValue < 0 || isNaN(seekToValue)) {
+        seekToValue = 0
       }
-    }
-  }, [])
+
+      wavesurfer.current.seekTo(seekToValue)
+    },
+    [currentTrack.playTime]
+  )
 
   useEffect(() => {
     if (!wavesurfer.current) {
@@ -67,13 +63,32 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
       return
     }
     if (currentTrack.isPlaying) {
-      wavesurfer.current.play()
+      if (playerIsReady) {
+        if (currentTrack.isRoomPlayer) {
+          gotoTrackPosition(currentTrack.currentPosition)
+        }
+        setCurrentTrack({ visible: true })
+      }
+
       wavesurfer.current.setMute(currentTrack.mute)
       wavesurfer.current.setVolume(currentTrack.volume)
-      gotoTrackPosition(currentTrack.currentPosition)
-      setCurrentTrack({ visible: true })
-    } else {
-      wavesurfer.current.pause()
+
+      try {
+        wavesurfer.current.play()
+      } catch {
+        setCurrentTrack({ isPlaying: false })
+      }
+    } else if (
+      (!currentTrack.isRoomPlayer && !currentTrack.isPlaying) ||
+      (currentTrack.isRoomPlayer &&
+        !currentTrack.isPlaying &&
+        !currentTrack.visible)
+    ) {
+      try {
+        wavesurfer.current.pause()
+      } catch {
+        console.log('Could not pause')
+      }
     }
     if (playerIsReady) {
       setPlayerIsReady(false)
@@ -84,9 +99,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
     if (!currentTrack.url) {
       return
     }
-    if (wavesurfer.current) {
-      wavesurfer.current.destroy()
-    }
+
     setCurrentTrack({ isLoading: true, isPlaying: false })
     create(currentTrack.url)
   }, [currentTrack.url, currentTrack.nftType])
@@ -95,29 +108,32 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
     if (!WavesurferLibrary.current) {
       WavesurferLibrary.current = await (await import('wavesurfer.js')).default
     }
+
+    if (wavesurfer.current) {
+      await wavesurfer.current.destroy()
+    }
+
     const options = formWaveSurferOptions(waveformRef.current)
-    wavesurfer.current = await WavesurferLibrary.current.create({
+
+    wavesurfer.current = await new WavesurferLibrary.current.create({
       ...options,
       ...(currentTrack.isRoomPlayer && { interact: false }),
     })
+
     wavesurfer.current.load(url, currentTrack.waveForm)
 
     wavesurfer.current.on('ready', () => {
       if (currentTrack.play) {
         if (isMobile) {
-          setCurrentTrack({
-            isLoading: false,
-            visible: true,
-          })
+          setCurrentTrack({ visible: true, isPlaying: false })
         } else {
           setCurrentTrack({
             isLoading: false,
             isPlaying: true,
           })
-          wavesurfer.current.play()
         }
-        setPlayerIsReady(true)
       }
+      setPlayerIsReady(true)
     })
   }
 
@@ -187,21 +203,27 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
         <div
           className={cn(
             'grid grid-cols-5 align-center items-center',
-            (!currentTrack.isRoomPlayer ) && 'col-span-3 lg:col-span-1'
+            !currentTrack.isRoomPlayer && 'col-span-3 lg:col-span-1'
           )}
         >
-          {(!currentTrack.isRoomPlayer || isMobile) ? (
+          {!currentTrack.isRoomPlayer || isMobile ? (
             <div
               className="col-span-2 lg:col-span-1 cursor-pointer text-right mr-3 -mb-1"
               onClick={() => {
                 setCurrentTrack({
                   isPlaying: !currentTrack.isPlaying,
                 })
-                //Direkt calling play/pause for mobile 
+                //Direkt calling play/pause for mobile
                 if (isMobile) {
+                  if (!wavesurfer.current) {
+                    return
+                  }
                   if (currentTrack.isPlaying) {
                     wavesurfer.current.pause()
                   } else {
+                    if (currentTrack.isRoomPlayer) {
+                      gotoTrackPosition(currentTrack.currentPosition)
+                    }
                     wavesurfer.current.play()
                   }
                 }

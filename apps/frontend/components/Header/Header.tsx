@@ -16,7 +16,7 @@ const Header = ({ className = '' }) => {
         <div className={styles.logo}>
           <Link href="/soundverses" passHref>
             <a>
-              <div className="relative w-16 mr-5 lg:w-32 2xl:60 h-5 lg:h-12">
+              <div className="relative w-16 mr-5 md:w-24 xl:w-32 h-5 lg:h-12">
                 <Image src="/logo-black.svg" alt="next" layout="fill" />
               </div>
             </a>
@@ -81,6 +81,24 @@ const Header = ({ className = '' }) => {
               <Link href="/launch" passHref>
                 <p className={styles.marketplaceLink}>Launch</p>
               </Link>
+            </div>
+
+            <div className="flex items-center">
+              <div className="w-[25px]  h-[25px] relative">
+                <Image
+                  className=""
+                  src="/img/book.svg"
+                  alt="next"
+                  layout="fill"
+                />
+              </div>
+              <a
+                href="https://soundverse.gitbook.io/welcome-to-soundverse/"
+                target={'_blank'}
+                rel="noreferrer"
+              >
+                <p className={styles.marketplaceLink}>Wiki</p>
+              </a>
             </div>
           </div>
           <div>

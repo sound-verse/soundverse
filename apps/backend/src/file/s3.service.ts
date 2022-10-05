@@ -46,7 +46,7 @@ export class S3Service {
     let bucketName;
     switch (bucket) {
       case 'soundverse-testflight-user':
-      case 'soundverse-main-user':
+      case 'soundverse-user-main':
       case 'soundverse-user': {
         bucketName = this.configService.get('ENVIRONMENT') === 'local' ? 'soundverse-user' : 'user';
         break;

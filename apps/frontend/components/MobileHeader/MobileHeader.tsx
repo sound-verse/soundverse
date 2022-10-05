@@ -102,6 +102,24 @@ const Header = ({ className = '' }) => {
                 <p className={styles.marketplaceLink}>Launch</p>
               </Link>
             </div>
+
+            <div className={styles.link}>
+              <div className="w-[30px]  h-[25px] relative">
+                <Image
+                  className=""
+                  src="/img/book.svg"
+                  alt="next"
+                  layout="fill"
+                />
+              </div>
+              <a
+                href="https://soundverse.gitbook.io/welcome-to-soundverse/"
+                target={'_blank'}
+                rel="noreferrer"
+              >
+                <p className={styles.marketplaceLink}>Wiki</p>
+              </a>
+            </div>
           </div>
           <div className={styles.connectButtonWrapper}>
             <ConnectButton />

@@ -121,7 +121,7 @@ export default function Launch() {
     setMasterNfts(userMasterNfts)
   }, [data])
 
-  const baseUrl = process.env.NEXT_PUBLIC_ENVIRONMENT === 'main' ? 'https://main.soundverse.io' : 'https://testflight.soundverse.io';
+  const baseUrl = process.env.NEXT_PUBLIC_ENVIRONMENT === 'main' ? 'https://app.soundverse.io' : 'https://testflight.soundverse.io';
 
   return (
     <div>

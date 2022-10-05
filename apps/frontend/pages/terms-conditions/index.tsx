@@ -6,7 +6,7 @@ import {useRouter} from 'next/router';
 
 export default function TermsConditions() {
   const router = useRouter()
-  const baseUrl = process.env.NEXT_PUBLIC_ENVIRONMENT === 'main' ? 'https://main.soundverse.io' : 'https://testflight.soundverse.io';
+  const baseUrl = process.env.NEXT_PUBLIC_ENVIRONMENT === 'main' ? 'https://app.soundverse.io' : 'https://testflight.soundverse.io';
 
   return (
     <div>
@@ -91,7 +91,7 @@ export default function TermsConditions() {
             <br />
             <br />
             <b>Smart-Contract: </b> Soundverse NFTs are represented in smart
-            contracts on the Polygon blockchain.
+            contracts on the Ethereum blockchain.
             <b>
               All these transactions on and off the Platform are recorded in an
               immutable ledger“Smart Contracts”.
@@ -100,7 +100,7 @@ export default function TermsConditions() {
             <br />
             Therefore, Any NFTs listed or traded within Soundverse platform are
             not under the control of any one party, including Soundverse. 
-            Metamask, the Polygon network, your browser, or any other
+            Metamask, the Ethereum network, your browser, or any other
             third-party site, product, or service that you may access, visit or
             use to enable you to use the Platform are neither owned nor
             controlled by us.
@@ -109,7 +109,7 @@ export default function TermsConditions() {
             In no event will we be liable for third parties, acts or omissions,
             nor will we be liable for any damages you may suffer from your
             interactions with any third parties. When you engage in a
-            transaction on the Platform, your Polygon public address will be
+            transaction on the Platform, your Ethereum public address will be
             made public.
             <br />
             <br />
@@ -767,7 +767,7 @@ export default function TermsConditions() {
               <br />
               <br />
               As soon as User Content is minted, it will irrevocably be linked
-              to the Soundverse NFT associated with it on the Polygon
+              to the Soundverse NFT associated with it on the Ethereum
               blockchain. Additionally, Artist acknowledges and accepts the fact
               that each user who purchases a Soundverse NFT on the Platform has
               the right to resell, gift, transfer ownership to third parties, or
