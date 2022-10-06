@@ -37,6 +37,11 @@ function SoundCard({
     setPlayCard(playingCardId === nft.id ? true : false)
   }, [playingCardId])
 
+  const isPlaying =
+    currentTrack?.id === nft.id &&
+    currentTrack?.isPlaying &&
+    currentTrack?.nftType === nftType
+
   const handleMusicClick = () => {
     setCurrentTrack({
       url: nft.fileUrl,
@@ -52,6 +57,14 @@ function SoundCard({
       nftType,
       restart: true,
       isRoomPlayer: false,
+    })
+  }
+
+  const handlePauseMusicClick = () => {
+    setCurrentTrack({
+      url: '',
+      visible: false,
+      isPlaying: false,
     })
   }
 
@@ -84,7 +97,24 @@ function SoundCard({
               {nftType === NftType.Master ? 'Master' : 'License'}
             </div>
             <div className={styles.mplaceImage}>
-              {showPlayButton && (
+              {showAudioBar && isPlaying && (
+                <div className={styles.pauseButton}>
+                  <div
+                    className={styles.pauseButtonInner}
+                    onClick={(event) => {
+                      event.preventDefault()
+                      handlePauseMusicClick()
+                    }}
+                  >
+                    <Image
+                      src="/img/pauseButtonBlue.svg"
+                      layout="fill"
+                      objectFit="cover"
+                    />
+                  </div>
+                </div>
+              )}
+              {showAudioBar && showPlayButton && !isPlaying && (
                 <div className={styles.playButton}>
                   <div
                     className={styles.playButtonInner}
