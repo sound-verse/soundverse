@@ -31,6 +31,7 @@ function SoundCard({
 }: SoundCardProp) {
   const [playCard, setPlayCard] = useState<boolean>(false)
   const { setCurrentTrack, currentTrack } = useAudioContext()
+  const [showPlayButton, setShowPlayButton] = useState<boolean>(false)
 
   useEffect(() => {
     setPlayCard(playingCardId === nft.id ? true : false)
@@ -67,7 +68,11 @@ function SoundCard({
     return
   }
   return (
-    <div className={rootClassName}>
+    <div
+      className={rootClassName}
+      onMouseEnter={() => setShowPlayButton(true)}
+      onMouseLeave={() => setShowPlayButton(false)}
+    >
       {activeLinks ? (
         <Link
           href={`/${nftType === NftType.Master ? 'master' : 'license'}/${
@@ -79,22 +84,23 @@ function SoundCard({
               {nftType === NftType.Master ? 'Master' : 'License'}
             </div>
             <div className={styles.mplaceImage}>
-              {showAudioBar && (
-                <div
-                  className={styles.soundCardAudio}
-                  onClick={(event) => {
-                    event.preventDefault()
-                    handleMusicClick()
-                  }}
-                >
-                  <Image
-                    src="/img/soundwave.svg"
-                    objectFit="contain"
-                    layout="fill"
-                  />
+              {showPlayButton && (
+                <div className={styles.playButton}>
+                  <div
+                    className={styles.playButtonInner}
+                    onClick={(event) => {
+                      event.preventDefault()
+                      handleMusicClick()
+                    }}
+                  >
+                    <Image
+                      src="/img/playButtonBlue.svg"
+                      layout="fill"
+                      objectFit="cover"
+                    />
+                  </div>
                 </div>
               )}
-
               <Image
                 src={nft.filePictureUrl}
                 layout="fill"
