@@ -8,6 +8,7 @@ import cn from 'classnames'
 import { Nft, NftType, Selling } from '../../common/graphql/schema.d'
 import Web3 from 'web3'
 import { useAudioContext } from '../../context/AudioContext'
+import useWindowDimensions from '../../hooks/useWindowDimensions'
 
 export type SoundCardProp = {
   nftType: NftType
@@ -32,6 +33,7 @@ function SoundCard({
   const [playCard, setPlayCard] = useState<boolean>(false)
   const { setCurrentTrack, currentTrack } = useAudioContext()
   const [showPlayButton, setShowPlayButton] = useState<boolean>(false)
+  const { isMobile } = useWindowDimensions()
 
   useEffect(() => {
     setPlayCard(playingCardId === nft.id ? true : false)
@@ -114,7 +116,7 @@ function SoundCard({
                   </div>
                 </div>
               )}
-              {showAudioBar && showPlayButton && !isPlaying && (
+              {showAudioBar && (showPlayButton || isMobile) && !isPlaying && (
                 <div className={styles.playButton}>
                   <div
                     className={styles.playButtonInner}
