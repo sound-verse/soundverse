@@ -84,3 +84,12 @@
   @apply mt-auto p-2 pb-3 text-xs;
 
 }
+
+.playButton {
+  @apply absolute w-10 h-10 top-[150px] right-0 mr-4 bg-white rounded-full;
+  z-index: 2;
+}
+
+.playButtonInner {
+  @apply absolute w-12 h-12 -mt-1 -ml-1
+}
