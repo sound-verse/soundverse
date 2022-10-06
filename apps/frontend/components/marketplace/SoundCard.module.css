@@ -93,3 +93,12 @@
 .playButtonInner {
   @apply absolute w-12 h-12 -mt-1 -ml-1
 }
+
+.pauseButton {
+  @apply absolute w-12 h-12 top-[146px] right-0 mr-3 bg-[#1400FF] rounded-full;
+  z-index: 2;
+}
+
+.pauseButtonInner {
+  @apply absolute w-12 h-12 
+}
