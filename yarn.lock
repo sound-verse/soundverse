@@ -21793,10 +21793,10 @@ wavesurfer-react@^2.2.2:
   resolved "https://registry.yarnpkg.com/wavesurfer-react/-/wavesurfer-react-2.2.2.tgz#6720f73fc1780bc47340ee454b9c552144717c52"
   integrity sha512-3w98DzGjZxMYFrP0syvyk1YYifFVLqhjtfUgJpygezSWPVXq0XTFKHlkNZrpJ8iLAtahpFb7CIeL60HYdw91MA==
 
-wavesurfer.js@^6.2.0:
-  version "6.2.0"
-  resolved "https://registry.yarnpkg.com/wavesurfer.js/-/wavesurfer.js-6.2.0.tgz#47b2c2006d8780749fd88ef372a1ec84f886ad5a"
-  integrity sha512-yuOteX+RKgJl4p5V+YNflm79QRNFWpNo0UHtKaGf1G05qMNChfbcJU0MZYL7+OJTHgYszYqN3dgUXjugYd/Iew==
+wavesurfer.js@^6.3.0:
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/wavesurfer.js/-/wavesurfer.js-6.3.0.tgz#b6ff4bafd537191989b2088ffc58c35ea3916608"
+  integrity sha512-x7efObHMHY3nwqWzIC0yeZTo0u/aC9T5Av6KhSdhTlsgtKdTG7JAE3mNqnYBXUjq0yGYfTB9F85/pks9830Vjw==
 
 wcwidth@^1.0.0, wcwidth@^1.0.1:
   version "1.0.1"
