@@ -12,7 +12,12 @@ async function bootstrap() {
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.enableCors({
-    origin: ['http://localhost:3000', 'https://testflight.soundverse.io', 'https://app.soundverse.io'],
+    origin: [
+      'http://localhost:3000',
+      'https://testflight.soundverse.io',
+      'https://app.soundverse.io',
+      'https://debug.soundverse.io',
+    ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
