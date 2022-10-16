@@ -5,6 +5,8 @@ import React, {
   useReducer,
   useContext,
   createContext,
+  useRef,
+  useEffect,
 } from 'react'
 import { NftType } from '../common/graphql/schema.d'
 
@@ -33,7 +35,25 @@ export type Track = {
   nftType?: NftType
   restart?: boolean
   isRoomPlayer?: boolean
+  wavesurferLibrary?: any
+  wavesurferRef?: any
+  wavesurfer?: any
+  waveDiv?: any
 }
+
+const formWaveSurferOptions = (ref) => ({
+  container: ref,
+  waveColor: 'grey',
+  progressColor: 'black',
+  cursorColor: 'black',
+  height: 50,
+  pixelRatio: 1,
+  normalize: true,
+  barWidth: 1,
+  barGap: 1,
+  backend: 'MediaElement',
+  responsive: true,
+})
 
 export type State = {
   currentTrack: Track
@@ -41,6 +61,7 @@ export type State = {
 
 type AudioContextType = State & {
   setCurrentTrack: (track: Track) => void
+  setAudio: (audioUrl: string, playOnReady: boolean) => void
 }
 
 type Action =
@@ -49,6 +70,11 @@ type Action =
       track: Track
     }
   | { type: 'SET_VOLUME'; volume: number }
+  | {
+      type: 'SET_AUDIO'
+      audioUrl: string
+      playOnReady: boolean
+    }
 
 const initialState: State = {
   currentTrack: {
@@ -56,7 +82,15 @@ const initialState: State = {
     contractAddress: '',
     trackName: '',
     url: '',
-    waveForm: [0],
+    waveForm: [
+      0.06668534874916077, -0.05741075426340103, 0.05851012468338013,
+      -0.09296835213899612, 0.07477575540542603, -0.08782101422548294,
+      0.11066360026597977, -0.0477738082408905, 0.11248180270195007,
+      -0.06280726194381714, 0.05673525854945183, -0.16519753634929657,
+      0.024955160915851593, -0.04258160665631294, 0.056970562785863876,
+      -0.11238270998001099, 0.09637515246868134, -0.04308032989501953,
+      0.03724837675690651, -0.05804464593529701,
+    ],
     currentPosition: 0,
     creatorEthAddress: '',
     creatorName: '',
@@ -99,14 +133,68 @@ export const AudioProvider: FC = (props) => {
     [dispatch]
   )
 
+  const setAudio = useCallback(
+    async (audioUrl: string, playOnReady = false) => {
+      if (!state.currentTrack.wavesurferLibrary) {
+        state.currentTrack.wavesurferLibrary = await (
+          await import('wavesurfer.js')
+        ).default
+      }
+
+      if (state.currentTrack.wavesurfer) {
+        await state.currentTrack.wavesurfer.destroy()
+      }
+
+      if (!state.currentTrack.wavesurferRef) {
+        return
+      }
+
+      const options = formWaveSurferOptions(state.currentTrack.wavesurferRef)
+
+      state.currentTrack.wavesurfer =
+        await new state.currentTrack.wavesurferLibrary.create({
+          ...options,
+          ...(currentTrack.isRoomPlayer && { interact: false }),
+        })
+
+      state.currentTrack.wavesurfer.load(audioUrl, currentTrack.waveForm)
+
+      if (playOnReady) {
+        state.currentTrack.wavesurfer.on('ready', () => {
+          play()
+        })
+      }
+    },
+    [state]
+  )
+
+  const play = useCallback(() => {
+    if (!state.currentTrack.wavesurfer) {
+      return
+    }
+
+    state.currentTrack.wavesurfer.play()
+  }, [state])
+
+  const pause = useCallback(() => {
+    if (!state.currentTrack.wavesurfer) {
+      return
+    }
+
+    state.currentTrack.wavesurfer.pause()
+  }, [state])
+
   const currentTrack = useMemo(() => state.currentTrack, [state.currentTrack])
 
   const value = useMemo(
     () => ({
       currentTrack,
       setCurrentTrack,
+      play,
+      pause,
+      setAudio,
     }),
-    [currentTrack, setCurrentTrack]
+    [currentTrack, pause, play, setCurrentTrack, setAudio]
   )
 
   return <AudioContext.Provider value={value} {...props} />
