@@ -15,32 +15,12 @@ interface ConnectButtonProps {
 
 declare const window: any
 
-const POLYGON_TESTNET_PARAMS = {
-  chainId: '0x13881',
-  chainName: 'Mumbai',
-  nativeCurrency: {
-    name: 'MATIC Token',
-    symbol: 'MATIC',
-    decimals: 18,
-  },
-  rpcUrls: ['https://matic-mumbai.chainstacklabs.com/'],
-  blockExplorerUrls: ['https://mumbai.polygonscan.com/'],
-}
-
 export const ConnectButton: FC<ConnectButtonProps> = ({ className }) => {
-  const abstractConnectorArgs = {
-    supportedChainIds: [80001],
-  }
-  const injected: InjectedConnector = new InjectedConnector(
-    abstractConnectorArgs
-  )
-
   const { loginUser, logout } = useLogin()
-  const { authUser, chainId } = useAuthContext()
+  const { authUser } = useAuthContext()
   const [showDropdown, setShowDropdown] = useState<boolean>(false)
 
   const onboarding = useRef<MetaMaskOnboarding>()
-  const [flashMessage, setFlashMsg] = useState<string>('')
 
   useEffect(() => {
     if (!onboarding.current) {
@@ -55,45 +35,11 @@ export const ConnectButton: FC<ConnectButtonProps> = ({ className }) => {
     }
   }, [])
 
-  // Custom networks for Ethereum compatible chains can be added to Metamask
-  // Not needed for standard chains
-  async function addEthereumNetwork() {
-    try {
-      const provider = await injected.getProvider()
-      // rpc request to switch chain to an ethereum compatible chain
-      await provider.request({
-        method: 'wallet_addEthereumChain',
-        params: [POLYGON_TESTNET_PARAMS],
-      })
-    } catch (e) {
-      setFlashMsg(
-        'Failed to switch to Polygon chain, please check your MetaMask and reconnect again'
-      )
-      console.log(e)
-    }
-  }
-
   const onboard = async () => {
     if (process.env.NEXT_PUBLIC_ENVIRONMENT === 'local') {
       return
     }
-    if (MetaMaskOnboarding.isMetaMaskInstalled()) {
-      try {
-        if (window) {
-          // TODO: better wallet connect
-
-          // await window.ethereum.request({
-          //   method: 'eth_requestAccounts',
-          // })
-          // if (chainId !== 80001) {
-          //   addEthereumNetwork()
-          // }
-        }
-      } catch (e) {
-        console.log(e)
-      }
-    } else {
-      // opens a new tab to the <chrome | firefox> store for user to install the MetaMask browser extension
+    if (!MetaMaskOnboarding.isMetaMaskInstalled()) {
       onboarding.current?.startOnboarding()
     }
   }

@@ -51,7 +51,7 @@ export const useLogin = () => {
       chainIds: [31337, 5],
     },
     testflight: {
-      chanIds: [80001],
+      chanIds: [5],
     },
     main: {
       chanIds: [1],
@@ -67,9 +67,6 @@ export const useLogin = () => {
     },
     1: {
       name: 'Ethereum',
-    },
-    80001: {
-      name: 'Polygon Mumbai',
     },
   }
 
