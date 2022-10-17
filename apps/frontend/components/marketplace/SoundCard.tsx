@@ -30,7 +30,8 @@ function SoundCard({
   activeLinks = true,
 }: SoundCardProp) {
   const [playCard, setPlayCard] = useState<boolean>(false)
-  const { setCurrentTrack, currentTrack } = useAudioContext()
+  const { setCurrentTrack, currentTrack, play, pause, setAudio } =
+    useAudioContext()
   const [showPlayButton, setShowPlayButton] = useState<boolean>(false)
   const { isMobile } = useWindowDimensions()
 
@@ -45,8 +46,6 @@ function SoundCard({
 
   const handleMusicClick = () => {
     setCurrentTrack({
-      url: nft.fileUrl,
-      waveForm: nft.soundWave,
       trackName: nft.metadata.name,
       currentPosition: 0,
       creatorName: nft.creator.name,
@@ -62,10 +61,9 @@ function SoundCard({
   }
 
   const handlePauseMusicClick = () => {
+    pause()
     setCurrentTrack({
-      url: '',
       visible: false,
-      isPlaying: false,
     })
   }
 

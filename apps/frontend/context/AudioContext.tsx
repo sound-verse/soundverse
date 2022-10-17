@@ -20,8 +20,6 @@ export type Track = {
   id?: string
   contractAddress?: string
   trackName?: string
-  url?: string
-  waveForm?: number[]
   currentPosition?: number
   creatorName?: string
   trackPictureUrl?: string
@@ -60,7 +58,7 @@ export type State = {
 
 type AudioContextType = State & {
   setCurrentTrack: (track: Track) => void
-  setAudio: () => void
+  setAudio: (audioUrl: string, waveForm: number[]) => void
   play: () => void
   pause: () => void
 }
@@ -72,12 +70,14 @@ type Action =
     }
   | { type: 'SET_VOLUME'; volume: number }
   | {
-      type: 'SET_AUDIO'
+      type: 'SET_AUDIO';
+      audioUrl: string;
+      waveForm: number[];
     }
   | {
       type: 'PLAY'
     }
-    | {
+  | {
       type: 'PAUSE'
     }
 
@@ -86,8 +86,6 @@ const initialState: State = {
     id: '',
     contractAddress: '',
     trackName: '',
-    url: '/dummy/dummy.mp3',
-    waveForm: [0],
     currentPosition: 0,
     creatorEthAddress: '',
     creatorName: '',
@@ -146,38 +144,6 @@ export const AudioProvider: FC = (props) => {
     wavesurfer.current.setVolume(currentTrack.volume)
   }, [currentTrack.volume])
 
-  // useEffect(() => {
-  //   if (!wavesurfer.current) {
-  //     return
-  //   }
-  //   if (currentTrack.isPlaying) {
-  //     if (currentTrack.isRoomPlayer) {
-  //       gotoTrackPosition(currentTrack.currentPosition)
-  //     }
-  //     setCurrentTrack({ visible: true })
-
-  //     wavesurfer.current.setMute(currentTrack.mute)
-  //     wavesurfer.current.setVolume(currentTrack.volume)
-
-  //     try {
-  //       play()
-  //     } catch {
-  //       setCurrentTrack({ isPlaying: false })
-  //     }
-  //   } else if (
-  //     (!currentTrack.isRoomPlayer && !currentTrack.isPlaying) ||
-  //     (currentTrack.isRoomPlayer &&
-  //       !currentTrack.isPlaying &&
-  //       !currentTrack.visible)
-  //   ) {
-  //     try {
-  //       pause()
-  //     } catch {
-  //       console.log('Could not pause')
-  //     }
-  //   }
-  // }, [currentTrack.isPlaying])
-
   const setCurrentTrack = useCallback(
     (track: Track) => dispatch({ type: 'SET_CURRENT_TRACK', track }),
     [dispatch]
@@ -196,33 +162,38 @@ export const AudioProvider: FC = (props) => {
     [currentTrack.playTime]
   )
 
-  const setAudio = useCallback(async () => {
-    if (!wavesurferLibrary.current) {
-      wavesurferLibrary.current = await (await import('wavesurfer.js')).default
-    }
+  const setAudio = useCallback(
+    async (audioUrl: string, waveForm: number[]) => {
+      if (!wavesurferLibrary.current) {
+        wavesurferLibrary.current = await (
+          await import('wavesurfer.js')
+        ).default
+      }
 
-    if (wavesurfer.current) {
-      await wavesurfer.current.destroy()
-    }
+      if (wavesurfer.current) {
+        await wavesurfer.current.destroy()
+      }
 
-    const options = formWaveSurferOptions(
-      currentTrack?.wavesurferRef ?? wavesurferRef.current
-    )
+      const options = formWaveSurferOptions(
+        currentTrack?.wavesurferRef ?? wavesurferRef.current
+      )
 
-    wavesurfer.current = await new wavesurferLibrary.current.create({
-      ...options,
-      ...(currentTrack.isRoomPlayer && { interact: false }),
-    })
-
-    await wavesurfer.current.load(currentTrack.url, currentTrack.waveForm)
-
-    await new Promise((resolve) => {
-      wavesurfer.current.on('ready', () => {
-        setCurrentTrack({ isLoading: false })
-        resolve(true)
+      wavesurfer.current = await new wavesurferLibrary.current.create({
+        ...options,
+        ...(currentTrack.isRoomPlayer && { interact: false }),
       })
-    })
-  }, [state])
+
+      await wavesurfer.current.load(audioUrl, waveForm)
+
+      await new Promise((resolve) => {
+        wavesurfer.current.on('ready', () => {
+          setCurrentTrack({ isLoading: false })
+          resolve(true)
+        })
+      })
+    },
+    [state]
+  )
 
   const play = useCallback(() => {
     if (!wavesurfer.current) {
@@ -237,7 +208,7 @@ export const AudioProvider: FC = (props) => {
     wavesurfer.current.setVolume(currentTrack.volume)
 
     wavesurfer.current.play()
-    setCurrentTrack({ isPlaying: true,visible: true })
+    setCurrentTrack({ isPlaying: true, visible: true })
   }, [state])
 
   const pause = useCallback(() => {

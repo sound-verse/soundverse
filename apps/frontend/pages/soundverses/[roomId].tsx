@@ -40,7 +40,7 @@ export default function Soundverse() {
     },
   })
 
-  const { setCurrentTrack } = useAudioContext()
+  const { setCurrentTrack, play, pause, setAudio } = useAudioContext()
   const [showWelcomeModal, setShowWelcomeModal] = useState<boolean>(false)
   const { joinRoom } = useJoinRoom()
   const { leaveRoom } = useLeaveRoom()
@@ -56,8 +56,6 @@ export default function Soundverse() {
           ? nft.masterContractAddress
           : nft.licenseContractAddress
       setCurrentTrack({
-        url: nft.fileUrl,
-        waveForm: nft.soundWave,
         trackName: nft.metadata.name,
         currentPosition: room.currentTrack?.currentPosition ?? 0,
         creatorName: nft.creator.name,
@@ -84,10 +82,9 @@ export default function Soundverse() {
   useEffect(() => {
     return () => {
       setCurrentTrack({
-        url: '',
         visible: false,
-        isPlaying: false,
       })
+      pause()
     }
   }, [])
 
