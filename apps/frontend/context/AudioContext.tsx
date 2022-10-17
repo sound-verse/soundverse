@@ -61,25 +61,13 @@ type AudioContextType = State & {
   setAudio: (audioUrl: string, waveForm: number[]) => void
   play: () => void
   pause: () => void
+  gotoTrackPosition: (trackPosition: number) => void
 }
 
-type Action =
-  | {
-      type: 'SET_CURRENT_TRACK'
-      track: Track
-    }
-  | { type: 'SET_VOLUME'; volume: number }
-  | {
-      type: 'SET_AUDIO'
-      audioUrl: string
-      waveForm: number[]
-    }
-  | {
-      type: 'PLAY'
-    }
-  | {
-      type: 'PAUSE'
-    }
+type Action = {
+  type: 'SET_CURRENT_TRACK'
+  track: Track
+}
 
 const initialState: State = {
   currentTrack: {
@@ -207,10 +195,6 @@ export const AudioProvider: FC = (props) => {
       return
     }
 
-    if (currentTrack.isRoomPlayer) {
-      gotoTrackPosition(currentTrack.currentPosition)
-    }
-
     wavesurfer.current.setMute(currentTrack.mute)
     wavesurfer.current.setVolume(currentTrack.volume)
 
@@ -233,8 +217,9 @@ export const AudioProvider: FC = (props) => {
       play,
       pause,
       setAudio,
+      gotoTrackPosition,
     }),
-    [currentTrack, pause, play, setCurrentTrack, setAudio]
+    [currentTrack, pause, play, setCurrentTrack, setAudio, gotoTrackPosition]
   )
 
   return (
