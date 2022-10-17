@@ -135,6 +135,7 @@ export const AudioProvider: FC = (props) => {
 
   const setAudio = useCallback(
     async (audioUrl: string, playOnReady = false) => {
+      console.log(state.currentTrack)
       if (!state.currentTrack.wavesurferLibrary) {
         state.currentTrack.wavesurferLibrary = await (
           await import('wavesurfer.js')
@@ -144,6 +145,8 @@ export const AudioProvider: FC = (props) => {
       if (state.currentTrack.wavesurfer) {
         await state.currentTrack.wavesurfer.destroy()
       }
+
+      console.log(state.currentTrack.wavesurferRef)
 
       if (!state.currentTrack.wavesurferRef) {
         return
@@ -158,6 +161,8 @@ export const AudioProvider: FC = (props) => {
         })
 
       state.currentTrack.wavesurfer.load(audioUrl, currentTrack.waveForm)
+
+      console.log(state.currentTrack.wavesurfer)
 
       if (playOnReady) {
         state.currentTrack.wavesurfer.on('ready', () => {
