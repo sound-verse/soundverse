@@ -12,7 +12,7 @@ export type AudioPlayerBarProps = {}
 
 export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
   const wavesurferRef = useRef(null)
-  const { setCurrentTrack, currentTrack } = useAudioContext()
+  const { setCurrentTrack, currentTrack, play, pause } = useAudioContext()
   const { isMobile } = useWindowDimensions()
 
   useEffect(() => {
@@ -92,9 +92,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
             <div
               className="col-span-2 lg:col-span-1 cursor-pointer text-right mr-3 -mb-1"
               onClick={() => {
-                setCurrentTrack({
-                  isPlaying: !currentTrack.isPlaying,
-                })
+                currentTrack.isPlaying ? pause() : play()
               }}
             >
               {currentTrack.isPlaying ? (
@@ -162,10 +160,9 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
               className="cursor-pointer lg:ml-5 flex justify-around lg:justify-start items-center"
               onClick={() => {
                 setCurrentTrack({
-                  url: '',
-                  isPlaying: false,
                   visible: false,
                 })
+                pause()
               }}
             >
               <Image
