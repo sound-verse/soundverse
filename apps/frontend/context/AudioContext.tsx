@@ -84,15 +84,7 @@ const initialState: State = {
     contractAddress: '',
     trackName: '',
     url: '',
-    waveForm: [
-      0.06668534874916077, -0.05741075426340103, 0.05851012468338013,
-      -0.09296835213899612, 0.07477575540542603, -0.08782101422548294,
-      0.11066360026597977, -0.0477738082408905, 0.11248180270195007,
-      -0.06280726194381714, 0.05673525854945183, -0.16519753634929657,
-      0.024955160915851593, -0.04258160665631294, 0.056970562785863876,
-      -0.11238270998001099, 0.09637515246868134, -0.04308032989501953,
-      0.03724837675690651, -0.05804464593529701,
-    ],
+    waveForm: [0],
     currentPosition: 0,
     creatorEthAddress: '',
     creatorName: '',
@@ -134,17 +126,86 @@ export const AudioProvider: FC = (props) => {
   const wavesurferLibrary = useRef(null)
   const wavesurfer = useRef(null)
 
+  const currentTrack = useMemo(() => state.currentTrack, [state.currentTrack])
+
   useEffect(() => {
     setAudio('/dummy/dummy.mp3')
   }, [])
+
+  useEffect(() => {
+    if (currentTrack.url) {
+      setAudio(currentTrack.url, true)
+    }
+  }, [currentTrack.url])
+
+  useEffect(() => {
+    if (!wavesurfer.current) {
+      return
+    }
+    wavesurfer.current.setMute(currentTrack.mute)
+  }, [currentTrack.mute])
+
+  useEffect(() => {
+    if (!wavesurfer.current) {
+      return
+    }
+    wavesurfer.current.setVolume(currentTrack.volume)
+  }, [currentTrack.volume])
+
+  useEffect(() => {
+    if (!wavesurfer.current) {
+      return
+    }
+    if (currentTrack.isPlaying) {
+      if (currentTrack.isRoomPlayer) {
+        gotoTrackPosition(currentTrack.currentPosition)
+      }
+      setCurrentTrack({ visible: true })
+
+      wavesurfer.current.setMute(currentTrack.mute)
+      wavesurfer.current.setVolume(currentTrack.volume)
+
+      try {
+        play()
+      } catch {
+        setCurrentTrack({ isPlaying: false })
+      }
+    } else if (
+      (!currentTrack.isRoomPlayer && !currentTrack.isPlaying) ||
+      (currentTrack.isRoomPlayer &&
+        !currentTrack.isPlaying &&
+        !currentTrack.visible)
+    ) {
+      try {
+        pause()
+      } catch {
+        console.log('Could not pause')
+      }
+    }
+  }, [currentTrack.isPlaying])
 
   const setCurrentTrack = useCallback(
     (track: Track) => dispatch({ type: 'SET_CURRENT_TRACK', track }),
     [dispatch]
   )
 
+  const gotoTrackPosition = useCallback(
+    (trackPosition: number) => {
+      let seekToValue = trackPosition / currentTrack.playTime
+
+      if (seekToValue > 1 || seekToValue < 0 || isNaN(seekToValue)) {
+        seekToValue = 0
+      }
+
+      wavesurfer.current.seekTo(seekToValue)
+    },
+    [currentTrack.playTime]
+  )
+
   const setAudio = useCallback(
-    async (audioUrl: string) => {
+    async (audioUrl: string, playOnLoad = false) => {
+      setCurrentTrack({ isLoading: true, isPlaying: false })
+
       if (!wavesurferLibrary.current) {
         wavesurferLibrary.current = await (
           await import('wavesurfer.js')
@@ -168,6 +229,13 @@ export const AudioProvider: FC = (props) => {
 
       await new Promise((resolve) => {
         wavesurfer.current.on('ready', () => {
+          setCurrentTrack({ isLoading: false })
+          if (playOnLoad) {
+            play()
+            setCurrentTrack({
+              isPlaying: true,
+            })
+          }
           resolve(true)
         })
       })
@@ -190,8 +258,6 @@ export const AudioProvider: FC = (props) => {
 
     wavesurfer.current.pause()
   }, [state])
-
-  const currentTrack = useMemo(() => state.currentTrack, [state.currentTrack])
 
   const value = useMemo(
     () => ({
