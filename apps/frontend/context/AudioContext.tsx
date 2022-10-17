@@ -58,7 +58,11 @@ export type State = {
 
 type AudioContextType = State & {
   setCurrentTrack: (track: Track) => void
-  setAudio: (audioUrl: string, waveForm: number[], isRoomPlayer?: boolean) => void
+  setAudio: (
+    audioUrl: string,
+    waveForm: number[],
+    isRoomPlayer?: boolean
+  ) => void
   play: () => void
   pause: () => void
   gotoTrackPosition: (trackPosition: number, playTime: number) => void

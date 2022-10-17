@@ -58,7 +58,12 @@ function SoundCard({
       restart: true,
       isRoomPlayer: false,
     })
-    await setAudio(nft.fileUrl, nft.soundWave)
+    if (
+      nft.id !== currentTrack.id ||
+      (nft.id === currentTrack.id && currentTrack.nftType !== nftType)
+    ) {
+      await setAudio(nft.fileUrl, nft.soundWave)
+    }
     play()
   }
 
