@@ -9,7 +9,7 @@ export default function Debug() {
   const wavesurferRef = useRef(null)
 
   useEffect(() => {
-    setCurrentTrack({ wavesurferRef: wavesurferRef.current })
+    // setCurrentTrack({ wavesurferRef: wavesurferRef.current })
   }, [setCurrentTrack])
 
   return (
