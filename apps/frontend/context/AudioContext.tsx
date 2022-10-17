@@ -230,6 +230,7 @@ export const AudioProvider: FC = (props) => {
       await new Promise((resolve) => {
         wavesurfer.current.on('ready', () => {
           setCurrentTrack({ isLoading: false })
+          console.log(currentTrack.playOnLoad)
           if (currentTrack.playOnLoad) {
             play()
             setCurrentTrack({

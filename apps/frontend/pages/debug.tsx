@@ -14,8 +14,7 @@ export default function Debug() {
           <div
             className="p-5 bg-black rounded-full flex items-center justify-center mt-20"
             onClick={async () => {
-              setCurrentTrack({ playOnLoad: true })
-              await setAudio('/dummy/dummy.mp3')
+              setCurrentTrack({ url: '/dummy/dummy.mp3', playOnLoad: true })
             }}
           >
             PLAY
