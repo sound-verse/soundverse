@@ -65,7 +65,7 @@ export default function Soundverse() {
         creatorEthAddress: nft.creator.ethAddress,
         id: nft.id,
         contractAddress,
-        play: true,
+        playOnLoad: true,
         nftType,
         isRoomPlayer: true,
         playTime: room.currentTrack?.nft.trackDuration,

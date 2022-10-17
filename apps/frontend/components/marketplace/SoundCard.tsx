@@ -3,7 +3,6 @@ import styles from './SoundCard.module.css'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ProfileImage, ProfileName } from '../profile'
-import { AudioPlayer } from '../AudioPlayer/AudioPlayer'
 import cn from 'classnames'
 import { Nft, NftType, Selling } from '../../common/graphql/schema.d'
 import Web3 from 'web3'
@@ -55,8 +54,8 @@ function SoundCard({
       creatorEthAddress: nft.creator.ethAddress,
       id: nft.id,
       contractAddress,
-      play: true,
       nftType,
+      playOnLoad: true,
       restart: true,
       isRoomPlayer: false,
     })
