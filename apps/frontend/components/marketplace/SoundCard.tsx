@@ -44,7 +44,7 @@ function SoundCard({
     currentTrack?.isPlaying &&
     currentTrack?.nftType === nftType
 
-  const handleMusicClick = () => {
+  const handleMusicClick = async () => {
     setCurrentTrack({
       trackName: nft.metadata.name,
       currentPosition: 0,
@@ -58,6 +58,8 @@ function SoundCard({
       restart: true,
       isRoomPlayer: false,
     })
+    await setAudio(nft.fileUrl, nft.soundWave)
+    play()
   }
 
   const handlePauseMusicClick = () => {

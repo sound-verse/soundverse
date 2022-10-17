@@ -47,7 +47,7 @@ export default function Soundverse() {
 
   const isHost = roomData?.room?.creator?.id === (authUser?.id ?? '')
 
-  const playCurrentTrack = () => {
+  const playCurrentTrack = async () => {
     if (room.currentTrack) {
       const nft = room.currentTrack?.nft
       const nftType = room.currentTrack?.nftType
@@ -68,6 +68,8 @@ export default function Soundverse() {
         isRoomPlayer: true,
         playTime: room.currentTrack?.nft.trackDuration,
       })
+      await setAudio(nft.fileUrl, nft.soundWave)
+      play()
     }
   }
 
