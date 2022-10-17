@@ -178,6 +178,7 @@ export const AudioProvider: FC = (props) => {
 
       if (wavesurfer.current) {
         await wavesurfer.current.destroy()
+        setCurrentTrack({ isPlaying: false })
       }
 
       const options = formWaveSurferOptions(

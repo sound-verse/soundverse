@@ -40,7 +40,8 @@ export default function Soundverse() {
     },
   })
 
-  const { setCurrentTrack, play, pause, setAudio } = useAudioContext()
+  const { setCurrentTrack, play, pause, setAudio, currentTrack } =
+    useAudioContext()
   const [showWelcomeModal, setShowWelcomeModal] = useState<boolean>(false)
   const { joinRoom } = useJoinRoom()
   const { leaveRoom } = useLeaveRoom()
@@ -48,29 +49,30 @@ export default function Soundverse() {
   const isHost = roomData?.room?.creator?.id === (authUser?.id ?? '')
 
   const playCurrentTrack = async () => {
-    if (room.currentTrack) {
-      const nft = room.currentTrack?.nft
-      const nftType = room.currentTrack?.nftType
-      const contractAddress =
-        nftType === NftType.Master
-          ? nft.masterContractAddress
-          : nft.licenseContractAddress
-      setCurrentTrack({
-        trackName: nft.metadata.name,
-        currentPosition: room.currentTrack?.currentPosition ?? 0,
-        creatorName: nft.creator.name,
-        trackPictureUrl: nft.filePictureUrl,
-        creatorEthAddress: nft.creator.ethAddress,
-        id: nft.id,
-        contractAddress,
-        playOnLoad: true,
-        nftType,
-        isRoomPlayer: true,
-        playTime: room.currentTrack?.nft.trackDuration,
-      })
-      await setAudio(nft.fileUrl, nft.soundWave)
-      play()
+    if (!room.currentTrack) {
+      return
     }
+    const nft = room.currentTrack?.nft
+    const nftType = room.currentTrack?.nftType
+    const contractAddress =
+      nftType === NftType.Master
+        ? nft.masterContractAddress
+        : nft.licenseContractAddress
+    setCurrentTrack({
+      trackName: nft.metadata.name,
+      currentPosition: room.currentTrack?.currentPosition ?? 0,
+      creatorName: nft.creator.name,
+      trackPictureUrl: nft.filePictureUrl,
+      creatorEthAddress: nft.creator.ethAddress,
+      id: nft.id,
+      contractAddress,
+      playOnLoad: true,
+      nftType,
+      isRoomPlayer: true,
+      playTime: room.currentTrack?.nft.trackDuration,
+    })
+    await setAudio(nft.fileUrl, nft.soundWave)
+    play()
   }
 
   const handleJoinRoom = () => {
@@ -105,7 +107,13 @@ export default function Soundverse() {
       return
     }
     if (!showWelcomeModal) {
-      playCurrentTrack()
+      if (
+        room.currentTrack.nft.id !== currentTrack.id ||
+        (room.currentTrack.nft.id === currentTrack.id &&
+          currentTrack.nftType !== room.currentTrack.nftType)
+      ) {
+        playCurrentTrack()
+      }
     }
   }, [room, showWelcomeModal])
 
