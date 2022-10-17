@@ -236,7 +236,7 @@ export type NftMetadata = {
 }
 
 export type NftMetadataInput = {
-  description: Scalars['String']
+  description?: InputMaybe<Scalars['String']>
   name: Scalars['String']
 }
 
@@ -401,7 +401,6 @@ export type SubscriptionRoomUpdatedArgs = {
 export type UpdateUserInput = {
   description?: InputMaybe<Scalars['String']>
   discord?: InputMaybe<Scalars['String']>
-  email?: InputMaybe<Scalars['String']>
   instagram?: InputMaybe<Scalars['String']>
   name?: InputMaybe<Scalars['String']>
   soundcloud?: InputMaybe<Scalars['String']>

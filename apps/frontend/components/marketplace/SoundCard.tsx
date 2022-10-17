@@ -3,7 +3,6 @@ import styles from './SoundCard.module.css'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ProfileImage, ProfileName } from '../profile'
-import { AudioPlayer } from '../AudioPlayer/AudioPlayer'
 import cn from 'classnames'
 import { Nft, NftType, Selling } from '../../common/graphql/schema.d'
 import Web3 from 'web3'
@@ -31,7 +30,8 @@ function SoundCard({
   activeLinks = true,
 }: SoundCardProp) {
   const [playCard, setPlayCard] = useState<boolean>(false)
-  const { setCurrentTrack, currentTrack } = useAudioContext()
+  const { setCurrentTrack, currentTrack, play, pause, setAudio } =
+    useAudioContext()
   const [showPlayButton, setShowPlayButton] = useState<boolean>(false)
   const { isMobile } = useWindowDimensions()
 
@@ -44,10 +44,8 @@ function SoundCard({
     currentTrack?.isPlaying &&
     currentTrack?.nftType === nftType
 
-  const handleMusicClick = () => {
+  const handleMusicClick = async () => {
     setCurrentTrack({
-      url: nft.fileUrl,
-      waveForm: nft.soundWave,
       trackName: nft.metadata.name,
       currentPosition: 0,
       creatorName: nft.creator.name,
@@ -55,18 +53,24 @@ function SoundCard({
       creatorEthAddress: nft.creator.ethAddress,
       id: nft.id,
       contractAddress,
-      play: true,
       nftType,
+      playOnLoad: true,
       restart: true,
       isRoomPlayer: false,
     })
+    if (
+      nft.id !== currentTrack.id ||
+      (nft.id === currentTrack.id && currentTrack.nftType !== nftType)
+    ) {
+      await setAudio(nft.fileUrl, nft.soundWave)
+    }
+    play()
   }
 
   const handlePauseMusicClick = () => {
+    pause()
     setCurrentTrack({
-      url: '',
       visible: false,
-      isPlaying: false,
     })
   }
 

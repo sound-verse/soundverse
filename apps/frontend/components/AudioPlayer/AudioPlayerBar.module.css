@@ -1,0 +1,15 @@
+.playbar {
+  @apply fixed bottom-0 left-0 w-screen bg-white z-50 py-2 border-t overflow-hidden h-16;
+}
+
+.volume {
+  @apply appearance-none bg-grey-light rounded-full h-1;
+}
+
+.volume::-webkit-slider-thumb {
+  @apply bg-grey-dark cursor-pointer w-3 h-3 appearance-none rounded-full;
+}
+
+.noOverflow wave {
+  overflow: hidden !important;
+}

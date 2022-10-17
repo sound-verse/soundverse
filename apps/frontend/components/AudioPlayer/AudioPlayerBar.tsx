@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react'
-import styles from './AudioPlayer.module.css'
+import styles from './AudioPlayerBar.module.css'
 import cn from 'classnames'
 import { useAudioContext } from '../../context/AudioContext'
 import Image from 'next/image'
@@ -10,132 +10,13 @@ import useWindowDimensions from '../../hooks/useWindowDimensions'
 
 export type AudioPlayerBarProps = {}
 
-const formWaveSurferOptions = (ref) => ({
-  container: ref,
-  waveColor: 'grey',
-  progressColor: 'black',
-  cursorColor: 'black',
-  height: 50,
-  pixelRatio: 1,
-  normalize: true,
-  barWidth: 1,
-  barGap: 1,
-  backend: 'MediaElement',
-})
-
 export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
-  const waveformRef = useRef(null)
-  const wavesurfer = useRef(null)
-  const WavesurferLibrary = useRef(null)
-  const { setCurrentTrack, currentTrack } = useAudioContext()
-  const [playerIsReady, setPlayerIsReady] = useState(false)
-  const { isMobile } = useWindowDimensions()
-
-  const gotoTrackPosition = useCallback(
-    (trackPosition: number) => {
-      let seekToValue = trackPosition / currentTrack.playTime
-
-      if (seekToValue > 1 || seekToValue < 0 || isNaN(seekToValue)) {
-        seekToValue = 0
-      }
-
-      wavesurfer.current.seekTo(seekToValue)
-    },
-    [currentTrack.playTime]
-  )
+  const wavesurferRef = useRef(null)
+  const { setCurrentTrack, currentTrack, play, pause } = useAudioContext()
 
   useEffect(() => {
-    if (!wavesurfer.current) {
-      return
-    }
-    wavesurfer.current.setMute(currentTrack.mute)
-  }, [currentTrack.mute])
-
-  useEffect(() => {
-    if (!wavesurfer.current) {
-      return
-    }
-    wavesurfer.current.setVolume(currentTrack.volume)
-  }, [currentTrack.volume])
-
-  useEffect(() => {
-    if (!wavesurfer.current) {
-      return
-    }
-    if (currentTrack.isPlaying) {
-      if (playerIsReady) {
-        if (currentTrack.isRoomPlayer) {
-          gotoTrackPosition(currentTrack.currentPosition)
-        }
-        setCurrentTrack({ visible: true })
-      }
-
-      wavesurfer.current.setMute(currentTrack.mute)
-      wavesurfer.current.setVolume(currentTrack.volume)
-
-      try {
-        wavesurfer.current.play()
-      } catch {
-        setCurrentTrack({ isPlaying: false })
-      }
-    } else if (
-      (!currentTrack.isRoomPlayer && !currentTrack.isPlaying) ||
-      (currentTrack.isRoomPlayer &&
-        !currentTrack.isPlaying &&
-        !currentTrack.visible)
-    ) {
-      try {
-        wavesurfer.current.pause()
-      } catch {
-        console.log('Could not pause')
-      }
-    }
-    if (playerIsReady) {
-      setPlayerIsReady(false)
-    }
-  }, [playerIsReady, currentTrack.isPlaying])
-
-  useEffect(() => {
-    if (!currentTrack.url) {
-      return
-    }
-
-    setCurrentTrack({ isLoading: true, isPlaying: false })
-    create(currentTrack.url)
-  }, [currentTrack.url, currentTrack.nftType])
-
-  const create = async (url: string) => {
-    if (!WavesurferLibrary.current) {
-      WavesurferLibrary.current = await (await import('wavesurfer.js')).default
-    }
-
-    if (wavesurfer.current) {
-      await wavesurfer.current.destroy()
-    }
-
-    const options = formWaveSurferOptions(waveformRef.current)
-
-    wavesurfer.current = await new WavesurferLibrary.current.create({
-      ...options,
-      ...(currentTrack.isRoomPlayer && { interact: false }),
-    })
-
-    wavesurfer.current.load(url, currentTrack.waveForm)
-
-    wavesurfer.current.on('ready', () => {
-      if (currentTrack.play) {
-        if (isMobile) {
-          setCurrentTrack({ visible: true, isPlaying: false })
-        } else {
-          setCurrentTrack({
-            isLoading: false,
-            isPlaying: true,
-          })
-        }
-      }
-      setPlayerIsReady(true)
-    })
-  }
+    setCurrentTrack({ wavesurferRef: wavesurferRef.current })
+  }, [])
 
   return (
     <div
@@ -206,27 +87,11 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
             !currentTrack.isRoomPlayer && 'col-span-3 lg:col-span-1'
           )}
         >
-          {!currentTrack.isRoomPlayer || isMobile ? (
+          {!currentTrack.isRoomPlayer ? (
             <div
               className="col-span-2 lg:col-span-1 cursor-pointer text-right mr-3 -mb-1"
               onClick={() => {
-                setCurrentTrack({
-                  isPlaying: !currentTrack.isPlaying,
-                })
-                //Direkt calling play/pause for mobile
-                if (isMobile) {
-                  if (!wavesurfer.current) {
-                    return
-                  }
-                  if (currentTrack.isPlaying) {
-                    wavesurfer.current.pause()
-                  } else {
-                    if (currentTrack.isRoomPlayer) {
-                      gotoTrackPosition(currentTrack.currentPosition)
-                    }
-                    wavesurfer.current.play()
-                  }
-                }
+                currentTrack.isPlaying ? pause() : play()
               }}
             >
               {currentTrack.isPlaying ? (
@@ -249,7 +114,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
             <div className="col-span-1"></div>
           )}
           <div className={cn('col-span-3', styles.noOverflow)}>
-            <div ref={waveformRef} />
+            <div ref={wavesurferRef} />
           </div>
         </div>
         <div className="flex justify-center lg:justify-start col-span-2 lg:col-span-1">
@@ -294,10 +159,9 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
               className="cursor-pointer lg:ml-5 flex justify-around lg:justify-start items-center"
               onClick={() => {
                 setCurrentTrack({
-                  url: '',
-                  isPlaying: false,
                   visible: false,
                 })
+                pause()
               }}
             >
               <Image
