@@ -13,7 +13,6 @@ export type AudioPlayerBarProps = {}
 export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
   const wavesurferRef = useRef(null)
   const { setCurrentTrack, currentTrack, play, pause } = useAudioContext()
-  const { isMobile } = useWindowDimensions()
 
   useEffect(() => {
     setCurrentTrack({ wavesurferRef: wavesurferRef.current })
@@ -88,7 +87,7 @@ export const AudioPlayerBar = ({}: AudioPlayerBarProps) => {
             !currentTrack.isRoomPlayer && 'col-span-3 lg:col-span-1'
           )}
         >
-          {!currentTrack.isRoomPlayer || isMobile ? (
+          {!currentTrack.isRoomPlayer ? (
             <div
               className="col-span-2 lg:col-span-1 cursor-pointer text-right mr-3 -mb-1"
               onClick={() => {
