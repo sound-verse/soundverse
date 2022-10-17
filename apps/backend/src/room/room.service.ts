@@ -182,8 +182,7 @@ export class RoomService {
       return;
     }
 
-    //2 seconds for lookahead
-    if (room.currentTrack.currentPosition + 10 > room.currentTrack.nft.trackDuration) {
+    if (room.currentTrack.currentPosition >= room.currentTrack.nft.trackDuration * 0.9) {
       updatedRoom = await this.playNextSong(room);
     } else {
       updatedRoom = await this.roomModel.findOneAndUpdate(

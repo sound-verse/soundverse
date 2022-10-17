@@ -153,7 +153,7 @@ type NftMetadata {
 }
 
 input NftMetadataInput {
-  description: String!
+  description: String
   name: String!
 }
 
@@ -282,7 +282,6 @@ scalar Timestamp
 input UpdateUserInput {
   description: String
   discord: String
-  email: String
   instagram: String
   name: String
   soundcloud: String

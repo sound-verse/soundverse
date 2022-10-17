@@ -45,14 +45,7 @@ export class RPCListenerService implements OnApplicationBootstrap {
 
     this.wsProvider._websocket.on('open', () => {
       keepAliveInterval = setInterval(() => {
-        console.log('Checking if the connection is alive, sending a ping');
-
         this.wsProvider._websocket.ping();
-
-        // Use `WebSocket#terminate()`, which immediately destroys the connection,
-        // instead of `WebSocket#close()`, which waits for the close timer.
-        // Delay should be equal to the interval at which your server
-        // sends out pings plus a conservative assumption of the latency.
         pingTimeout = setTimeout(() => {
           this.wsProvider._websocket.terminate();
         }, EXPECTED_PONG_BACK);
@@ -62,14 +55,12 @@ export class RPCListenerService implements OnApplicationBootstrap {
     });
 
     this.wsProvider._websocket.on('close', () => {
-      console.log('The websocket connection was closed');
       clearInterval(keepAliveInterval);
       clearTimeout(pingTimeout);
       this.startConnection();
     });
 
     this.wsProvider._websocket.on('pong', () => {
-      console.log('Received pong, so connection is alive, clearing the timeout');
       clearInterval(pingTimeout);
     });
   }
