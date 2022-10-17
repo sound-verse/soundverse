@@ -9,6 +9,7 @@ import React, {
   useEffect,
 } from 'react'
 import { NftType } from '../common/graphql/schema.d'
+import useWindowDimensions from '../hooks/useWindowDimensions'
 
 export enum PLAYER_STATUS {
   PLAYING = 'playing',
@@ -35,9 +36,6 @@ export type Track = {
   nftType?: NftType
   restart?: boolean
   isRoomPlayer?: boolean
-  wavesurferLibrary?: any
-  wavesurferRef?: any
-  wavesurfer?: any
   waveDiv?: any
 }
 
@@ -130,6 +128,14 @@ const audioReducer = (state: State, action: Action): State => {
 
 export const AudioProvider: FC = (props) => {
   const [state, dispatch] = useReducer(audioReducer, initialState)
+  const {isMobile} = useWindowDimensions()
+  const wavesurferRef = useRef(null)
+  const wavesurferLibrary = useRef(null)
+  const wavesurfer = useRef(null)
+
+  useEffect(() => {
+    setAudio('/dummy/dummy.mp3')
+  }, [])
 
   const setCurrentTrack = useCallback(
     (track: Track) => dispatch({ type: 'SET_CURRENT_TRACK', track }),
@@ -138,57 +144,48 @@ export const AudioProvider: FC = (props) => {
 
   const setAudio = useCallback(
     async (audioUrl: string) => {
-      if (!state.currentTrack.wavesurferLibrary) {
-        state.currentTrack.wavesurferLibrary = await (
+      if (!wavesurferLibrary.current) {
+        wavesurferLibrary.current = await (
           await import('wavesurfer.js')
         ).default
       }
 
-      if (state.currentTrack.wavesurfer) {
-        await state.currentTrack.wavesurfer.destroy()
+      if (wavesurfer.current) {
+        await wavesurfer.current.destroy()
       }
 
-      if (!state.currentTrack.wavesurferRef) {
-        return
-      }
+      const options = formWaveSurferOptions(wavesurferRef.current)
 
-      const options = formWaveSurferOptions(state.currentTrack.wavesurferRef)
+      wavesurfer.current = await new wavesurferLibrary.current.create({
+        ...options,
+        ...(currentTrack.isRoomPlayer && { interact: false }),
+      })
 
-      state.currentTrack.wavesurfer =
-        await new state.currentTrack.wavesurferLibrary.create({
-          ...options,
-          ...(currentTrack.isRoomPlayer && { interact: false }),
-        })
+      await wavesurfer.current.load(audioUrl, currentTrack.waveForm)
 
-      await state.currentTrack.wavesurfer.load(audioUrl, currentTrack.waveForm)
-
-      const test = await new Promise((resolve) => {
-        state.currentTrack.wavesurfer.on('ready', () => {
+      await new Promise((resolve) => {
+        wavesurfer.current.on('ready', () => {
           resolve(true)
         })
       })
-
-      console.log(test)
     },
     [state]
   )
 
   const play = useCallback(() => {
-    if (!state.currentTrack.wavesurfer) {
+    if (!wavesurfer.current) {
       return
     }
 
-    console.log('play')
-
-    state.currentTrack.wavesurfer.play()
+    wavesurfer.current.play()
   }, [state])
 
   const pause = useCallback(() => {
-    if (!state.currentTrack.wavesurfer) {
+    if (!wavesurfer.current) {
       return
     }
 
-    state.currentTrack.wavesurfer.pause()
+    wavesurfer.current.pause()
   }, [state])
 
   const currentTrack = useMemo(() => state.currentTrack, [state.currentTrack])
@@ -204,7 +201,12 @@ export const AudioProvider: FC = (props) => {
     [currentTrack, pause, play, setCurrentTrack, setAudio]
   )
 
-  return <AudioContext.Provider value={value} {...props} />
+  return (
+    <AudioContext.Provider value={value}>
+      <div {...props} />
+      <div ref={wavesurferRef} className="hidden" />
+    </AudioContext.Provider>
+  )
 }
 
 export const useAudioContext = () => {
