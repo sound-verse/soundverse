@@ -70,9 +70,9 @@ type Action =
     }
   | { type: 'SET_VOLUME'; volume: number }
   | {
-      type: 'SET_AUDIO';
-      audioUrl: string;
-      waveForm: number[];
+      type: 'SET_AUDIO'
+      audioUrl: string
+      waveForm: number[]
     }
   | {
       type: 'PLAY'
@@ -129,6 +129,12 @@ export const AudioProvider: FC = (props) => {
   const wavesurfer = useRef(null)
 
   const currentTrack = useMemo(() => state.currentTrack, [state.currentTrack])
+
+  useEffect(() => {
+    if (isMobile) {
+      setAudio('/dummy/dummy.mp3', [])
+    }
+  }, [])
 
   useEffect(() => {
     if (!wavesurfer.current) {
