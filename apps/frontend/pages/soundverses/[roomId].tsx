@@ -78,8 +78,10 @@ export default function Soundverse() {
       playTime: room.currentTrack?.nft.trackDuration,
     })
     await setAudio(nft.fileUrl, nft.soundWave)
-    console.log(room.currentTrack.currentPosition)
-    gotoTrackPosition(room.currentTrack?.currentPosition ?? 0)
+    gotoTrackPosition(
+      room.currentTrack?.currentPosition ?? 0,
+      room?.currentTrack.nft.trackDuration ?? 0
+    )
     play()
   }
 

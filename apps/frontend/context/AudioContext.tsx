@@ -61,7 +61,7 @@ type AudioContextType = State & {
   setAudio: (audioUrl: string, waveForm: number[]) => void
   play: () => void
   pause: () => void
-  gotoTrackPosition: (trackPosition: number) => void
+  gotoTrackPosition: (trackPosition: number, playTime: number) => void
 }
 
 type Action = {
@@ -144,8 +144,8 @@ export const AudioProvider: FC = (props) => {
   )
 
   const gotoTrackPosition = useCallback(
-    (trackPosition: number) => {
-      let seekToValue = trackPosition / currentTrack.playTime
+    (trackPosition: number, playTime: number) => {
+      let seekToValue = trackPosition / playTime
 
       if (seekToValue > 1 || seekToValue < 0 || isNaN(seekToValue)) {
         seekToValue = 0
