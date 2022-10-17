@@ -40,8 +40,14 @@ export default function Soundverse() {
     },
   })
 
-  const { setCurrentTrack, play, pause, setAudio, currentTrack, gotoTrackPosition } =
-    useAudioContext()
+  const {
+    setCurrentTrack,
+    play,
+    pause,
+    setAudio,
+    currentTrack,
+    gotoTrackPosition,
+  } = useAudioContext()
   const [showWelcomeModal, setShowWelcomeModal] = useState<boolean>(false)
   const { joinRoom } = useJoinRoom()
   const { leaveRoom } = useLeaveRoom()
@@ -72,6 +78,7 @@ export default function Soundverse() {
       playTime: room.currentTrack?.nft.trackDuration,
     })
     await setAudio(nft.fileUrl, nft.soundWave)
+    console.log(room.currentTrack.currentPosition)
     gotoTrackPosition(room.currentTrack?.currentPosition ?? 0)
     play()
   }
