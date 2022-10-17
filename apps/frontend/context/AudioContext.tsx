@@ -60,7 +60,7 @@ export type State = {
 
 type AudioContextType = State & {
   setCurrentTrack: (track: Track) => void
-  setAudio: (audioUrl: string) => void
+  setAudio: (audioUrl: string, playOnLoad: boolean) => void
   play: () => void
 }
 
@@ -73,6 +73,7 @@ type Action =
   | {
       type: 'SET_AUDIO'
       audioUrl: string
+      playOnLoad: boolean
     }
   | {
       type: 'PLAY'
