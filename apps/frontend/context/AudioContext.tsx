@@ -37,6 +37,7 @@ export type Track = {
   restart?: boolean
   isRoomPlayer?: boolean
   waveDiv?: any
+  wavesurferRef?: any
 }
 
 const formWaveSurferOptions = (ref) => ({
@@ -128,7 +129,7 @@ const audioReducer = (state: State, action: Action): State => {
 
 export const AudioProvider: FC = (props) => {
   const [state, dispatch] = useReducer(audioReducer, initialState)
-  const {isMobile} = useWindowDimensions()
+  const { isMobile } = useWindowDimensions()
   const wavesurferRef = useRef(null)
   const wavesurferLibrary = useRef(null)
   const wavesurfer = useRef(null)
@@ -154,7 +155,9 @@ export const AudioProvider: FC = (props) => {
         await wavesurfer.current.destroy()
       }
 
-      const options = formWaveSurferOptions(wavesurferRef.current)
+      const options = formWaveSurferOptions(
+        currentTrack?.wavesurferRef ?? wavesurferRef.current
+      )
 
       wavesurfer.current = await new wavesurferLibrary.current.create({
         ...options,

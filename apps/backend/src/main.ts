@@ -46,8 +46,6 @@ async function bootstrap() {
     },
   });
 
-  console.log('microservice connected');
-
   await app.startAllMicroservices();
   await app.listen(process.env.PORT || 8001);
 }

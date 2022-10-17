@@ -9,8 +9,8 @@ export default function Debug() {
   const wavesurferRef = useRef(null)
 
   useEffect(() => {
-    // setCurrentTrack({ wavesurferRef: wavesurferRef.current })
-  }, [setCurrentTrack])
+    setCurrentTrack({ wavesurferRef: wavesurferRef.current })
+  }, [])
 
   return (
     <div>
