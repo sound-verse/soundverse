@@ -58,7 +58,7 @@ export type State = {
 
 type AudioContextType = State & {
   setCurrentTrack: (track: Track) => void
-  setAudio: (audioUrl: string, waveForm: number[]) => void
+  setAudio: (audioUrl: string, waveForm: number[], isRoomPlayer?: boolean) => void
   play: () => void
   pause: () => void
   gotoTrackPosition: (trackPosition: number, playTime: number) => void
@@ -157,7 +157,7 @@ export const AudioProvider: FC = (props) => {
   )
 
   const setAudio = useCallback(
-    async (audioUrl: string, waveForm: number[]) => {
+    async (audioUrl: string, waveForm: number[], isRoomPlayer = false) => {
       if (!wavesurferLibrary.current) {
         wavesurferLibrary.current = await (
           await import('wavesurfer.js')
@@ -175,7 +175,7 @@ export const AudioProvider: FC = (props) => {
 
       wavesurfer.current = await new wavesurferLibrary.current.create({
         ...options,
-        ...(currentTrack.isRoomPlayer && { interact: false }),
+        ...(isRoomPlayer && { interact: false }),
       })
 
       await wavesurfer.current.load(audioUrl, waveForm)
