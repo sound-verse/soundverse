@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'
 import { useAudioContext } from '../context/AudioContext'
 
 export default function Debug() {
-  const { setAudio, currentTrack, setCurrentTrack } = useAudioContext()
+  const { setAudio, currentTrack, setCurrentTrack, play } = useAudioContext()
   const wavesurferRef = useRef(null)
 
   useEffect(() => {
@@ -20,8 +20,9 @@ export default function Debug() {
         <div className=" text-white w-full flex items-center justify-center flex-col">
           <div
             className="p-5 bg-black rounded-full flex items-center justify-center mt-20"
-            onClick={() => {
-              setAudio('/dummy/dummy.mp3', true)
+            onClick={async () => {
+             await setAudio('/dummy/dummy.mp3')
+             play()
             }}
           >
             PLAY

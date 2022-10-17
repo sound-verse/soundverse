@@ -61,7 +61,8 @@ export type State = {
 
 type AudioContextType = State & {
   setCurrentTrack: (track: Track) => void
-  setAudio: (audioUrl: string, playOnReady: boolean) => void
+  setAudio: (audioUrl: string) => void
+  play: () => void
 }
 
 type Action =
@@ -73,7 +74,9 @@ type Action =
   | {
       type: 'SET_AUDIO'
       audioUrl: string
-      playOnReady: boolean
+    }
+  | {
+      type: 'PLAY'
     }
 
 const initialState: State = {
@@ -134,7 +137,7 @@ export const AudioProvider: FC = (props) => {
   )
 
   const setAudio = useCallback(
-    async (audioUrl: string, playOnReady = false) => {
+    async (audioUrl: string) => {
       if (!state.currentTrack.wavesurferLibrary) {
         state.currentTrack.wavesurferLibrary = await (
           await import('wavesurfer.js')
@@ -157,16 +160,15 @@ export const AudioProvider: FC = (props) => {
           ...(currentTrack.isRoomPlayer && { interact: false }),
         })
 
-      state.currentTrack.wavesurfer.load(audioUrl, currentTrack.waveForm)
+      await state.currentTrack.wavesurfer.load(audioUrl, currentTrack.waveForm)
 
-      console.log('player loaded')
-
-      if (playOnReady) {
+      const test = await new Promise((resolve) => {
         state.currentTrack.wavesurfer.on('ready', () => {
-          console.log('player ready')
-          play()
+          resolve(true)
         })
-      }
+      })
+
+      console.log(test)
     },
     [state]
   )
@@ -175,7 +177,8 @@ export const AudioProvider: FC = (props) => {
     if (!state.currentTrack.wavesurfer) {
       return
     }
-    console.log('player playing')
+
+    console.log('play')
 
     state.currentTrack.wavesurfer.play()
   }, [state])
