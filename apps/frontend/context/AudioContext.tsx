@@ -29,7 +29,6 @@ export type Track = {
   visible?: boolean
   mute?: boolean
   volume?: number
-  play?: boolean
   isLoading?: boolean
   playTime?: number
   isPlaying?: boolean
@@ -38,6 +37,7 @@ export type Track = {
   isRoomPlayer?: boolean
   waveDiv?: any
   wavesurferRef?: any
+  playOnLoad?: boolean
 }
 
 const formWaveSurferOptions = (ref) => ({
@@ -60,7 +60,7 @@ export type State = {
 
 type AudioContextType = State & {
   setCurrentTrack: (track: Track) => void
-  setAudio: (audioUrl: string, playOnLoad: boolean) => void
+  setAudio: (audioUrl: string) => void
   play: () => void
 }
 
@@ -73,7 +73,6 @@ type Action =
   | {
       type: 'SET_AUDIO'
       audioUrl: string
-      playOnLoad: boolean
     }
   | {
       type: 'PLAY'
@@ -99,6 +98,7 @@ const initialState: State = {
     restart: false,
     nftType: NftType.Master,
     isRoomPlayer: false,
+    playOnLoad: false,
   } as Track,
 }
 
@@ -135,7 +135,8 @@ export const AudioProvider: FC = (props) => {
 
   useEffect(() => {
     if (currentTrack.url) {
-      setAudio(currentTrack.url, true)
+      setCurrentTrack({ isLoading: true, isPlaying: false })
+      setAudio(currentTrack.url)
     }
   }, [currentTrack.url])
 
@@ -204,9 +205,7 @@ export const AudioProvider: FC = (props) => {
   )
 
   const setAudio = useCallback(
-    async (audioUrl: string, playOnLoad = false) => {
-      setCurrentTrack({ isLoading: true, isPlaying: false })
-
+    async (audioUrl: string) => {
       if (!wavesurferLibrary.current) {
         wavesurferLibrary.current = await (
           await import('wavesurfer.js')
@@ -231,7 +230,7 @@ export const AudioProvider: FC = (props) => {
       await new Promise((resolve) => {
         wavesurfer.current.on('ready', () => {
           setCurrentTrack({ isLoading: false })
-          if (playOnLoad) {
+          if (currentTrack.playOnLoad) {
             play()
             setCurrentTrack({
               isPlaying: true,
