@@ -183,6 +183,8 @@ enum SortOption {
   NAME
   OLDEST
   NEWEST
+  MASTER
+  LICENSE
 }
 
 input NftFilter {

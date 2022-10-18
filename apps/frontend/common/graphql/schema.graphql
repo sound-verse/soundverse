@@ -264,6 +264,8 @@ type Selling {
 }
 
 enum SortOption {
+  LICENSE
+  MASTER
   NAME
   NEWEST
   OLDEST
