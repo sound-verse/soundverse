@@ -87,7 +87,7 @@
 
 .playButton {
   @apply absolute w-10 h-10 top-[150px] right-0 mr-4 bg-white rounded-full;
-  z-index: 2;
+  z-index: 10;
 }
 
 .playButtonInner {
@@ -96,7 +96,7 @@
 
 .pauseButton {
   @apply absolute w-12 h-12 top-[146px] right-0 mr-3 bg-[#1400FF] rounded-full;
-  z-index: 2;
+  z-index: 10;
 }
 
 .pauseButtonInner {
