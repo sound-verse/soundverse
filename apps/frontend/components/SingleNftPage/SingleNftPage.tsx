@@ -208,9 +208,14 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
 
   Modal.setAppElement('#__next')
 
-  const baseUrl = process.env.NEXT_PUBLIC_ENVIRONMENT === 'main' ? 'https://app.soundverse.io' : 'https://testflight.soundverse.io';
-  const nftName = nft.metadata.name ? nft.metadata.name : "NFT Details";
-  const nftDescription = nft.metadata.description ? nft.metadata.description : "Every NFT has a story to share. Read all about it here!";
+  const baseUrl =
+    process.env.NEXT_PUBLIC_ENVIRONMENT === 'main'
+      ? 'https://app.soundverse.io'
+      : 'https://testflight.soundverse.io'
+  const nftName = nft.metadata.name ? nft.metadata.name : 'NFT Details'
+  const nftDescription = nft.metadata.description
+    ? nft.metadata.description
+    : 'Every NFT has a story to share. Read all about it here!'
 
   return (
     <div>
