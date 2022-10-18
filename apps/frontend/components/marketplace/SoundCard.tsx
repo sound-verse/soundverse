@@ -34,15 +34,19 @@ function SoundCard({
     useAudioContext()
   const [showPlayButton, setShowPlayButton] = useState<boolean>(false)
   const { isMobile } = useWindowDimensions()
+  const [isPlaying, setIsPlaying] = useState<boolean>(false)
 
   useEffect(() => {
     setPlayCard(playingCardId === nft.id ? true : false)
   }, [playingCardId])
 
-  const isPlaying =
-    currentTrack?.id === nft.id &&
-    currentTrack?.isPlaying &&
-    currentTrack?.nftType === nftType
+  useEffect(() => {
+    const isPlaying =
+      currentTrack?.id === nft.id &&
+      currentTrack?.isPlaying &&
+      currentTrack?.nftType === nftType
+    setIsPlaying(isPlaying)
+  }, [currentTrack, nft.id, nftType])
 
   const handleMusicClick = async () => {
     setCurrentTrack({
@@ -103,6 +107,13 @@ function SoundCard({
               {nftType === NftType.Master ? 'Master' : 'License'}
             </div>
             <div className={styles.mplaceImage}>
+              <Image
+                src={nft.filePictureUrl}
+                layout="fill"
+                objectFit="cover"
+                className={'rounded-tl-2xl'}
+                alt="nft picture"
+              />
               {showAudioBar && isPlaying && (
                 <div className={styles.pauseButton}>
                   <div
@@ -116,6 +127,7 @@ function SoundCard({
                       src="/img/pauseButtonBlue.svg"
                       layout="fill"
                       objectFit="cover"
+                      alt="play button"
                     />
                   </div>
                 </div>
@@ -133,16 +145,11 @@ function SoundCard({
                       src="/img/playButtonBlue.svg"
                       layout="fill"
                       objectFit="cover"
+                      alt="pause button"
                     />
                   </div>
                 </div>
               )}
-              <Image
-                src={nft.filePictureUrl}
-                layout="fill"
-                objectFit="cover"
-                className={'rounded-tl-2xl'}
-              />
             </div>
           </a>
         </Link>
@@ -157,6 +164,7 @@ function SoundCard({
               layout="fill"
               objectFit="cover"
               className={'rounded-tl-2xl'}
+              alt="nft picture"
             />
           </div>
         </>
@@ -165,7 +173,12 @@ function SoundCard({
       <div className={styles.soundCardBody}>
         <div className={styles.imageOverlay}></div>
         <div className={styles.blur}>
-          <Image src={nft.filePictureUrl} layout="fill" objectFit="cover" />
+          <Image
+            src={nft.filePictureUrl}
+            layout="fill"
+            objectFit="cover"
+            alt="blurry background"
+          />
         </div>
 
         <div className={styles.soundCardInnerBody}>
