@@ -382,6 +382,8 @@ export type Selling = {
 }
 
 export enum SortOption {
+  License = 'LICENSE',
+  Master = 'MASTER',
   Name = 'NAME',
   Newest = 'NEWEST',
   Oldest = 'OLDEST',
