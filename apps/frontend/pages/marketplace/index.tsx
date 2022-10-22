@@ -15,7 +15,7 @@ import { useBottomScrollListener } from 'react-bottom-scroll-listener'
 import { Bars } from 'react-loader-spinner'
 import Image from 'next/image'
 import useComponentVisible from '../../hooks/useComponentVisible'
-import {useRouter} from 'next/router';
+import { useRouter } from 'next/router'
 
 const LIMIT = 100
 const SKIP = 100
@@ -35,6 +35,14 @@ export default function Marketplace() {
     }
     case SortOption.Name: {
       sortByString = 'Name'
+      break
+    }
+    case SortOption.Master: {
+      sortByString = 'Master'
+      break
+    }
+    case SortOption.License: {
+      sortByString = 'License'
       break
     }
     default: {
@@ -97,19 +105,38 @@ export default function Marketplace() {
     setCurrentSkip(currentSkip + SKIP)
   })
 
+  const isMasterFilterSet = sortByString === 'Master' ? true : false
+
+  const isLicenseFilterSet = sortByString === 'License' ? true : false
+
+  const isOtherFilterSet =
+    sortByString !== 'Master' && sortByString !== 'License' ? true : false
+
   const router = useRouter()
-  const baseUrl = process.env.NEXT_PUBLIC_ENVIRONMENT === 'main' ? 'https://app.soundverse.io' : 'https://testflight.soundverse.io';
+  const baseUrl =
+    process.env.NEXT_PUBLIC_ENVIRONMENT === 'main'
+      ? 'https://app.soundverse.io'
+      : 'https://testflight.soundverse.io'
 
   return (
     <div className="">
       <Head>
         <title>Soundverse Marketplace</title>
-        <meta name="description" content="Discover, play, and collect the hottest music License or Master NFTs!" />
+        <meta
+          name="description"
+          content="Discover, play, and collect the hottest music License or Master NFTs!"
+        />
         <meta property="og:title" content="Soundverse Marketplace" />
-        <meta property="og:description" content="Discover, play, and collect the hottest music License or Master NFTs!" />
+        <meta
+          property="og:description"
+          content="Discover, play, and collect the hottest music License or Master NFTs!"
+        />
         <meta property="og:url" content={`${baseUrl}${router.asPath}`} />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content={`${baseUrl}/img/metadata/marketplace.png`} />
+        <meta
+          property="og:image"
+          content={`${baseUrl}/img/metadata/marketplace.png`}
+        />
       </Head>
 
       <Layout>
@@ -133,7 +160,7 @@ export default function Marketplace() {
               </div>
             </div>
             <div ref={ref}>
-              {isComponentVisible  && (
+              {isComponentVisible && (
                 <div className="flex flex-col bg-white rounded-2xl border border-grey-light p-1 w-40 mb-5 -mt-2 absolute z-50">
                   <div
                     className="hover:bg-grey-light cursor-pointer select-none rounded-xl p-1"
@@ -153,6 +180,18 @@ export default function Marketplace() {
                   >
                     Name
                   </div>
+                  <div
+                    className="hover:bg-grey-light cursor-pointer select-none rounded-xl p-1"
+                    onClick={() => handleSortClick(SortOption.Master)}
+                  >
+                    Master
+                  </div>
+                  <div
+                    className="hover:bg-grey-light cursor-pointer select-none rounded-xl p-1"
+                    onClick={() => handleSortClick(SortOption.License)}
+                  >
+                    License
+                  </div>
                 </div>
               )}
             </div>
@@ -164,24 +203,26 @@ export default function Marketplace() {
 
                 return (
                   <>
-                    {nft.sellings.masterSelling && (
-                      <SoundCard
-                        nft={nft}
-                        nftType={NftType.Master}
-                        key={`master ${nft.id}`}
-                        playingCardId={playingCardId}
-                        onMusicClick={() => handleMusicClick(nft.id)}
-                      />
-                    )}
-                    {nft.sellings.licenseSellings[0] && (
-                      <SoundCard
-                        nft={nft}
-                        nftType={NftType.License}
-                        key={`license ${nft.id}`}
-                        playingCardId={playingCardId}
-                        onMusicClick={() => handleMusicClick(nft.id)}
-                      />
-                    )}
+                    {nft.sellings.masterSelling &&
+                      (isOtherFilterSet || isMasterFilterSet) && (
+                        <SoundCard
+                          nft={nft}
+                          nftType={NftType.Master}
+                          key={`master ${nft.id}`}
+                          playingCardId={playingCardId}
+                          onMusicClick={() => handleMusicClick(nft.id)}
+                        />
+                      )}
+                    {nft.sellings.licenseSellings[0] &&
+                      (isOtherFilterSet || isLicenseFilterSet) && (
+                        <SoundCard
+                          nft={nft}
+                          nftType={NftType.License}
+                          key={`license ${nft.id}`}
+                          playingCardId={playingCardId}
+                          onMusicClick={() => handleMusicClick(nft.id)}
+                        />
+                      )}
                   </>
                 )
               })}
