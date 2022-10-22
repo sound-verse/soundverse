@@ -106,11 +106,15 @@ export default function Marketplace() {
   })
 
   const isMasterFilterSet = sortByString === 'Master' ? true : false
+  console.log(isMasterFilterSet)
 
   const isLicenseFilterSet = sortByString !== 'License' ? true : false
+  console.log(isLicenseFilterSet)
 
   const isOtherFilterSet =
     sortByString !== 'Master' && sortByString !== 'License' ? true : false
+  
+  console.log(isOtherFilterSet)
 
   const router = useRouter()
   const baseUrl =
