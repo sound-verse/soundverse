@@ -105,17 +105,12 @@ export default function Marketplace() {
     setCurrentSkip(currentSkip + SKIP)
   })
 
-  const isMasterFilterSet = () => {
-    this.state.SortOption === 'Master' ? true : false
-  }
+  const isMasterFilterSet = sortByString === 'Master' ? true : false
 
-  const isLicenseFilterSet = () => {
-    this.state.SortOption !== 'License' ? true : false
-  }
+  const isLicenseFilterSet = sortByString !== 'License' ? true : false
 
-  const isOtherFilterSet = () => {
-    this.state.SortOption !== 'Master' ? true : false
-  }
+  const isOtherFilterSet =
+    sortByString !== 'Master' && sortByString !== 'License' ? true : false
 
   const router = useRouter()
   const baseUrl =
@@ -209,9 +204,7 @@ export default function Marketplace() {
                 return (
                   <>
                     {nft.sellings.masterSelling &&
-                      (isOtherFilterSet ||
-                        isMasterFilterSet ||
-                        !isLicenseFilterSet) && (
+                      (isOtherFilterSet || isMasterFilterSet) && (
                         <SoundCard
                           nft={nft}
                           nftType={NftType.Master}
@@ -221,9 +214,7 @@ export default function Marketplace() {
                         />
                       )}
                     {nft.sellings.licenseSellings[0] &&
-                      (isOtherFilterSet ||
-                        isLicenseFilterSet ||
-                        !isMasterFilterSet) && (
+                      (isOtherFilterSet || isLicenseFilterSet) && (
                         <SoundCard
                           nft={nft}
                           nftType={NftType.License}
