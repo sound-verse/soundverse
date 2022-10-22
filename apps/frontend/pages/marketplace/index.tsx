@@ -107,7 +107,7 @@ export default function Marketplace() {
 
   const isMasterFilterSet = sortByString === 'Master' ? true : false
 
-  const isLicenseFilterSet = sortByString !== 'License' ? true : false
+  const isLicenseFilterSet = sortByString === 'License' ? true : false
 
   const isOtherFilterSet =
     sortByString !== 'Master' && sortByString !== 'License' ? true : false
