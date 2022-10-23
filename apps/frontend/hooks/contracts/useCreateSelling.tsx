@@ -72,7 +72,6 @@ export const useCreateSelling = () => {
   const {
     data: signature,
     error,
-    isLoading,
     signTypedData,
   } = useSignTypedData({
     types: undefined,
