@@ -14,6 +14,9 @@ const marketContractAddress = process.env.NEXT_PUBLIC_MARKET_CONTRACT_ADDRESS
 export const useUnlistSelling = () => {
   const abi = new utils.Interface(MarketContractAbi.abi)
   const [unlistProps, setUnlistProps] = useState<UnlistSellingProps>(undefined)
+  const [status, setStatus] = useState<'success' | 'error' | 'pending'>(
+    'pending'
+  )
 
   const contractConfig = {
     addressOrName: marketContractAddress,
@@ -30,6 +33,22 @@ export const useUnlistSelling = () => {
       executeUnlistNft()
     }
   }, [unlistProps])
+
+  useEffect(() => {
+    if (!data) {
+      return
+    }
+    data.wait(1).then(() => {
+      setStatus('success')
+    })
+  }, [data])
+
+  useEffect(() => {
+    if (!error) {
+      return
+    }
+    setStatus('error')
+  }, [error])
 
   const unlistNft = (unlistProps: UnlistSellingProps) => {
     setUnlistProps(unlistProps)
@@ -54,15 +73,12 @@ export const useUnlistSelling = () => {
       }
     } catch (error) {
       console.log(error)
-      toast.error('Error unlisting your NFT!')
+      toast.error('Error unlisting your NFT!', { id: '1' })
     }
   }
 
   return {
     unlistNft,
-    unlistNftState: {
-      txHash: data,
-      error,
-    },
+    unlistNftState: status,
   }
 }

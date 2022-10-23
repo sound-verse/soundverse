@@ -15,7 +15,7 @@ const Header = ({ className = '' }) => {
   return (
     <>
       <div className={cn(styles.headerWrapper, className)}>
-        <Toaster position="top-right" />
+        <Toaster position="top-left" />
         <div className={styles.logo}>
           <Link href="/soundverses" passHref>
             <a>

@@ -76,7 +76,7 @@ export const CreateSellingForm = ({
 
   const onSubmit = async (values, onSubmitProps) => {
     if (!authUser) {
-      toast.error('Please connect your wallet.')
+      toast.error('Please connect your wallet.', { id: '1' })
       return
     }
 
@@ -91,7 +91,7 @@ export const CreateSellingForm = ({
     } catch (error) {
       setLoading(false)
       console.log(error)
-      toast.error('Error listing your NFT')
+      toast.error('Error listing your NFT', { id: '1' })
     }
 
     onSubmitProps.setSubmitting(false)

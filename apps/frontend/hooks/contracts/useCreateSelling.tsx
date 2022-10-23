@@ -139,7 +139,7 @@ export const useCreateSelling = () => {
         })
       } catch {
         console.log(error)
-        toast.error('Error listing your NFT!')
+        toast.error('Error listing your NFT!', { id: '1' })
         return
       }
 
@@ -210,7 +210,7 @@ export const useCreateSelling = () => {
         )
       } catch (error) {
         console.log(error)
-        toast.error('Error listing your NFT!')
+        toast.error('Error listing your NFT!', { id: '1' })
       }
     },
     [error]

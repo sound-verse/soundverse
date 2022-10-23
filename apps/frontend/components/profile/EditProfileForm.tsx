@@ -100,7 +100,7 @@ export const EditProfileForm = ({
     } catch (error) {
       setShowing(false)
       console.log(error)
-      toast.error('Error updating your profile')
+      toast.error('Error updating your profile', { id: '1' })
     }
 
     onSubmitProps.setSubmitting(false)

@@ -14,6 +14,9 @@ const marketContractAddress = process.env.NEXT_PUBLIC_MARKET_CONTRACT_ADDRESS
 
 export const useBuy = () => {
   const [buyProps, setBuyProps] = useState<BuyProps>(undefined)
+  const [status, setStatus] = useState<'success' | 'error' | 'pending'>(
+    'pending'
+  )
 
   //TODO: currently just taking the recent marketplace contract address - we should provide fallback for older marketplace contract addresss used in the vouchers
 
@@ -34,6 +37,22 @@ export const useBuy = () => {
       executeBuy()
     }
   }, [buyProps])
+
+  useEffect(() => {
+    if (!data) {
+      return
+    }
+    data.wait(1).then(() => {
+      setStatus('success')
+    })
+  }, [data])
+
+  useEffect(() => {
+    if (!error) {
+      return
+    }
+    setStatus('error')
+  }, [error])
 
   const isMintVoucher = buyProps?.selling?.saleVoucher ? false : true
 
@@ -68,9 +87,6 @@ export const useBuy = () => {
 
   return {
     buyNft,
-    buyNftState: {
-      txHash: data,
-      error,
-    },
+    buyNftState: status,
   }
 }

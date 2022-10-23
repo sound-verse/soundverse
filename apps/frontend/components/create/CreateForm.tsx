@@ -220,7 +220,7 @@ export const CreateForm = () => {
 
   const onSubmit = async (values, onSubmitProps) => {
     if (!authUser) {
-      toast.error('Please connect your wallet.')
+      toast.error('Please connect your wallet.', { id: '1' })
       return
     }
     try {
@@ -242,13 +242,13 @@ export const CreateForm = () => {
       if (id) {
         router.push(`/license/${id}`)
       } else {
-        toast.error('Error minting your NFT')
+        toast.error('Error minting your NFT', { id: '1' })
       }
       setShowing(false)
     } catch (error) {
       setShowing(false)
       console.log(error)
-      toast.error('Error minting your NFT')
+      toast.error('Error minting your NFT', { id: '1' })
     }
 
     onSubmitProps.setSubmitting(false)
