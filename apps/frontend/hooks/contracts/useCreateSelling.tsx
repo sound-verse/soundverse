@@ -1,13 +1,9 @@
-import { useEthers } from '@usedapp/core'
-import { useAuthContext } from '../../context/AuthContext'
 import toast from 'react-hot-toast'
 import { FetchResult, useMutation } from '@apollo/client'
 import {
   Nft,
-  CreateSellingInput,
   Selling,
   CreateSellingMutation,
-  CreateMintSellingInput,
   NftType,
   CreateMintSellingMutation,
   CreateSellingMutationVariables,
@@ -20,6 +16,7 @@ import { useCallback, useEffect, useState } from 'react'
 import Web3 from 'web3'
 import { CREATE_MINT_SELLING } from '../../common/graphql/mutations/create-mint-selling.mutation'
 import { add } from 'date-fns'
+import { useSignTypedData } from '@web3modal/react'
 
 export const saleVoucherTypes = {
   SVVoucher: [
@@ -60,12 +57,6 @@ const licenseContractAddress = process.env.NEXT_PUBLIC_LICENSE_CONTRACT_ADDRESS
 const marketContractAddress = process.env.NEXT_PUBLIC_MARKET_CONTRACT_ADDRESS
 
 export const useCreateSelling = () => {
-  const { authUser } = useAuthContext()
-  const { chainId, library } = useEthers()
-  const [createSellingInputProps, setCreateSellingInputProps] =
-    useState<CreateSellingInputProps>(undefined)
-  const [contractAddress, setContractAddress] = useState<string>(undefined)
-
   const [createSellingMutation] = useMutation<
     CreateSellingMutation,
     CreateSellingMutationVariables
@@ -78,146 +69,157 @@ export const useCreateSelling = () => {
 
   const [selling, setSelling] = useState<Partial<Selling>>(undefined)
 
-  useEffect(() => {
-    if (contractAddress) {
-      saveVoucher()
-    }
-  }, [contractAddress])
+  const {
+    data: signature,
+    error,
+    signTypedData,
+  } = useSignTypedData({
+    types: undefined,
+    value: undefined,
+    domain: undefined,
+  })
 
-  useEffect(() => {
-    if (createSellingInputProps) {
+  const saveVoucher = useCallback(
+    async (createSellingInputProps: CreateSellingInputProps) => {
+      const isMintVoucher =
+        createSellingInputProps?.nft?.tokenId > 0 ? false : true
+
       const contractAddress =
         createSellingInputProps.nftType === NftType.Master
           ? masterContractAddress
           : licenseContractAddress
-      setContractAddress(contractAddress)
-    }
-  }, [createSellingInputProps])
 
-  const saveVoucher = useCallback(async () => {
-    const isMintVoucher = createSellingInputProps.nft.tokenId > 0 ? false : true
-
-    let voucher
-
-    if (isMintVoucher) {
-      voucher = {
-        price: Web3.utils.toWei(createSellingInputProps.price.toString()),
-        tokenUri: createSellingInputProps.nft.ipfsUrl,
-        supply: createSellingInputProps.amount,
-        maxSupply: createSellingInputProps.nft.supply,
-        isMaster:
-          createSellingInputProps.nftType === NftType.Master ? true : false,
-        currency: 'ETH',
-        royaltyFeeMaster: createSellingInputProps.nft.royaltyFeeMaster,
-        royaltyFeeLicense: createSellingInputProps.nft.royaltyFeeLicense,
-        creatorOwnerSplit: createSellingInputProps.nft.creatorOwnerSplit,
-        validUntil: +add(new Date(), { years: 1 }),
+      let voucher, voucherTypes
+      if (!createSellingInputProps) {
+        voucher = undefined
+        voucherTypes = undefined
+      } else if (isMintVoucher) {
+        voucher = {
+          price: Web3.utils.toWei(createSellingInputProps.price.toString()),
+          tokenUri: createSellingInputProps.nft.ipfsUrl,
+          supply: createSellingInputProps.amount,
+          maxSupply: createSellingInputProps.nft.supply,
+          isMaster:
+            createSellingInputProps.nftType === NftType.Master ? true : false,
+          currency: 'ETH',
+          royaltyFeeMaster: createSellingInputProps.nft.royaltyFeeMaster,
+          royaltyFeeLicense: createSellingInputProps.nft.royaltyFeeLicense,
+          creatorOwnerSplit: createSellingInputProps.nft.creatorOwnerSplit,
+          validUntil: +add(new Date(), { years: 1 }),
+        }
+        voucherTypes = mintVoucherTypes
+      } else {
+        voucher = {
+          nftContractAddress: contractAddress.toLowerCase(),
+          price: Web3.utils.toWei(createSellingInputProps.price.toString()),
+          tokenUri: createSellingInputProps.nft.ipfsUrl,
+          supply: createSellingInputProps.amount,
+          isMaster:
+            createSellingInputProps.nftType === NftType.Master ? true : false,
+          currency: 'ETH',
+          validUntil: +add(new Date(), { years: 1 }),
+        }
+        voucherTypes = saleVoucherTypes
       }
-    } else {
-      voucher = {
-        nftContractAddress: await (
-          await library._getAddress(contractAddress)
-        ).toLowerCase(),
-        price: Web3.utils.toWei(createSellingInputProps.price.toString()),
-        tokenUri: createSellingInputProps.nft.ipfsUrl,
-        supply: createSellingInputProps.amount,
-        isMaster:
-          createSellingInputProps.nftType === NftType.Master ? true : false,
-        currency: 'ETH',
-        validUntil: +add(new Date(), { years: 1 }),
+
+      const signingDomain = {
+        name: 'SVVoucher',
+        version: '1',
+        verifyingContract: marketContractAddress.toLowerCase(),
+        chainId: createSellingInputProps.nft.chainId,
       }
-    }
 
-    const signingDomain = {
-      name: 'SVVoucher',
-      version: '1',
-      verifyingContract: marketContractAddress.toLowerCase(),
-      chainId,
-    }
+      let signature = ''
 
-    const voucherTypes = isMintVoucher ? mintVoucherTypes : saleVoucherTypes
-
-    const signature = await library
-      .getSigner()
-      ._signTypedData(signingDomain, voucherTypes, {
-        ...voucher,
-      })
-
-    let voucherInput: MintVoucherInput | SaleVoucherInput
-
-    if (isMintVoucher) {
-      const { currency, isMaster, price, supply, validUntil } = voucher
-      voucherInput = {
-        currency,
-        isMaster,
-        price,
-        supply,
-        validUntil,
-        signature,
+      try {
+        signature = await signTypedData({
+          domain: signingDomain,
+          types: voucherTypes,
+          value: voucher,
+        })
+      } catch {
+        console.log(error)
+        toast.error('Error listing your NFT!', { id: '1' })
+        return
       }
-    } else {
-      const {
-        currency,
-        isMaster,
-        price,
-        supply,
-        validUntil,
-        nftContractAddress,
-      } = voucher
-      voucherInput = {
-        currency,
-        isMaster,
-        price,
-        supply,
-        validUntil,
-        nftContractAddress,
-        signature,
-      }
-    }
 
-    let createSellingInput
-    if (isMintVoucher) {
-      createSellingInput = {
-        nftId: createSellingInputProps.nft.id,
-        mintVoucherInput: {
-          ...voucherInput,
-        },
-      }
-    } else {
-      createSellingInput = {
-        nftId: createSellingInputProps.nft.id,
-        saleVoucherInput: {
-          ...voucherInput,
-        },
-      }
-    }
+      let voucherInput: MintVoucherInput | SaleVoucherInput
 
-    try {
-      const newSelling = !isMintVoucher
-        ? await createSellingMutation({
-            variables: { createSellingInput },
-          })
-        : await createMintSellingMutation({
-            variables: { createMintSellingInput: createSellingInput },
-          })
+      if (isMintVoucher) {
+        const { currency, isMaster, price, supply, validUntil } = voucher
+        voucherInput = {
+          currency,
+          isMaster,
+          price,
+          supply,
+          validUntil,
+          signature,
+        }
+      } else {
+        const {
+          currency,
+          isMaster,
+          price,
+          supply,
+          validUntil,
+          nftContractAddress,
+        } = voucher
+        voucherInput = {
+          currency,
+          isMaster,
+          price,
+          supply,
+          validUntil,
+          nftContractAddress,
+          signature,
+        }
+      }
 
-      setSelling(
-        isMintVoucher
-          ? (newSelling as FetchResult<CreateMintSellingMutation>).data
-              .createMintSelling
-          : (newSelling as FetchResult<CreateSellingMutation>).data
-              .createSelling
-      )
-    } catch (error) {
-      console.log(error)
-      toast.error('Error listing your NFT!')
-    }
-  }, [createSellingInputProps, contractAddress])
+      let createSellingInput
+      if (isMintVoucher) {
+        createSellingInput = {
+          nftId: createSellingInputProps.nft.id,
+          mintVoucherInput: {
+            ...voucherInput,
+          },
+        }
+      } else {
+        createSellingInput = {
+          nftId: createSellingInputProps.nft.id,
+          saleVoucherInput: {
+            ...voucherInput,
+          },
+        }
+      }
+
+      try {
+        const newSelling = !isMintVoucher
+          ? await createSellingMutation({
+              variables: { createSellingInput },
+            })
+          : await createMintSellingMutation({
+              variables: { createMintSellingInput: createSellingInput },
+            })
+
+        setSelling(
+          isMintVoucher
+            ? (newSelling as FetchResult<CreateMintSellingMutation>).data
+                .createMintSelling
+            : (newSelling as FetchResult<CreateSellingMutation>).data
+                .createSelling
+        )
+      } catch (error) {
+        console.log(error)
+        toast.error('Error listing your NFT!', { id: '1' })
+      }
+    },
+    [error]
+  )
 
   const createSelling = async (
     createSellingInputProps: CreateSellingInputProps
   ) => {
-    setCreateSellingInputProps(createSellingInputProps)
+    await saveVoucher(createSellingInputProps)
   }
 
   return { createSelling, selling }

@@ -24,7 +24,6 @@ import { BuyLicense } from '../selling/BuyLicense'
 import Modal from 'react-modal'
 import Web3 from 'web3'
 import { Bars } from 'react-loader-spinner'
-import { useLogin } from '../../hooks/useLogin'
 import { UnlistLicense } from '../selling/UnlistLicense'
 
 type SingleNftPageProps = {
@@ -43,12 +42,6 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
   const [showUnlistedSuccess, setShowUnlistedSuccess] = useState<boolean>(false)
   const [showing, setShowing] = useState<Boolean>(false)
   const [showIsUnlisting, setShowIsUnlisting] = useState<Boolean>(false)
-
-  // useEffect(() => {
-  //   if (!authUser && router.isReady) {
-  //     router.push(`/marketplace`)
-  //   }
-  // }, [router.isReady])
 
   const authMasterOwner =
     nft.masterOwner.user.id === authUser?.id ? nft.masterOwner : undefined
@@ -139,32 +132,33 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
   const { unlistNft, unlistNftState } = useUnlistSelling()
 
   useEffect(() => {
-    if (buyNftState.status === 'Success') {
+    if (buyNftState === 'success') {
       setShowBoughtSuccess(true)
       setShowing(false)
     }
-    if (buyNftState.status === 'Exception') {
+    if (buyNftState === 'error') {
       toast.error(
-        'Error buying the NFT. Do you have enough funds in your wallet?'
+        'Error buying the NFT. Do you have enough funds in your wallet?',
+        { id: '1' }
       )
       setShowing(false)
     }
   }, [buyNftState])
 
   useEffect(() => {
-    if (unlistNftState.status === 'Success') {
+    if (unlistNftState === 'success') {
       setShowUnlistedSuccess(true)
       setShowIsUnlisting(false)
     }
-    if (unlistNftState.status === 'Exception') {
-      toast.error('Error unlisting the NFT.')
+    if (unlistNftState === 'error') {
+      toast.error('Error unlisting the NFT.', { id: '1' })
       setShowIsUnlisting(false)
     }
   }, [unlistNftState])
 
   const handleBuyNft = async () => {
     if (!authUser) {
-      toast.error('Please connect your wallet.')
+      toast.error('Please connect your wallet.', { id: '1' })
       return
     }
     setShowing(true)
@@ -177,7 +171,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
 
   const handleBuyLicense = async () => {
     if (!authUser) {
-      toast.error('Please connect your wallet.')
+      toast.error('Please connect your wallet.', { id: '1' })
       return
     }
     setShowing(true)
@@ -190,7 +184,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
 
   const handleUnlistNft = async () => {
     if (!authUser) {
-      toast.error('Please connect your wallet.')
+      toast.error('Please connect your wallet.', { id: '1' })
       return
     }
     setShowIsUnlisting(true)
@@ -199,7 +193,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
 
   const handleUnlistLicense = async () => {
     if (!authUser) {
-      toast.error('Please connect your wallet.')
+      toast.error('Please connect your wallet.', { id: '1' })
       return
     }
     setShowIsUnlisting(true)

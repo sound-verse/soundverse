@@ -1,10 +1,9 @@
-import { useContractFunction, useEthers } from '@usedapp/core'
 import toast from 'react-hot-toast'
 import { Nft, NftType, Selling } from '../../common/graphql/schema.d'
 import { utils } from 'ethers'
-import { Contract } from '@ethersproject/contracts'
 import MarketContractAbi from '../../common/artifacts/MarketContract.json'
 import { useEffect, useState } from 'react'
+import { useContractWrite } from '@web3modal/react'
 
 export type UnlistSellingProps = {
   selling: Selling
@@ -14,19 +13,42 @@ const marketContractAddress = process.env.NEXT_PUBLIC_MARKET_CONTRACT_ADDRESS
 
 export const useUnlistSelling = () => {
   const abi = new utils.Interface(MarketContractAbi.abi)
-  const contract = new Contract(marketContractAddress, abi)
   const [unlistProps, setUnlistProps] = useState<UnlistSellingProps>(undefined)
+  const [status, setStatus] = useState<'success' | 'error' | 'pending'>(
+    'pending'
+  )
 
-  const { state: unlistMintVoucherState, send: sendUnlistMintVoucher } =
-    useContractFunction(contract as any, 'unlistMintVoucher')
-  const { state: unlistSaleVoucherState, send: sendUnlistSaleVoucher } =
-    useContractFunction(contract as any, 'unlistSaleVoucher')
+  const contractConfig = {
+    addressOrName: marketContractAddress,
+    contractInterface: abi,
+  }
+
+  const { write, data, error } = useContractWrite({
+    ...contractConfig,
+    functionName: '',
+  })
 
   useEffect(() => {
     if (unlistProps) {
       executeUnlistNft()
     }
   }, [unlistProps])
+
+  useEffect(() => {
+    if (!data) {
+      return
+    }
+    data.wait(1).then(() => {
+      setStatus('success')
+    })
+  }, [data])
+
+  useEffect(() => {
+    if (!error) {
+      return
+    }
+    setStatus('error')
+  }, [error])
 
   const unlistNft = (unlistProps: UnlistSellingProps) => {
     setUnlistProps(unlistProps)
@@ -37,20 +59,26 @@ export const useUnlistSelling = () => {
   const executeUnlistNft = async () => {
     try {
       if (isMintVoucher) {
-        await sendUnlistMintVoucher(unlistProps.selling.mintVoucher)
+        await write({
+          ...contractConfig,
+          args: [unlistProps.selling.mintVoucher],
+          functionName: 'unlistMintVoucher',
+        })
       } else {
-        await sendUnlistSaleVoucher(unlistProps.selling.saleVoucher)
+        await write({
+          ...contractConfig,
+          args: [unlistProps.selling.saleVoucher],
+          functionName: 'unlistSaleVoucher',
+        })
       }
     } catch (error) {
       console.log(error)
-      toast.error('Error unlisting your NFT!')
+      toast.error('Error unlisting your NFT!', { id: '1' })
     }
   }
 
   return {
     unlistNft,
-    unlistNftState: isMintVoucher
-      ? unlistMintVoucherState
-      : unlistSaleVoucherState,
+    unlistNftState: status,
   }
 }

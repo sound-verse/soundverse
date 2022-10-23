@@ -90,7 +90,7 @@ export default function Launch() {
       setModalLoading(false)
       setSelectedNfts([])
     } catch {
-      toast.error('Could not create room')
+      toast.error('Could not create room', { id: '1' })
       setModalLoading(false)
     }
   }
@@ -121,18 +121,30 @@ export default function Launch() {
     setMasterNfts(userMasterNfts)
   }, [data])
 
-  const baseUrl = process.env.NEXT_PUBLIC_ENVIRONMENT === 'main' ? 'https://app.soundverse.io' : 'https://testflight.soundverse.io';
+  const baseUrl =
+    process.env.NEXT_PUBLIC_ENVIRONMENT === 'main'
+      ? 'https://app.soundverse.io'
+      : 'https://testflight.soundverse.io'
 
   return (
     <div>
       <Head>
         <title>Launch a Soundverse</title>
-        <meta name="description" content="Launch your Soundverse room, showcase your music NFTs and earn rewards!" />
+        <meta
+          name="description"
+          content="Launch your Soundverse room, showcase your music NFTs and earn rewards!"
+        />
         <meta property="og:title" content="Launch a Soundverse" />
-        <meta property="og:description" content="Launch your Soundverse room, showcase your music NFTs and earn rewards!" />
+        <meta
+          property="og:description"
+          content="Launch your Soundverse room, showcase your music NFTs and earn rewards!"
+        />
         <meta property="og:url" content={`${baseUrl}${router.asPath}`} />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content={`${baseUrl}/img/metadata/soundverse_room.png`} />
+        <meta
+          property="og:image"
+          content={`${baseUrl}/img/metadata/soundverse_room.png`}
+        />
       </Head>
       <Layout>
         {!authUser && !libraryLoading ? (
@@ -212,7 +224,9 @@ export default function Launch() {
                 <div
                   className={cn(
                     'bg-white rounded text-black px-8 py-1 shadow-lg cursor-pointer',
-                    selectedMasterSlider ? ' !bg-gradient-to-l from-[#1400FF] to-[#0089FF] !text-white ' : ''
+                    selectedMasterSlider
+                      ? ' !bg-gradient-to-l from-[#1400FF] to-[#0089FF] !text-white '
+                      : ''
                   )}
                   onClick={() => setSelectedMasterSlider(!selectedMasterSlider)}
                 >
@@ -222,7 +236,9 @@ export default function Launch() {
                 <div
                   className={cn(
                     'bg-white rounded text-black px-8 py-1 shadow-lg cursor-pointer',
-                    !selectedMasterSlider ? ' !bg-gradient-to-l from-[#1400FF] to-[#0089FF] !text-white ' : ''
+                    !selectedMasterSlider
+                      ? ' !bg-gradient-to-l from-[#1400FF] to-[#0089FF] !text-white '
+                      : ''
                   )}
                   onClick={() => setSelectedMasterSlider(!selectedMasterSlider)}
                 >

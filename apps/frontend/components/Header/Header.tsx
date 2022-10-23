@@ -3,15 +3,15 @@ import { Toaster } from 'react-hot-toast'
 import styles from './Header.module.css'
 import Image from 'next/image'
 import cn from 'classnames'
-import { ConnectButton } from '../ConnectButton/ConnectButton'
 import { SearchBar } from '../SearchBar/SearchBar'
 import { useAuthContext } from '../../context/AuthContext'
+import { ConnectButton } from '../ConnectButton/ConnectButton'
 
 const Header = ({ className = '' }) => {
   const { authUser } = useAuthContext()
   return (
     <div className={cn(styles.headerWrapper, className)}>
-      <Toaster position="top-right" />
+      <Toaster position="top-left" />
       <div className={styles.headerWrapperToo}>
         <div className={styles.logo}>
           <Link href="/soundverses" passHref>
