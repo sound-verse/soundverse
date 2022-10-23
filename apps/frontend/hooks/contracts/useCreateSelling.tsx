@@ -131,7 +131,7 @@ export const useCreateSelling = () => {
         name: 'SVVoucher',
         version: '1',
         verifyingContract: marketContractAddress.toLowerCase(),
-        chainId: chain?.id ?? undefined,
+        chainId: createSellingInputProps.nft.chainId,
       }
 
       let signature = ''
