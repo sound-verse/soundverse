@@ -16,7 +16,7 @@ import { useCallback, useEffect, useState } from 'react'
 import Web3 from 'web3'
 import { CREATE_MINT_SELLING } from '../../common/graphql/mutations/create-mint-selling.mutation'
 import { add } from 'date-fns'
-import { useNetwork, useSignTypedData } from '@web3modal/react'
+import { useSignTypedData } from '@web3modal/react'
 
 export const saleVoucherTypes = {
   SVVoucher: [
@@ -80,12 +80,8 @@ export const useCreateSelling = () => {
     domain: undefined,
   })
 
-  const { chain } = useNetwork()
-
   const saveVoucher = useCallback(
     async (createSellingInputProps: CreateSellingInputProps) => {
-      if (!chain.id) return
-
       const isMintVoucher =
         createSellingInputProps?.nft?.tokenId > 0 ? false : true
 
@@ -218,7 +214,7 @@ export const useCreateSelling = () => {
         toast.error('Error listing your NFT!')
       }
     },
-    [chain, error]
+    [error]
   )
 
   const createSelling = async (
