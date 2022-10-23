@@ -132,10 +132,10 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
   const { unlistNft, unlistNftState } = useUnlistSelling()
 
   useEffect(() => {
-    if (buyNftState?.txHash?.hash?.length > 0) {
+    buyNftState?.txHash?.wait(1).then(() => {
       setShowBoughtSuccess(true)
       setShowing(false)
-    }
+    })
     if (buyNftState?.error?.message?.length > 0) {
       toast.error(
         'Error buying the NFT. Do you have enough funds in your wallet?'
@@ -145,10 +145,10 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
   }, [buyNftState])
 
   useEffect(() => {
-    if (unlistNftState?.txHash?.hash?.length > 0) {
+    unlistNftState?.txHash?.wait(1).then(() => {
       setShowUnlistedSuccess(true)
       setShowIsUnlisting(false)
-    }
+    })
     if (unlistNftState?.error?.message?.length > 0) {
       toast.error('Error unlisting the NFT.')
       setShowIsUnlisting(false)
