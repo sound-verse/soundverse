@@ -24,7 +24,6 @@ import { BuyLicense } from '../selling/BuyLicense'
 import Modal from 'react-modal'
 import Web3 from 'web3'
 import { Bars } from 'react-loader-spinner'
-import { useLogin } from '../../hooks/useLogin'
 import { UnlistLicense } from '../selling/UnlistLicense'
 
 type SingleNftPageProps = {
@@ -43,12 +42,6 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
   const [showUnlistedSuccess, setShowUnlistedSuccess] = useState<boolean>(false)
   const [showing, setShowing] = useState<Boolean>(false)
   const [showIsUnlisting, setShowIsUnlisting] = useState<Boolean>(false)
-
-  // useEffect(() => {
-  //   if (!authUser && router.isReady) {
-  //     router.push(`/marketplace`)
-  //   }
-  // }, [router.isReady])
 
   const authMasterOwner =
     nft.masterOwner.user.id === authUser?.id ? nft.masterOwner : undefined
@@ -139,11 +132,11 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
   const { unlistNft, unlistNftState } = useUnlistSelling()
 
   useEffect(() => {
-    if (buyNftState.status === 'Success') {
+    if (buyNftState?.txHash?.hash?.length > 0) {
       setShowBoughtSuccess(true)
       setShowing(false)
     }
-    if (buyNftState.status === 'Exception') {
+    if (buyNftState?.error?.message?.length > 0) {
       toast.error(
         'Error buying the NFT. Do you have enough funds in your wallet?'
       )
@@ -152,11 +145,11 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
   }, [buyNftState])
 
   useEffect(() => {
-    if (unlistNftState.status === 'Success') {
+    if (unlistNftState?.txHash?.hash?.length > 0) {
       setShowUnlistedSuccess(true)
       setShowIsUnlisting(false)
     }
-    if (unlistNftState.status === 'Exception') {
+    if (unlistNftState?.error?.message?.length > 0) {
       toast.error('Error unlisting the NFT.')
       setShowIsUnlisting(false)
     }
@@ -596,11 +589,7 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
               onClick={() => {
                 setShowBoughtSuccess(false)
                 setShowUnlistedSuccess(false)
-                router.push(
-                  `/${nftType === NftType.License ? 'license' : 'master'}/${
-                    nft.id
-                  }`
-                )
+                window.location.reload()
               }}
             />
           </div>

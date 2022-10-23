@@ -122,7 +122,7 @@ const Header = ({ className = '' }) => {
             </div>
           </div>
           <div className={styles.connectButtonWrapper}>
-            <ConnectButton />
+            {/* <ConnectButton /> */}
           </div>
         </div>
       </div>

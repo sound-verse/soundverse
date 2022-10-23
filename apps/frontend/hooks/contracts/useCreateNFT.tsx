@@ -1,8 +1,8 @@
-import { useEthers } from '@usedapp/core'
 import { gql } from '@apollo/client'
 import { print } from 'graphql'
 import axios from 'axios'
 import Cookies from 'js-cookie'
+import { useNetwork } from '@web3modal/react'
 
 const CREATE_NFT = gql`
   mutation createNft(
@@ -34,7 +34,7 @@ export type CreateNFT = {
 }
 
 export const useCreateNFT = () => {
-  const { chainId } = useEthers()
+  const { chain } = useNetwork()
 
   const prepareMint = async (
     createNftProps: CreateNFT
@@ -52,7 +52,7 @@ export const useCreateNFT = () => {
       trackDuration,
       soundWave,
       bpm,
-      genre
+      genre,
     } = createNftProps
 
     const formData = new FormData()
@@ -67,7 +67,7 @@ export const useCreateNFT = () => {
             metadata: { name, description },
             supply: parseInt(licenses.toString()),
             tags,
-            chainId,
+            chainId: chain.id,
             trackDuration,
             trackBPM: bpm,
             genre,

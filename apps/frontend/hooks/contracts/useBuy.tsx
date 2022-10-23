@@ -1,11 +1,8 @@
-import { useContractFunction, useEthers } from '@usedapp/core'
-import { useAuthContext } from '../../context/AuthContext'
-import toast from 'react-hot-toast'
 import { Nft, NftOwner, Selling } from '../../common/graphql/schema.d'
-import { ethers, utils } from 'ethers'
-import { Contract } from '@ethersproject/contracts'
+import { BigNumber, ethers, utils } from 'ethers'
 import MarketContractAbi from '../../common/artifacts/MarketContract.json'
 import { useEffect, useState } from 'react'
+import { useContractWrite } from '@web3modal/react'
 
 export type BuyProps = {
   nft: Nft
@@ -16,19 +13,21 @@ export type BuyProps = {
 const marketContractAddress = process.env.NEXT_PUBLIC_MARKET_CONTRACT_ADDRESS
 
 export const useBuy = () => {
-  const { authUser } = useAuthContext()
-  const { chainId, library } = useEthers()
   const [buyProps, setBuyProps] = useState<BuyProps>(undefined)
 
   //TODO: currently just taking the recent marketplace contract address - we should provide fallback for older marketplace contract addresss used in the vouchers
 
   const abi = new utils.Interface(MarketContractAbi.abi)
-  const contract = new Contract(marketContractAddress, abi)
 
-  const { state: redeemMintVoucherState, send: sendRedeemMintVoucher } =
-    useContractFunction(contract as any, 'redeemMintVoucher')
-  const { state: redeemSaleVoucherState, send: sendRedeemSaleVoucher } =
-    useContractFunction(contract as any, 'redeemSaleVoucher')
+  const contractConfig = {
+    addressOrName: marketContractAddress,
+    contractInterface: abi,
+  }
+
+  const { write, data, error } = useContractWrite({
+    ...contractConfig,
+    functionName: '',
+  })
 
   useEffect(() => {
     if (buyProps) {
@@ -40,21 +39,26 @@ export const useBuy = () => {
 
   const executeBuy = async () => {
     if (isMintVoucher) {
-      await sendRedeemMintVoucher(
-        buyProps.amountToBuy,
-        buyProps.selling.mintVoucher,
-        {
+      await write({
+        ...contractConfig,
+        overrides: {
           value: buyProps.selling.mintVoucher.price,
-        }
-      )
+        },
+        args: [buyProps.amountToBuy, buyProps.selling.mintVoucher],
+        functionName: 'redeemMintVoucher',
+      })
     } else {
-      await sendRedeemSaleVoucher(
-        buyProps.amountToBuy,
-        buyProps.selling.saleVoucher,
-        {
+      await write({
+        ...contractConfig,
+        overrides: {
           value: buyProps.selling.saleVoucher.price,
-        }
-      )
+          customData: {
+            amountToBuy: buyProps.amountToBuy,
+            saleVoucher: buyProps.selling.saleVoucher,
+          },
+        },
+        functionName: 'redeemSaleVoucher',
+      })
     }
   }
 
@@ -64,8 +68,9 @@ export const useBuy = () => {
 
   return {
     buyNft,
-    buyNftState: isMintVoucher
-      ? redeemMintVoucherState
-      : redeemSaleVoucherState,
+    buyNftState: {
+      txHash: data,
+      error,
+    },
   }
 }

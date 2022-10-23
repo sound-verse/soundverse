@@ -1,11 +1,5 @@
 import React from 'react'
 import type { AppProps } from 'next/app'
-import {
-  DAppProvider,
-  FullConfig,
-  Goerli,
-  Localhost,
-} from '@usedapp/core'
 import { AuthProvider } from '../context/AuthContext'
 import '../css/index.css'
 import '../css/pages/marketplace.css'
@@ -14,20 +8,46 @@ import { AudioProvider } from '../context/AudioContext'
 import NextNProgress from 'nextjs-progressbar'
 import { AudioPlayerBar } from '../components/AudioPlayer/AudioPlayerBar'
 import Script from 'next/script'
+import { chains, providers } from '@web3modal/ethereum'
+import type { ConfigOptions } from '@web3modal/react'
+import { Web3Modal } from '@web3modal/react'
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const supportedNetworks = {
-    local: [Localhost, Goerli],
-    testflight: [Goerli],
+  if (!process.env.NEXT_PUBLIC_WC_PROJECT_ID)
+    throw new Error(
+      'You need to provide NEXT_PUBLIC_WC_PROJECT_ID env variable'
+    )
+
+  const environment = process.env.NEXT_PUBLIC_ENVIRONMENT
+  let supportedChains = []
+  switch (environment) {
+    case 'main': {
+      supportedChains = [chains.mainnet]
+      break
+    }
+    case 'testflight': {
+      supportedChains = [chains.goerli]
+      break
+    }
+    case 'local': {
+      supportedChains = [chains.hardhat, chains.localhost]
+      break
+    }
   }
 
-  const config: Partial<FullConfig> = {
-    networks:
-      process.env.NEXT_PUBLIC_ENVIRONMENT === 'local'
-        ? supportedNetworks.local
-        : supportedNetworks.testflight,
-    multicallAddresses: {
-      31337: '0x6602338AA55E2F65d9DB5644A17AeBD1AA1CdE00',
+  const modalConfig: ConfigOptions = {
+    projectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID,
+    theme: 'light',
+    accentColor: 'blackWhite',
+    ethereum: {
+      appName: 'Soundverse',
+      autoConnect: true,
+      chains: supportedChains,
+      providers: [
+        providers.walletConnectProvider({
+          projectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID,
+        }) as any,
+      ],
     },
   }
 
@@ -51,13 +71,12 @@ function MyApp({ Component, pageProps }: AppProps) {
 
       <AuthProvider>
         <ApolloClientProvider initialApolloState={pageProps.initialApolloState}>
-          <DAppProvider config={config}>
-            <AudioProvider>
-              <NextNProgress color="#1400FF" height={2} />
-              <Component {...pageProps} />
-              <AudioPlayerBar />
-            </AudioProvider>
-          </DAppProvider>
+          <AudioProvider>
+            <NextNProgress color="#1400FF" height={2} />
+            <Web3Modal config={modalConfig} />
+            <Component {...pageProps} />
+            <AudioPlayerBar />
+          </AudioProvider>
         </ApolloClientProvider>
       </AuthProvider>
     </>

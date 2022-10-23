@@ -13,9 +13,9 @@ import Modal from 'react-modal'
 import { Bars } from 'react-loader-spinner'
 import styles from './EditProfileForm.module.css'
 import { useProfile } from '../../hooks/useProfile'
-import { useLogin } from '../../hooks/useLogin'
 import { AuthUser } from '../../common/graphql/schema'
 import cn from 'classnames'
+import { useAuthContext } from '../../context/AuthContext'
 
 const FILE_SIZE = 100000000
 
@@ -39,8 +39,7 @@ export const EditProfileForm = ({
   const [showing, setShowing] = useState<Boolean>(false)
   const [profileImageError, setProfileImageError] = useState<String>('')
   const { updateProfile } = useProfile()
-
-  const { refetch } = useLogin()
+  const { authUser } = useAuthContext()
 
   const initialValues = {
     name: user.name,
@@ -97,7 +96,6 @@ export const EditProfileForm = ({
         soundcloud,
       })
       setShowing(false)
-      refetch()
       setShowEditProfile(false)
     } catch (error) {
       setShowing(false)

@@ -9,8 +9,8 @@ import Modal from 'react-modal'
 import { Bars } from 'react-loader-spinner'
 import styles from './CreateForm.module.css'
 import cn from 'classnames'
-import { useLogin } from '../../hooks/useLogin'
 import useWindowDimensions from '../../hooks/useWindowDimensions'
+import { useAuthContext } from '../../context/AuthContext'
 
 const FILE_SIZE = 100000000
 
@@ -51,11 +51,11 @@ export const CreateForm = () => {
   const [pictureFileError, setPictureFileError] = useState<String>('')
   const [firstStepValues, setFirstStepValues] = useState<FirstStepValues>()
   const [showSecondStep, setShowSecondStep] = useState(false)
-  const { authenticated } = useLogin()
   const WavesurferLibrary = useRef(null)
   const waveformRef = useRef(null)
   const { isMobile } = useWindowDimensions()
   const DetectLibrary = useRef(null)
+  const { authUser } = useAuthContext()
 
   const initialValuesFirstStep: FirstStepValues = {
     name: '',
@@ -172,8 +172,10 @@ export const CreateForm = () => {
 
   const validationSchemaFirstStep = Yup.object().shape({
     name: Yup.string().required('Enter a title'),
-    description: Yup.string()
-      .max(1000, 'Maximum number of characters of 1000 exceeded'),
+    description: Yup.string().max(
+      1000,
+      'Maximum number of characters of 1000 exceeded'
+    ),
     bpm: Yup.number()
       .min(40, 'Only BPM above 40 is allowed')
       .max(200, 'Only BPM below 200 is allowed')
@@ -217,7 +219,7 @@ export const CreateForm = () => {
   }
 
   const onSubmit = async (values, onSubmitProps) => {
-    if (!authenticated) {
+    if (!authUser) {
       toast.error('Please connect your wallet.')
       return
     }
@@ -408,9 +410,7 @@ export const CreateForm = () => {
           {'<-'} Back
         </div>
         <div className="flex flex-col text-sm text-black">
-          <div className="text-black font-bold text-sm">
-            Number of Licenses
-          </div>
+          <div className="text-black font-bold text-sm">Number of Licenses</div>
           <div className="mt-3 w-full">
             <Field
               id="licenses"

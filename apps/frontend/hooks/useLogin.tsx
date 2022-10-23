@@ -1,4 +1,3 @@
-import { useEthers } from '@usedapp/core'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { gql, useMutation, useQuery } from '@apollo/client'
 import { useAuthContext } from '../context/AuthContext'
@@ -16,6 +15,7 @@ import {
 import { LOGIN } from '../common/graphql/mutations/login.mutation'
 import { GENERATE_VERIFICATION_TOKEN } from '../common/graphql/mutations/generate-verification-token.mutation'
 import { ME } from '../common/graphql/queries/me.query'
+import { useAccount, useDisconnect, useSignMessage } from '@web3modal/react'
 
 export type JwtObject = {
   id?: string
@@ -24,190 +24,118 @@ export type JwtObject = {
   exp?: number
 }
 
+const getJwtUser = (jwtToken): JwtObject => {
+  if (jwtToken && jwtToken !== '') {
+    const decodedJwtToken: JwtObject = jwt_decode(jwtToken)
+    let currentDate = new Date()
+    if (decodedJwtToken.exp * 1000 < currentDate.getTime()) {
+      return undefined
+    } else {
+      return {
+        id: decodedJwtToken.id,
+        ethAddress: decodedJwtToken.ethAddress,
+      }
+    }
+  } else {
+    return undefined
+  }
+}
+
 export const useLogin = () => {
   const [generateVerificationToken] = useMutation<
     GenerateVerificationTokenMutation,
     GenerateVerificationTokenMutationVariables
   >(GENERATE_VERIFICATION_TOKEN)
-  const [login] = useMutation<LoginMutation, LoginMutationVariables>(LOGIN)
-  const { jwtToken, setAuthToken, setLoggedInUser, authUser } = useAuthContext()
+  const [login, { loading: loginLoading }] = useMutation<
+    LoginMutation,
+    LoginMutationVariables
+  >(LOGIN)
+  const { jwtToken, setAuthToken, setLoggedInUser } = useAuthContext()
   const { data, loading, refetch } = useQuery<MeQuery, MeQueryVariables>(ME, {
     fetchPolicy: 'no-cache',
   })
-  const authenticationPending = useRef(false)
-
-  const {
-    account,
-    library: ethLibrary,
-    activateBrowserWallet,
-    deactivate,
-    activate,
-    chainId,
-    active,
-  } = useEthers()
-
-  const supportedNetworks = {
-    local: {
-      chainIds: [31337, 5],
-    },
-    testflight: {
-      chanIds: [5],
-    },
-    main: {
-      chanIds: [1],
-    },
-  }
-
-  const networks = {
-    31337: {
-      name: 'Localhost',
-    },
-    5: {
-      name: 'Görli',
-    },
-    1: {
-      name: 'Ethereum',
-    },
-  }
-
-  let correctChainIds
-
-  switch (process.env.NEXT_PUBLIC_ENVIRONMENT) {
-    case 'local': {
-      correctChainIds = supportedNetworks.local.chainIds
-      break
-    }
-    case 'testflight': {
-      correctChainIds = supportedNetworks.testflight.chanIds
-      break
-    }
-    case 'main': {
-      correctChainIds = supportedNetworks.main.chanIds
-      break
-    }
-    default: {
-      correctChainIds = supportedNetworks.main.chanIds
-      break
-    }
-  }
-
-  const correctNetworkName = chainId && networks[correctChainIds[0]].name
-
-  const getJwtUser = useCallback((jwtToken): JwtObject => {
-    if (jwtToken && jwtToken !== '') {
-      const decodedJwtToken: JwtObject = jwt_decode(jwtToken)
-      let currentDate = new Date()
-      if (decodedJwtToken.exp * 1000 < currentDate.getTime()) {
-        return undefined
-      } else {
-        return {
-          id: decodedJwtToken.id,
-          ethAddress: decodedJwtToken.ethAddress,
-        }
-      }
-    } else {
-      return undefined
-    }
-  }, [])
-
   const [authenticated, setAuthenticated] = useState<Boolean>(
     !!getJwtUser(jwtToken)?.ethAddress
   )
   const [jwtUser, setJwtUser] = useState<JwtObject>(getJwtUser(jwtToken))
 
-  const setAuthUser = useCallback(
-    (authUser: User) => {
-      setLoggedInUser(authUser)
-    },
-    [setLoggedInUser]
-  )
+  const { address, status } = useAccount()
+  const disconnect = useDisconnect()
+  const { signMessage } = useSignMessage({ message: '' })
+
+  useEffect(() => {
+    if (status === 'disconnected') {
+      logout()
+    }
+    if (status === 'connected') {
+      try {
+        authenticate()
+      } catch (error) {
+        console.log(error)
+        logout()
+      }
+    }
+  }, [status])
 
   useEffect(() => {
     if (!loading && data && jwtUser) {
       if (
         jwtUser.ethAddress?.toLowerCase() === data.me.ethAddress?.toLowerCase()
       ) {
-        setAuthUser(data.me)
+        setLoggedInUser(data.me)
       }
     }
   }, [jwtUser, data])
 
-  const loginUser = useCallback(() => {
-    activateBrowserWallet()
-  }, [activateBrowserWallet])
-
-  useEffect(() => {
-    if (authUser && chainId && account && active) {
-      setAuthenticated(true)
-    } else if (jwtUser && (!chainId || !account || !active)) {
-      setAuthenticated(false)
-      activateBrowserWallet()
-    } else {
-      setAuthenticated(false)
-      logout()
-    }
-  }, [account, active, authUser, chainId, loginUser])
-
-  useEffect(() => {
-    if (account && chainId && !correctChainIds.includes(chainId)) {
-      toast.error(`Wrong network! Please change to ${correctNetworkName}`)
-      logout()
-    } else if (
-      correctChainIds.includes(chainId) &&
-      account &&
-      account.toLowerCase() !== jwtUser?.ethAddress.toLowerCase()
-    ) {
-      authenticate()
-    }
-  }, [
-    account,
-    chainId,
-    correctChainIds,
-    correctNetworkName,
-    jwtUser?.ethAddress,
-  ])
-
   const logout = useCallback(async () => {
     setAuthToken('')
-    setAuthUser(undefined)
+    setLoggedInUser(undefined)
     setJwtUser(undefined)
-    deactivate()
-  }, [deactivate, setAuthToken, setLoggedInUser])
+    disconnect()
+  }, [disconnect, setAuthToken, setLoggedInUser])
 
   const authenticate = useCallback(async (): Promise<void> => {
-    if (authenticationPending.current) {
-      return
-    }
-    authenticationPending.current = true
     try {
+      const jwtUser = getJwtUser(jwtToken)
+
+      if (jwtUser) {
+        setJwtUser(jwtUser)
+        setAuthenticated(true)
+        refetch()
+        return
+      }
+
       const nonce = await generateVerificationToken({
-        variables: { data: { ethAddress: account } },
+        variables: { data: { ethAddress: address } },
         fetchPolicy: 'network-only',
       })
 
-      const msg = `To authenticate, please sign this message: ${account.toLowerCase()} (${
+      const msg = `To authenticate, please sign this message: ${address.toLowerCase()} (${
         nonce.data.generateVerificationToken
       })`
 
-      const signature = await ethLibrary.getSigner().signMessage(msg)
+      const signature = await signMessage({ message: msg })
 
-      const jwtToken = await login({
-        variables: { data: { ethAddress: account, signature } },
+      if (!signature) {
+        throw Error('Signature not found')
+      }
+
+      const newJwtToken = await login({
+        variables: { data: { ethAddress: address, signature } },
         fetchPolicy: 'network-only',
       })
 
-      setAuthToken(jwtToken.data.login.token)
-      setJwtUser(getJwtUser(jwtToken.data.login.token))
+      setAuthToken(newJwtToken.data.login.token)
+      setJwtUser(getJwtUser(newJwtToken.data.login.token))
+      setAuthenticated(true)
       refetch()
     } catch (e) {
       logout()
       console.log(`Authentication failed ${e}`)
     }
-    authenticationPending.current = false
   }, [
     generateVerificationToken,
-    account,
-    ethLibrary,
+    address,
     login,
     setAuthToken,
     getJwtUser,
@@ -221,9 +149,7 @@ export const useLogin = () => {
       authenticated,
       loading,
       refetch,
-      loginUser,
-      chainId,
     }),
-    [logout, authenticated, loading, refetch, loginUser, chainId]
+    [logout, authenticated, loading, refetch]
   )
 }

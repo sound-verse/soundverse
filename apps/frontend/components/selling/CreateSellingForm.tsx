@@ -5,7 +5,6 @@ import toast from 'react-hot-toast'
 import Modal from 'react-modal'
 import { Bars } from 'react-loader-spinner'
 import styles from './CreateSellingForm.module.css'
-import { useProfile } from '../../hooks/useProfile'
 import { useRouter } from 'next/router'
 import { useCreateSelling } from '../../hooks/contracts/useCreateSelling'
 import { AuthUser, Nft, NftType } from '../../common/graphql/schema.d'
@@ -31,7 +30,7 @@ export const CreateSellingForm = ({
   const { createSelling, selling } = useCreateSelling()
   const { authUser } = useAuthContext()
 
-  const initialValues = { price: 0, amount: nftType === NftType.Master ? 1 : 0 }
+   const initialValues = { price: 0, amount: nftType === NftType.Master ? 1 : 0 }
 
   let userSupply = 0
   let availableSupply = 0

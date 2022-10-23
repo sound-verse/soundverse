@@ -1,13 +1,12 @@
 import React, { FC, useRef, useEffect, useState } from 'react'
 import cn from 'classnames'
 import styles from './ConnectButton.module.css'
-import MetaMaskOnboarding from '@metamask/onboarding'
-import { InjectedConnector } from '@pangolindex/web3-react-injected-connector'
 import { useLogin } from '../../hooks/useLogin'
 import { useAuthContext } from '../../context/AuthContext'
 import Link from 'next/link'
 import Image from 'next/image'
 import { ProfileImage, ProfileName } from '../profile'
+import { useConnectModal } from '@web3modal/react'
 
 interface ConnectButtonProps {
   className?: string
@@ -16,33 +15,10 @@ interface ConnectButtonProps {
 declare const window: any
 
 export const ConnectButton: FC<ConnectButtonProps> = ({ className }) => {
-  const { loginUser, logout } = useLogin()
+  const { logout } = useLogin()
+  const { open, isOpen, close } = useConnectModal()
   const { authUser } = useAuthContext()
   const [showDropdown, setShowDropdown] = useState<boolean>(false)
-
-  const onboarding = useRef<MetaMaskOnboarding>()
-
-  useEffect(() => {
-    if (!onboarding.current) {
-      onboarding.current = new MetaMaskOnboarding()
-    }
-  }, [])
-
-  // check for if user has metamask extension already installed on their browser
-  useEffect(() => {
-    if (MetaMaskOnboarding.isMetaMaskInstalled()) {
-      onboarding.current?.stopOnboarding()
-    }
-  }, [])
-
-  const onboard = async () => {
-    if (process.env.NEXT_PUBLIC_ENVIRONMENT === 'local') {
-      return
-    }
-    if (!MetaMaskOnboarding.isMetaMaskInstalled()) {
-      onboarding.current?.startOnboarding()
-    }
-  }
 
   useEffect(() => {
     if (!authUser) {
@@ -57,8 +33,7 @@ export const ConnectButton: FC<ConnectButtonProps> = ({ className }) => {
         onClick={() => {
           if (!authUser) {
             setShowDropdown(false)
-            onboard()
-            loginUser()
+            open()
           }
         }}
         onMouseEnter={() => {
@@ -86,6 +61,8 @@ export const ConnectButton: FC<ConnectButtonProps> = ({ className }) => {
                 name={authUser?.name}
                 short={true}
               />
+            ) : isOpen ? (
+              'CONNECTING...'
             ) : (
               'CONNECT'
             )}
