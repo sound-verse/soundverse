@@ -15,8 +15,7 @@ interface ConnectButtonProps {
 declare const window: any
 
 export const ConnectButton: FC<ConnectButtonProps> = ({ className }) => {
-  const { logout } = useLogin()
-  const { open, isOpen, close } = useConnectModal()
+  const { logout, open, isOpen } = useLogin()
   const { authUser } = useAuthContext()
   const [showDropdown, setShowDropdown] = useState<boolean>(false)
 

@@ -15,7 +15,7 @@ import {
 import { LOGIN } from '../common/graphql/mutations/login.mutation'
 import { GENERATE_VERIFICATION_TOKEN } from '../common/graphql/mutations/generate-verification-token.mutation'
 import { ME } from '../common/graphql/queries/me.query'
-import { useAccount, useDisconnect, useSignMessage } from '@web3modal/react'
+import { useAccount, useConnectModal, useDisconnect, useSignMessage } from '@web3modal/react'
 
 export type JwtObject = {
   id?: string
@@ -58,7 +58,7 @@ export const useLogin = () => {
     !!getJwtUser(jwtToken)?.ethAddress
   )
   const [jwtUser, setJwtUser] = useState<JwtObject>(getJwtUser(jwtToken))
-
+  const { open, isOpen, close } = useConnectModal()
   const { address, status } = useAccount()
   const disconnect = useDisconnect()
   const { signMessage } = useSignMessage({ message: '' })
@@ -149,7 +149,9 @@ export const useLogin = () => {
       authenticated,
       loading,
       refetch,
+      open,
+      isOpen
     }),
-    [logout, authenticated, loading, refetch]
+    [logout, authenticated, loading, refetch, open, isOpen]
   )
 }
