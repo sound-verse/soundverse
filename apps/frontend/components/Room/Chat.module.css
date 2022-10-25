@@ -1,7 +1,35 @@
 .root {
-  @apply w-[350px] hidden xl:block;
+  @apply w-full h-full fixed top-0 left-0 xl:left-auto xl:top-auto z-50 xl:w-[350px];
 }
 
 .boxShadow {
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.chatWrapper {
+  @apply flex flex-col w-full xl:w-[350px] h-full xl:h-screen p-2;
+}
+
+.chatHeading {
+  @apply text-black font-bold text-xl text-left pl-6 py-2 bg-white pt-6 rounded-t-2xl;
+}
+
+.chatMessages {
+  @apply text-black px-6 py-2 overflow-y-auto bg-white h-full text-xs;
+}
+
+.chatInputWrapper {
+  @apply py-4 w-full mt-auto bg-white rounded-b-xl;
+}
+
+.chatInput {
+  @apply flex justify-center items-center content-center bg-white;
+}
+
+.mobileChatButton {
+  @apply bg-[#1400FF] fixed z-50 bottom-0 w-full p-2 flex items-start justify-center text-white left-0;
+}
+
+.mobileChatButtonMargin {
+  @apply bottom-[65px]
 }

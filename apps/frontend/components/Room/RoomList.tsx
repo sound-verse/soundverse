@@ -60,7 +60,7 @@ export const RoomList: FC<RoomListProps> = ({ rooms }) => {
         <Chat
           roomId={''}
           chat={masterRoom?.room?.chat}
-          className="fixed -mt-9"
+          className="fixed xl:-mt-4"
         />
       </div>
     </div>

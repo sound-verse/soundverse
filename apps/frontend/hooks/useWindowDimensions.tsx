@@ -19,10 +19,13 @@ export default function useWindowDimensions() {
     getWindowDimensions()
   )
   const [isMobile, setIsMobile] = useState(false)
+  const [isResponsive, setIsResponsive] = useState(false)
 
   useEffect(() => {
     const isMobile = windowDimensions.width < 1024
+    const isResponsive = windowDimensions.width < 1280
     setIsMobile(isMobile)
+    setIsResponsive(isResponsive)
   }, [windowDimensions])
 
   useEffect(() => {
@@ -34,5 +37,5 @@ export default function useWindowDimensions() {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  return { windowDimensions, isMobile }
+  return { windowDimensions, isMobile, isResponsive }
 }
