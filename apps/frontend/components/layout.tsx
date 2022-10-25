@@ -5,16 +5,16 @@ import MobileHeader from './MobileHeader/MobileHeader'
 import { useEffect, useState } from 'react'
 
 export default function Layout({ className = '', children }) {
-  const { isMobile } = useWindowDimensions()
+  const { isResponsive } = useWindowDimensions()
   const [showMobileMenu, setShowMobileMenu] = useState(false)
 
   useEffect(() => {
-    if (isMobile) {
+    if (isResponsive) {
       setShowMobileMenu(true)
     } else {
       setShowMobileMenu(false)
     }
-  }, [isMobile])
+  }, [isResponsive])
 
   return (
     // <div className="flex items-center justify-center w-full h-screen">
