@@ -195,36 +195,41 @@ export default function Marketplace() {
                 </div>
               )}
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-10">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-10">
               {allNfts.map((nft) => {
                 if (!nft.filePictureUrl) {
-                  return
+                  return null
                 }
 
-                return (
-                  <>
-                    {nft.sellings.masterSelling &&
-                      (isOtherFilterSet || isMasterFilterSet) && (
-                        <SoundCard
-                          nft={nft}
-                          nftType={NftType.Master}
-                          key={`master ${nft.id}`}
-                          playingCardId={playingCardId}
-                          onMusicClick={() => handleMusicClick(nft.id)}
-                        />
-                      )}
-                    {nft.sellings.licenseSellings[0] &&
-                      (isOtherFilterSet || isLicenseFilterSet) && (
-                        <SoundCard
-                          nft={nft}
-                          nftType={NftType.License}
-                          key={`license ${nft.id}`}
-                          playingCardId={playingCardId}
-                          onMusicClick={() => handleMusicClick(nft.id)}
-                        />
-                      )}
-                  </>
-                )
+                if (
+                  nft.sellings.masterSelling &&
+                  (isOtherFilterSet || isMasterFilterSet)
+                ) {
+                  return (
+                    <SoundCard
+                      nft={nft}
+                      nftType={NftType.Master}
+                      key={`master ${nft.id}`}
+                      playingCardId={playingCardId}
+                      onMusicClick={() => handleMusicClick(nft.id)}
+                    />
+                  )
+                }
+
+                if (
+                  nft.sellings.licenseSellings[0] &&
+                  (isOtherFilterSet || isLicenseFilterSet)
+                ) {
+                  return (
+                    <SoundCard
+                      nft={nft}
+                      nftType={NftType.License}
+                      key={`license ${nft.id}`}
+                      playingCardId={playingCardId}
+                      onMusicClick={() => handleMusicClick(nft.id)}
+                    />
+                  )
+                }
               })}
             </div>
           </div>
@@ -238,3 +243,21 @@ export default function Marketplace() {
     </div>
   )
 }
+
+// export async function getServerSideProps(context) {
+//   const client = createApolloClient()
+
+//   const nft = await client.apolloClient.query({
+//     query: GET_NFTS,
+//     variables: { limit: LIMIT, skip: 0 },
+//     fetchPolicy: 'network-only',
+//   })
+
+//   console.log(nft)
+
+//   return {
+//     props: {
+//       nfts: nft.data.nfts,
+//     },
+//   }
+// }
