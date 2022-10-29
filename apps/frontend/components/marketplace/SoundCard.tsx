@@ -217,7 +217,9 @@ function SoundCard({
                             nft.sellings.masterSelling.saleVoucher?.price ??
                               nft.sellings.masterSelling.mintVoucher?.price
                           )
-                        ).toFixed(3)}
+                        ).toLocaleString('en-US', {
+                          maximumFractionDigits: 3,
+                        })}
                       </div>
                       {/* {nft.sellings.masterSelling.saleVoucher?.currency ??
                         nft.sellings.masterSelling.mintVoucher.currency} */}
@@ -251,7 +253,9 @@ function SoundCard({
                         nft.sellings.licenseSellings[0]?.saleVoucher?.price ??
                           nft.sellings.licenseSellings[0]?.mintVoucher.price
                       )
-                    ).toFixed(3)}
+                    ).toLocaleString('en-US', {
+                      maximumFractionDigits: 3,
+                    })}
                   </div>
                   <div className="relative w-4 h-5">
                     <Image
