@@ -142,7 +142,7 @@ export default function Marketplace() {
       <Layout>
         <div className="big-wrapper">
           <div className="marketplace-wrapper w-full">
-            <div className=" mb-5 select-none text-sm flex flex-start w-full">
+            <div className="mb-5 select-none text-sm flex flex-start w-full">
               <div
                 className="rounded-full border select-none cursor-pointer border-grey-light bg-white p-2 w-40  flex justify-start "
                 onClick={() => setIsComponentVisible(!isComponentVisible)}
@@ -195,7 +195,7 @@ export default function Marketplace() {
                 </div>
               )}
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-10">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-0.5 xs:gap-10">
               {allNfts.map((nft) => {
                 if (!nft.filePictureUrl) {
                   return null
@@ -243,21 +243,3 @@ export default function Marketplace() {
     </div>
   )
 }
-
-// export async function getServerSideProps(context) {
-//   const client = createApolloClient()
-
-//   const nft = await client.apolloClient.query({
-//     query: GET_NFTS,
-//     variables: { limit: LIMIT, skip: 0 },
-//     fetchPolicy: 'network-only',
-//   })
-
-//   console.log(nft)
-
-//   return {
-//     props: {
-//       nfts: nft.data.nfts,
-//     },
-//   }
-// }
