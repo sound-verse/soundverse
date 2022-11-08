@@ -8,7 +8,6 @@ on:
   push:
     branches:
       - main
-      - testflight
     paths:
       - "apps/backend/**"
       - "packages/**"
@@ -72,23 +71,18 @@ jobs:
         uses: iamtheyammer/branch-env-vars@v1.0.2
         with:
           CR_URL: |
-            testflight:${{ secrets.CR_URL }}
             main:${{ secrets.CR_URL }}
             !default: 'Unsupported branch'
           IMAGE_NAME: |
-            testflight:main-api-testflight
             main:main-api
             !default: 'Unsupported branch'
           CLUSTER_NAME: |
-            testflight:soundverse-testflight-cluster
             main:soundverse-main-cluster
             !default: 'Unsupported branch'
           DEPLOY_NAME: |
-            testflight:main-api-testflight
             main:main-api
             !default: 'Unsupported branch'
           ENV_NAME: |
-            testflight:testflight
             main:main
             !default: 'Unsupported branch'
 
