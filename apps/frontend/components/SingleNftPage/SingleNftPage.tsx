@@ -25,6 +25,7 @@ import Modal from 'react-modal'
 import Web3 from 'web3'
 import { Bars } from 'react-loader-spinner'
 import { UnlistLicense } from '../selling/UnlistLicense'
+import { formatPrice } from '../../hooks/useFormatPrice'
 
 type SingleNftPageProps = {
   nft: Nft
@@ -114,12 +115,12 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
   } else {
     lowestAskSellingVoucher = nft.sellings?.licenseSellings?.reduce(
       (lowest: MintVoucher | SaleVoucher, selling: Selling) => {
-        return parseFloat(Web3.utils.fromWei(lowest?.price ?? '0')) >
-          parseFloat(
+        return formatPrice(parseFloat(Web3.utils.fromWei(lowest?.price ?? '0'))) >
+          formatPrice(parseFloat(
             Web3.utils.fromWei(
               selling.saleVoucher?.price ?? selling.mintVoucher?.price
             )
-          )
+          ))
           ? selling?.saleVoucher ?? selling?.mintVoucher
           : lowest
       },
@@ -452,11 +453,11 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                             <div className="flex flex-col mb-10">
                               <div className="flex mb-2">
                                 <div className="text-xl text-bolder mr-2">
-                                  {parseFloat(
+                                  {formatPrice(parseFloat(
                                     Web3.utils.fromWei(
                                       lowestAskSellingVoucher.price
                                     )
-                                  ).toFixed(3)}
+                                  ))}
                                 </div>
                                 <div className="text-grey-medium text-xs">
                                   {lowestAskSellingVoucher.currency.toUpperCase()}
@@ -471,11 +472,11 @@ export default function SingleNftPage({ nft, nftType }: SingleNftPageProps) {
                             <div className="flex flex-col mb-10">
                               <div className="flex mb-2">
                                 <div className="text-3xl text-bolder mr-2">
-                                  {parseFloat(
+                                  {formatPrice(parseFloat(
                                     Web3.utils.fromWei(
                                       lowestAskSellingVoucher.price
                                     )
-                                  ).toFixed(3)}
+                                  ))}
                                 </div>
                                 <div className="text-grey-medium text-sm">
                                   {lowestAskSellingVoucher.currency.toUpperCase()}

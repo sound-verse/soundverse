@@ -8,7 +8,6 @@ on:
   push:
     branches:
       - main
-      - testflight
     paths:
       - "apps/rpc-listener-service/**"
       - "packages/**"
@@ -80,23 +79,18 @@ jobs:
         uses: iamtheyammer/branch-env-vars@v1.0.2
         with:
           CR_URL: |
-            testflight:${{ secrets.CR_URL }}
             main:${{ secrets.CR_URL }}
             !default: 'Unsupported branch'
           IMAGE_NAME: |
-            testflight:rpc-listener-service-testflight
             main:rpc-listener-service
             !default: 'Unsupported branch'
           CLUSTER_NAME: |
-            testflight:soundverse-testflight-cluster
             main:soundverse-main-cluster
             !default: 'Unsupported branch'
           DEPLOY_NAME: |
-            testflight:rpc-listener-service-testflight
             main:rpc-listener-service
             !default: 'Unsupported branch'
           ENV_NAME: |
-            testflight:testflight
             main:main
             !default: 'Unsupported branch'
 

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Web3 from 'web3'
 import styles from './BuyLicense.module.css'
 import cn from 'classnames'
+import { formatPrice } from '../../hooks/useFormatPrice'
 
 export type UnlistLicenseProps = {
   user: AuthUser
@@ -68,11 +69,11 @@ export const UnlistLicense = ({
               />
             </div>
             <div className="font-bold text-sm col-span-3">
-              {parseFloat(
+              {formatPrice(parseFloat(
                 Web3.utils.fromWei(
                   selling.saleVoucher?.price ?? selling.mintVoucher?.price
                 )
-              ).toFixed(3)}
+              ))}
               <span className="ml-2">
                 {selling.saleVoucher?.currency ?? selling.mintVoucher?.currency}
               </span>
