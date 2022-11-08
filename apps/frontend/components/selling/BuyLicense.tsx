@@ -1,10 +1,11 @@
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useRef, useState} from 'react'
 import { AuthUser, Selling } from '../../common/graphql/schema.d'
 import { ProfileName } from '../profile'
 import Link from 'next/link'
 import Web3 from 'web3'
 import cn from 'classnames'
 import styles from './BuyLicense.module.css'
+import { formatPrice } from '../../hooks/useFormatPrice'
 
 export type BuyLicenseProps = {
   user: AuthUser
@@ -68,11 +69,13 @@ export const BuyLicense = ({
               />
             </div>
             <div className="font-bold text-sm col-span-3">
-              {parseFloat(
-                Web3.utils.fromWei(
-                  selling.saleVoucher?.price ?? selling.mintVoucher?.price
+              {formatPrice(
+                parseFloat(
+                  Web3.utils.fromWei(
+                    selling.saleVoucher?.price ?? selling.mintVoucher?.price
+                  )
                 )
-              ).toFixed(3)}
+              )}
               <span className="ml-2">
                 {selling.saleVoucher?.currency ?? selling.mintVoucher?.currency}
               </span>
