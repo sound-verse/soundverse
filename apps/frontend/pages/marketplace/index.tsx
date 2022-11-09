@@ -7,6 +7,7 @@ import {
   GetNftsQuery,
   GetNftsQueryVariables,
   Nft,
+  NftSelling,
   NftType,
   SortOption,
 } from '../../common/graphql/schema.d'
@@ -195,17 +196,19 @@ export default function Marketplace() {
                 </div>
               )}
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-0.5 xs:gap-10">
+            <div className="grid place-items-center grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-0.5 xs:gap-10">
               {allNfts.map((nft) => {
                 if (!nft.filePictureUrl) {
                   return null
                 }
 
+                let nftSellings = []
+
                 if (
                   nft.sellings.masterSelling &&
                   (isOtherFilterSet || isMasterFilterSet)
                 ) {
-                  return (
+                  nftSellings.push(
                     <SoundCard
                       nft={nft}
                       nftType={NftType.Master}
@@ -220,7 +223,7 @@ export default function Marketplace() {
                   nft.sellings.licenseSellings[0] &&
                   (isOtherFilterSet || isLicenseFilterSet)
                 ) {
-                  return (
+                  nftSellings.push(
                     <SoundCard
                       nft={nft}
                       nftType={NftType.License}
@@ -230,6 +233,8 @@ export default function Marketplace() {
                     />
                   )
                 }
+
+                return nftSellings
               })}
             </div>
           </div>
