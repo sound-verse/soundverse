@@ -36,9 +36,15 @@ export const ProfileName = ({
       ? generateShortEthAddress(ethAddress, customEthLength)
       : ethAddress
   }
+
+  const baseUrl =
+  process.env.NEXT_PUBLIC_ENVIRONMENT === 'main'
+    ? 'https://app.soundverse.io/profile/'
+    : process.env.NEXT_PUBLIC_ENVIRONMENT === 'local' ?  'http://localhost:3000/profile/' :  'https://testflight.soundverse.io/profile/'
+
   return (
     <div className={cn(className)} style={{ color }}>
-      {displayName}
+      <a href={`${baseUrl}${ethAddress}`}>{displayName}</a>
     </div>
   )
 }
