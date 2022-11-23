@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Blockies from 'react-blockies'
 import { generateShortEthAddress } from '../../utils/common'
 import cn from 'classnames'
+import Link from 'next/link'
 
 export type ProfileNameProps = {
   ethAddress: string
@@ -37,14 +38,13 @@ export const ProfileName = ({
       : ethAddress
   }
 
-  const baseUrl =
-  process.env.NEXT_PUBLIC_ENVIRONMENT === 'main'
-    ? 'https://app.soundverse.io/profile/'
-    : process.env.NEXT_PUBLIC_ENVIRONMENT === 'local' ?  'http://localhost:3000/profile/' :  'https://testflight.soundverse.io/profile/'
-
   return (
     <div className={cn(className)} style={{ color }}>
-      <a href={`${baseUrl}${ethAddress}`}>{displayName}</a>
+      <Link href={`/profile/${ethAddress}`}>
+          <a>
+            {displayName}
+          </a>
+        </Link>
     </div>
   )
 }
