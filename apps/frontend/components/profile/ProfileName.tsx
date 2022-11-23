@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Blockies from 'react-blockies'
 import { generateShortEthAddress } from '../../utils/common'
 import cn from 'classnames'
+import Link from 'next/link'
 
 export type ProfileNameProps = {
   ethAddress: string
@@ -36,9 +37,14 @@ export const ProfileName = ({
       ? generateShortEthAddress(ethAddress, customEthLength)
       : ethAddress
   }
+
   return (
     <div className={cn(className)} style={{ color }}>
-      {displayName}
+      <Link href={`/profile/${ethAddress}`}>
+          <a>
+            {displayName}
+          </a>
+        </Link>
     </div>
   )
 }
