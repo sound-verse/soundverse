@@ -85,9 +85,7 @@ function SoundCard({
       [styles.master]: nftType === NftType.Master,
       [styles.license]: nftType === NftType.License,
     },
-    className,
-    "scale-75",
-    "xs:scale-100",
+    className
   )
 
   if (!nft.filePictureUrl) {
