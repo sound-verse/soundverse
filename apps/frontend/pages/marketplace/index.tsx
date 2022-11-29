@@ -17,7 +17,6 @@ import { Bars } from 'react-loader-spinner'
 import Image from 'next/image'
 import useComponentVisible from '../../hooks/useComponentVisible'
 import { useRouter } from 'next/router'
-import cn from 'classnames'
 
 const LIMIT = 100
 const SKIP = 100
@@ -67,33 +66,6 @@ export default function Marketplace() {
 
   const handleMusicClick = (activeCardId: string) => {
     setPlayingCardId(activeCardId)
-  }
-
-  const [userLicenseNfts, setLicenseNfts] = useState<Nft[]>([])
-  const [userMasterNfts, setMasterNfts] = useState<Nft[]>([])
-  const [selectedMasterSlider, setSelectedMasterSlider] = useState(true)
-  const [selectedNfts, setSelectedNfts] = useState<
-    { nft: Nft; nftType: NftType }[]
-  >([])
-  const hasNfts = userLicenseNfts?.length > 0 || userMasterNfts?.length > 0
-
-  const handleClick = (nft: Nft, nftType: NftType) => {
-    const foundNft = selectedNfts.find(
-      (selectedNft) =>
-        selectedNft.nft.id === nft.id && selectedNft.nftType === nftType
-    )
-
-    if (foundNft) {
-      setSelectedNfts(
-        selectedNfts.filter(
-          (selectedNft) =>
-            selectedNft.nft.id !== foundNft.nft.id ||
-            selectedNft.nftType !== nftType
-        )
-      )
-    } else {
-      setSelectedNfts([...selectedNfts, { nft, nftType }])
-    }
   }
 
   useEffect(() => {
@@ -188,32 +160,6 @@ export default function Marketplace() {
                 <div className="font-bold">{sortByString}</div>
               </div>
             </div>
-            <div className="flex mb-10 select-none">
-            <div
-                className={cn(
-                  'bg-white rounded text-black px-8 py-1 shadow-lg cursor-pointer',
-                  selectedMasterSlider
-                    ? ' !bg-gradient-to-l from-[#1400FF] to-[#0089FF] !text-white '
-                    : ''
-                )}
-                onClick={() => {setSelectedMasterSlider(!selectedMasterSlider); handleSortClick(SortOption.Master);}}
-              >
-                Masters
-              </div>
-
-              <div
-                className={cn(
-                  'bg-white rounded text-black px-8 py-1 shadow-lg cursor-pointer',
-                  !selectedMasterSlider
-                    ? ' !bg-gradient-to-l from-[#1400FF] to-[#0089FF] !text-white '
-                    : ''
-                )}
-                onClick={() => {setSelectedMasterSlider(!selectedMasterSlider); handleSortClick(SortOption.License);}}
-              >
-                Licenses
-              </div>
-            </div>
-
             <div ref={ref}>
               {isComponentVisible && (
                 <div className="flex flex-col bg-white rounded-2xl border border-grey-light p-1 w-40 mb-5 -mt-2 absolute z-50">
