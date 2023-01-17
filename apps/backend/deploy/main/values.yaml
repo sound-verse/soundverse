@@ -161,14 +161,14 @@ env:
   - name: INTERNAL_FILE_URL_BASE
     value: 'https://cdn-{bucket}.soundverse.io'
   - name: RABBITMQ_USER
-    value: 'erlernxh'
+    value: 'iitmkxqd'
   - name: RABBITMQ_PASSWORD
     valueFrom:
       secretKeyRef:
         name: rabbitmq-password-soundverse
         key: rabbitmq-password
   - name: RABBITMQ_HOST
-    value: 'sparrow.rmq.cloudamqp.com/erlernxh'
+    value: 'cow.rmq2.cloudamqp.com/iitmkxqd'
   - name: RABBITMQ_QUEUE_NAME
     value: 'sc-blockchain-events'
   - name: RABBITMQ_RECOVERY_QUEUE_NAME
