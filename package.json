@@ -5,6 +5,7 @@
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build --stream",
+    "start": "lerna run start --stream",
     "lint": "lerna run lint --scope @soundverse/app-*",
     "prettier": "lerna run prettier --scope @soundverse/app-*",
     "lint:fix": "yarn run lint --fix",
